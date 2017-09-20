@@ -2,6 +2,7 @@ package io.swagger.api;
 
 import io.swagger.annotations.ApiParam;
 import io.swagger.api.factories.AlgorithmApiServiceFactory;
+import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 
 import javax.servlet.ServletConfig;
@@ -11,6 +12,8 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import java.io.IOException;
+import java.io.InputStream;
+import java.math.BigDecimal;
 
 @Path("/algorithm")
 
@@ -105,6 +108,37 @@ public class AlgorithmApi  {
     throws NotFoundException {
         return delegate.algorithmGet(accept,subjectid,securityContext);
     }
+
+    @POST
+    @Path("/BayesNet")
+    @Consumes({ "multipart/form-data" })
+    @Produces({ "text/plain" })
+    @io.swagger.annotations.ApiOperation(value = "", notes = "REST interface to the WEKA BayesNet learning compound.", response = void.class, tags={ "algorithm", })
+    @io.swagger.annotations.ApiResponses(value = {
+            @io.swagger.annotations.ApiResponse(code = 200, message = "OK", response = void.class),
+
+            @io.swagger.annotations.ApiResponse(code = 400, message = "Bad Request", response = void.class),
+
+            @io.swagger.annotations.ApiResponse(code = 401, message = "Unauthorized", response = void.class),
+
+            @io.swagger.annotations.ApiResponse(code = 403, message = "Forbidden", response = void.class),
+
+            @io.swagger.annotations.ApiResponse(code = 404, message = "Resource Not Found", response = void.class) })
+    public Response algorithmBayesNetPost(
+            @FormDataParam("file") InputStream fileInputStream,
+            @FormDataParam("file") FormDataContentDisposition fileDetail
+            ,@ApiParam(value = "The estimator algorithm to be used in the compound. Must be SimpleEstimator,  MultiNomialBMAEstimator, BMAEstimator or BayesNetEstimator (Default: SimpleEstimator).", allowableValues="SimpleEstimator, MultiNomialBMAEstimator, BMAEstimator, BayesNetEstimator", defaultValue="SimpleEstimator")@FormDataParam("estimator")  String estimator
+            ,@ApiParam(value = "The parameter for the estimator to be used in the compound.  Must be of type double (Default: 0.5).", defaultValue="0.5")@FormDataParam("estimatorParams")  BigDecimal estimatorParams
+            ,@ApiParam(value = "Whether to use ADTrees for searching (using will increase the speed of the search, but will also raise the memory use (Default: 0).", defaultValue="0")@FormDataParam("useADTree")  Integer useADTree
+            ,@ApiParam(value = "The algorithmn to be used for searching in the compound. Must be local.K2, local.GeneticSearch, local.HillClimber, local.LAGDHillClimber, local.RepeatedHillClimber, local.SimulatedAnnealing, local.TabuSearch, local.TAN, global.K2, global.GeneticSearch, global.HillClimber, global.RepeatedHillClimber, global.SimulatedAnnealing, global.TabuSearch, global.TAN, ci.CISearchAlgorithm, ci.ICSSearchAlgorithm (Default: local.K2).", allowableValues="local.K2, local.GeneticSearch, local.HillClimber, local.LAGDHillClimber, local.RepeatedHillClimber, local.SimulatedAnnealing, local.TabuSearch, local.TAN, global.K2, global.GeneticSearch, global.HillClimber, global.RepeatedHillClimber, global.SimulatedAnnealing, global.TabuSearch, global.TAN, ci.CISearchAlgorithm, ci.ICSSearchAlgorithm", defaultValue="local.K2")@FormDataParam("searchAlgorithm")  String searchAlgorithm
+            ,@ApiParam(value = "The parameter for algorithmn to be used for searching in the compound. Are set automatically (WEKA's standard parameter setting).", defaultValue="-P 1 -S BAYES -E")@FormDataParam("searchParams")  String searchParams
+            ,@Context SecurityContext securityContext)
+            throws NotFoundException {
+        return delegate.algorithmBayesNetPost(fileInputStream, fileDetail,estimator,estimatorParams,useADTree,searchAlgorithm,searchParams,securityContext);
+    }
+
+
+
     @POST
     @Path("/kNNclassification")
     @Consumes({ "multipart/form-data" })

@@ -9,6 +9,8 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
+import javax.ws.rs.core.UriInfo;
+import java.io.IOException;
 
 @Path("/api")
 
@@ -50,8 +52,8 @@ public class ApiApi  {
         @io.swagger.annotations.ApiResponse(code = 400, message = "Bad Request", response = void.class),
         
         @io.swagger.annotations.ApiResponse(code = 500, message = "Server Error", response = void.class) })
-    public Response apiApiJsonGet(@Context SecurityContext securityContext)
-    throws NotFoundException {
-        return delegate.apiApiJsonGet(securityContext);
+    public Response apiApiJsonGet(@Context SecurityContext securityContext, @Context UriInfo ui)
+            throws NotFoundException, IOException {
+        return delegate.apiApiJsonGet(securityContext, ui);
     }
 }
