@@ -2,7 +2,6 @@ package io.swagger.api;
 
 
 import org.apache.commons.io.IOUtils;
-import org.glassfish.jersey.message.XmlHeader;
 import org.json.JSONObject;
 
 import javax.servlet.ServletContext;
@@ -25,7 +24,6 @@ public class IndexPage {
         // This method is called if HTML is request
         @GET
         @Produces("text/html")
-        @XmlHeader("<?xml-stylesheet type=\"text/css\" href=\"style.css\"?>")
         public String startPage() throws IOException {
 
             InputStream in = new URL( ui.getAbsolutePath() + "swagger.json" ).openStream();

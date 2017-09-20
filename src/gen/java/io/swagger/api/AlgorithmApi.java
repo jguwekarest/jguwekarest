@@ -112,7 +112,7 @@ public class AlgorithmApi  {
     @POST
     @Path("/BayesNet")
     @Consumes({ "multipart/form-data" })
-    @Produces({ "text/plain" })
+    @Produces({ "text/x-arff" })
     @io.swagger.annotations.ApiOperation(value = "", notes = "REST interface to the WEKA BayesNet learning compound.", response = void.class, tags={ "algorithm", })
     @io.swagger.annotations.ApiResponses(value = {
             @io.swagger.annotations.ApiResponse(code = 200, message = "OK", response = void.class),
@@ -133,7 +133,7 @@ public class AlgorithmApi  {
             ,@ApiParam(value = "The algorithmn to be used for searching in the compound. Must be local.K2, local.GeneticSearch, local.HillClimber, local.LAGDHillClimber, local.RepeatedHillClimber, local.SimulatedAnnealing, local.TabuSearch, local.TAN, global.K2, global.GeneticSearch, global.HillClimber, global.RepeatedHillClimber, global.SimulatedAnnealing, global.TabuSearch, global.TAN, ci.CISearchAlgorithm, ci.ICSSearchAlgorithm (Default: local.K2).", allowableValues="local.K2, local.GeneticSearch, local.HillClimber, local.LAGDHillClimber, local.RepeatedHillClimber, local.SimulatedAnnealing, local.TabuSearch, local.TAN, global.K2, global.GeneticSearch, global.HillClimber, global.RepeatedHillClimber, global.SimulatedAnnealing, global.TabuSearch, global.TAN, ci.CISearchAlgorithm, ci.ICSSearchAlgorithm", defaultValue="local.K2")@FormDataParam("searchAlgorithm")  String searchAlgorithm
             ,@ApiParam(value = "The parameter for algorithmn to be used for searching in the compound. Are set automatically (WEKA's standard parameter setting).", defaultValue="-P 1 -S BAYES -E")@FormDataParam("searchParams")  String searchParams
             ,@Context SecurityContext securityContext)
-            throws NotFoundException {
+            throws NotFoundException, IOException {
         return delegate.algorithmBayesNetPost(fileInputStream, fileDetail,estimator,estimatorParams,useADTree,searchAlgorithm,searchParams,securityContext);
     }
 
