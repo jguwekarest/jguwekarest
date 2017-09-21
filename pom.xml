@@ -47,7 +47,7 @@
           <stopKey>stopit</stopKey>
           <stopWait>10</stopWait>
           <httpConnector>
-            <port>8080</port>
+            <port>8081</port>
             <idleTimeout>60000</idleTimeout>
           </httpConnector>
         </configuration>
@@ -184,6 +184,8 @@
       <artifactId>weka-stable</artifactId>
       <version>3.8.1</version>
     </dependency>
+
+
     <!-- Bean Validation API support -->
     <!-- <dependency>
         <groupId>javax.validation</groupId>

@@ -15,10 +15,11 @@ import java.net.URL;
 public class ApiApiServiceImpl extends ApiApiService {
     @Override
     public Response apiApiJsonGet(SecurityContext securityContext, UriInfo ui) throws NotFoundException, IOException {
+
         InputStream in = new URL( ui.getBaseUri() + "swagger.json" ).openStream();
         String jsonContent;
         try {
-            jsonContent = new String(IOUtils.toString(in));
+            jsonContent = new String(IOUtils.toString(in, "UTF-8"));
         } finally {
             IOUtils.closeQuietly(in);
         }

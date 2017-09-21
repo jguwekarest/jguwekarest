@@ -17,6 +17,12 @@
   
   <path id="weka_rs.module.production.classpath">
     <path refid="${module.jdk.classpath.weka_rs}"/>
+    <path refid="library.org.glassfish.jersey.ext:jersey-mvc:2.5.1.classpath"/>
+    <path refid="library.org.glassfish.jersey.ext:jersey-mvc-jsp:2.16.classpath"/>
+    <path refid="library.org.glassfish.jersey.media:jersey-media-json-jackson:2.5.classpath"/>
+    <path refid="library.org.glassfish:javax.json:1.1.classpath"/>
+    <path refid="library.org.json:json:20170516.classpath"/>
+    <path refid="library.nz.ac.waikato.cms.weka:weka-stable:3.8.1.classpath"/>
     <path refid="library.maven:_io.swagger:swagger-jersey2-jaxrs:1.5.15.classpath"/>
     <path refid="library.maven:_io.swagger:swagger-jaxrs:1.5.15.classpath"/>
     <path refid="library.maven:_io.swagger:swagger-core:1.5.15.classpath"/>
@@ -49,6 +55,13 @@
     <path refid="library.maven:_javax.ws.rs:javax.ws.rs-api:2.0.1.classpath"/>
     <path refid="library.maven:_org.glassfish.jersey.media:jersey-media-multipart:2.22.2.classpath"/>
     <path refid="library.maven:_org.jvnet.mimepull:mimepull:1.9.6.classpath"/>
+    <path refid="library.maven:_org.glassfish.jersey.ext:jersey-mvc:2.5.1.classpath"/>
+    <path refid="library.maven:_org.glassfish.jersey.ext:jersey-mvc-jsp:2.16.classpath"/>
+    <path refid="library.maven:_org.glassfish.jersey.media:jersey-media-json-jackson:2.5.classpath"/>
+    <path refid="library.maven:_org.codehaus.jackson:jackson-core-asl:1.9.13.classpath"/>
+    <path refid="library.maven:_org.codehaus.jackson:jackson-mapper-asl:1.9.13.classpath"/>
+    <path refid="library.maven:_org.codehaus.jackson:jackson-jaxrs:1.9.13.classpath"/>
+    <path refid="library.maven:_org.codehaus.jackson:jackson-xc:1.9.13.classpath"/>
     <path refid="library.maven:_com.fasterxml.jackson.datatype:jackson-datatype-joda:2.8.9.classpath"/>
     <path refid="library.maven:_com.fasterxml.jackson.core:jackson-annotations:2.8.0.classpath"/>
     <path refid="library.maven:_com.fasterxml.jackson.core:jackson-core:2.8.9.classpath"/>
@@ -58,16 +71,42 @@
     <path refid="library.maven:_com.fasterxml.jackson.jaxrs:jackson-jaxrs-base:2.8.9.classpath"/>
     <path refid="library.maven:_com.fasterxml.jackson.module:jackson-module-jaxb-annotations:2.8.9.classpath"/>
     <path refid="library.maven:_com.brsanthu:migbase64:2.2.classpath"/>
-    <path refid="library.weka.classpath"/>
-    <path refid="library.org.glassfish.jersey.ext:jersey-mvc:2.5.1.classpath"/>
-    <path refid="library.org.glassfish.jersey.ext:jersey-mvc-jsp:2.16.classpath"/>
-    <path refid="library.org.glassfish.jersey.media:jersey-media-json-jackson:2.5.classpath"/>
-    <path refid="library.org.glassfish:javax.json:1.1.classpath"/>
-    <path refid="library.org.json:json:20170516.classpath"/>
+    <path refid="library.maven:_org.json:json:20170516.classpath"/>
+    <path refid="library.maven:_org.glassfish:javax.json:1.0.4.classpath"/>
+    <path refid="library.maven:_commons-io:commons-io:2.5.classpath"/>
+    <path refid="library.maven:_nz.ac.waikato.cms.weka:weka-stable:3.8.1.classpath"/>
+    <path refid="library.maven:_nz.ac.waikato.cms.weka.thirdparty:java-cup-11b:2015.03.26.classpath"/>
+    <path refid="library.maven:_nz.ac.waikato.cms.weka.thirdparty:java-cup-11b-runtime:2015.03.26.classpath"/>
+    <path refid="library.maven:_nz.ac.waikato.cms.weka.thirdparty:bounce:0.18.classpath"/>
+    <path refid="library.maven:_com.googlecode.matrix-toolkits-java:mtj:1.0.4.classpath"/>
+    <path refid="library.maven:_com.github.fommil.netlib:netlib-native_ref-osx-x86_64:natives:1.1.classpath"/>
+    <path refid="library.maven:_com.github.fommil.netlib:native_ref-java:1.1.classpath"/>
+    <path refid="library.maven:_com.github.fommil:jniloader:1.1.classpath"/>
+    <path refid="library.maven:_com.github.fommil.netlib:netlib-native_ref-linux-x86_64:natives:1.1.classpath"/>
+    <path refid="library.maven:_com.github.fommil.netlib:netlib-native_ref-linux-i686:natives:1.1.classpath"/>
+    <path refid="library.maven:_com.github.fommil.netlib:netlib-native_ref-win-x86_64:natives:1.1.classpath"/>
+    <path refid="library.maven:_com.github.fommil.netlib:netlib-native_ref-win-i686:natives:1.1.classpath"/>
+    <path refid="library.maven:_com.github.fommil.netlib:netlib-native_ref-linux-armhf:natives:1.1.classpath"/>
+    <path refid="library.maven:_com.github.fommil.netlib:netlib-native_system-osx-x86_64:natives:1.1.classpath"/>
+    <path refid="library.maven:_com.github.fommil.netlib:native_system-java:1.1.classpath"/>
+    <path refid="library.maven:_com.github.fommil.netlib:netlib-native_system-linux-x86_64:natives:1.1.classpath"/>
+    <path refid="library.maven:_com.github.fommil.netlib:netlib-native_system-linux-i686:natives:1.1.classpath"/>
+    <path refid="library.maven:_com.github.fommil.netlib:netlib-native_system-linux-armhf:natives:1.1.classpath"/>
+    <path refid="library.maven:_com.github.fommil.netlib:netlib-native_system-win-x86_64:natives:1.1.classpath"/>
+    <path refid="library.maven:_com.github.fommil.netlib:netlib-native_system-win-i686:natives:1.1.classpath"/>
+    <path refid="library.maven:_net.sourceforge.f2j:arpack_combined_all:0.1.classpath"/>
+    <path refid="library.maven:_com.googlecode.netlib-java:netlib-java:1.1.classpath"/>
+    <path refid="library.maven:_com.github.fommil.netlib:core:1.1.classpath"/>
   </path>
   
   <path id="weka_rs.runtime.production.module.classpath">
     <pathelement location="${weka_rs.output.dir}"/>
+    <path refid="library.org.glassfish.jersey.ext:jersey-mvc:2.5.1.classpath"/>
+    <path refid="library.org.glassfish.jersey.ext:jersey-mvc-jsp:2.16.classpath"/>
+    <path refid="library.org.glassfish.jersey.media:jersey-media-json-jackson:2.5.classpath"/>
+    <path refid="library.org.glassfish:javax.json:1.1.classpath"/>
+    <path refid="library.org.json:json:20170516.classpath"/>
+    <path refid="library.nz.ac.waikato.cms.weka:weka-stable:3.8.1.classpath"/>
     <path refid="library.maven:_io.swagger:swagger-jersey2-jaxrs:1.5.15.classpath"/>
     <path refid="library.maven:_io.swagger:swagger-jaxrs:1.5.15.classpath"/>
     <path refid="library.maven:_io.swagger:swagger-core:1.5.15.classpath"/>
@@ -100,6 +139,13 @@
     <path refid="library.maven:_javax.ws.rs:javax.ws.rs-api:2.0.1.classpath"/>
     <path refid="library.maven:_org.glassfish.jersey.media:jersey-media-multipart:2.22.2.classpath"/>
     <path refid="library.maven:_org.jvnet.mimepull:mimepull:1.9.6.classpath"/>
+    <path refid="library.maven:_org.glassfish.jersey.ext:jersey-mvc:2.5.1.classpath"/>
+    <path refid="library.maven:_org.glassfish.jersey.ext:jersey-mvc-jsp:2.16.classpath"/>
+    <path refid="library.maven:_org.glassfish.jersey.media:jersey-media-json-jackson:2.5.classpath"/>
+    <path refid="library.maven:_org.codehaus.jackson:jackson-core-asl:1.9.13.classpath"/>
+    <path refid="library.maven:_org.codehaus.jackson:jackson-mapper-asl:1.9.13.classpath"/>
+    <path refid="library.maven:_org.codehaus.jackson:jackson-jaxrs:1.9.13.classpath"/>
+    <path refid="library.maven:_org.codehaus.jackson:jackson-xc:1.9.13.classpath"/>
     <path refid="library.maven:_com.fasterxml.jackson.datatype:jackson-datatype-joda:2.8.9.classpath"/>
     <path refid="library.maven:_com.fasterxml.jackson.core:jackson-annotations:2.8.0.classpath"/>
     <path refid="library.maven:_com.fasterxml.jackson.core:jackson-core:2.8.9.classpath"/>
@@ -109,17 +155,43 @@
     <path refid="library.maven:_com.fasterxml.jackson.jaxrs:jackson-jaxrs-base:2.8.9.classpath"/>
     <path refid="library.maven:_com.fasterxml.jackson.module:jackson-module-jaxb-annotations:2.8.9.classpath"/>
     <path refid="library.maven:_com.brsanthu:migbase64:2.2.classpath"/>
-    <path refid="library.weka.classpath"/>
-    <path refid="library.org.glassfish.jersey.ext:jersey-mvc:2.5.1.classpath"/>
-    <path refid="library.org.glassfish.jersey.ext:jersey-mvc-jsp:2.16.classpath"/>
-    <path refid="library.org.glassfish.jersey.media:jersey-media-json-jackson:2.5.classpath"/>
-    <path refid="library.org.glassfish:javax.json:1.1.classpath"/>
-    <path refid="library.org.json:json:20170516.classpath"/>
+    <path refid="library.maven:_org.json:json:20170516.classpath"/>
+    <path refid="library.maven:_org.glassfish:javax.json:1.0.4.classpath"/>
+    <path refid="library.maven:_commons-io:commons-io:2.5.classpath"/>
+    <path refid="library.maven:_nz.ac.waikato.cms.weka:weka-stable:3.8.1.classpath"/>
+    <path refid="library.maven:_nz.ac.waikato.cms.weka.thirdparty:java-cup-11b:2015.03.26.classpath"/>
+    <path refid="library.maven:_nz.ac.waikato.cms.weka.thirdparty:java-cup-11b-runtime:2015.03.26.classpath"/>
+    <path refid="library.maven:_nz.ac.waikato.cms.weka.thirdparty:bounce:0.18.classpath"/>
+    <path refid="library.maven:_com.googlecode.matrix-toolkits-java:mtj:1.0.4.classpath"/>
+    <path refid="library.maven:_com.github.fommil.netlib:netlib-native_ref-osx-x86_64:natives:1.1.classpath"/>
+    <path refid="library.maven:_com.github.fommil.netlib:native_ref-java:1.1.classpath"/>
+    <path refid="library.maven:_com.github.fommil:jniloader:1.1.classpath"/>
+    <path refid="library.maven:_com.github.fommil.netlib:netlib-native_ref-linux-x86_64:natives:1.1.classpath"/>
+    <path refid="library.maven:_com.github.fommil.netlib:netlib-native_ref-linux-i686:natives:1.1.classpath"/>
+    <path refid="library.maven:_com.github.fommil.netlib:netlib-native_ref-win-x86_64:natives:1.1.classpath"/>
+    <path refid="library.maven:_com.github.fommil.netlib:netlib-native_ref-win-i686:natives:1.1.classpath"/>
+    <path refid="library.maven:_com.github.fommil.netlib:netlib-native_ref-linux-armhf:natives:1.1.classpath"/>
+    <path refid="library.maven:_com.github.fommil.netlib:netlib-native_system-osx-x86_64:natives:1.1.classpath"/>
+    <path refid="library.maven:_com.github.fommil.netlib:native_system-java:1.1.classpath"/>
+    <path refid="library.maven:_com.github.fommil.netlib:netlib-native_system-linux-x86_64:natives:1.1.classpath"/>
+    <path refid="library.maven:_com.github.fommil.netlib:netlib-native_system-linux-i686:natives:1.1.classpath"/>
+    <path refid="library.maven:_com.github.fommil.netlib:netlib-native_system-linux-armhf:natives:1.1.classpath"/>
+    <path refid="library.maven:_com.github.fommil.netlib:netlib-native_system-win-x86_64:natives:1.1.classpath"/>
+    <path refid="library.maven:_com.github.fommil.netlib:netlib-native_system-win-i686:natives:1.1.classpath"/>
+    <path refid="library.maven:_net.sourceforge.f2j:arpack_combined_all:0.1.classpath"/>
+    <path refid="library.maven:_com.googlecode.netlib-java:netlib-java:1.1.classpath"/>
+    <path refid="library.maven:_com.github.fommil.netlib:core:1.1.classpath"/>
   </path>
   
   <path id="weka_rs.module.classpath">
     <path refid="${module.jdk.classpath.weka_rs}"/>
     <pathelement location="${weka_rs.output.dir}"/>
+    <path refid="library.org.glassfish.jersey.ext:jersey-mvc:2.5.1.classpath"/>
+    <path refid="library.org.glassfish.jersey.ext:jersey-mvc-jsp:2.16.classpath"/>
+    <path refid="library.org.glassfish.jersey.media:jersey-media-json-jackson:2.5.classpath"/>
+    <path refid="library.org.glassfish:javax.json:1.1.classpath"/>
+    <path refid="library.org.json:json:20170516.classpath"/>
+    <path refid="library.nz.ac.waikato.cms.weka:weka-stable:3.8.1.classpath"/>
     <path refid="library.maven:_io.swagger:swagger-jersey2-jaxrs:1.5.15.classpath"/>
     <path refid="library.maven:_io.swagger:swagger-jaxrs:1.5.15.classpath"/>
     <path refid="library.maven:_io.swagger:swagger-core:1.5.15.classpath"/>
@@ -154,6 +226,13 @@
     <path refid="library.maven:_javax.ws.rs:javax.ws.rs-api:2.0.1.classpath"/>
     <path refid="library.maven:_org.glassfish.jersey.media:jersey-media-multipart:2.22.2.classpath"/>
     <path refid="library.maven:_org.jvnet.mimepull:mimepull:1.9.6.classpath"/>
+    <path refid="library.maven:_org.glassfish.jersey.ext:jersey-mvc:2.5.1.classpath"/>
+    <path refid="library.maven:_org.glassfish.jersey.ext:jersey-mvc-jsp:2.16.classpath"/>
+    <path refid="library.maven:_org.glassfish.jersey.media:jersey-media-json-jackson:2.5.classpath"/>
+    <path refid="library.maven:_org.codehaus.jackson:jackson-core-asl:1.9.13.classpath"/>
+    <path refid="library.maven:_org.codehaus.jackson:jackson-mapper-asl:1.9.13.classpath"/>
+    <path refid="library.maven:_org.codehaus.jackson:jackson-jaxrs:1.9.13.classpath"/>
+    <path refid="library.maven:_org.codehaus.jackson:jackson-xc:1.9.13.classpath"/>
     <path refid="library.maven:_com.fasterxml.jackson.datatype:jackson-datatype-joda:2.8.9.classpath"/>
     <path refid="library.maven:_com.fasterxml.jackson.core:jackson-annotations:2.8.0.classpath"/>
     <path refid="library.maven:_com.fasterxml.jackson.core:jackson-core:2.8.9.classpath"/>
@@ -163,17 +242,43 @@
     <path refid="library.maven:_com.fasterxml.jackson.jaxrs:jackson-jaxrs-base:2.8.9.classpath"/>
     <path refid="library.maven:_com.fasterxml.jackson.module:jackson-module-jaxb-annotations:2.8.9.classpath"/>
     <path refid="library.maven:_com.brsanthu:migbase64:2.2.classpath"/>
-    <path refid="library.weka.classpath"/>
-    <path refid="library.org.glassfish.jersey.ext:jersey-mvc:2.5.1.classpath"/>
-    <path refid="library.org.glassfish.jersey.ext:jersey-mvc-jsp:2.16.classpath"/>
-    <path refid="library.org.glassfish.jersey.media:jersey-media-json-jackson:2.5.classpath"/>
-    <path refid="library.org.glassfish:javax.json:1.1.classpath"/>
-    <path refid="library.org.json:json:20170516.classpath"/>
+    <path refid="library.maven:_org.json:json:20170516.classpath"/>
+    <path refid="library.maven:_org.glassfish:javax.json:1.0.4.classpath"/>
+    <path refid="library.maven:_commons-io:commons-io:2.5.classpath"/>
+    <path refid="library.maven:_nz.ac.waikato.cms.weka:weka-stable:3.8.1.classpath"/>
+    <path refid="library.maven:_nz.ac.waikato.cms.weka.thirdparty:java-cup-11b:2015.03.26.classpath"/>
+    <path refid="library.maven:_nz.ac.waikato.cms.weka.thirdparty:java-cup-11b-runtime:2015.03.26.classpath"/>
+    <path refid="library.maven:_nz.ac.waikato.cms.weka.thirdparty:bounce:0.18.classpath"/>
+    <path refid="library.maven:_com.googlecode.matrix-toolkits-java:mtj:1.0.4.classpath"/>
+    <path refid="library.maven:_com.github.fommil.netlib:netlib-native_ref-osx-x86_64:natives:1.1.classpath"/>
+    <path refid="library.maven:_com.github.fommil.netlib:native_ref-java:1.1.classpath"/>
+    <path refid="library.maven:_com.github.fommil:jniloader:1.1.classpath"/>
+    <path refid="library.maven:_com.github.fommil.netlib:netlib-native_ref-linux-x86_64:natives:1.1.classpath"/>
+    <path refid="library.maven:_com.github.fommil.netlib:netlib-native_ref-linux-i686:natives:1.1.classpath"/>
+    <path refid="library.maven:_com.github.fommil.netlib:netlib-native_ref-win-x86_64:natives:1.1.classpath"/>
+    <path refid="library.maven:_com.github.fommil.netlib:netlib-native_ref-win-i686:natives:1.1.classpath"/>
+    <path refid="library.maven:_com.github.fommil.netlib:netlib-native_ref-linux-armhf:natives:1.1.classpath"/>
+    <path refid="library.maven:_com.github.fommil.netlib:netlib-native_system-osx-x86_64:natives:1.1.classpath"/>
+    <path refid="library.maven:_com.github.fommil.netlib:native_system-java:1.1.classpath"/>
+    <path refid="library.maven:_com.github.fommil.netlib:netlib-native_system-linux-x86_64:natives:1.1.classpath"/>
+    <path refid="library.maven:_com.github.fommil.netlib:netlib-native_system-linux-i686:natives:1.1.classpath"/>
+    <path refid="library.maven:_com.github.fommil.netlib:netlib-native_system-linux-armhf:natives:1.1.classpath"/>
+    <path refid="library.maven:_com.github.fommil.netlib:netlib-native_system-win-x86_64:natives:1.1.classpath"/>
+    <path refid="library.maven:_com.github.fommil.netlib:netlib-native_system-win-i686:natives:1.1.classpath"/>
+    <path refid="library.maven:_net.sourceforge.f2j:arpack_combined_all:0.1.classpath"/>
+    <path refid="library.maven:_com.googlecode.netlib-java:netlib-java:1.1.classpath"/>
+    <path refid="library.maven:_com.github.fommil.netlib:core:1.1.classpath"/>
   </path>
   
   <path id="weka_rs.runtime.module.classpath">
     <pathelement location="${weka_rs.testoutput.dir}"/>
     <pathelement location="${weka_rs.output.dir}"/>
+    <path refid="library.org.glassfish.jersey.ext:jersey-mvc:2.5.1.classpath"/>
+    <path refid="library.org.glassfish.jersey.ext:jersey-mvc-jsp:2.16.classpath"/>
+    <path refid="library.org.glassfish.jersey.media:jersey-media-json-jackson:2.5.classpath"/>
+    <path refid="library.org.glassfish:javax.json:1.1.classpath"/>
+    <path refid="library.org.json:json:20170516.classpath"/>
+    <path refid="library.nz.ac.waikato.cms.weka:weka-stable:3.8.1.classpath"/>
     <path refid="library.maven:_io.swagger:swagger-jersey2-jaxrs:1.5.15.classpath"/>
     <path refid="library.maven:_io.swagger:swagger-jaxrs:1.5.15.classpath"/>
     <path refid="library.maven:_io.swagger:swagger-core:1.5.15.classpath"/>
@@ -208,6 +313,13 @@
     <path refid="library.maven:_javax.ws.rs:javax.ws.rs-api:2.0.1.classpath"/>
     <path refid="library.maven:_org.glassfish.jersey.media:jersey-media-multipart:2.22.2.classpath"/>
     <path refid="library.maven:_org.jvnet.mimepull:mimepull:1.9.6.classpath"/>
+    <path refid="library.maven:_org.glassfish.jersey.ext:jersey-mvc:2.5.1.classpath"/>
+    <path refid="library.maven:_org.glassfish.jersey.ext:jersey-mvc-jsp:2.16.classpath"/>
+    <path refid="library.maven:_org.glassfish.jersey.media:jersey-media-json-jackson:2.5.classpath"/>
+    <path refid="library.maven:_org.codehaus.jackson:jackson-core-asl:1.9.13.classpath"/>
+    <path refid="library.maven:_org.codehaus.jackson:jackson-mapper-asl:1.9.13.classpath"/>
+    <path refid="library.maven:_org.codehaus.jackson:jackson-jaxrs:1.9.13.classpath"/>
+    <path refid="library.maven:_org.codehaus.jackson:jackson-xc:1.9.13.classpath"/>
     <path refid="library.maven:_com.fasterxml.jackson.datatype:jackson-datatype-joda:2.8.9.classpath"/>
     <path refid="library.maven:_com.fasterxml.jackson.core:jackson-annotations:2.8.0.classpath"/>
     <path refid="library.maven:_com.fasterxml.jackson.core:jackson-core:2.8.9.classpath"/>
@@ -217,12 +329,32 @@
     <path refid="library.maven:_com.fasterxml.jackson.jaxrs:jackson-jaxrs-base:2.8.9.classpath"/>
     <path refid="library.maven:_com.fasterxml.jackson.module:jackson-module-jaxb-annotations:2.8.9.classpath"/>
     <path refid="library.maven:_com.brsanthu:migbase64:2.2.classpath"/>
-    <path refid="library.weka.classpath"/>
-    <path refid="library.org.glassfish.jersey.ext:jersey-mvc:2.5.1.classpath"/>
-    <path refid="library.org.glassfish.jersey.ext:jersey-mvc-jsp:2.16.classpath"/>
-    <path refid="library.org.glassfish.jersey.media:jersey-media-json-jackson:2.5.classpath"/>
-    <path refid="library.org.glassfish:javax.json:1.1.classpath"/>
-    <path refid="library.org.json:json:20170516.classpath"/>
+    <path refid="library.maven:_org.json:json:20170516.classpath"/>
+    <path refid="library.maven:_org.glassfish:javax.json:1.0.4.classpath"/>
+    <path refid="library.maven:_commons-io:commons-io:2.5.classpath"/>
+    <path refid="library.maven:_nz.ac.waikato.cms.weka:weka-stable:3.8.1.classpath"/>
+    <path refid="library.maven:_nz.ac.waikato.cms.weka.thirdparty:java-cup-11b:2015.03.26.classpath"/>
+    <path refid="library.maven:_nz.ac.waikato.cms.weka.thirdparty:java-cup-11b-runtime:2015.03.26.classpath"/>
+    <path refid="library.maven:_nz.ac.waikato.cms.weka.thirdparty:bounce:0.18.classpath"/>
+    <path refid="library.maven:_com.googlecode.matrix-toolkits-java:mtj:1.0.4.classpath"/>
+    <path refid="library.maven:_com.github.fommil.netlib:netlib-native_ref-osx-x86_64:natives:1.1.classpath"/>
+    <path refid="library.maven:_com.github.fommil.netlib:native_ref-java:1.1.classpath"/>
+    <path refid="library.maven:_com.github.fommil:jniloader:1.1.classpath"/>
+    <path refid="library.maven:_com.github.fommil.netlib:netlib-native_ref-linux-x86_64:natives:1.1.classpath"/>
+    <path refid="library.maven:_com.github.fommil.netlib:netlib-native_ref-linux-i686:natives:1.1.classpath"/>
+    <path refid="library.maven:_com.github.fommil.netlib:netlib-native_ref-win-x86_64:natives:1.1.classpath"/>
+    <path refid="library.maven:_com.github.fommil.netlib:netlib-native_ref-win-i686:natives:1.1.classpath"/>
+    <path refid="library.maven:_com.github.fommil.netlib:netlib-native_ref-linux-armhf:natives:1.1.classpath"/>
+    <path refid="library.maven:_com.github.fommil.netlib:netlib-native_system-osx-x86_64:natives:1.1.classpath"/>
+    <path refid="library.maven:_com.github.fommil.netlib:native_system-java:1.1.classpath"/>
+    <path refid="library.maven:_com.github.fommil.netlib:netlib-native_system-linux-x86_64:natives:1.1.classpath"/>
+    <path refid="library.maven:_com.github.fommil.netlib:netlib-native_system-linux-i686:natives:1.1.classpath"/>
+    <path refid="library.maven:_com.github.fommil.netlib:netlib-native_system-linux-armhf:natives:1.1.classpath"/>
+    <path refid="library.maven:_com.github.fommil.netlib:netlib-native_system-win-x86_64:natives:1.1.classpath"/>
+    <path refid="library.maven:_com.github.fommil.netlib:netlib-native_system-win-i686:natives:1.1.classpath"/>
+    <path refid="library.maven:_net.sourceforge.f2j:arpack_combined_all:0.1.classpath"/>
+    <path refid="library.maven:_com.googlecode.netlib-java:netlib-java:1.1.classpath"/>
+    <path refid="library.maven:_com.github.fommil.netlib:core:1.1.classpath"/>
   </path>
   
   
@@ -238,6 +370,12 @@
     <dirset dir="${module.weka_rs.basedir}">
       <include name="src/gen/java"/>
       <include name="src/main/java"/>
+    </dirset>
+  </path>
+  
+  <path id="weka_rs.module.test.sourcepath">
+    <dirset dir="${module.weka_rs.basedir}">
+      <include name="src/main/webapp"/>
     </dirset>
   </path>
   
@@ -266,7 +404,23 @@
     </copy>
   </target>
   
-  <target name="compile.module.weka_rs.tests" depends="register.custom.compilers,compile.module.weka_rs.production" description="compile module weka_rs; test classes" unless="skip.tests"/>
+  <target name="compile.module.weka_rs.tests" depends="register.custom.compilers,compile.module.weka_rs.production" description="compile module weka_rs; test classes" unless="skip.tests">
+    <mkdir dir="${weka_rs.testoutput.dir}"/>
+    <javac2 destdir="${weka_rs.testoutput.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.weka_rs}/javac">
+      <compilerarg line="${compiler.args.weka_rs}"/>
+      <bootclasspath refid="weka_rs.module.bootclasspath"/>
+      <classpath refid="weka_rs.module.classpath"/>
+      <src refid="weka_rs.module.test.sourcepath"/>
+      <patternset refid="excluded.from.compilation.weka_rs"/>
+    </javac2>
+    
+    <copy todir="${weka_rs.testoutput.dir}">
+      <fileset dir="${module.weka_rs.basedir}/src/main/webapp">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
   
   <target name="clean.module.weka_rs" description="cleanup module">
     <delete dir="${weka_rs.output.dir}"/>

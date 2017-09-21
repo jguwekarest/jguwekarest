@@ -16,7 +16,13 @@ mvn clean package jetty:run
 You can then view the swagger listing here:
 
 ```
-http://localhost:8080/swagger.json
+http://localhost:8081/swagger.json
+```
+
+You can POST an arff file to WEKA with:
+
+```
+curl  -X POST -H "Content-Type: multipart/form-data" -F "file=@/yourpathtowekadata/weka-3-8-1/data/weather.nominal.arff;" -F "estimatorParams=0.5"  -F "searchAlgorithm=local.K2" -F useADTree=0 -F "estimator=SimpleEstimator" -F searchParams='-P 1 -S BAYES' http://0.0.0.0:8080/weka_rs/algorithm/BayesNet
 ```
 
 Note that if you have configured the `host` to be something other than localhost, the calls through

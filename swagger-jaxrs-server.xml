@@ -127,8 +127,84 @@
     <pathelement location="${path.variable.maven_repository}/com/fasterxml/jackson/module/jackson-module-jaxb-annotations/2.8.9/jackson-module-jaxb-annotations-2.8.9.jar"/>
   </path>
   
+  <path id="library.maven:_com.github.fommil.netlib:core:1.1.classpath">
+    <pathelement location="${path.variable.maven_repository}/com/github/fommil/netlib/core/1.1/core-1.1.jar"/>
+  </path>
+  
+  <path id="library.maven:_com.github.fommil.netlib:native_ref-java:1.1.classpath">
+    <pathelement location="${path.variable.maven_repository}/com/github/fommil/netlib/native_ref-java/1.1/native_ref-java-1.1.jar"/>
+  </path>
+  
+  <path id="library.maven:_com.github.fommil.netlib:native_system-java:1.1.classpath">
+    <pathelement location="${path.variable.maven_repository}/com/github/fommil/netlib/native_system-java/1.1/native_system-java-1.1.jar"/>
+  </path>
+  
+  <path id="library.maven:_com.github.fommil.netlib:netlib-native_ref-linux-armhf:natives:1.1.classpath">
+    <pathelement location="${path.variable.maven_repository}/com/github/fommil/netlib/netlib-native_ref-linux-armhf/1.1/netlib-native_ref-linux-armhf-1.1-natives.jar"/>
+  </path>
+  
+  <path id="library.maven:_com.github.fommil.netlib:netlib-native_ref-linux-i686:natives:1.1.classpath">
+    <pathelement location="${path.variable.maven_repository}/com/github/fommil/netlib/netlib-native_ref-linux-i686/1.1/netlib-native_ref-linux-i686-1.1-natives.jar"/>
+  </path>
+  
+  <path id="library.maven:_com.github.fommil.netlib:netlib-native_ref-linux-x86_64:natives:1.1.classpath">
+    <pathelement location="${path.variable.maven_repository}/com/github/fommil/netlib/netlib-native_ref-linux-x86_64/1.1/netlib-native_ref-linux-x86_64-1.1-natives.jar"/>
+  </path>
+  
+  <path id="library.maven:_com.github.fommil.netlib:netlib-native_ref-osx-x86_64:natives:1.1.classpath">
+    <pathelement location="${path.variable.maven_repository}/com/github/fommil/netlib/netlib-native_ref-osx-x86_64/1.1/netlib-native_ref-osx-x86_64-1.1-natives.jar"/>
+  </path>
+  
+  <path id="library.maven:_com.github.fommil.netlib:netlib-native_ref-win-i686:natives:1.1.classpath">
+    <pathelement location="${path.variable.maven_repository}/com/github/fommil/netlib/netlib-native_ref-win-i686/1.1/netlib-native_ref-win-i686-1.1-natives.jar"/>
+  </path>
+  
+  <path id="library.maven:_com.github.fommil.netlib:netlib-native_ref-win-x86_64:natives:1.1.classpath">
+    <pathelement location="${path.variable.maven_repository}/com/github/fommil/netlib/netlib-native_ref-win-x86_64/1.1/netlib-native_ref-win-x86_64-1.1-natives.jar"/>
+  </path>
+  
+  <path id="library.maven:_com.github.fommil.netlib:netlib-native_system-linux-armhf:natives:1.1.classpath">
+    <pathelement location="${path.variable.maven_repository}/com/github/fommil/netlib/netlib-native_system-linux-armhf/1.1/netlib-native_system-linux-armhf-1.1-natives.jar"/>
+  </path>
+  
+  <path id="library.maven:_com.github.fommil.netlib:netlib-native_system-linux-i686:natives:1.1.classpath">
+    <pathelement location="${path.variable.maven_repository}/com/github/fommil/netlib/netlib-native_system-linux-i686/1.1/netlib-native_system-linux-i686-1.1-natives.jar"/>
+  </path>
+  
+  <path id="library.maven:_com.github.fommil.netlib:netlib-native_system-linux-x86_64:natives:1.1.classpath">
+    <pathelement location="${path.variable.maven_repository}/com/github/fommil/netlib/netlib-native_system-linux-x86_64/1.1/netlib-native_system-linux-x86_64-1.1-natives.jar"/>
+  </path>
+  
+  <path id="library.maven:_com.github.fommil.netlib:netlib-native_system-osx-x86_64:natives:1.1.classpath">
+    <pathelement location="${path.variable.maven_repository}/com/github/fommil/netlib/netlib-native_system-osx-x86_64/1.1/netlib-native_system-osx-x86_64-1.1-natives.jar"/>
+  </path>
+  
+  <path id="library.maven:_com.github.fommil.netlib:netlib-native_system-win-i686:natives:1.1.classpath">
+    <pathelement location="${path.variable.maven_repository}/com/github/fommil/netlib/netlib-native_system-win-i686/1.1/netlib-native_system-win-i686-1.1-natives.jar"/>
+  </path>
+  
+  <path id="library.maven:_com.github.fommil.netlib:netlib-native_system-win-x86_64:natives:1.1.classpath">
+    <pathelement location="${path.variable.maven_repository}/com/github/fommil/netlib/netlib-native_system-win-x86_64/1.1/netlib-native_system-win-x86_64-1.1-natives.jar"/>
+  </path>
+  
+  <path id="library.maven:_com.github.fommil:jniloader:1.1.classpath">
+    <pathelement location="${path.variable.maven_repository}/com/github/fommil/jniloader/1.1/jniloader-1.1.jar"/>
+  </path>
+  
   <path id="library.maven:_com.google.guava:guava:20.0.classpath">
     <pathelement location="${path.variable.maven_repository}/com/google/guava/guava/20.0/guava-20.0.jar"/>
+  </path>
+  
+  <path id="library.maven:_com.googlecode.matrix-toolkits-java:mtj:1.0.4.classpath">
+    <pathelement location="${path.variable.maven_repository}/com/googlecode/matrix-toolkits-java/mtj/1.0.4/mtj-1.0.4.jar"/>
+  </path>
+  
+  <path id="library.maven:_com.googlecode.netlib-java:netlib-java:1.1.classpath">
+    <pathelement location="${path.variable.maven_repository}/com/googlecode/netlib-java/netlib-java/1.1/netlib-java-1.1.jar"/>
+  </path>
+  
+  <path id="library.maven:_commons-io:commons-io:2.5.classpath">
+    <pathelement location="${path.variable.maven_repository}/commons-io/commons-io/2.5/commons-io-2.5.jar"/>
   </path>
   
   <path id="library.maven:_io.swagger:swagger-annotations:1.5.15.classpath">
@@ -175,8 +251,44 @@
     <pathelement location="${path.variable.maven_repository}/junit/junit/4.12/junit-4.12.jar"/>
   </path>
   
+  <path id="library.maven:_net.sourceforge.f2j:arpack_combined_all:0.1.classpath">
+    <pathelement location="${path.variable.maven_repository}/net/sourceforge/f2j/arpack_combined_all/0.1/arpack_combined_all-0.1.jar"/>
+  </path>
+  
+  <path id="library.maven:_nz.ac.waikato.cms.weka.thirdparty:bounce:0.18.classpath">
+    <pathelement location="${path.variable.maven_repository}/nz/ac/waikato/cms/weka/thirdparty/bounce/0.18/bounce-0.18.jar"/>
+  </path>
+  
+  <path id="library.maven:_nz.ac.waikato.cms.weka.thirdparty:java-cup-11b-runtime:2015.03.26.classpath">
+    <pathelement location="${path.variable.maven_repository}/nz/ac/waikato/cms/weka/thirdparty/java-cup-11b-runtime/2015.03.26/java-cup-11b-runtime-2015.03.26.jar"/>
+  </path>
+  
+  <path id="library.maven:_nz.ac.waikato.cms.weka.thirdparty:java-cup-11b:2015.03.26.classpath">
+    <pathelement location="${path.variable.maven_repository}/nz/ac/waikato/cms/weka/thirdparty/java-cup-11b/2015.03.26/java-cup-11b-2015.03.26.jar"/>
+  </path>
+  
+  <path id="library.maven:_nz.ac.waikato.cms.weka:weka-stable:3.8.1.classpath">
+    <pathelement location="${path.variable.maven_repository}/nz/ac/waikato/cms/weka/weka-stable/3.8.1/weka-stable-3.8.1.jar"/>
+  </path>
+  
   <path id="library.maven:_org.apache.commons:commons-lang3:3.2.1.classpath">
     <pathelement location="${path.variable.maven_repository}/org/apache/commons/commons-lang3/3.2.1/commons-lang3-3.2.1.jar"/>
+  </path>
+  
+  <path id="library.maven:_org.codehaus.jackson:jackson-core-asl:1.9.13.classpath">
+    <pathelement location="${path.variable.maven_repository}/org/codehaus/jackson/jackson-core-asl/1.9.13/jackson-core-asl-1.9.13.jar"/>
+  </path>
+  
+  <path id="library.maven:_org.codehaus.jackson:jackson-jaxrs:1.9.13.classpath">
+    <pathelement location="${path.variable.maven_repository}/org/codehaus/jackson/jackson-jaxrs/1.9.13/jackson-jaxrs-1.9.13.jar"/>
+  </path>
+  
+  <path id="library.maven:_org.codehaus.jackson:jackson-mapper-asl:1.9.13.classpath">
+    <pathelement location="${path.variable.maven_repository}/org/codehaus/jackson/jackson-mapper-asl/1.9.13/jackson-mapper-asl-1.9.13.jar"/>
+  </path>
+  
+  <path id="library.maven:_org.codehaus.jackson:jackson-xc:1.9.13.classpath">
+    <pathelement location="${path.variable.maven_repository}/org/codehaus/jackson/jackson-xc/1.9.13/jackson-xc-1.9.13.jar"/>
   </path>
   
   <path id="library.maven:_org.glassfish.hk2.external:aopalliance-repackaged:2.4.0-b34.classpath">
@@ -223,12 +335,28 @@
     <pathelement location="${path.variable.maven_repository}/org/glassfish/jersey/core/jersey-server/2.22.2/jersey-server-2.22.2.jar"/>
   </path>
   
+  <path id="library.maven:_org.glassfish.jersey.ext:jersey-mvc-jsp:2.16.classpath">
+    <pathelement location="${path.variable.maven_repository}/org/glassfish/jersey/ext/jersey-mvc-jsp/2.16/jersey-mvc-jsp-2.16.jar"/>
+  </path>
+  
+  <path id="library.maven:_org.glassfish.jersey.ext:jersey-mvc:2.5.1.classpath">
+    <pathelement location="${path.variable.maven_repository}/org/glassfish/jersey/ext/jersey-mvc/2.5.1/jersey-mvc-2.5.1.jar"/>
+  </path>
+  
   <path id="library.maven:_org.glassfish.jersey.media:jersey-media-jaxb:2.22.2.classpath">
     <pathelement location="${path.variable.maven_repository}/org/glassfish/jersey/media/jersey-media-jaxb/2.22.2/jersey-media-jaxb-2.22.2.jar"/>
   </path>
   
+  <path id="library.maven:_org.glassfish.jersey.media:jersey-media-json-jackson:2.5.classpath">
+    <pathelement location="${path.variable.maven_repository}/org/glassfish/jersey/media/jersey-media-json-jackson/2.5/jersey-media-json-jackson-2.5.jar"/>
+  </path>
+  
   <path id="library.maven:_org.glassfish.jersey.media:jersey-media-multipart:2.22.2.classpath">
     <pathelement location="${path.variable.maven_repository}/org/glassfish/jersey/media/jersey-media-multipart/2.22.2/jersey-media-multipart-2.22.2.jar"/>
+  </path>
+  
+  <path id="library.maven:_org.glassfish:javax.json:1.0.4.classpath">
+    <pathelement location="${path.variable.maven_repository}/org/glassfish/javax.json/1.0.4/javax.json-1.0.4.jar"/>
   </path>
   
   <path id="library.maven:_org.hamcrest:hamcrest-core:1.3.classpath">
@@ -237,6 +365,10 @@
   
   <path id="library.maven:_org.javassist:javassist:3.21.0-ga.classpath">
     <pathelement location="${path.variable.maven_repository}/org/javassist/javassist/3.21.0-GA/javassist-3.21.0-GA.jar"/>
+  </path>
+  
+  <path id="library.maven:_org.json:json:20170516.classpath">
+    <pathelement location="${path.variable.maven_repository}/org/json/json/20170516/json-20170516.jar"/>
   </path>
   
   <path id="library.maven:_org.jvnet.mimepull:mimepull:1.9.6.classpath">
@@ -253,6 +385,33 @@
   
   <path id="library.maven:_org.yaml:snakeyaml:1.17.classpath">
     <pathelement location="${path.variable.maven_repository}/org/yaml/snakeyaml/1.17/snakeyaml-1.17.jar"/>
+  </path>
+  
+  <path id="library.nz.ac.waikato.cms.weka:weka-stable:3.8.1.classpath">
+    <pathelement location="${basedir}/lib/all-1.1.2.pom"/>
+    <pathelement location="${basedir}/lib/arpack_combined_all-0.1.jar"/>
+    <pathelement location="${basedir}/lib/bounce-0.18.jar"/>
+    <pathelement location="${basedir}/lib/core-1.1.jar"/>
+    <pathelement location="${basedir}/lib/java-cup-11b-2015.03.26.jar"/>
+    <pathelement location="${basedir}/lib/java-cup-11b-runtime-2015.03.26.jar"/>
+    <pathelement location="${basedir}/lib/jniloader-1.1.jar"/>
+    <pathelement location="${basedir}/lib/mtj-1.0.4.jar"/>
+    <pathelement location="${basedir}/lib/native_ref-java-1.1.jar"/>
+    <pathelement location="${basedir}/lib/native_system-java-1.1.jar"/>
+    <pathelement location="${basedir}/lib/netlib-java-1.1.jar"/>
+    <pathelement location="${basedir}/lib/netlib-native_ref-linux-armhf-1.1-natives.jar"/>
+    <pathelement location="${basedir}/lib/netlib-native_ref-linux-i686-1.1-natives.jar"/>
+    <pathelement location="${basedir}/lib/netlib-native_ref-linux-x86_64-1.1-natives.jar"/>
+    <pathelement location="${basedir}/lib/netlib-native_ref-osx-x86_64-1.1-natives.jar"/>
+    <pathelement location="${basedir}/lib/netlib-native_ref-win-i686-1.1-natives.jar"/>
+    <pathelement location="${basedir}/lib/netlib-native_ref-win-x86_64-1.1-natives.jar"/>
+    <pathelement location="${basedir}/lib/netlib-native_system-linux-armhf-1.1-natives.jar"/>
+    <pathelement location="${basedir}/lib/netlib-native_system-linux-i686-1.1-natives.jar"/>
+    <pathelement location="${basedir}/lib/netlib-native_system-linux-x86_64-1.1-natives.jar"/>
+    <pathelement location="${basedir}/lib/netlib-native_system-osx-x86_64-1.1-natives.jar"/>
+    <pathelement location="${basedir}/lib/netlib-native_system-win-i686-1.1-natives.jar"/>
+    <pathelement location="${basedir}/lib/netlib-native_system-win-x86_64-1.1-natives.jar"/>
+    <pathelement location="${basedir}/lib/weka-stable-3.8.1.jar"/>
   </path>
   
   <path id="library.org.glassfish.jersey.ext:jersey-mvc-jsp:2.16.classpath">
@@ -321,10 +480,6 @@
   
   <path id="library.org.json:json:20170516.classpath">
     <pathelement location="${basedir}/lib/json-20170516.jar"/>
-  </path>
-  
-  <path id="library.weka.classpath">
-    <pathelement location="${basedir}/lib/weka.jar"/>
   </path>
   <!-- Register Custom Compiler Taskdefs -->
   <property name="javac2.home" value="${idea.home}/lib"/>

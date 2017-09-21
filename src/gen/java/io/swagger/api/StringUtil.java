@@ -39,4 +39,24 @@ public class StringUtil {
     }
     return out.toString();
   }
+
+  /**
+   * Check a String for a trailing slash and adds a slash if there is none
+   *
+   * @param str     The URI string
+   * @return the resulting string
+   */
+  public static String checkTrailingSlash(String str) {
+    return str.endsWith("/") ? str : str + "/";
+  }
+
+
+  /**
+   * Check a String for a trailing slash and removes it.
+   *
+   * @param str     The URI string
+   * @return the resulting string
+   */
+  public static String removeTrailingSlash(String str) { return str.endsWith("/") ? (str.substring(0, str.length() - 1)) : str; }
+
 }
