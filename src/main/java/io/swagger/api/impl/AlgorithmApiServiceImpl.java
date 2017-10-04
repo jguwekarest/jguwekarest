@@ -72,7 +72,9 @@ public class AlgorithmApiServiceImpl extends AlgorithmApiService {
         int nNrOfAtts = params.length;
 
         StringBuilder parameters = new StringBuilder();
-        parameters.append(" -D ");
+
+        if (useADTree != 1) { parameters.append(" -D ");}
+
         // Set the parameter for the searchAlgo
         parameters.append(" -Q ");
         parameters.append("weka.classifiers.bayes.net.search." + searchAlgorithm);

@@ -1,6 +1,8 @@
 package io.swagger.api;
 
 import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.Extension;
+import io.swagger.annotations.ExtensionProperty;
 import io.swagger.api.factories.AlgorithmApiServiceFactory;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
@@ -45,18 +47,14 @@ public class AlgorithmApi  {
    }
     @GET
     @Path("/{algorithmname}")
-    
+
     @Produces({ "application/json" })
     @io.swagger.annotations.ApiOperation(value = "", notes = "Get algorithm representation", response = void.class, tags={ "algorithm", })
     @io.swagger.annotations.ApiResponses(value = { 
         @io.swagger.annotations.ApiResponse(code = 200, message = "OK", response = void.class),
-        
         @io.swagger.annotations.ApiResponse(code = 400, message = "Bad Request", response = void.class),
-        
         @io.swagger.annotations.ApiResponse(code = 401, message = "Unauthorized", response = void.class),
-        
         @io.swagger.annotations.ApiResponse(code = 403, message = "Forbidden", response = void.class),
-        
         @io.swagger.annotations.ApiResponse(code = 404, message = "Resource Not Found", response = void.class) })
     public Response algorithmAlgorithmnameGet(@ApiParam(value = "requested Content-Type" ,required=true, allowableValues="application/json")@HeaderParam("Accept") String accept
 ,@ApiParam(value = "name of an algorithm",required=true) @PathParam("algorithmname") String algorithmname
@@ -72,13 +70,9 @@ public class AlgorithmApi  {
     @io.swagger.annotations.ApiOperation(value = "", notes = "Train data on algorithm", response = void.class, tags={ "algorithm", })
     @io.swagger.annotations.ApiResponses(value = { 
         @io.swagger.annotations.ApiResponse(code = 200, message = "OK", response = void.class),
-        
         @io.swagger.annotations.ApiResponse(code = 400, message = "Bad Request", response = void.class),
-        
         @io.swagger.annotations.ApiResponse(code = 401, message = "Unauthorized", response = void.class),
-        
         @io.swagger.annotations.ApiResponse(code = 403, message = "Forbidden", response = void.class),
-        
         @io.swagger.annotations.ApiResponse(code = 404, message = "Resource Not Found", response = void.class) })
     public Response algorithmAlgorithmnamePost(@ApiParam(value = "SMILES identifier or Nanoparticle URI or comma separated list of SMILES  identifiers or Nanoparticle URI", required=true)@FormDataParam("identifier")  String identifier
 ,@ApiParam(value = "name of an algorithm",required=true) @PathParam("algorithmname") String algorithmname
@@ -91,16 +85,12 @@ public class AlgorithmApi  {
     
     
     @Produces({ "text/uri-list", "application/json" })
-    @io.swagger.annotations.ApiOperation(value = "", notes = "Get a list of all algorithms", response = void.class, tags={ "algorithm", })
+    @io.swagger.annotations.ApiOperation(value = "", notes = "Get a list of all algorithms", response = void.class, tags={ "algorithm", },extensions = @Extension(name = "my-extension", properties = { @ExtensionProperty(name = "test1", value = "value1")}))
     @io.swagger.annotations.ApiResponses(value = { 
         @io.swagger.annotations.ApiResponse(code = 200, message = "OK", response = void.class),
-        
         @io.swagger.annotations.ApiResponse(code = 400, message = "Bad Request", response = void.class),
-        
         @io.swagger.annotations.ApiResponse(code = 401, message = "Unauthorized", response = void.class),
-        
         @io.swagger.annotations.ApiResponse(code = 404, message = "Resource Not Found", response = void.class),
-        
         @io.swagger.annotations.ApiResponse(code = 500, message = "Server Error", response = void.class) })
     public Response algorithmGet(@ApiParam(value = "requested Content-Type" ,required=true, allowableValues="text/uri-list, application/json")@HeaderParam("Accept") String accept
 ,@ApiParam(value = "authorization token" )@HeaderParam("subjectid") String subjectid
@@ -116,20 +106,16 @@ public class AlgorithmApi  {
     @io.swagger.annotations.ApiOperation(value = "", notes = "REST interface to the WEKA BayesNet learning compound.", response = void.class, tags={ "algorithm", })
     @io.swagger.annotations.ApiResponses(value = {
             @io.swagger.annotations.ApiResponse(code = 200, message = "OK", response = void.class),
-
             @io.swagger.annotations.ApiResponse(code = 400, message = "Bad Request", response = void.class),
-
             @io.swagger.annotations.ApiResponse(code = 401, message = "Unauthorized", response = void.class),
-
             @io.swagger.annotations.ApiResponse(code = 403, message = "Forbidden", response = void.class),
-
             @io.swagger.annotations.ApiResponse(code = 404, message = "Resource Not Found", response = void.class) })
     public Response algorithmBayesNetPost(
             @FormDataParam("file") InputStream fileInputStream,
             @FormDataParam("file") FormDataContentDisposition fileDetail
             ,@ApiParam(value = "The estimator algorithm to be used in the compound. Must be SimpleEstimator,  MultiNomialBMAEstimator, BMAEstimator or BayesNetEstimator (Default: SimpleEstimator).", allowableValues="SimpleEstimator, MultiNomialBMAEstimator, BMAEstimator, BayesNetEstimator", defaultValue="SimpleEstimator")@FormDataParam("estimator")  String estimator
             ,@ApiParam(value = "The parameter for the estimator to be used in the compound.  Must be of type double (Default: 0.5).", defaultValue="0.5")@FormDataParam("estimatorParams")  BigDecimal estimatorParams
-            ,@ApiParam(value = "Whether to use ADTrees for searching (using will increase the speed of the search, but will also raise the memory use (Default: 0).", defaultValue="0")@FormDataParam("useADTree")  Integer useADTree
+            ,@ApiParam(value = "Whether to use ADTrees for searching (using will increase the speed of the search, but will also raise the memory use (Default: 0).", defaultValue="0", allowableValues="0,1")@FormDataParam("useADTree")  Integer useADTree
             ,@ApiParam(value = "The algorithmn to be used for searching in the compound. Must be local.K2, local.GeneticSearch, local.HillClimber, local.LAGDHillClimber, local.RepeatedHillClimber, local.SimulatedAnnealing, local.TabuSearch, local.TAN, global.K2, global.GeneticSearch, global.HillClimber, global.RepeatedHillClimber, global.SimulatedAnnealing, global.TabuSearch, global.TAN, ci.CISearchAlgorithm, ci.ICSSearchAlgorithm (Default: local.K2).", allowableValues="local.K2, local.GeneticSearch, local.HillClimber, local.LAGDHillClimber, local.RepeatedHillClimber, local.SimulatedAnnealing, local.TabuSearch, local.TAN, global.K2, global.GeneticSearch, global.HillClimber, global.RepeatedHillClimber, global.SimulatedAnnealing, global.TabuSearch, global.TAN, ci.CISearchAlgorithm, ci.ICSSearchAlgorithm", defaultValue="local.K2")@FormDataParam("searchAlgorithm")  String searchAlgorithm
             ,@ApiParam(value = "The parameter for algorithmn to be used for searching in the compound. Are set automatically (WEKA's standard parameter setting).", defaultValue="-P 1 -S BAYES -E")@FormDataParam("searchParams")  String searchParams
             ,@Context SecurityContext securityContext)
@@ -146,13 +132,9 @@ public class AlgorithmApi  {
     @io.swagger.annotations.ApiOperation(value = "", notes = "K-nearest neighbours classifier.", response = void.class, tags={ "algorithm", })
     @io.swagger.annotations.ApiResponses(value = { 
         @io.swagger.annotations.ApiResponse(code = 200, message = "OK", response = void.class),
-        
         @io.swagger.annotations.ApiResponse(code = 400, message = "Bad Request", response = void.class),
-        
         @io.swagger.annotations.ApiResponse(code = 401, message = "Unauthorized", response = void.class),
-        
         @io.swagger.annotations.ApiResponse(code = 403, message = "Forbidden", response = void.class),
-        
         @io.swagger.annotations.ApiResponse(code = 404, message = "Resource Not Found", response = void.class) })
     public Response algorithmKNNclassificationPost(@ApiParam(value = "URI of the feature to predict", required=true)@FormDataParam("prediction_feature")  String predictionFeature
 ,@ApiParam(value = "URI of the dataset to be used.", required=true)@FormDataParam("dataset_uri")  String datasetUri
