@@ -32,7 +32,7 @@
         <load-on-startup>1</load-on-startup>
     </servlet>
 
-    <servlet>
+    <!-- servlet>
         <servlet-name>Jersey2Config</servlet-name>
         <servlet-class>io.swagger.jersey.config.JerseyJaxrsConfig</servlet-class>
         <init-param>
@@ -49,7 +49,7 @@
         </init-param>
 
         <load-on-startup>2</load-on-startup>
-    </servlet>
+    </servlet -->
     <servlet>
         <servlet-name>Bootstrap</servlet-name>
         <servlet-class>io.swagger.api.Bootstrap</servlet-class>
@@ -60,7 +60,6 @@
         <url-pattern>/*</url-pattern>
     </servlet-mapping>
     <welcome-file-list>
-        <welcome-file>index.jsp</welcome-file>
         <welcome-file>index.html</welcome-file>
     </welcome-file-list>
     <filter>

@@ -1,21 +1,22 @@
 package io.swagger.api;
 
 import io.swagger.jaxrs.config.SwaggerContextService;
-import io.swagger.models.*;
+import io.swagger.models.Contact;
+import io.swagger.models.Info;
+import io.swagger.models.License;
+import io.swagger.models.Swagger;
 
-import io.swagger.models.auth.*;
-
-import javax.servlet.http.HttpServlet;
-import javax.servlet.ServletContext;
 import javax.servlet.ServletConfig;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
 
 public class Bootstrap extends HttpServlet {
   @Override
   public void init(ServletConfig config) throws ServletException {
     Info info = new Info()
-      .title("Swagger Server")
-      .description("REST API webservice for weka.  ")
+      .title("JGU WEKA REST services")
+      .description("REST API webservice for weka.")
       .termsOfService("")
       .contact(new Contact()
         .email("rautenberg@uni-mainz.de"))
