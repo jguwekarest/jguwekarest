@@ -4,26 +4,26 @@ import io.swagger.api.NotFoundException;
 import io.swagger.api.TreesService;
 import io.swagger.api.WekaUtils;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
-import weka.classifiers.bayes.BayesNet;
+import weka.classifiers.trees.J48;
 import weka.core.Instances;
 
+import javax.servlet.ServletContext;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
+import java.util.TreeMap;
 import java.util.Vector;
 
 public class TreesImpl extends TreesService {
 
-
-
     @Override
     @Produces("text/plain")
-    public Response algorithmJ48Post(InputStream fileInputStream, FormDataContentDisposition fileDetail, String estimator, BigDecimal estimatorParams, Integer useADTree, String searchAlgorithm, String searchParams, SecurityContext securityContext) throws NotFoundException, IOException {
-        // do some magic!
-        Object[] params = {estimator, estimatorParams, useADTree, searchAlgorithm, searchParams};
+    public Response algorithmJ48Post(InputStream fileInputStream, FormDataContentDisposition fileDetail, Integer binarySplits, BigDecimal confidenceFactor, Integer minNumObj, Integer numFolds, Integer reducedErrorPruning, Integer seed, Integer subtreeRaising, Integer unpruned, Integer useLaplace, SecurityContext securityContext, ServletContext servletContext) throws NotFoundException, IOException {
+
+        Object[] params = {binarySplits, confidenceFactor, minNumObj, numFolds, reducedErrorPruning, seed, subtreeRaising, unpruned, useLaplace};
 
         for (int i = 0; i < params.length; i++) {
             System.out.println("param are: " + params[i]);
@@ -35,36 +35,52 @@ public class TreesImpl extends TreesService {
             txtStr.append((char) c);
         }
 
-        int nNrOfAtts = params.length;
-
         StringBuilder parameters = new StringBuilder();
 
-        if (useADTree != 1) {
-            parameters.append(" -D ");
+        if (binarySplits == 1) {
+            parameters.append(" -B ");
         }
 
-        // Set the parameter for the searchAlgo
-        parameters.append(" -Q ");
-        parameters.append("weka.classifiers.bayes.net.search." + searchAlgorithm);
-        System.out.println("searchAlgorithm is: " + searchAlgorithm);
-        // Set the search parameters
-        if (searchParams != null) {
-            parameters.append(" -- ");
-            parameters.append(searchParams);
+        if (minNumObj != null) {
+            parameters.append(" -M " + minNumObj);
+        } else {
+            parameters.append(" -M 2 ");
         }
-        // Set estimator
-        if (estimator != null) {
-            parameters.append(" -E ");
-            parameters.append("weka.classifiers.bayes.net.estimate." + estimator);
+
+        if (reducedErrorPruning == 1) {
+            if (numFolds != null) {
+                parameters.append(" -R -N " + numFolds);
+            } else {
+                parameters.append(" -R -N 3 ");
+            }
         }
-        // Set the parameters for the estimator
-        if (estimatorParams != null) {
-            parameters.append(" -- ");
+
+        if (seed != null) {
+            parameters.append(" -Q " + seed);
+        } else {
+            parameters.append(" -Q 2 ");
+        }
+
+        if (unpruned == 1) {
+            parameters.append(" -U ");
+        } else {
+            if (subtreeRaising == 0) {
+                parameters.append(" -S ");
+            }
+            if (confidenceFactor != null) {
+                parameters.append(" -C " + confidenceFactor);
+            } else {
+                parameters.append(" -C 0.25 ");
+            }
+        }
+
+        if (useLaplace !=null && useLaplace == 1) {
             parameters.append(" -A ");
-            parameters.append(estimatorParams);
         }
-        System.out.println("parameterstring for weka: " + parameters.toString());
-        BayesNet net = new BayesNet();
+
+        System.out.println("parameterstring for weka: weka.classifiers.trees.J48 " + parameters.toString());
+
+        J48 j48 = new J48();
         String[] options = new String[0];
 
         Instances instances = WekaUtils.instancesFromString(txtStr.toString());
@@ -75,23 +91,33 @@ public class TreesImpl extends TreesService {
             return Response.serverError().entity(e.getMessage()).build();
         }
         try {
-            net.setOptions(options);
+            j48.setOptions(options);
         } catch (Exception e) {
             e.printStackTrace();
-            return Response.serverError().entity("Error: check options for WEKA weka.classifiers.bayes.net.search." + searchAlgorithm + "\n parameters: \"" + parameters.toString() + "\"\nWeka error message: " + e.getMessage() + "\n").build();
+            return Response.serverError().entity("Error: check options for WEKA weka.classifiers.trees.j48\n parameters: \"" + parameters.toString() + "\"\nWeka error message: " + e.getMessage() + "\n").build();
         }
         try {
-            net.buildClassifier(instances);
+            j48.buildClassifier(instances);
         } catch (Exception e) {
             e.printStackTrace();
-            return Response.serverError().entity("Error: WEKA weka.classifiers.bayes.net.search." + searchAlgorithm + "\n parameters: \"" + parameters.toString() + "\"\nWeka error message: " + e.getMessage() + "\n").build();
+            return Response.serverError().entity("Error: WEKA weka.classifiers.trees.j48\n parameters: \"" + parameters.toString() + "\"\nWeka error message: " + e.getMessage() + "\n").build();
         }
 
         Vector v = new Vector();
-        v.add(net);
+        v.add(j48);
         v.add(new Instances(instances, 0));
 
+        String contextBasePath = new String(servletContext.getRealPath("/"));
+        if (WekaUtils.saveWekaModel(v, contextBasePath + "/j48.model")) {
+            System.out.println("Model is saved to ");
+        }
         return Response.ok(v.toString() + "\n").build();
     }
+
+
+    public void showParams(TreeMap<String, String> parameters){
+        System.out.println(parameters);
+    }
+
 
 }
