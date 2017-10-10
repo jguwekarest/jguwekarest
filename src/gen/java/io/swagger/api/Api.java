@@ -1,6 +1,6 @@
 package io.swagger.api;
 
-import io.swagger.api.factories.ApiApiServiceFactory;
+import io.swagger.api.factories.ApiFactory;
 
 import javax.servlet.ServletConfig;
 import javax.ws.rs.GET;
@@ -17,17 +17,17 @@ import java.io.IOException;
 
 @io.swagger.annotations.Api(description = "the api API")
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2017-09-11T12:03:46.572Z")
-public class ApiApi  {
-   private final ApiApiService delegate;
+public class Api  {
+   private final ApiService delegate;
 
-   public ApiApi(@Context ServletConfig servletContext) {
-      ApiApiService delegate = null;
+   public Api(@Context ServletConfig servletContext) {
+      ApiService delegate = null;
 
       if (servletContext != null) {
          String implClass = servletContext.getInitParameter("ApiApi.implementation");
          if (implClass != null && !"".equals(implClass.trim())) {
             try {
-               delegate = (ApiApiService) Class.forName(implClass).newInstance();
+               delegate = (ApiService) Class.forName(implClass).newInstance();
             } catch (Exception e) {
                throw new RuntimeException(e);
             }
@@ -35,7 +35,7 @@ public class ApiApi  {
       }
 
       if (delegate == null) {
-         delegate = ApiApiServiceFactory.getApiApi();
+         delegate = ApiFactory.getApiApi();
       }
 
       this.delegate = delegate;

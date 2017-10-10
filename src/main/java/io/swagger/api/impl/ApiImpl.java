@@ -1,6 +1,6 @@
 package io.swagger.api.impl;
 
-import io.swagger.api.ApiApiService;
+import io.swagger.api.ApiService;
 import io.swagger.api.NotFoundException;
 import org.apache.commons.io.IOUtils;
 
@@ -12,7 +12,7 @@ import java.io.InputStream;
 import java.net.URL;
 
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2017-09-11T12:03:46.572Z")
-public class ApiApiServiceImpl extends ApiApiService {
+public class ApiImpl extends ApiService {
     @Override
     public Response apiApiJsonGet(SecurityContext securityContext, UriInfo ui) throws NotFoundException, IOException {
 

@@ -21,7 +21,7 @@ public class TreesImpl extends TreesService {
 
     @Override
     @Produces("text/plain")
-    public Response algorithmJ48NetPost(InputStream fileInputStream, FormDataContentDisposition fileDetail, String estimator, BigDecimal estimatorParams, Integer useADTree, String searchAlgorithm, String searchParams, SecurityContext securityContext) throws NotFoundException, IOException {
+    public Response algorithmJ48Post(InputStream fileInputStream, FormDataContentDisposition fileDetail, String estimator, BigDecimal estimatorParams, Integer useADTree, String searchAlgorithm, String searchParams, SecurityContext securityContext) throws NotFoundException, IOException {
         // do some magic!
         Object[] params = {estimator, estimatorParams, useADTree, searchAlgorithm, searchParams};
 

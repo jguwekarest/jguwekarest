@@ -1,7 +1,7 @@
 package io.swagger.api;
 
 import io.swagger.annotations.ApiParam;
-import io.swagger.api.factories.TreesFactory;
+import io.swagger.api.factories.BayesFactory;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 
@@ -20,19 +20,19 @@ import java.math.BigDecimal;
 
 @Path("/algorithm")
 
-@io.swagger.annotations.Api(description = "the trees algorithm API")
+@io.swagger.annotations.Api(description = "the bayes algorithm API")
 
-public class Trees  {
-    private final TreesService delegate;
+public class Bayes {
+    private final BayesService delegate;
 
-    public Trees(@Context ServletConfig servletContext) {
-        TreesService delegate = null;
+    public Bayes(@Context ServletConfig servletContext) {
+        BayesService delegate = null;
 
         if (servletContext != null) {
-            String implClass = servletContext.getInitParameter("AlgorithmApi.implementation");
+            String implClass = servletContext.getInitParameter("Bayes.implementation");
             if (implClass != null && !"".equals(implClass.trim())) {
                 try {
-                    delegate = (TreesService) Class.forName(implClass).newInstance();
+                    delegate = (BayesService) Class.forName(implClass).newInstance();
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
@@ -40,23 +40,25 @@ public class Trees  {
         }
 
         if (delegate == null) {
-            delegate = TreesFactory.getTrees();
+            delegate = BayesFactory.getBayes();
         }
         this.delegate = delegate;
     }
 
+
+
     @POST
-    @Path("/J48")
+    @Path("/BayesNet")
     @Consumes({ "multipart/form-data" })
     @Produces({ "text/x-arff" })
-    @io.swagger.annotations.ApiOperation(value = "", notes = "REST interface to the WEKA J48 classifier.", response = void.class, tags={ "algorithm", })
+    @io.swagger.annotations.ApiOperation(value = "", notes = "REST interface to the WEKA BayesNet classifier.", response = void.class, tags={ "algorithm", })
     @io.swagger.annotations.ApiResponses(value = {
             @io.swagger.annotations.ApiResponse(code = 200, message = "OK", response = void.class),
             @io.swagger.annotations.ApiResponse(code = 400, message = "Bad Request", response = void.class),
             @io.swagger.annotations.ApiResponse(code = 401, message = "Unauthorized", response = void.class),
             @io.swagger.annotations.ApiResponse(code = 403, message = "Forbidden", response = void.class),
             @io.swagger.annotations.ApiResponse(code = 404, message = "Resource Not Found", response = void.class) })
-    public Response algorithmJ48Post(
+    public Response algorithmBayesNetPost(
             @FormDataParam("file") InputStream fileInputStream,
             @FormDataParam("file") FormDataContentDisposition fileDetail
             ,@ApiParam(value = "The estimator algorithm to be used in the compound. Must be SimpleEstimator,  MultiNomialBMAEstimator, BMAEstimator or BayesNetEstimator (Default: SimpleEstimator).", allowableValues="SimpleEstimator, MultiNomialBMAEstimator, BMAEstimator, BayesNetEstimator", defaultValue="SimpleEstimator")@FormDataParam("estimator")  String estimator
@@ -66,7 +68,8 @@ public class Trees  {
             ,@ApiParam(value = "The parameter for algorithmn to be used for searching in the compound. Are set automatically (WEKA's standard parameter setting).", defaultValue="-P 1 -S BAYES")@FormDataParam("searchParams")  String searchParams
             ,@Context SecurityContext securityContext)
             throws NotFoundException, IOException {
-        return delegate.algorithmJ48Post(fileInputStream, fileDetail,estimator,estimatorParams,useADTree,searchAlgorithm,searchParams,securityContext);
+        return delegate.algorithmBayesNetPost(fileInputStream, fileDetail,estimator,estimatorParams,useADTree,searchAlgorithm,searchParams,securityContext);
     }
+
 
 }

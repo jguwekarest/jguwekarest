@@ -9,6 +9,6 @@ import java.io.InputStream;
 import java.math.BigDecimal;
 
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2017-09-11T12:03:46.572Z")
-public abstract class TreesService {
-    public abstract Response algorithmJ48Post(InputStream fileInputStream, FormDataContentDisposition fileDetail,String estimator,BigDecimal estimatorParams,Integer useADTree,String searchAlgorithm,String searchParams,SecurityContext securityContext) throws NotFoundException, IOException;
+public abstract class BayesService {
+    public abstract Response algorithmBayesNetPost(InputStream fileInputStream, FormDataContentDisposition fileDetail,String estimator,BigDecimal estimatorParams,Integer useADTree,String searchAlgorithm,String searchParams,SecurityContext securityContext) throws NotFoundException, IOException;
 }
