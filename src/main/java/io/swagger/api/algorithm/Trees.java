@@ -1,6 +1,7 @@
-package io.swagger.api;
+package io.swagger.api.algorithm;
 
 import io.swagger.annotations.ApiParam;
+import io.swagger.api.NotFoundException;
 import io.swagger.api.factories.TreesFactory;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;

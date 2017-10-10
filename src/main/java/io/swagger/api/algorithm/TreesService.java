@@ -1,5 +1,6 @@
-package io.swagger.api;
+package io.swagger.api.algorithm;
 
+import io.swagger.api.NotFoundException;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 
 import javax.servlet.ServletContext;

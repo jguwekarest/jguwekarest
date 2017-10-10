@@ -1,6 +1,6 @@
 package io.swagger.api.impl;
 
-import io.swagger.api.BayesService;
+import io.swagger.api.algorithm.BayesService;
 import io.swagger.api.NotFoundException;
 import io.swagger.api.WekaUtils;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;

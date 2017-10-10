@@ -1,6 +1,6 @@
 package io.swagger.api.factories;
 
-import io.swagger.api.TreesService;
+import io.swagger.api.algorithm.TreesService;
 import io.swagger.api.impl.TreesImpl;
 
 

@@ -1,6 +1,6 @@
 package io.swagger.api.factories;
 
-import io.swagger.api.BayesService;
+import io.swagger.api.algorithm.BayesService;
 import io.swagger.api.impl.BayesImpl;
 
 public class BayesFactory {
