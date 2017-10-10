@@ -1,10 +1,9 @@
 package io.swagger.api;
 
 import weka.core.Instances;
+import weka.core.SerializationHelper;
 
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.io.StringReader;
 
 public class WekaUtils {
@@ -16,16 +15,10 @@ public class WekaUtils {
         return insts;
     }
 
-
-    public static Boolean saveWekaModel(Object v, String filename) {
-        ObjectOutputStream oos = null;
+    public static Boolean saveWekaModel(Object model, String filename) {
         try {
-            oos = new ObjectOutputStream(
-                    new FileOutputStream(filename));
-            oos.writeObject(v);
-            oos.flush();
-            oos.close();
-        } catch (IOException e) {
+            SerializationHelper.write(filename, model);
+        } catch (Exception e) {
             e.printStackTrace();
             return false;
         }
