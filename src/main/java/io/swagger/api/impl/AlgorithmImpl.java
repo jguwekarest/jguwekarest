@@ -45,14 +45,6 @@ public class AlgorithmImpl extends AlgorithmService {
         // do some magic!
         return Response.ok().entity(new ApiResponseMessage(ApiResponseMessage.OK, "magic!")).build();
     }
-    @Override
-    public Response algorithmKNNclassificationPost(String predictionFeature, String datasetUri, String datasetService, Integer windowSize, Integer KNN, Integer crossValidate, Integer distanceWeighting, Integer meanSquared, String nearestNeighbourSearchAlgorithm, String subjectid, SecurityContext securityContext) throws NotFoundException {
-        // do some magic!
-        Object[] params = {predictionFeature, datasetUri, datasetService, windowSize, KNN, crossValidate, distanceWeighting, meanSquared, nearestNeighbourSearchAlgorithm, subjectid};
-        for (int i= 0; i < params.length; i ++  ) {
-            System.out.println("kNN param " + i + " are: " + params[i]);
-        }
-        return Response.ok().entity(new ApiResponseMessage(ApiResponseMessage.OK, "magic!")).build();
-    }
+
 
 }
