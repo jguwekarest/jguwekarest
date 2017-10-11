@@ -1,8 +1,8 @@
 package io.swagger.api.impl;
 
 import io.swagger.api.NotFoundException;
-import io.swagger.api.algorithm.TreesService;
 import io.swagger.api.WekaUtils;
+import io.swagger.api.algorithm.TreesService;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import weka.classifiers.trees.J48;
 import weka.core.Instances;

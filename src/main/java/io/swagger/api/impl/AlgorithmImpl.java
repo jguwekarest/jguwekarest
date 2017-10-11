@@ -3,21 +3,13 @@ package io.swagger.api.impl;
 import io.swagger.api.AlgorithmService;
 import io.swagger.api.ApiResponseMessage;
 import io.swagger.api.NotFoundException;
-import io.swagger.api.WekaUtils;
-import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
-import weka.classifiers.bayes.BayesNet;
-import weka.core.Instances;
 
 import javax.servlet.ServletContext;
-import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import java.io.IOException;
-import java.io.InputStream;
-import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Vector;
 
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2017-09-11T12:03:46.572Z")
 public class AlgorithmImpl extends AlgorithmService {

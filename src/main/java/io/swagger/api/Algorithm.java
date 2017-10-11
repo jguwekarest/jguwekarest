@@ -9,6 +9,7 @@ import org.glassfish.jersey.media.multipart.FormDataParam;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
 import javax.ws.rs.*;
+import javax.ws.rs.NotFoundException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
@@ -58,7 +59,7 @@ public class Algorithm  {
         ,@ApiParam(value = "name of an algorithm",required=true) @PathParam("algorithmname") String algorithmname
         ,@ApiParam(value = "authorization token" )@HeaderParam("subjectid") String subjectid
         ,@Context SecurityContext securityContext, @Context ServletContext servletContext)
-        throws NotFoundException, IOException {
+            throws javax.ws.rs.NotFoundException, IOException, io.swagger.api.NotFoundException {
             return delegate.algorithmAlgorithmnameGet(accept,algorithmname,subjectid,securityContext,servletContext);
     }
     @POST
@@ -76,7 +77,7 @@ public class Algorithm  {
         ,@ApiParam(value = "name of an algorithm",required=true) @PathParam("algorithmname") String algorithmname
         ,@ApiParam(value = "authorization token" )@HeaderParam("subjectid") String subjectid
         ,@Context SecurityContext securityContext)
-        throws NotFoundException {
+            throws javax.ws.rs.NotFoundException, io.swagger.api.NotFoundException {
             return delegate.algorithmAlgorithmnamePost(identifier,algorithmname,subjectid,securityContext);
     }
     @GET
@@ -93,7 +94,7 @@ public class Algorithm  {
     public Response algorithmGet(@ApiParam(value = "requested Content-Type" ,required=true, allowableValues="text/uri-list, application/json")@HeaderParam("Accept") String accept
     ,@ApiParam(value = "authorization token" )@HeaderParam("subjectid") String subjectid
     ,@Context SecurityContext securityContext)
-        throws NotFoundException {
+            throws NotFoundException, io.swagger.api.NotFoundException {
             return delegate.algorithmGet(accept,subjectid,securityContext);
     }
 
