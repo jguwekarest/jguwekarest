@@ -1,6 +1,6 @@
 package io.swagger.api.algorithm;
 
-import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.*;
 import io.swagger.api.NotFoundException;
 import io.swagger.api.factories.TreesFactory;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
@@ -22,7 +22,7 @@ import java.math.BigDecimal;
 
 @Path("/algorithm")
 
-@io.swagger.annotations.Api(description = "the trees algorithm API")
+@Api(description = "the trees algorithm API")
 
 public class Trees  {
     private final TreesService delegate;
@@ -53,17 +53,17 @@ public class Trees  {
     @Consumes({ "multipart/form-data" })
     @Produces({ "text/x-arff" })
 
-    @io.swagger.annotations.ApiOperation(value = "", notes = "REST interface to the WEKA J48 classifier.", response = void.class, tags={ "algorithm", })
-    @io.swagger.annotations.ApiResponses(value = {
-            @io.swagger.annotations.ApiResponse(code = 200, message = "OK", response = void.class),
-            @io.swagger.annotations.ApiResponse(code = 400, message = "Bad Request", response = void.class),
-            @io.swagger.annotations.ApiResponse(code = 401, message = "Unauthorized", response = void.class),
-            @io.swagger.annotations.ApiResponse(code = 403, message = "Forbidden", response = void.class),
-            @io.swagger.annotations.ApiResponse(code = 404, message = "Resource Not Found", response = void.class) })
+    @ApiOperation(value = "", notes = "REST interface to the WEKA J48 classifier.", response = void.class, tags={ "algorithm", })
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "OK", response = void.class),
+            @ApiResponse(code = 400, message = "Bad Request", response = void.class),
+            @ApiResponse(code = 401, message = "Unauthorized", response = void.class),
+            @ApiResponse(code = 403, message = "Forbidden", response = void.class),
+            @ApiResponse(code = 404, message = "Resource Not Found", response = void.class) })
     public Response algorithmJ48Post(
             @FormDataParam("file") InputStream fileInputStream,
             @FormDataParam("file") FormDataContentDisposition fileDetail
-            ,@ApiParam(value = "Whether to use binary splits on nominal attributes when building the trees.", defaultValue="0")@FormDataParam("binarySplits") Integer binarySplits
+            ,@ApiParam(value = "Whether to use binary splits on nominal attributes when building the trees.", allowableValues = "0, 1", defaultValue="0")@FormDataParam("binarySplits") Integer binarySplits
             ,@ApiParam(value = "The confidence factor used for pruning (smaller values incur more pruning).", defaultValue = "0.25")@FormDataParam("confidenceFactor") BigDecimal confidenceFactor
             ,@ApiParam(value = "The minimum number of instances per leaf.", defaultValue = "2")@FormDataParam("minNumObj") Integer minNumObj
             ,@ApiParam(value = "Determines the amount of data used for reduced-error pruning.  One fold is used for pruning, the rest for growing the tree", defaultValue = "3")@FormDataParam("numFolds") Integer numFolds

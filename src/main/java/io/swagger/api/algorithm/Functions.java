@@ -1,7 +1,7 @@
 package io.swagger.api.algorithm;
 
 
-import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.*;
 import io.swagger.api.NotFoundException;
 import io.swagger.api.factories.FunctionsFactory;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
@@ -17,7 +17,7 @@ import java.io.InputStream;
 import java.math.BigDecimal;
 
 @Path("/algorithm")
-@io.swagger.annotations.Api(description = "the lazy algorithm API")
+@Api(description = "the lazy algorithm API")
 
 public class Functions {
 
@@ -48,13 +48,13 @@ public class Functions {
     @Path("/linearRegression")
     @Consumes({"multipart/form-data"})
     @Produces({"text/x-arff", "application/json"})
-    @io.swagger.annotations.ApiOperation(value = "", notes = "K-nearest neighbours classifier.", response = void.class, tags = {"algorithm",})
-    @io.swagger.annotations.ApiResponses(value = {
-            @io.swagger.annotations.ApiResponse(code = 200, message = "OK", response = void.class),
-            @io.swagger.annotations.ApiResponse(code = 400, message = "Bad Request", response = void.class),
-            @io.swagger.annotations.ApiResponse(code = 401, message = "Unauthorized", response = void.class),
-            @io.swagger.annotations.ApiResponse(code = 403, message = "Forbidden", response = void.class),
-            @io.swagger.annotations.ApiResponse(code = 404, message = "Resource Not Found", response = void.class)})
+    @ApiOperation(value = "", notes = "K-nearest neighbours classifier.", response = void.class, tags = {"algorithm",})
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "OK", response = void.class),
+            @ApiResponse(code = 400, message = "Bad Request", response = void.class),
+            @ApiResponse(code = 401, message = "Unauthorized", response = void.class),
+            @ApiResponse(code = 403, message = "Forbidden", response = void.class),
+            @ApiResponse(code = 404, message = "Resource Not Found", response = void.class)})
     public Response algorithmKNNclassificationPost(
             @FormDataParam("file") InputStream fileInputStream,
             @FormDataParam("file") FormDataContentDisposition fileDetail
