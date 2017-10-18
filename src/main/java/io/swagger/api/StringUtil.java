@@ -59,4 +59,12 @@ public class StringUtil {
    */
   public static String removeTrailingSlash(String str) { return str.endsWith("/") ? (str.substring(0, str.length() - 1)) : str; }
 
+  public static Boolean isNumeric(String str) {
+    if (str == null) return true;
+    if (str.matches("((-|\\+)?[0-9]+(\\.[0-9]+)?)+")) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 }

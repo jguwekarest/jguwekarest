@@ -48,7 +48,7 @@ public class Functions {
     @Path("/linearRegression")
     @Consumes({"multipart/form-data"})
     @Produces({"text/x-arff", "application/json"})
-    @ApiOperation(value = "", notes = "K-nearest neighbours classifier.", response = void.class, tags = {"algorithm",})
+    @ApiOperation(value = "", notes = "K-nearest neighbours classifier.", response = void.class, tags = {"algorithm",}, position=3)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "OK", response = void.class),
             @ApiResponse(code = 400, message = "Bad Request", response = void.class),

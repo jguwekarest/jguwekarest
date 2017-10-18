@@ -1,10 +1,11 @@
 package io.swagger.api.impl;
 
-import io.swagger.api.algorithm.BayesService;
 import io.swagger.api.NotFoundException;
 import io.swagger.api.WekaUtils;
+import io.swagger.api.algorithm.BayesService;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import weka.classifiers.bayes.BayesNet;
+import weka.classifiers.evaluation.Evaluation;
 import weka.core.Instances;
 
 import javax.ws.rs.Produces;
@@ -13,6 +14,7 @@ import javax.ws.rs.core.SecurityContext;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
+import java.util.Random;
 import java.util.Vector;
 
 public class BayesImpl extends BayesService {
@@ -80,12 +82,23 @@ public class BayesImpl extends BayesService {
             e.printStackTrace();
             return Response.serverError().entity("Error: WEKA weka.classifiers.bayes.net.search." + searchAlgorithm + "\n parameters: \"" + parameters.toString() + "\"\nWeka error message: " + e.getMessage() + "\n").build();
         }
+        String eval_out = "";
+        try {
+            Evaluation eval = new Evaluation(instances);
+            eval.crossValidateModel(net, instances, 10, new Random(1));
+            eval_out = eval.toSummaryString("\n=== Crossvalidation Results ===\n", false);
+            eval_out += "\n" + eval.toClassDetailsString() + "\n";
+            eval_out += "\n" + eval.toMatrixString() + "\n";
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Response.serverError().entity("Error: WEKA weka.classifiers.bayes.net Evaluation Error:\nWeka error message: " + e.getMessage() + "\n").build();
+        }
 
         Vector v = new Vector();
         v.add(net);
         v.add(new Instances(instances, 0));
 
-        return Response.ok(v.toString() + "\n").build();
+        return Response.ok(v.toString() + "\n" + eval_out ).build();
     }
 
 }
