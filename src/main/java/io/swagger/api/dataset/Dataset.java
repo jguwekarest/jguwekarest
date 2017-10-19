@@ -10,13 +10,13 @@ import javax.ws.rs.core.Response;
 import java.util.List;
 import java.util.Map;
 
-@Path("/dataset")
+@Path("/")
 @Api(description = "Dataset API")
 
 public class Dataset {
 
     @POST
-    @Path("/")
+    @Path("/dataset")
     @Consumes({ "multipart/form-data" })
     @Produces({ "text/x-arff" })
     @ApiOperation(
@@ -26,21 +26,23 @@ public class Dataset {
             response = void.class,
             produces = "text/x-arff")
     @ApiResponses(value = {
-            @ApiResponse(code = 401, message = "Wrong, missing or insufficient credentials. Error report is produced."),
-            @ApiResponse(code = 200, message = "Logged in - authentication token can be found in the response body (in JSON)")
-    })
+            @ApiResponse(code = 200, message = "OK", response = void.class),
+            @ApiResponse(code = 400, message = "Bad Request", response = void.class),
+            @ApiResponse(code = 401, message = "Unauthorized", response = void.class),
+            @ApiResponse(code = 403, message = "Forbidden", response = void.class),
+            @ApiResponse(code = 404, message = "Resource Not Found", response = void.class) })
     public Response create(
               @ApiParam(value = "URI of the dataset to be used.", required=true)@FormDataParam("dataset_uri") String dataset_uri
-            , @ApiParam(value = "URI of the feature for weka class", required=true)@FormDataParam("feature_uri") String predictionFeature
-            , @ApiParam(value = "authorization token" )@HeaderParam("subjectid") String subjectid) throws ApiException {
+            , @ApiParam(value = "URI of the feature to define as weka class", required=false)@FormDataParam("class_uri") String class_uri
+            , @ApiParam(value = "Authorization token" )@HeaderParam("subjectid") String subjectid) throws ApiException {
 
         Dataset out = DatasetService.readDataset(dataset_uri, subjectid);
-        String arff = DatasetService.toArff(out);
+        String arff = DatasetService.toArff(out, class_uri);
 
-        System.out.println(arff);
+        //System.out.println(arff);
 
         return Response
-                .ok("Dataset Create Response:\n" + arff)
+                .ok(arff)
                 .status(Response.Status.OK)
                 .build();
     }
@@ -50,7 +52,6 @@ public class Dataset {
     public List<Features> features;
     public List<Entries> dataEntry;
 
-
     public class Entries {
         public LinkedTreeMap compound;
         public Map<String , String> values;
@@ -58,6 +59,8 @@ public class Dataset {
 
     public class Features {
         public String name;
+        public String units;
+        public LinkedTreeMap conditions;
         public String category;
         public String uri;
     }

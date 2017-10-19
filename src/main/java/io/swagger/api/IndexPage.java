@@ -25,6 +25,7 @@ public class IndexPage {
         public String startPage() throws IOException {
 
             String contextBasePath = new String(servletContext.getRealPath("/"));
+            System.out.println("contextBasePath is: " + contextBasePath);
             String content = new String(Files.readAllBytes(Paths.get(contextBasePath +"/index.html")));
 
             return content;

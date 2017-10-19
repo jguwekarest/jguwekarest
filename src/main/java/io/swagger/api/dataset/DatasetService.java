@@ -31,7 +31,7 @@ public class DatasetService {
                 .get();
 
         String responseValue = response.readEntity(String.class);
-        System.out.println(response.getHeaders());
+
         response.close();
         jsonString = responseValue;
         GsonBuilder gsonBuilder = new GsonBuilder();
@@ -48,11 +48,12 @@ public class DatasetService {
      * @param dataset a Dataset object
      * @return an arff String
      */
-    public static String toArff(Dataset dataset) {
+    public static String toArff(Dataset dataset, String class_uri) {
 
         String arff = "";
         //add comments datasetURI and dataset metadata
-        arff += "% JGU weka service converted dataset from " + dataset.datasetURI + "\n%\n";
+        arff += "% JGU weka service converted dataset from :" + dataset.datasetURI + "\n%\n";
+        arff += "% Using " + (class_uri != null ? ("feature " + class_uri): "no feature") + " for the weka class.\n%\n";
         if (dataset.meta != null) {
             Set metaEntries = dataset.meta.entrySet();
             Iterator metaIterator = metaEntries.iterator();
@@ -62,24 +63,32 @@ public class DatasetService {
                 arff += "% meta " + me.getKey() + ": " + me.getValue().toString().replaceAll("^[\\[]|[\\]]$", "") + "\n";
             }
         }
+
+        for (int i = 0; i < dataset.features.size(); i++) {
+            arff += "% feature:     uri: " + dataset.features.get(i).uri + "\n";
+            arff += "%             name: " + dataset.features.get(i).name + "\n";
+            arff += "%            units: " + dataset.features.get(i).units + "\n";
+            arff += "%         category: " + dataset.features.get(i).category + "\n";
+            arff += "%       conditions: " + dataset.features.get(i).conditions + "\n%\n";
+        }
+
         //add current date
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
         arff += "% created: " + sdf.format(new Date()) + "\n\n";
-
         arff += "@relation " + dataset.datasetURI + "\n";
 
-        String dataStr = "";
-        dataStr += "\n@data\n";
+        String dataStr = "\n@data\n";
+
         //check if features are not numeric
         Map<String,String> featureIsNumeric = new HashMap<String,String>();
         for (int i = 0; i < dataset.features.size(); i++) {
             featureIsNumeric.put(dataset.features.get(i).uri, "Numeric");
         }
-
+        List classValues =  new ArrayList<>();
         for (int j = 0; j < dataset.dataEntry.size(); j++) {
-            String line = "";
+            String line = "", classVal = "";
             Dataset.Entries de = dataset.dataEntry.get(j);
-            Class compound = de.compound.getClass();
+
             line += "'" + de.compound.get("URI") + "'";
             for (int i = 0; i < dataset.features.size(); i++) {
                 String val = de.values.get(dataset.features.get(i).uri);
@@ -87,19 +96,33 @@ public class DatasetService {
                     featureIsNumeric.put(dataset.features.get(i).uri, "String");
                 }
                 if (val == null) val = "?";
-                line += "," + val;
-            }
-            dataStr += line + "\n";
-            Map values = de.values;
-            if (values != null){
-                System.out.println("entries are: " + line);
-            }
 
+                if (class_uri != null && dataset.features.get(i).uri.equals(class_uri)){
+                    classVal = "," +  val;
+                    classValues.add(val);
+                } else {
+                    line += "," + val;
+                }
+            }
+            dataStr += line + classVal + "\n";
         }
+
+        Set<String> classValuesUnique = new LinkedHashSet<>(classValues);
+
         arff += "@attribute URI String\n";
+        String classAttr = "";
         for (int i = 0; i < dataset.features.size(); i++) {
-            arff += "@attribute " + dataset.features.get(i).uri + " " + featureIsNumeric.get(dataset.features.get(i).uri) + "\n";
+            if (class_uri != null && dataset.features.get(i).uri.equals(class_uri)) {
+                String attributeValues = "";
+                if (classValuesUnique.size() > 0) {
+                    attributeValues = " { " + String.join(", ", classValuesUnique) + " }";
+                }
+                classAttr = "@attribute " + dataset.features.get(i).uri + attributeValues;
+            } else {
+                arff += "@attribute " + dataset.features.get(i).uri + " " + featureIsNumeric.get(dataset.features.get(i).uri) + "\n";
+            }
         }
+        arff += classAttr;
         arff += dataStr;
         return arff;
     }

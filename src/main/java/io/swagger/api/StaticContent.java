@@ -23,7 +23,7 @@ public class StaticContent {
     public Response staticContent(@PathParam("path") String path) throws IOException {
         System.out.println("serve static content: " + path);
         String contextBasePath = new String(servletContext.getRealPath("/"));
-        String content = new String(Files.readAllBytes(Paths.get(contextBasePath +"/"+ path)));
+        String content = new String(Files.readAllBytes(Paths.get(StringUtil.checkTrailingSlash(contextBasePath) + path)));
         return Response.ok(content).build();
     }
 
@@ -33,7 +33,7 @@ public class StaticContent {
     public Response staticPngContent(@PathParam("path") String path) throws IOException {
         System.out.println("serve static png content: " + path);
         String contextBasePath = new String(servletContext.getRealPath("/"));
-        FileInputStream content = new FileInputStream(contextBasePath +"/"+ path);
+        FileInputStream content = new FileInputStream(StringUtil.checkTrailingSlash(contextBasePath) + path);
         return Response.ok(content).build();
     }
 
