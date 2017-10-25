@@ -4,13 +4,12 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import io.swagger.api.ApiException;
 import io.swagger.api.StringUtil;
+import io.swagger.api.dao.MongoDao;
+import org.bson.Document;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.MultivaluedHashMap;
-import javax.ws.rs.core.MultivaluedMap;
-import javax.ws.rs.core.Response;
+import javax.ws.rs.core.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -18,7 +17,21 @@ public class DatasetService {
 
     public static Object cmp;
 
-    public static Dataset readDataset(String uri, String token) throws ApiException {
+    public static String listDatasets(String token, UriInfo ui, String accept) {
+        MongoDao datasetDao = new MongoDao();
+        String dslist = datasetDao.getDatasetList(ui, accept);
+        datasetDao.close();
+        return dslist;
+    }
+
+    public static String getDatasetArff(String id, String token){
+        MongoDao datasetDao = new MongoDao();
+        String arff = datasetDao.getDatasetArff(id);
+        datasetDao.close();
+        return arff;
+    }
+
+    public static Dataset readExternalDataset(String uri, String token) throws ApiException {
 
         String jsonString = "";
         Client client = ClientBuilder.newClient();
@@ -87,7 +100,7 @@ public class DatasetService {
         List classValues =  new ArrayList<>();
         for (int j = 0; j < dataset.dataEntry.size(); j++) {
             String line = "", classVal = "";
-            Dataset.Entries de = dataset.dataEntry.get(j);
+            Dataset.DataEntry de = dataset.dataEntry.get(j);
 
             line += "'" + de.compound.get("URI") + "'";
             for (int i = 0; i < dataset.features.size(); i++) {
@@ -124,6 +137,17 @@ public class DatasetService {
         }
         arff += classAttr;
         arff += dataStr;
+        MongoDao datasetDao = new MongoDao();
+        try {
+            dataset.arff = arff;
+            Gson gson = new Gson();
+            Document document = Document.parse(gson.toJson(dataset));
+            datasetDao.saveDataset(document);
+        }catch (Exception e){
+            e.printStackTrace();
+        }finally {
+            datasetDao.close();
+        }
         return arff;
     }
 
