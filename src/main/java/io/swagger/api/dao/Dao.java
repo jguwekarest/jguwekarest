@@ -19,7 +19,7 @@ import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class MongoDao {
+public class Dao {
 
     private String dbName;
     private String dbHost;
@@ -29,9 +29,9 @@ public class MongoDao {
     private MongoCollection mongoCollection;
 
     private static Properties dbProperties = new Properties();
-    private static final Logger LOG = Logger.getLogger(MongoDao.class.getName());
+    private static final Logger LOG = Logger.getLogger(Dao.class.getName());
 
-    public MongoDao() {
+    public Dao() {
         ClassLoader classLoader = this.getClass().getClassLoader();
         InputStream is = classLoader.getResourceAsStream("config/db.properties");
         try {

@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import io.swagger.api.ApiException;
 import io.swagger.api.StringUtil;
-import io.swagger.api.dao.MongoDao;
+import io.swagger.api.dao.Dao;
 import org.bson.Document;
 
 import javax.ws.rs.client.Client;
@@ -18,14 +18,14 @@ public class DatasetService {
     public static Object cmp;
 
     public static String listDatasets(String token, UriInfo ui, String accept) {
-        MongoDao datasetDao = new MongoDao();
+        Dao datasetDao = new Dao();
         String dslist = datasetDao.getDatasetList(ui, accept);
         datasetDao.close();
         return dslist;
     }
 
     public static String getDatasetArff(String id, String token){
-        MongoDao datasetDao = new MongoDao();
+        Dao datasetDao = new Dao();
         String arff = datasetDao.getDatasetArff(id);
         datasetDao.close();
         return arff;
@@ -137,7 +137,7 @@ public class DatasetService {
         }
         arff += classAttr;
         arff += dataStr;
-        MongoDao datasetDao = new MongoDao();
+        Dao datasetDao = new Dao();
         try {
             dataset.arff = arff;
             Gson gson = new Gson();

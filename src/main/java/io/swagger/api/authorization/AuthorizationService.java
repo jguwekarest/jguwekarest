@@ -29,8 +29,6 @@ public class AuthorizationService {
 
     private static final Logger LOG = Logger.getLogger(AuthorizationService.class.getName());
 
-
-
     public static final String SSO_HOST = "openam.in-silico.ch",
             SSO_IDENTITY = "https://" + SSO_HOST + "/auth/%s",
             SSO_POLICY = "https://" + SSO_HOST + "/pol",

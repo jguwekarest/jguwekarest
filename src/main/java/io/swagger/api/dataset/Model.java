@@ -4,7 +4,7 @@ package io.swagger.api.dataset;
 import com.google.gson.internal.LinkedTreeMap;
 import io.swagger.annotations.*;
 import io.swagger.api.ApiException;
-import io.swagger.api.dao.MongoDao;
+import io.swagger.api.dao.Dao;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
@@ -32,7 +32,7 @@ public class Model {
     public Response getModelList(
             @ApiParam(value = "Authorization token" )@HeaderParam("subjectid") String subjectid) throws ApiException {
 
-        MongoDao modelDao = new MongoDao();
+        Dao modelDao = new Dao();
         String model_list = modelDao.getModelList();
         modelDao.close();
         return Response
