@@ -107,17 +107,15 @@ public class TreesImpl extends TreesService {
         v.add(j48);
         v.add(new Instances(instances, 0));
 
-        String contextBasePath = new String(servletContext.getRealPath("/"));
+        String contextBasePath = servletContext.getRealPath("/");
         if (WekaUtils.saveWekaModel(v, contextBasePath + "/j48.model")) {
             System.out.println("Model is saved to ");
         }
         return Response.ok(v.toString() + "\n").build();
     }
 
-
     public void showParams(TreeMap<String, String> parameters){
         System.out.println(parameters);
     }
-
 
 }

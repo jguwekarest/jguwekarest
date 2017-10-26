@@ -70,7 +70,7 @@ public class Trees  {
             ,@ApiParam(value = "Whether reduced-error pruning is used instead of C.4.5 pruning.", allowableValues="0, 1", defaultValue = "0")@FormDataParam("reducedErrorPruning") Integer reducedErrorPruning
             ,@ApiParam(value = "The seed used for randomizing the data when reduced-error pruning is used.", allowableValues="0, 1", defaultValue = "1")@FormDataParam("seed") Integer seed
             ,@ApiParam(value = "Whether to consider the subtree raising operation when pruning.", allowableValues="0, 1", defaultValue = "1")@FormDataParam("subtreeRaising") Integer subtreeRaising
-            ,@ApiParam(value = "Whether pruning is performed.", defaultValue = "0", allowableValues="0, 1")@FormDataParam("unpruned") Integer unpruned
+            ,@ApiParam(value = "Whether pruning is performed.", defaultValue = "1", allowableValues="0, 1")@FormDataParam("unpruned") Integer unpruned
             ,@ApiParam(value = "Whether counts at leaves are smoothed based on Laplace.", defaultValue = "0", allowableValues="0, 1")@FormDataParam("useLaplace") Integer useLaplace
             ,@Context SecurityContext securityContext)
             throws NotFoundException, IOException {

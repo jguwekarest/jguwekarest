@@ -22,6 +22,15 @@ public class StaticContent {
     @Context UriInfo ui;
     @Context HttpServletRequest servletRequest;
 
+    // delivers the swagger ui index.html file
+    @GET
+    @Path("/")
+    @Produces("text/html")
+    public Response startPage() throws IOException {
+        String contextBasePath = servletContext.getRealPath("/");
+        return Response.ok(Files.readAllBytes(Paths.get(contextBasePath +"/index.html"))).build();
+    }
+
     // delivers static CSS and JavaScript file
     @GET
     @Path("{path : .*\\.css|.*\\.js}")
