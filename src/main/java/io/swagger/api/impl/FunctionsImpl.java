@@ -14,13 +14,15 @@ import java.io.InputStream;
 import java.math.BigDecimal;
 import java.util.Vector;
 
+import static io.swagger.api.impl.Validation.crossValidation;
+
 public class FunctionsImpl extends FunctionsService {
     @Override
     @Produces("text/plain")
 
-    public Response linearRegressionPost(InputStream fileInputStream, FormDataContentDisposition fileDetail, String predictionFeature, String datasetUri, String datasetService, Integer attributeSelectionMethod, Integer eliminateColinearAttributes, BigDecimal ridge, String subjectid, SecurityContext securityContext) throws IOException {
+    public Response linearRegressionPost(InputStream fileInputStream, FormDataContentDisposition fileDetail, /* String predictionFeature, String datasetUri, String datasetService, */ Integer attributeSelectionMethod, Integer eliminateColinearAttributes, BigDecimal ridge, String subjectid, SecurityContext securityContext) throws IOException {
 
-        Object[] params = {predictionFeature, datasetUri, datasetService, attributeSelectionMethod, eliminateColinearAttributes, ridge, subjectid};
+        Object[] params = {/* predictionFeature, datasetUri, datasetService, */  attributeSelectionMethod, eliminateColinearAttributes, ridge, subjectid};
 
         for (int i= 0; i < params.length; i ++  ) {
             System.out.println("LR param " + i + " are: " + params[i]);
@@ -55,12 +57,16 @@ public class FunctionsImpl extends FunctionsService {
             return Response.serverError().entity("Error: check options for WEKA weka.classifiers.functions.LinearRegression\n parameters: \"" + parameters.toString() + "\"\nWeka error message: " + e.getMessage() + "\n").build();
         }
 
+        String validation = "";
+        validation = crossValidation(instances, LR);
+
         Vector v = new Vector();
         v.add(LR);
         v.add(new Instances(instances, 0));
 
 
-        return Response.ok(v.toString() + "\n", "text/x-arff").build();
+        return Response.ok(v.toString() + "\n" + validation + "\n", "text/x-arff").build();
     }
+
 
 }

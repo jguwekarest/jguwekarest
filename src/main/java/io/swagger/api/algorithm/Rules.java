@@ -62,4 +62,29 @@ public class Rules {
     }
 
 
+
+    @POST
+    @Path("/M5Rules")
+    @Consumes({ "multipart/form-data" })
+    @Produces({ "text/x-arff"})
+    @ApiOperation(value = "", notes = "REST interface to the WEKA M5Rules classifier.", response = void.class, tags={ "algorithm", }, position = 2)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "OK", response = void.class),
+            @ApiResponse(code = 400, message = "Bad Request", response = void.class),
+            @ApiResponse(code = 401, message = "Unauthorized", response = void.class),
+            @ApiResponse(code = 403, message = "Forbidden", response = void.class),
+            @ApiResponse(code = 404, message = "Resource Not Found", response = void.class) })
+    public Response algorithmM5RclassificationPost(
+            @FormDataParam("file") InputStream fileInputStream,
+            @FormDataParam("file") FormDataContentDisposition fileDetail
+            ,@ApiParam(value = "Whether pruning is performed.", example = "0", defaultValue = "0", allowableValues="0,1")@FormDataParam("unpruned") Integer unpruned
+            ,@ApiParam(value = "Whether to use unsmoothed predictions.", defaultValue = "0", allowableValues="0,1")@FormDataParam("useUnsmoothed") Integer useUnsmoothed
+            ,@ApiParam(value = "The minimum number of instances to allow at a leaf node.", defaultValue = "4")@FormDataParam("minNumInstances") Double minNumInstances
+            ,@ApiParam(value = "Whether to generate a regression tree/rule instead of a model tree/rule.", defaultValue = "0", allowableValues="0,1")@FormDataParam("buildRegressionTree") Integer buildRegressionTree
+            ,@ApiParam(value = "authorization token") @HeaderParam("subjectid") String subjectid
+            ,@Context SecurityContext securityContext)
+            throws io.swagger.api.NotFoundException, IOException {
+        return delegate.algorithmM5RulesPost(fileInputStream,fileDetail,unpruned,useUnsmoothed,minNumInstances,buildRegressionTree,subjectid,securityContext);
+    }
+
 }

@@ -14,12 +14,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Vector;
 
+import static io.swagger.api.impl.Validation.crossValidation;
+
 public class LazyImpl extends LazyService {
     @Override
     @Produces("text/plain")
-    public Response algorithmKNNclassificationPost(InputStream fileInputStream, FormDataContentDisposition fileDetail, String predictionFeature, String datasetUri, String datasetService, Integer windowSize, Integer KNN, Integer crossValidate, String distanceWeighting, Integer meanSquared, String nearestNeighbourSearchAlgorithm, String subjectid, SecurityContext securityContext) throws NotFoundException, IOException {
+    public Response algorithmKNNclassificationPost(InputStream fileInputStream, FormDataContentDisposition fileDetail, Integer windowSize, Integer KNN, Integer crossValidate, String distanceWeighting, Integer meanSquared, String nearestNeighbourSearchAlgorithm, String subjectid, SecurityContext securityContext) throws NotFoundException, IOException {
         // do some magic!
-        Object[] params = {predictionFeature, datasetUri, datasetService, windowSize, KNN, crossValidate, distanceWeighting, meanSquared, nearestNeighbourSearchAlgorithm, subjectid};
+        Object[] params = {windowSize, KNN, crossValidate, distanceWeighting, meanSquared, nearestNeighbourSearchAlgorithm, subjectid};
 
         for (int i= 0; i < params.length; i ++  ) {
             System.out.println("kNN param " + i + " are: " + params[i]);
@@ -69,11 +71,14 @@ public class LazyImpl extends LazyService {
             return Response.serverError().entity("Error: check options for WEKA weka.classifiers.lazy.IBk\n parameters: \"" + parameters.toString() + "\"\nWeka error message: " + e.getMessage() + "\n").build();
         }
 
+        String validation = "";
+        validation = crossValidation(instances, kNN);
+
         Vector v = new Vector();
         v.add(kNN);
         v.add(new Instances(instances, 0));
 
-        return Response.ok(v.toString() + "\n", "text/x-arff").build();
+        return Response.ok(v.toString() + "\n" + validation + "\n", "text/x-arff").build();
 
         //return Response.ok(MediaType.APPLICATION_JSON).entity(new ApiResponseMessage(ApiResponseMessage.OK, "Here it is magic!")).build();
     }

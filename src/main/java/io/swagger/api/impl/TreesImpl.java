@@ -17,6 +17,8 @@ import java.math.BigDecimal;
 import java.util.TreeMap;
 import java.util.Vector;
 
+import static io.swagger.api.impl.Validation.crossValidation;
+
 public class TreesImpl extends TreesService {
 
     @Override
@@ -103,6 +105,9 @@ public class TreesImpl extends TreesService {
             return Response.serverError().entity("Error: WEKA weka.classifiers.trees.j48\n parameters: \"" + parameters.toString() + "\"\nWeka error message: " + e.getMessage() + "\n").build();
         }
 
+        String validation = "";
+        validation = crossValidation(instances, j48);
+
         Vector v = new Vector();
         v.add(j48);
         v.add(new Instances(instances, 0));
@@ -111,7 +116,7 @@ public class TreesImpl extends TreesService {
         if (WekaUtils.saveWekaModel(v, contextBasePath + "/j48.model")) {
             System.out.println("Model is saved to ");
         }
-        return Response.ok(v.toString() + "\n").build();
+        return Response.ok(v.toString() + "\n" + validation + "\n").build();
     }
 
     public void showParams(TreeMap<String, String> parameters){

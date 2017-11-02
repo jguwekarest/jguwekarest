@@ -17,6 +17,8 @@ import java.math.BigDecimal;
 import java.util.Random;
 import java.util.Vector;
 
+import static io.swagger.api.impl.Validation.crossValidation;
+
 public class BayesImpl extends BayesService {
     @Override
     @Produces("text/plain")
@@ -94,11 +96,15 @@ public class BayesImpl extends BayesService {
             return Response.serverError().entity("Error: WEKA weka.classifiers.bayes.net Evaluation Error:\nWeka error message: " + e.getMessage() + "\n").build();
         }
 
+        String validation = "";
+        validation = crossValidation(instances, net);
+
+
         Vector v = new Vector();
         v.add(net);
         v.add(new Instances(instances, 0));
 
-        return Response.ok(v.toString() + "\n" + eval_out ).build();
+        return Response.ok(v.toString() + "\n" + validation ).build();
     }
 
 }
