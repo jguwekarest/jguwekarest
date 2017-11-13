@@ -5,7 +5,6 @@ import io.swagger.api.WekaUtils;
 import io.swagger.api.algorithm.BayesService;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import weka.classifiers.bayes.BayesNet;
-import weka.classifiers.evaluation.Evaluation;
 import weka.core.Instances;
 
 import javax.ws.rs.Produces;
@@ -14,7 +13,6 @@ import javax.ws.rs.core.SecurityContext;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
-import java.util.Random;
 import java.util.Vector;
 
 import static io.swagger.api.impl.Validation.crossValidation;
@@ -84,6 +82,7 @@ public class BayesImpl extends BayesService {
             e.printStackTrace();
             return Response.serverError().entity("Error: WEKA weka.classifiers.bayes.net.search." + searchAlgorithm + "\n parameters: \"" + parameters.toString() + "\"\nWeka error message: " + e.getMessage() + "\n").build();
         }
+        /*
         String eval_out = "";
         try {
             Evaluation eval = new Evaluation(instances);
@@ -95,7 +94,7 @@ public class BayesImpl extends BayesService {
             e.printStackTrace();
             return Response.serverError().entity("Error: WEKA weka.classifiers.bayes.net Evaluation Error:\nWeka error message: " + e.getMessage() + "\n").build();
         }
-
+        */
         String validation = "";
         validation = crossValidation(instances, net);
 

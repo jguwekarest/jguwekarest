@@ -78,11 +78,12 @@ public class DatasetService {
         }
 
         for (int i = 0; i < dataset.features.size(); i++) {
-            arff += "% feature:     uri: " + dataset.features.get(i).uri + "\n";
-            arff += "%             name: " + dataset.features.get(i).name + "\n";
-            arff += "%            units: " + dataset.features.get(i).units + "\n";
-            arff += "%         category: " + dataset.features.get(i).category + "\n";
-            arff += "%       conditions: " + dataset.features.get(i).conditions + "\n%\n";
+            Dataset.Feature feat = dataset.features.get(i);
+            if (feat.uri != null) arff += "% feature:     uri: " + feat.uri + "\n";
+            if (feat.name != null) arff += "%             name: " + feat.name + "\n";
+            if (feat.units != null) arff += "%            units: " + feat.units + "\n";
+            if (feat.category != null) arff += "%         category: " + feat.category + "\n";
+            if (feat.conditions != null) arff += "%       conditions: " + feat.conditions + "\n%\n";
         }
 
         //add current date

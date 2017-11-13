@@ -19,7 +19,7 @@ public class Authorization {
     @Consumes({ "multipart/form-data" })
     @Produces({MediaType.TEXT_PLAIN})
     @ApiOperation(
-            value = "Creates Security Token",
+            value = "Request a security token.",
             notes = "Uses OpenAM server to get a security token.",
             tags={ "authorization", },
             response = void.class,
@@ -45,20 +45,20 @@ public class Authorization {
     @Produces(MediaType.TEXT_PLAIN)
     @Consumes({ "application/x-www-form-urlencoded" })
     @ApiOperation(
-            value = "Logs out a user",
-            notes = "Invalidates a security token and logs out the corresponding user",
+            value = "Invalidate a security token.",
+            notes = "Invalidates a security token and logs out the corresponding user.",
             tags={ "authorization", },
             produces = "text/plain")
     @ApiResponses(value = {
-            @ApiResponse(code = 401, message = "Wrong, missing or insufficient credentials. Error report is produced."),
-            @ApiResponse(code = 200, message = "Logged out")
+            @ApiResponse(code = 401, message = "Wrong, missing or invalid token."),
+            @ApiResponse(code = 200, message = "Token invalidated.")
     })
     public Response logout(
             @HeaderParam("subjectid") String subjectId
     ) throws Exeption.AAException {
         boolean loggedOut = AuthorizationService.logout(subjectId);
         return Response
-                .ok(loggedOut ? "true" : "false", MediaType.APPLICATION_JSON)
+                .ok(loggedOut ? "true" : "false")
                 .status(loggedOut ? Response.Status.OK : Response.Status.UNAUTHORIZED)
                 .build();
     }

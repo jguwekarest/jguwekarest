@@ -49,7 +49,7 @@ public class Bayes {
     @Path("/BayesNet")
     @Consumes({ "multipart/form-data" })
     @Produces({ "text/x-arff" })
-    @ApiOperation(value = "", notes = "REST interface to the WEKA BayesNet classifier.", response = void.class, tags={ "algorithm", }, position = 0)
+    @ApiOperation(value = "REST interface to the WEKA BayesNet classifier.", notes = "REST interface to the WEKA BayesNet classifier.", response = void.class, tags={ "algorithm", }, position = 0)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "OK", response = void.class),
             @ApiResponse(code = 400, message = "Bad Request", response = void.class),

@@ -121,12 +121,12 @@ public class AuthorizationService {
         Response response = client.target(SSOlogout)
                 .request()
                 .post(Entity.form(formData));
-        if (200 != response.getStatus()) {
-            response.close();
-            throw new Exeption.AAException(response.getStatus(), "It seems your token is not valid");
-        }
-        response.close();
         int status = response.getStatus();
+        response.close();
+        if (200 != status) {
+            //throw new Exeption.AAException(401, "Token is not valid");
+            return false;
+        }
         return status == 200;
     }
 

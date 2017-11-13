@@ -45,7 +45,7 @@ public class Rules {
     @Path("/ZeroR")
     @Consumes({ "multipart/form-data" })
     @Produces({ "text/x-arff", "application/json"})
-    @ApiOperation(value = "", notes = "REST interface to the WEKA ZeroR classifier.", response = void.class, tags={ "algorithm", }, position = 2)
+    @ApiOperation(value = "REST interface to the WEKA ZeroR classifier.", notes = "REST interface to the WEKA ZeroR classifier.", response = void.class, tags={ "algorithm", }, position = 2)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "OK", response = void.class),
             @ApiResponse(code = 400, message = "Bad Request", response = void.class),
@@ -67,7 +67,7 @@ public class Rules {
     @Path("/M5Rules")
     @Consumes({ "multipart/form-data" })
     @Produces({ "text/x-arff"})
-    @ApiOperation(value = "", notes = "REST interface to the WEKA M5Rules classifier.", response = void.class, tags={ "algorithm", }, position = 2)
+    @ApiOperation(value = "REST interface to the WEKA M5Rules classifier.", notes = "REST interface to the WEKA M5Rules classifier.", response = void.class, tags={ "algorithm", }, position = 2)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "OK", response = void.class),
             @ApiResponse(code = 400, message = "Bad Request", response = void.class),

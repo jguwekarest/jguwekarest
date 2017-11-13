@@ -39,8 +39,9 @@ public class Dataset {
             , @ApiParam(value = "URI of the feature to define as weka class", required=false)@FormDataParam("class_uri") String class_uri
             , @ApiParam(value = "Authorization token" )@HeaderParam("subjectid") String subjectid) throws ApiException {
 
-        Dataset out = DatasetService.readExternalDataset(dataset_uri, subjectid);
-        String arff = DatasetService.toArff(out, class_uri);
+        Dataset ds = DatasetService.readExternalDataset(dataset_uri, subjectid);
+        if (ds.datasetURI == null) ds.datasetURI = dataset_uri;
+        String arff = DatasetService.toArff(ds, class_uri);
 
         //System.out.println(arff);
 
@@ -83,8 +84,8 @@ public class Dataset {
     @Path("/dataset/{id}/arff")
     @Produces({ "text/x-arff" })
     @ApiOperation(
-            value = "Get arff reprsentation of a dataset.",
-            notes = "Get arff reprsentation of a dataset.",
+            value = "Get arff representation of a dataset.",
+            notes = "Get arff representation of a dataset.",
             tags={ "dataset", },
             response = void.class)
     @ApiResponses(value = {
