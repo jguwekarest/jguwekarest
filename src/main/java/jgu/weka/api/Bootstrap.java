@@ -22,7 +22,8 @@ public class Bootstrap extends HttpServlet {
         .email("rautenberg@uni-mainz.de"))
       .license(new License()
         .name("GNU General Public License 3")
-        .url("https://www.gnu.org/licenses/gpl-3.0.de.html"));
+        .url("https://www.gnu.org/licenses/gpl-3.0.de.html"))
+      .version("0.0.2");
 
     ServletContext context = config.getServletContext();
     Swagger swagger = new Swagger().info(info);
