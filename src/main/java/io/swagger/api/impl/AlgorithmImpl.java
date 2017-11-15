@@ -34,15 +34,16 @@ public class AlgorithmImpl extends AlgorithmService {
 
         return Response.ok(jsonString).build();
     }
+
     @Override
     public Response algorithmAlgorithmnamePost(String identifier, String algorithmname, String subjectid, SecurityContext securityContext) throws NotFoundException {
-        // do some magic!
         return Response.ok().entity(new ApiResponseMessage(ApiResponseMessage.OK, "magic!")).build();
     }
+
     @Override
     public Response algorithmGet(String accept, String subjectid, SecurityContext securityContext, UriInfo ui) throws NotFoundException, IOException {
-        // do some magic!
         String baseuri = ui.getBaseUri().toString();
+        System.out.println("========================\nbaseuir: " + baseuri + "\n=============================");
         InputStream in = new URL( ui.getBaseUri() + "swagger.json" ).openStream();
         String jsonContent;
         try {
