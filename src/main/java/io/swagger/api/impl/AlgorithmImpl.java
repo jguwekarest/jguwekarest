@@ -42,10 +42,8 @@ public class AlgorithmImpl extends AlgorithmService {
 
     @Override
     public Response algorithmGet(String accept, String subjectid, SecurityContext securityContext, UriInfo ui) throws NotFoundException, IOException {
-        System.out.println("========================\nbaseuir 1: " + ui.getBaseUri() + "\n=============================");
         String baseuri = ui.getBaseUri().toString();
-        System.out.println("========================\nbaseuir 2: " + baseuri + "\n=============================");
-        InputStream in = new URL( ui.getBaseUri().toString() + "swagger.json" ).openStream();
+        InputStream in = new URL( ui.getBaseUri() + "swagger.json" ).openStream();
         String jsonContent;
         try {
             jsonContent = new String(IOUtils.toString(in, "UTF-8"));

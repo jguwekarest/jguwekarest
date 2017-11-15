@@ -1,17 +1,11 @@
 package io.swagger.api;
 
-import io.swagger.annotations.*;
 import io.swagger.api.factories.AlgorithmFactory;
 
 import javax.annotation.Generated;
 import javax.servlet.ServletConfig;
-import javax.ws.rs.*;
-import javax.ws.rs.NotFoundException;
+import javax.ws.rs.Path;
 import javax.ws.rs.core.Context;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.SecurityContext;
-import javax.ws.rs.core.UriInfo;
-import java.io.IOException;
 
 @Path("/algorithm")
 
@@ -77,7 +71,7 @@ public class Algorithm  {
             throws javax.ws.rs.NotFoundException, NotFoundException {
             return delegate.algorithmAlgorithmnamePost(identifier,algorithmname,subjectid,securityContext);
     }
-*/
+
 
     @GET
     @Produces({ "text/uri-list" })
@@ -96,5 +90,5 @@ public class Algorithm  {
             return delegate.algorithmGet(accept,subjectid,securityContext,uriinfo);
     }
 
-
+*/
 }
