@@ -3,6 +3,8 @@ package io.swagger.api.dao;
 import com.google.gson.Gson;
 import com.mongodb.BasicDBObject;
 import com.mongodb.MongoClient;
+import com.mongodb.MongoCredential;
+import com.mongodb.ServerAddress;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
@@ -15,6 +17,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.UriInfo;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Arrays;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -24,7 +27,10 @@ public class Dao {
     private String dbName;
     private String dbHost;
     private Integer dbPort;
-    private MongoClient mongoClient;
+    private String dbUser = "";
+    private String dbPassword;
+
+    private MongoClient mongoClient = null;
     private MongoDatabase mongoDB;
     private MongoCollection mongoCollection;
 
@@ -39,6 +45,8 @@ public class Dao {
             dbName = dbProperties.getProperty("db.name");
             dbHost = dbProperties.getProperty("db.host");
             dbPort = Integer.parseInt(dbProperties.getProperty("db.port"));
+            if (dbProperties.getProperty("db.user") != null) dbUser = dbProperties.getProperty("db.user");
+            if (dbProperties.getProperty("db.password") != null) dbPassword = dbProperties.getProperty("db.password");
             LOG.log(Level.INFO, "Database configuration read!");
         } catch (IOException ex) {
             LOG.log(Level.SEVERE, "No DB properties file found!", ex);
@@ -46,9 +54,13 @@ public class Dao {
             e.printStackTrace();
             LOG.log(Level.SEVERE, "Database configuration can not be loaded!");
         } finally {
-            mongoClient = new MongoClient(dbHost, dbPort);
+            if (dbUser != "" && dbPassword != null) {
+                MongoCredential mongoCredential = MongoCredential.createScramSha1Credential(dbUser, dbName, dbPassword.toCharArray());
+                mongoClient = new MongoClient(new ServerAddress(dbHost, dbPort), Arrays.asList(mongoCredential));
+            } else {
+                mongoClient = new MongoClient(dbHost, dbPort);
+            }
             mongoDB = mongoClient.getDatabase(dbName);
-
             LOG.log(Level.INFO, "Database configured and connection established successfully!");
         }
     }
