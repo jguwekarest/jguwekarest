@@ -43,6 +43,7 @@ public class AlgorithmImpl extends AlgorithmService {
     @Override
     public Response algorithmGet(String accept, String subjectid, SecurityContext securityContext, UriInfo ui) throws NotFoundException, IOException {
         String baseuri = ui.getBaseUri().toString();
+        System.out.println("baseuri: " + baseuri);
         InputStream in = new URL( ui.getBaseUri() + "swagger.json" ).openStream();
         String jsonContent;
         try {

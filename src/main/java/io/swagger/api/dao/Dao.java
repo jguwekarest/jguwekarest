@@ -88,7 +88,7 @@ public class Dao {
     public String getDatasetList(UriInfo ui, String accept) {
         String result = "";
         int i = 0;
-        System.out.println("accept header string is: " + accept);
+        //System.out.println("accept header string is: " + accept);
         mongoCollection = mongoDB.getCollection("dataset");
         try (MongoCursor<Document> cursor = mongoCollection.find().iterator()) {
             while(cursor.hasNext()) {
@@ -132,7 +132,7 @@ public class Dao {
             strictJSON = strictJSON.replaceAll("(\"[^\"]*)(\\.)([^\"]*\".:)", "$1\\(DOT\\)$3");
         }
 
-        System.out.println(strictJSON);
+        //System.out.println(strictJSON);
         Document documentParsed = Document.parse(strictJSON);
         mongoCollection.insertOne(documentParsed);
     }

@@ -20,7 +20,13 @@ To connect the server to a mongodb database you can use a standard mongo docker 
 
 ```
 docker pull mongo
-docker run -d -p 27017:27017 mongo
+docker run -d mongo
+```
+
+or with a local file storage, restart policy and container name:
+
+```
+docker run -d --restart unless-stopped --name ORN_mongodb -v ~/orn/mongodb:/data/db mongo
 ```
 
 

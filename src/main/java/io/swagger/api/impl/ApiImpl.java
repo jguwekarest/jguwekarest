@@ -17,6 +17,8 @@ public class ApiImpl extends ApiService {
     @Override
     public Response apiApiJsonGet(SecurityContext securityContext, UriInfo ui) throws NotFoundException, IOException {
 
+
+
         InputStream in = new URL( ui.getBaseUri() + "swagger.json" ).openStream();
         String jsonContent;
         try {
@@ -26,5 +28,6 @@ public class ApiImpl extends ApiService {
         }
 
         return Response.ok(jsonContent).build();
+
     }
 }
