@@ -1,9 +1,8 @@
 # Dockerized Development Environment Setup
 
-This describes an exampl dockerized development environment for a Java web project with a MongoDB database. A Jenkins server is used as a build setup for the code deployment. A Tomcat container hosts the application war file. Jenkins and Tomcat do share a file storage for easy deployment via copying within the Jenkins instance. 
+This describes an example dockerized development environment for a Java web project with a MongoDB database. A Jenkins server is used as a build setup for the code deployment. A Tomcat container hosts the application war file. Jenkins and Tomcat do share a file storage for easy deployment via copying within the Jenkins instance. 
 
 ## Tomcat Container Setup
-
 
 ```
 docker run -d --restart unless-stopped --name ORN_tomcat -p 8081:8081 -v ~/jenkins/workspace/tomcat:/usr/local/tomcat/webapps tomcat:8.0-jre8
@@ -12,6 +11,19 @@ docker run -d --restart unless-stopped --name ORN_tomcat -p 8081:8081 -v ~/jenki
 Add a proxy entry to  /usr/local/tomcat/conf/server.xml to proxy from host Apache2 or Nginx to the Tomcat docker IP:8081
 ```
 <Connector port="8081" proxyPort="8081"/>
+```
+
+If you want to use OpenTox Authorization and Authentication you have to install a security certificate to the tomcat truststore. 
+This is used to connect to https://openam.in-silico.ch.
+
+Download the certificate from https://openam.in-silico.ch with openssl:
+```
+openssl s_client -showcerts -connect openam.in-silico.ch:443 </dev/null 2>/dev/null|openssl x509 -outform PEM >in-silicoch.crt
+``` 
+Import it into the Tomcat truststore
+```
+docker cp in-silicoch.crt ORN_tomcat:/usr/local/tomcat
+docker exec -it ORN_tomcat keytool -keystore /etc/ssl/certs/java/cacerts -importcert -alias openam.in-silico.ch -file in-silicoch.crt
 ```
 
 ## MongoDB Setup
@@ -67,8 +79,6 @@ EXECUTE SHELL
 ```
 cp /var/jenkins_home/workspace/weka_rest_service/target/weka_rs-0.0.1.war /var/jenkins_home/workspace/tomcat/ROOT.war
 ```
-
-
 
 ## Apache2 Setup 
 
