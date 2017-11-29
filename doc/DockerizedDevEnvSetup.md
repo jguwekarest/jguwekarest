@@ -13,8 +13,8 @@ Add a proxy entry to  /usr/local/tomcat/conf/server.xml to proxy from host Apach
 <Connector port="8081" proxyPort="8081"/>
 ```
 
-If you want to use OpenTox Authorization and Authentication you have to install a security certificate to the tomcat truststore. 
-This is used to connect to https://openam.in-silico.ch.
+
+If you want to use OpenTox Authorization and Authentication you have to install a security certificate to the tomcat truststore. (This is used to connect to https://openam.in-silico.ch.)
 
 Download the certificate from https://openam.in-silico.ch with openssl:
 ```
