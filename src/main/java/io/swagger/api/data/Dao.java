@@ -1,4 +1,4 @@
-package io.swagger.api.dao;
+package io.swagger.api.data;
 
 import com.google.gson.Gson;
 import com.mongodb.BasicDBObject;
@@ -8,7 +8,6 @@ import com.mongodb.ServerAddress;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
-import io.swagger.api.dataset.Dataset;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 
@@ -24,14 +23,14 @@ import java.util.logging.Logger;
 
 public class Dao {
 
-    private String dbName;
-    private String dbHost;
+    private String  dbName;
+    private String  dbHost;
     private Integer dbPort;
-    private String dbUser = "";
-    private String dbPassword;
+    private String  dbUser = "";
+    private String  dbPassword;
 
-    private MongoClient mongoClient = null;
-    private MongoDatabase mongoDB;
+    private MongoClient     mongoClient = null;
+    private MongoDatabase   mongoDB;
     private MongoCollection mongoCollection;
 
     private static Properties dbProperties = new Properties();
@@ -65,42 +64,23 @@ public class Dao {
         }
     }
 
-    public String getModelList() {
-        final String result = "";
-        int modelsCount = 0;
-        mongoCollection = mongoDB.getCollection("model");
-        try (MongoCursor<Document> cursor = mongoCollection.find().iterator()) {
-            while(cursor.hasNext()) {
-                Document document = cursor.next();
-                result.concat(document.get("_id") + "\n");
-                modelsCount++;
-            }
-            cursor.close();
-        } finally {
-
-        }
-        LOG.log(Level.INFO, "Retrieved " + modelsCount + " models");
-        return result;
-    }
-
-
     @Produces({"text/uri-list", "application/json"})
-    public String getDatasetList(UriInfo ui, String accept) {
+    public String listData(String collection, UriInfo ui, String accept) {
         String result = "";
         int i = 0;
         //System.out.println("accept header string is: " + accept);
-        mongoCollection = mongoDB.getCollection("dataset");
+        mongoCollection = mongoDB.getCollection(collection);
         try (MongoCursor<Document> cursor = mongoCollection.find().iterator()) {
             while(cursor.hasNext()) {
                 Document document = cursor.next();
-                result += (ui.getBaseUri() + "dataset/" + document.get("_id") + "\n");
+                result += (ui.getBaseUri() + collection + "/" + document.get("_id") + "\n");
                 i++;
             }
             cursor.close();
         } finally {
 
         }
-        LOG.log(Level.INFO, "Retrieved " + i + " datasets\n" + result);
+        LOG.log(Level.INFO, "Retrieved " + i + " " + collection + "\n" + result);
         return result;
     }
 
@@ -121,9 +101,24 @@ public class Dao {
         return dataset.arff;
     }
 
-    public void saveDataset(Document model) {
-        mongoCollection = mongoDB.getCollection("dataset");
-        String strictJSON = model.toJson();
+    public Model getModel(String id){
+        String output = "";
+        mongoCollection = mongoDB.getCollection("model");
+        BasicDBObject query = new BasicDBObject();
+        query.put("_id", new ObjectId(id));
+        Object modelObj = mongoCollection.find(query).first();
+        Gson gson = new Gson();
+        String jsonString = gson.toJson(modelObj);
+        Model model = gson.fromJson(jsonString, Model.class);
+        if (model == null) {
+            throw new NotFoundException("Could not find Model with id:" + id);
+        }
+        return model;
+    }
+
+    public void saveData(String collection, Document document) {
+        mongoCollection = mongoDB.getCollection(collection);
+        String strictJSON = document.toJson();
         //TODO make loop for parsing dots
         //strictJSON = strictJSON.replaceAll("(\"[^\"]*)(\\.)([^\"]*\".:)", "$1\\(DOT\\)$3");
         //strictJSON = strictJSON.replaceAll("(\"[^\"]*)(\\.)([^\"]*\".:)", "$1\\(DOT\\)$3");
@@ -135,6 +130,8 @@ public class Dao {
         //System.out.println(strictJSON);
         Document documentParsed = Document.parse(strictJSON);
         mongoCollection.insertOne(documentParsed);
+        System.out.println("saveData _id is: " + documentParsed.get("_id"));
+
     }
 
 

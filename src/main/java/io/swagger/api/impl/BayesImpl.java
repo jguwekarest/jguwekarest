@@ -1,8 +1,10 @@
 package io.swagger.api.impl;
 
-import io.swagger.api.algorithm.BayesService;
 import io.swagger.api.NotFoundException;
 import io.swagger.api.WekaUtils;
+import io.swagger.api.algorithm.BayesService;
+import io.swagger.api.data.Model;
+import io.swagger.api.data.ModelService;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import weka.classifiers.bayes.BayesNet;
 import weka.core.Instances;
@@ -14,8 +16,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
 import java.util.Vector;
-
-import static io.swagger.api.impl.Validation.crossValidation;
 
 public class BayesImpl extends BayesService {
     @Override
@@ -98,11 +98,19 @@ public class BayesImpl extends BayesService {
         String validation = "";
         validation = Validation.crossValidation(instances, net);
 
-
         Vector v = new Vector();
         v.add(net);
         v.add(new Instances(instances, 0));
-
+        try {
+            Model model = new Model();
+            model.model = ModelService.serialize(net);
+            model.info = net.globalInfo();
+            model.validation = validation;
+            ModelService.saveModel(model,"");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Response.serverError().entity("Error: WEKA weka.classifiers.bayes.net.search." + searchAlgorithm + "\n parameters: \"" + parameters.toString() + "\"\nWeka error message: " + e.getMessage() + "\n").build();
+        }
         return Response.ok(v.toString() + "\n" + validation ).build();
     }
 

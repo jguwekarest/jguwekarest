@@ -1,4 +1,4 @@
-package io.swagger.api.dataset;
+package io.swagger.api.data;
 
 import com.google.gson.internal.LinkedTreeMap;
 import io.swagger.annotations.*;
@@ -71,7 +71,7 @@ public class Dataset {
             @ApiParam(value = "requested Content-Type" ,required=true, allowableValues="text/uri-list, application/json")@HeaderParam("Accept") String accept,
             @Context UriInfo ui, @Context HttpHeaders headers) throws ApiException {
 
-        String datasetList = DatasetService.listDatasets(subjectid, ui, accept);
+        String datasetList = DatasetService.listDatasets(ui, accept, subjectid);
 
         return Response
                 .ok(datasetList)
@@ -96,7 +96,7 @@ public class Dataset {
             @ApiResponse(code = 404, message = "Resource Not Found", response = void.class) })
     public Response getDatasetArff(
             @ApiParam(value = "Dataset ID" )@PathParam("id") String id,
-            @ApiParam(value = "Authorization token" )@HeaderParam("subjectid") String subjectid, @Context UriInfo ui) throws ApiException {
+            @ApiParam(value = "Authorization token" )@HeaderParam("subjectid") String subjectid, @Context UriInfo ui) throws ApiException, NotFoundException {
 
         String out = DatasetService.getDatasetArff(id, subjectid);
 

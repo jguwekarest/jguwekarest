@@ -3,8 +3,14 @@ package io.swagger.api;
 import io.swagger.api.factories.ApiFactory;
 
 import javax.servlet.ServletConfig;
+import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.SecurityContext;
+import javax.ws.rs.core.UriInfo;
+import java.io.IOException;
 
 @Path("/api")
 
@@ -34,7 +40,7 @@ public class Api  {
 
       this.delegate = delegate;
    }
-/*
+
     @GET
     @Path("/api.json")
     
@@ -48,5 +54,5 @@ public class Api  {
             throws NotFoundException, IOException {
         return delegate.apiApiJsonGet(securityContext, ui);
     }
-*/
+
 }

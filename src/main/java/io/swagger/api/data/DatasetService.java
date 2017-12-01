@@ -1,9 +1,8 @@
-package io.swagger.api.dataset;
+package io.swagger.api.data;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import io.swagger.api.StringUtil;
-import io.swagger.api.dao.Dao;
 import io.swagger.api.ApiException;
 import org.bson.Document;
 
@@ -17,9 +16,9 @@ public class DatasetService {
 
     public static Object cmp;
 
-    public static String listDatasets(String token, UriInfo ui, String accept) {
+    public static String listDatasets(UriInfo ui, String accept, String token) {
         Dao datasetDao = new Dao();
-        String dslist = datasetDao.getDatasetList(ui, accept);
+        String dslist = datasetDao.listData("dataset", ui, accept);
         datasetDao.close();
         return dslist;
     }
@@ -143,7 +142,7 @@ public class DatasetService {
             dataset.arff = arff;
             Gson gson = new Gson();
             Document document = Document.parse(gson.toJson(dataset));
-            datasetDao.saveDataset(document);
+            datasetDao.saveData("dataset", document);
         }catch (Exception e){
             e.printStackTrace();
         }finally {
