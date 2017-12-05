@@ -2,6 +2,7 @@ package io.swagger.api.impl;
 
 import io.swagger.api.algorithm.FunctionsService;
 import io.swagger.api.WekaUtils;
+import io.swagger.api.data.DatasetService;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import weka.classifiers.functions.LinearRegression;
 import weka.core.Instances;
@@ -20,7 +21,7 @@ public class FunctionsImpl extends FunctionsService {
     @Override
     @Produces("text/plain")
 
-    public Response linearRegressionPost(InputStream fileInputStream, FormDataContentDisposition fileDetail, /* String predictionFeature, String datasetUri, String datasetService, */ Integer attributeSelectionMethod, Integer eliminateColinearAttributes, BigDecimal ridge, String subjectid, SecurityContext securityContext) throws IOException {
+    public Response linearRegressionPost(InputStream fileInputStream, FormDataContentDisposition fileDetail, String datasetUri, Integer attributeSelectionMethod, Integer eliminateColinearAttributes, BigDecimal ridge, String subjectid, SecurityContext securityContext) throws IOException {
 
         Object[] params = {/* predictionFeature, datasetUri, datasetService, */  attributeSelectionMethod, eliminateColinearAttributes, ridge, subjectid};
 
@@ -28,33 +29,29 @@ public class FunctionsImpl extends FunctionsService {
             System.out.println("LR param " + i + " are: " + params[i]);
         }
 
-        StringBuffer txtStr = new StringBuffer();
-        int c;
-        while ((c = fileInputStream.read()) != -1) {
-            txtStr.append((char)c);
-        }
+        String txtStr = DatasetService.getArff(fileInputStream, fileDetail, datasetUri);
 
-        StringBuilder parameters = new StringBuilder();
+        String parameters = "";
 
-        parameters.append((attributeSelectionMethod != null) ? (" -S " + attributeSelectionMethod + " ") : (" -S 1 ") );
+        parameters += ((attributeSelectionMethod != null) ? (" -S " + attributeSelectionMethod + " ") : (" -S 1 ") );
 
-        if (eliminateColinearAttributes != null && eliminateColinearAttributes == 0) parameters.append(" -C ");
+        if (eliminateColinearAttributes != null && eliminateColinearAttributes == 0) parameters += " -C ";
 
-        if (ridge != null ) parameters.append(" -R " + ridge + " ");
+        if (ridge != null ) parameters += " -R " + ridge + " ";
 
-        parameters.append(" -num-decimal-places 4 ");
+        parameters += " -num-decimal-places 4 ";
 
-        System.out.println("parameterstring for weka: linearRegression " + parameters.toString().replaceAll("( )+", " "));
+        System.out.println("parameterstring for weka: linearRegression " + parameters.replaceAll("( )+", " "));
         LinearRegression LR = new LinearRegression();
 
-        Instances instances = WekaUtils.instancesFromString(txtStr.toString());
+        Instances instances = WekaUtils.instancesFromString(txtStr);
 
         try {
-            LR.setOptions( weka.core.Utils.splitOptions(parameters.toString().replaceAll("( )+", " ")) );
+            LR.setOptions( weka.core.Utils.splitOptions(parameters.replaceAll("( )+", " ")) );
             LR.buildClassifier(instances);
         } catch (Exception e) {
             e.printStackTrace();
-            return Response.serverError().entity("Error: check options for WEKA weka.classifiers.functions.LinearRegression\n parameters: \"" + parameters.toString() + "\"\nWeka error message: " + e.getMessage() + "\n").build();
+            return Response.serverError().entity("Error: check options for WEKA weka.classifiers.functions.LinearRegression\n parameters: \"" + parameters + "\"\nWeka error message: " + e.getMessage() + "\n").build();
         }
 
         String validation = "";

@@ -3,6 +3,7 @@ package io.swagger.api.impl;
 import io.swagger.api.algorithm.RulesService;
 import io.swagger.api.NotFoundException;
 import io.swagger.api.WekaUtils;
+import io.swagger.api.data.DatasetService;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import weka.classifiers.rules.M5Rules;
 import weka.classifiers.rules.ZeroR;
@@ -19,21 +20,16 @@ import static io.swagger.api.impl.Validation.crossValidation;
 
 public class RulesImpl extends RulesService {
 
-
     @Override
     @Produces("text/plain")
-    public Response algorithmZeroRPost(InputStream fileInputStream, FormDataContentDisposition fileDetail, String subjectid, SecurityContext securityContext) throws NotFoundException, IOException {
+    public Response algorithmZeroRPost(InputStream fileInputStream, FormDataContentDisposition fileDetail, String datasetUri, String subjectid, SecurityContext securityContext) throws NotFoundException, IOException {
 
-        StringBuffer txtStr = new StringBuffer();
-        int c;
-        while ((c = fileInputStream.read()) != -1) {
-            txtStr.append((char)c);
-        }
+        String txtStr = DatasetService.getArff(fileInputStream, fileDetail, datasetUri);
 
         ZeroR zeror = new ZeroR();
         String[] options = new String[0];
 
-        Instances instances = WekaUtils.instancesFromString(txtStr.toString());
+        Instances instances = WekaUtils.instancesFromString(txtStr);
 
         try {
             zeror.buildClassifier(instances);
@@ -53,44 +49,39 @@ public class RulesImpl extends RulesService {
 
     }
 
-    @Override
     @Produces("text/plain")
-    public Response algorithmM5RulesPost(InputStream fileInputStream, FormDataContentDisposition fileDetail,
+    public Response algorithmM5RulesPost(InputStream fileInputStream, FormDataContentDisposition fileDetail, String datasetUri,
                                          Integer unpruned, Integer useUnsmoothed, Double minNumInstances, Integer buildRegressionTree,
                                          String subjectid, SecurityContext securityContext) throws NotFoundException, IOException {
 
-        StringBuffer txtStr = new StringBuffer();
-        int c;
-        while ((c = fileInputStream.read()) != -1) {
-            txtStr.append((char)c);
-        }
+        String txtStr = DatasetService.getArff(fileInputStream, fileDetail, datasetUri);
 
-        StringBuilder parameters = new StringBuilder();
+        String parameters = "";
 
         // set unpruned
-        if (unpruned == 1) { parameters.append(" -N ");}
+        if (unpruned == 1) { parameters += " -N ";}
 
         // set use unsmoothed
-        if (useUnsmoothed == 1) { parameters.append(" -U ");}
+        if (useUnsmoothed == 1) { parameters += " -U ";}
 
         // Set minNumInstances
         if (minNumInstances != null) {
-            parameters.append(" -M " + minNumInstances + " ");
+            parameters += " -M " + minNumInstances + " ";
         } else {
-            parameters.append(" -M 4.0 ");
+            parameters += " -M 4.0 ";
         }
 
         // set buildRegressionTree
-        if (buildRegressionTree == 1) { parameters.append(" -R ");}
+        if (buildRegressionTree == 1) { parameters += " -R ";}
 
-        System.out.println("parameterstring for weka: M5Rules " + parameters.toString());
+        System.out.println("parameterstring for weka: M5Rules " + parameters);
 
 
 
         M5Rules m5rules = new M5Rules();
         String[] options = new String[0];
 
-        Instances instances = WekaUtils.instancesFromString(txtStr.toString());
+        Instances instances = WekaUtils.instancesFromString(txtStr);
 
         try {
             m5rules.buildClassifier(instances);

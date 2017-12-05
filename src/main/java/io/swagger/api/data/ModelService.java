@@ -1,11 +1,14 @@
 package io.swagger.api.data;
 
+import com.google.common.collect.Maps;
 import com.google.gson.Gson;
 import io.swagger.api.ApiException;
 import org.bson.Document;
+import weka.classifiers.Classifier;
 
 import javax.ws.rs.core.UriInfo;
 import java.io.*;
+import java.util.Map;
 
 public class ModelService {
 
@@ -18,33 +21,46 @@ public class ModelService {
     }
 
     public static String getModel(String id) throws ApiException {
-        Dao modelDao = new Dao();
-        Model model = modelDao.getModel(id);
-        modelDao.close();
         String out = "";
+        Dao modelDao = new Dao();
         try {
+            Model model = modelDao.getModel(id);
             out = ModelService.deserialize(model.model).toString();
             out += "\n" + model.validation;
-            out += "\n" + model.info;
+            out += "\nModel build options:";
+            out += "\n" + model.meta.get("className") + " " + model.meta.get("options").toString();
         }catch (Exception e) {
             e.printStackTrace();
+        }finally {
+            modelDao.close();
         }
         return out;
     }
 
-
-    public static String saveModel(Model model, String token) {
-        Dao datasetDao = new Dao();
+    public static String saveModel(Classifier classifier,String[] options, String validation, String token) {
+        Dao modelDao = new Dao();
         String id = "";
         try {
+
+            Model model = new Model();
+            model.model = ModelService.serialize(classifier);
+
+            System.out.println("Class is: " + classifier.getClass().getName());
+            Map<String, String> map = Maps.newHashMap();
+
+            map.put("options", String.join(" ", options));
+            map.put("className", classifier.getClass().getName());
+            model.setMeta(map);
+            model.validation = validation;
+
             Gson gson = new Gson();
             Document document = Document.parse(gson.toJson(model));
-            datasetDao.saveData("model", document);
+            modelDao.saveData("model", document);
             id = "1";
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            datasetDao.close();
+            modelDao.close();
         }
         return id;
     }

@@ -55,6 +55,7 @@ public class Lazy {
     public Response algorithmKNNclassificationPost(
             @FormDataParam("file") InputStream fileInputStream,
             @FormDataParam("file") FormDataContentDisposition fileDetail
+            , @ApiParam(value = "Dataset URI or local dataset ID (to the arff representation of a dataset).")@FormDataParam("datasetURI")  String datasetUri
             , @ApiParam(value = "Gets the maximum number of instances allowed in the training pool. The addition of new instances above this value will result in old instances being removed. A value of 0 signifies no limit to the number of training instances. Must be 0 or 1 (Default: 0).", defaultValue="0")@FormDataParam("windowSize")  Integer windowSize
             , @ApiParam(value = "The number of neighbors to use. Must be an integer greater than 0 (Default: 1).", defaultValue="1")@FormDataParam("KNN") Integer KNN
             , @ApiParam(value = "Whether hold-one-out cross-validation will be used to select the best k value. Must be 0 or 1 (Default: 0).", defaultValue="0")@FormDataParam("crossValidate")  Integer crossValidate
@@ -64,7 +65,7 @@ public class Lazy {
             , @ApiParam(value = "Authorization token" )@HeaderParam("subjectid") String subjectid
             , @Context SecurityContext securityContext)
             throws io.swagger.api.NotFoundException, IOException {
-        return delegate.algorithmKNNclassificationPost(fileInputStream,fileDetail,windowSize,KNN,crossValidate,distanceWeighting,meanSquared,nearestNeighbourSearchAlgorithm,subjectid,securityContext);
+        return delegate.algorithmKNNclassificationPost(fileInputStream,fileDetail,datasetUri,windowSize,KNN,crossValidate,distanceWeighting,meanSquared,nearestNeighbourSearchAlgorithm,subjectid,securityContext);
     }
 
 

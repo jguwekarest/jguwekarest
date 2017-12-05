@@ -63,6 +63,7 @@ public class Trees  {
     public Response algorithmJ48Post(
             @FormDataParam("file") InputStream fileInputStream,
             @FormDataParam("file") FormDataContentDisposition fileDetail
+            , @ApiParam(value = "Dataset URI or local dataset ID (to the arff representation of a dataset).")@FormDataParam("datasetURI")  String datasetUri
             ,@ApiParam(value = "Whether to use binary splits on nominal attributes when building the trees.", allowableValues = "0, 1", defaultValue="0")@FormDataParam("binarySplits") Integer binarySplits
             ,@ApiParam(value = "The confidence factor used for pruning (smaller values incur more pruning).", defaultValue = "0.25")@FormDataParam("confidenceFactor") BigDecimal confidenceFactor
             ,@ApiParam(value = "The minimum number of instances per leaf.", defaultValue = "2")@FormDataParam("minNumObj") Integer minNumObj
@@ -74,7 +75,7 @@ public class Trees  {
             ,@ApiParam(value = "Whether counts at leaves are smoothed based on Laplace.", defaultValue = "0", allowableValues="0, 1")@FormDataParam("useLaplace") Integer useLaplace
             ,@Context SecurityContext securityContext)
             throws NotFoundException, IOException {
-        return delegate.algorithmJ48Post(fileInputStream, fileDetail,binarySplits,confidenceFactor,minNumObj,numFolds,reducedErrorPruning,seed,subtreeRaising,unpruned,useLaplace,securityContext,servletContext);
+        return delegate.algorithmJ48Post(fileInputStream, fileDetail,datasetUri,binarySplits,confidenceFactor,minNumObj,numFolds,reducedErrorPruning,seed,subtreeRaising,unpruned,useLaplace,securityContext,servletContext);
     }
 
 }

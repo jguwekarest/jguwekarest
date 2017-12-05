@@ -3,15 +3,17 @@ package io.swagger.api.impl;
 import io.swagger.api.NotFoundException;
 import io.swagger.api.WekaUtils;
 import io.swagger.api.algorithm.BayesService;
-import io.swagger.api.data.Model;
+import io.swagger.api.data.DatasetService;
 import io.swagger.api.data.ModelService;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import weka.classifiers.bayes.BayesNet;
 import weka.core.Instances;
 
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
+import javax.ws.rs.core.UriInfo;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
@@ -20,53 +22,42 @@ import java.util.Vector;
 public class BayesImpl extends BayesService {
     @Override
     @Produces("text/plain")
-    public Response algorithmBayesNetPost(InputStream fileInputStream, FormDataContentDisposition fileDetail, String estimator, BigDecimal estimatorParams, Integer useADTree, String searchAlgorithm, String searchParams, SecurityContext securityContext) throws NotFoundException, IOException {
-        // do some magic!
-        Object[] params = {estimator, estimatorParams, useADTree, searchAlgorithm, searchParams};
+    public Response algorithmBayesNetPost(InputStream fileInputStream, FormDataContentDisposition fileDetail, String datasetUri, String estimator, BigDecimal estimatorParams, Integer useADTree, String searchAlgorithm, String searchParams, HttpHeaders headers, UriInfo ui, SecurityContext securityContext) throws NotFoundException, IOException {
 
-        for (int i= 0; i < params.length; i ++  ) {
-            System.out.println("param are: " + params[i]);
-        }
-        StringBuffer txtStr = new StringBuffer();
-        int c;
-        while ((c = fileInputStream.read()) != -1) {
-            txtStr.append((char)c);
-        }
+        String txtStr = DatasetService.getArff(fileInputStream, fileDetail, datasetUri);
 
-        int nNrOfAtts = params.length;
+        String parameters = "";
 
-        StringBuilder parameters = new StringBuilder();
-
-        if (useADTree != 1) { parameters.append(" -D ");}
+        if (useADTree != 1) { parameters += " -D ";}
 
         // Set the parameter for the searchAlgo
-        parameters.append(" -Q ");
-        parameters.append("weka.classifiers.bayes.net.search." + searchAlgorithm);
+        parameters += " -Q ";
+        parameters += "weka.classifiers.bayes.net.search." + searchAlgorithm;
         System.out.println("searchAlgorithm is: " + searchAlgorithm);
         // Set the search parameters
         if (searchParams != null) {
-            parameters.append(" -- ");
-            parameters.append(searchParams);
+            parameters += " -- ";
+            parameters += searchParams;
         }
         // Set estimator
         if (estimator != null) {
-            parameters.append(" -E ");
-            parameters.append("weka.classifiers.bayes.net.estimate." + estimator);
+            parameters += " -E ";
+            parameters += "weka.classifiers.bayes.net.estimate." + estimator;
         }
         // Set the parameters for the estimator
         if (estimatorParams != null) {
-            parameters.append(" -- ");
-            parameters.append(" -A ");
-            parameters.append(estimatorParams);
+            parameters += " -- ";
+            parameters += " -A ";
+            parameters += estimatorParams;
         }
-        System.out.println("parameterstring for weka: " + parameters.toString());
+        System.out.println("parameterstring for weka: " + parameters);
         BayesNet net = new BayesNet();
         String[] options = new String[0];
 
-        Instances instances = WekaUtils.instancesFromString(txtStr.toString());
+        Instances instances = WekaUtils.instancesFromString(txtStr);
 
         try {
-            options = weka.core.Utils.splitOptions(parameters.toString());
+            options = weka.core.Utils.splitOptions(parameters);
         } catch (Exception e) {
             return Response.serverError().entity(e.getMessage()).build();
         }
@@ -74,27 +65,15 @@ public class BayesImpl extends BayesService {
             net.setOptions(options);
         } catch (Exception e) {
             e.printStackTrace();
-            return Response.serverError().entity("Error: check options for WEKA weka.classifiers.bayes.net.search." + searchAlgorithm + "\n parameters: \"" + parameters.toString() + "\"\nWeka error message: " + e.getMessage() + "\n").build();
+            return Response.serverError().entity("Error: check options for WEKA weka.classifiers.bayes.net.search." + searchAlgorithm + "\n parameters: \"" + parameters + "\"\nWeka error message: " + e.getMessage() + "\n").build();
         }
         try {
             net.buildClassifier(instances);
         } catch (Exception e) {
             e.printStackTrace();
-            return Response.serverError().entity("Error: WEKA weka.classifiers.bayes.net.search." + searchAlgorithm + "\n parameters: \"" + parameters.toString() + "\"\nWeka error message: " + e.getMessage() + "\n").build();
+            return Response.serverError().entity("Error: WEKA weka.classifiers.bayes.net.search." + searchAlgorithm + "\n parameters: \"" + parameters + "\"\nWeka error message: " + e.getMessage() + "\n").build();
         }
-        /*
-        String eval_out = "";
-        try {
-            Evaluation eval = new Evaluation(instances);
-            eval.crossValidateModel(net, instances, 10, new Random(1));
-            eval_out = eval.toSummaryString("\n=== Crossvalidation Results ===\n", false);
-            eval_out += "\n" + eval.toClassDetailsString() + "\n";
-            eval_out += "\n" + eval.toMatrixString() + "\n";
-        } catch (Exception e) {
-            e.printStackTrace();
-            return Response.serverError().entity("Error: WEKA weka.classifiers.bayes.net Evaluation Error:\nWeka error message: " + e.getMessage() + "\n").build();
-        }
-        */
+
         String validation = "";
         validation = Validation.crossValidation(instances, net);
 
@@ -102,14 +81,11 @@ public class BayesImpl extends BayesService {
         v.add(net);
         v.add(new Instances(instances, 0));
         try {
-            Model model = new Model();
-            model.model = ModelService.serialize(net);
-            model.info = net.globalInfo();
-            model.validation = validation;
-            ModelService.saveModel(model,"");
+
+            ModelService.saveModel(net, net.getOptions(), validation,"");
         } catch (Exception e) {
             e.printStackTrace();
-            return Response.serverError().entity("Error: WEKA weka.classifiers.bayes.net.search." + searchAlgorithm + "\n parameters: \"" + parameters.toString() + "\"\nWeka error message: " + e.getMessage() + "\n").build();
+            return Response.serverError().entity("Error: WEKA weka.classifiers.bayes.net.search." + searchAlgorithm + "\n parameters: \"" + parameters + "\"\nWeka error message: " + e.getMessage() + "\n").build();
         }
         return Response.ok(v.toString() + "\n" + validation ).build();
     }

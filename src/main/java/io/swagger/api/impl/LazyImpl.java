@@ -1,8 +1,9 @@
 package io.swagger.api.impl;
 
 import io.swagger.api.NotFoundException;
-import io.swagger.api.algorithm.LazyService;
 import io.swagger.api.WekaUtils;
+import io.swagger.api.algorithm.LazyService;
+import io.swagger.api.data.DatasetService;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import weka.classifiers.lazy.IBk;
 import weka.core.Instances;
@@ -14,12 +15,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Vector;
 
-import static io.swagger.api.impl.Validation.crossValidation;
-
 public class LazyImpl extends LazyService {
     @Override
     @Produces("text/plain")
-    public Response algorithmKNNclassificationPost(InputStream fileInputStream, FormDataContentDisposition fileDetail, Integer windowSize, Integer KNN, Integer crossValidate, String distanceWeighting, Integer meanSquared, String nearestNeighbourSearchAlgorithm, String subjectid, SecurityContext securityContext) throws NotFoundException, IOException {
+    public Response algorithmKNNclassificationPost(InputStream fileInputStream, FormDataContentDisposition fileDetail, String datasetUri, Integer windowSize, Integer KNN, Integer crossValidate, String distanceWeighting, Integer meanSquared, String nearestNeighbourSearchAlgorithm, String subjectid, SecurityContext securityContext) throws NotFoundException, IOException {
         // do some magic!
         Object[] params = {windowSize, KNN, crossValidate, distanceWeighting, meanSquared, nearestNeighbourSearchAlgorithm, subjectid};
 
@@ -27,48 +26,44 @@ public class LazyImpl extends LazyService {
             System.out.println("kNN param " + i + " are: " + params[i]);
         }
 
-        StringBuffer txtStr = new StringBuffer();
-        int c;
-        while ((c = fileInputStream.read()) != -1) {
-            txtStr.append((char)c);
-        }
+        String txtStr = DatasetService.getArff(fileInputStream, fileDetail, datasetUri);
 
-        StringBuilder parameters = new StringBuilder();
+        String parameters = "";
 
-        parameters.append((windowSize != null) ? (" -W " + windowSize + " ") : (" -W 0 ") );
+        parameters += ((windowSize != null) ? (" -W " + windowSize + " ") : (" -W 0 ") );
 
         if (KNN != null && KNN != 1) {
-            parameters.append(" -K " + KNN + " ");
+            parameters += " -K " + KNN + " ";
         } else {
-            parameters.append(" -K 1 ");
+            parameters += " -K 1 ";
         }
 
-        parameters.append((crossValidate != null && crossValidate != 0) ? " -X " : "");
+        parameters += ((crossValidate != null && crossValidate != 0) ? " -X " : "");
 
         if (distanceWeighting != null) {
-            if (distanceWeighting == "F" || distanceWeighting == "I") {
-                parameters.append(" -" + distanceWeighting + " ");
+            if (distanceWeighting.equals("F") || distanceWeighting.equals("I")) {
+                parameters += " -" + distanceWeighting + " ";
             }
         }
 
-        if (meanSquared != null && meanSquared != 0) parameters.append(" -E ");
+        if (meanSquared != null && meanSquared != 0) parameters += " -E ";
 
         //use LinearNNSearch fixed
-        parameters.append(" -A ");
-        parameters.append("\"weka.core.neighboursearch.LinearNNSearch -A \\\"weka.core.EuclideanDistance -R first-last\\\"\"");
+        parameters += " -A ";
+        parameters += "\"weka.core.neighboursearch.LinearNNSearch -A \\\"weka.core.EuclideanDistance -R first-last\\\"\"";
 
-        System.out.println("parameterstring for weka: IBk " + parameters.toString().replaceAll("( )+", " "));
+        System.out.println("parameterstring for weka: IBk " + parameters.replaceAll("( )+", " "));
 
         IBk kNN = new IBk();
 
-        Instances instances = WekaUtils.instancesFromString(txtStr.toString());
+        Instances instances = WekaUtils.instancesFromString(txtStr);
 
         try {
-            kNN.setOptions( weka.core.Utils.splitOptions(parameters.toString().replaceAll("( )+", " ")) );
+            kNN.setOptions( weka.core.Utils.splitOptions(parameters.replaceAll("( )+", " ")) );
             kNN.buildClassifier(instances);
         } catch (Exception e) {
             e.printStackTrace();
-            return Response.serverError().entity("Error: check options for WEKA weka.classifiers.lazy.IBk\n parameters: \"" + parameters.toString() + "\"\nWeka error message: " + e.getMessage() + "\n").build();
+            return Response.serverError().entity("Error: check options for WEKA weka.classifiers.lazy.IBk\n parameters: \"" + parameters + "\"\nWeka error message: " + e.getMessage() + "\n").build();
         }
 
         String validation = "";

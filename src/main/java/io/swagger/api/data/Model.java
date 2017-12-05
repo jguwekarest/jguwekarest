@@ -1,7 +1,6 @@
 package io.swagger.api.data;
 
 
-import com.google.gson.internal.LinkedTreeMap;
 import io.swagger.annotations.*;
 import io.swagger.api.ApiException;
 
@@ -10,6 +9,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
+import java.util.Map;
 
 @Path("/")
 @Api(description = "Model API")
@@ -19,7 +19,7 @@ public class Model {
     @GET
     @Path("/model")
     @Consumes({ "multipart/form-data" })
-    @Produces({ "text/uri-list" })
+    @Produces({ "text/uri-list", "application/json" })
     @ApiOperation(
             value = "List all Models",
             notes = "List all Models.",
@@ -33,13 +33,11 @@ public class Model {
             @ApiResponse(code = 404, message = "Resource Not Found", response = void.class) })
     public Response getModelList(
             @ApiParam(value = "Authorization token" )@HeaderParam("subjectid") String subjectid,
-            @ApiParam(value = "requested Content-Type" ,required=true, allowableValues="text/uri-list, application/json")@HeaderParam("Accept") String accept,
             @Context UriInfo ui, @Context HttpHeaders headers) throws ApiException {
 
-        Dao modelDao = new Dao();
-        String model_list = ModelService.listModels(ui, accept, subjectid);
-        System.out.println("Model list is: " + model_list);
-        modelDao.close();
+        String accept = headers.getRequestHeaders().getFirst("accept");
+        Object model_list = ModelService.listModels(ui, accept, subjectid);
+
         return Response
                 .ok(model_list)
                 .status(Response.Status.OK)
@@ -75,12 +73,25 @@ public class Model {
     }
 
 
-    public LinkedTreeMap meta;
-    public String datasetURI;
+    public Map<String, String> meta;
+    public String hasSources;
     public Dataset dataset;
 
+    public class MetaData {
+        public String info;
+        public String className;
+        public String options;
+    }
+
+    public void setMeta(Map<String, String> meta) {
+        this.meta = meta;
+    }
+
     public byte[] model;
-    public String info;
+
     public String validation;
+
+
+
 
 }

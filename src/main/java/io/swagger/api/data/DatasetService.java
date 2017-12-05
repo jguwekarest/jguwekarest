@@ -5,10 +5,13 @@ import com.google.gson.GsonBuilder;
 import io.swagger.api.StringUtil;
 import io.swagger.api.ApiException;
 import org.bson.Document;
+import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.core.*;
+import java.io.IOException;
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -28,6 +31,19 @@ public class DatasetService {
         String arff = datasetDao.getDatasetArff(id);
         datasetDao.close();
         return arff;
+    }
+
+    public static String getArff(InputStream fileInputStream, FormDataContentDisposition fileDetail, String datasetURI) throws IOException {
+        StringBuffer txtStr = new StringBuffer();
+        if (datasetURI != null && datasetURI != "") {
+            txtStr.append(DatasetService.getDatasetArff(datasetURI, null));
+        } else {
+            int c;
+            while ((c = fileInputStream.read()) != -1) {
+                txtStr.append((char) c);
+            }
+        }
+        return txtStr.toString();
     }
 
     public static Dataset readExternalDataset(String uri, String token) throws ApiException {
