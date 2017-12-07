@@ -32,7 +32,7 @@ public class Dao {
 
     private MongoClient     mongoClient = null;
     private MongoDatabase   mongoDB;
-    private MongoCollection mongoCollection;
+    private MongoCollection<Document> mongoCollection;
 
     private static Properties dbProperties = new Properties();
     private static final Logger LOG = Logger.getLogger(Dao.class.getName());

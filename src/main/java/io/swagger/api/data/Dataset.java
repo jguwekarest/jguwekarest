@@ -69,7 +69,7 @@ public class Dataset {
     public Response list(
             @ApiParam(value = "Authorization token" )@HeaderParam("subjectid") String subjectid,
             @Context UriInfo ui, @Context HttpHeaders headers) throws ApiException {
-        
+
         String accept = headers.getRequestHeaders().getFirst("accept");
         String datasetList = DatasetService.listDatasets(ui, accept, subjectid);
 
