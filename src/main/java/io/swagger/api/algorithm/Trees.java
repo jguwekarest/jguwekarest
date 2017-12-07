@@ -53,7 +53,8 @@ public class Trees  {
     @Consumes({ "multipart/form-data" })
     @Produces({ "text/x-arff" })
 
-    @ApiOperation(value = "REST interface to the WEKA J48 classifier.", notes = "REST interface to the WEKA J48 classifier.", response = void.class, tags={ "algorithm", }, position = 1)
+    @ApiOperation(value = "REST interface to the WEKA J48 classifier.", notes = "REST interface to the WEKA J48 classifier.", response = void.class, tags={ "algorithm", }, position = 1
+            ,extensions = @Extension(name = "algorithm", properties = { @ExtensionProperty(name = "J48", value = "https://en.wikipedia.org/wiki/C4.5_algorithm#Implementations")}))
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "OK", response = void.class),
             @ApiResponse(code = 400, message = "Bad Request", response = void.class),

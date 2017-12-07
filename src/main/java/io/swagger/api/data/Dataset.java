@@ -68,9 +68,9 @@ public class Dataset {
             @ApiResponse(code = 404, message = "Resource Not Found", response = void.class) })
     public Response list(
             @ApiParam(value = "Authorization token" )@HeaderParam("subjectid") String subjectid,
-            @ApiParam(value = "requested Content-Type" ,required=true, allowableValues="text/uri-list, application/json")@HeaderParam("Accept") String accept,
             @Context UriInfo ui, @Context HttpHeaders headers) throws ApiException {
-
+        
+        String accept = headers.getRequestHeaders().getFirst("accept");
         String datasetList = DatasetService.listDatasets(ui, accept, subjectid);
 
         return Response

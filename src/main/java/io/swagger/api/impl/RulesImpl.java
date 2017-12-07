@@ -41,7 +41,7 @@ public class RulesImpl extends RulesService {
         String validation = "";
         validation = crossValidation(instances, zeror);
 
-        Vector v = new Vector();
+        Vector<Object> v = new Vector<>();
         v.add(zeror);
         v.add(new Instances(instances, 0));
 
@@ -76,25 +76,24 @@ public class RulesImpl extends RulesService {
 
         System.out.println("parameterstring for weka: M5Rules " + parameters);
 
-
-
-        M5Rules m5rules = new M5Rules();
+        M5Rules classifier = new M5Rules();
         String[] options = new String[0];
 
         Instances instances = WekaUtils.instancesFromString(txtStr);
 
         try {
-            m5rules.buildClassifier(instances);
+            classifier.setOptions(weka.core.Utils.splitOptions(parameters));
+            classifier.buildClassifier(instances);
         } catch (Exception e) {
             e.printStackTrace();
             return Response.serverError().entity("Error: WEKA weka.classifiers.rules.M5Rules\nWeka error message: " + e.getMessage() + "\n").build();
         }
 
         String validation = "";
-        validation = crossValidation(instances, m5rules);
+        validation = crossValidation(instances, classifier);
 
-        Vector v = new Vector();
-        v.add(m5rules);
+        Vector<Object> v = new Vector<>();
+        v.add(classifier);
         v.add(new Instances(instances, 0));
 
         return Response.ok(v.toString() + "\n" + validation ).build();

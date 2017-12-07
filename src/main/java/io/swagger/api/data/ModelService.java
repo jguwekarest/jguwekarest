@@ -28,7 +28,7 @@ public class ModelService {
             out = ModelService.deserialize(model.model).toString();
             out += "\n" + model.validation;
             out += "\nModel build options:";
-            out += "\n" + model.meta.get("className") + " " + model.meta.get("options").toString();
+            out += "\n" + model.meta.get("className") + " " + model.meta.get("options");
         }catch (Exception e) {
             e.printStackTrace();
         }finally {
@@ -37,7 +37,7 @@ public class ModelService {
         return out;
     }
 
-    public static String saveModel(Classifier classifier,String[] options, String validation, String token) {
+    public static String saveModel(Classifier classifier, String[] options, String validation, String token) {
         Dao modelDao = new Dao();
         String id = "";
         try {

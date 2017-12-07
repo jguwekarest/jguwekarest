@@ -2,14 +2,18 @@ package io.swagger.api.data;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import io.swagger.api.StringUtil;
 import io.swagger.api.ApiException;
+import io.swagger.api.StringUtil;
 import org.bson.Document;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
+import weka.core.Attribute;
+import weka.core.Instances;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.core.*;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
@@ -17,16 +21,15 @@ import java.util.*;
 
 public class DatasetService {
 
-    public static Object cmp;
-
-    public static String listDatasets(UriInfo ui, String accept, String token) {
+    static String listDatasets(UriInfo ui, String accept, String token) {
         Dao datasetDao = new Dao();
         String dslist = datasetDao.listData("dataset", ui, accept);
         datasetDao.close();
+        System.out.println(toArffWeka("test"));
         return dslist;
     }
 
-    public static String getDatasetArff(String id, String token){
+    static String getDatasetArff(String id, String token){
         Dao datasetDao = new Dao();
         String arff = datasetDao.getDatasetArff(id);
         datasetDao.close();
@@ -34,8 +37,8 @@ public class DatasetService {
     }
 
     public static String getArff(InputStream fileInputStream, FormDataContentDisposition fileDetail, String datasetURI) throws IOException {
-        StringBuffer txtStr = new StringBuffer();
-        if (datasetURI != null && datasetURI != "") {
+        StringBuilder txtStr = new StringBuilder();
+        if (datasetURI != null && !Objects.equals(datasetURI, "")) {
             txtStr.append(DatasetService.getDatasetArff(datasetURI, null));
         } else {
             int c;
@@ -46,11 +49,17 @@ public class DatasetService {
         return txtStr.toString();
     }
 
-    public static Dataset readExternalDataset(String uri, String token) throws ApiException {
+    /**
+     * Download an external dataset in JSON format (e.G.: from JAQPOT service)
+     * @param uri URI of the external dataset
+     * @param token authentication token
+     * @return representation of the dataset in Dataset class
+    */
 
+    static Dataset readExternalDataset(String uri, String token) throws ApiException {
         String jsonString = "";
         Client client = ClientBuilder.newClient();
-        MultivaluedMap<String, String> formData = new MultivaluedHashMap<>();
+        // MultivaluedMap<String, String> formData = new MultivaluedHashMap<>();
 
         Response response = client.target(uri)
                 .request()
@@ -65,63 +74,60 @@ public class DatasetService {
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.setDateFormat("MM-dd-yyyy HH:mm"); // setting custom date format
         Gson gson = gsonBuilder.create();
-        Dataset dataset = gson.fromJson(jsonString, Dataset.class);
 
-        return dataset;
+        return gson.fromJson(jsonString, Dataset.class);
     }
 
     /**
      * Converts a Dataset to arff.
-     *
      * @param dataset a Dataset object
      * @return an arff String
      */
-    public static String toArff(Dataset dataset, String class_uri) {
+    static String toArff(Dataset dataset, String class_uri) {
 
-        String arff = "";
+        StringBuilder arff = new StringBuilder();
         //add comments datasetURI and dataset metadata
-        arff += "% JGU weka service converted dataset from :" + dataset.datasetURI + "\n%\n";
-        arff += "% Using " + (class_uri != null ? ("feature " + class_uri): "no feature") + " for the weka class.\n%\n";
+        arff.append("% JGU weka service converted dataset from :").append(dataset.datasetURI).append("\n%\n");
+        arff.append("% Using ").append(class_uri != null ? ("feature " + class_uri) : "no feature").append(" for the weka class.\n%\n");
         if (dataset.meta != null) {
             Set metaEntries = dataset.meta.entrySet();
-            Iterator metaIterator = metaEntries.iterator();
-            while (metaIterator.hasNext()) {
-                Map.Entry me = (Map.Entry) metaIterator.next();
-                String val = me.getValue().toString();
-                arff += "% meta " + me.getKey() + ": " + me.getValue().toString().replaceAll("^[\\[]|[\\]]$", "") + "\n";
+            for (Object metaEntry : metaEntries) {
+                Map.Entry me = (Map.Entry) metaEntry;
+                arff.append("% meta ").append(me.getKey()).append(": ").append(me.getValue().toString().replaceAll("^[\\[]|[\\]]$", "")).append("\n");
             }
         }
 
         for (int i = 0; i < dataset.features.size(); i++) {
             Dataset.Feature feat = dataset.features.get(i);
-            if (feat.uri != null) arff += "% feature:     uri: " + feat.uri + "\n";
-            if (feat.name != null) arff += "%             name: " + feat.name + "\n";
-            if (feat.units != null) arff += "%            units: " + feat.units + "\n";
-            if (feat.category != null) arff += "%         category: " + feat.category + "\n";
-            if (feat.conditions != null) arff += "%       conditions: " + feat.conditions + "\n%\n";
+            if (feat.uri != null) arff.append("% feature:     uri: ").append(feat.uri).append("\n");
+            if (feat.name != null) arff.append("%             name: ").append(feat.name).append("\n");
+            if (feat.units != null) arff.append("%            units: ").append(feat.units).append("\n");
+            if (feat.category != null) arff.append("%         category: ").append(feat.category).append("\n");
+            if (feat.conditions != null) arff.append("%       conditions: ").append(feat.conditions).append("\n%\n");
         }
 
         //add current date
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
-        arff += "% created: " + sdf.format(new Date()) + "\n\n";
-        arff += "@relation " + dataset.datasetURI + "\n";
+        arff.append("% created: ").append(sdf.format(new Date())).append("\n\n");
+        arff.append("@relation ").append(dataset.datasetURI).append("\n");
 
-        String dataStr = "\n@data\n";
+        StringBuilder dataStr = new StringBuilder("\n@data\n");
 
         //check if features are not numeric
-        Map<String,String> featureIsNumeric = new HashMap<String,String>();
+        Map<String,String> featureIsNumeric = new HashMap<>();
         for (int i = 0; i < dataset.features.size(); i++) {
             featureIsNumeric.put(dataset.features.get(i).uri, "Numeric");
         }
-        List classValues =  new ArrayList<>();
+        List<String> classValues =  new ArrayList<>();
         for (int j = 0; j < dataset.dataEntry.size(); j++) {
-            String line = "", classVal = "";
+            StringBuilder line = new StringBuilder();
+            String classVal = "";
             Dataset.DataEntry de = dataset.dataEntry.get(j);
 
-            line += "'" + de.compound.get("URI") + "'";
+            line.append("'").append(de.compound.get("URI")).append("'");
             for (int i = 0; i < dataset.features.size(); i++) {
                 String val = de.values.get(dataset.features.get(i).uri);
-                if (!StringUtil.isNumeric(val) && val != "null") {
+                if (!StringUtil.isNumeric(val) && !Objects.equals(val, "null")) {
                     featureIsNumeric.put(dataset.features.get(i).uri, "String");
                 }
                 if (val == null) val = "?";
@@ -130,15 +136,15 @@ public class DatasetService {
                     classVal = "," +  val;
                     classValues.add(val);
                 } else {
-                    line += "," + val;
+                    line.append(",").append(val);
                 }
             }
-            dataStr += line + classVal + "\n";
+            dataStr.append(line).append(classVal).append("\n");
         }
 
         Set<String> classValuesUnique = new LinkedHashSet<>(classValues);
 
-        arff += "@attribute URI String\n";
+        arff.append("@attribute URI String\n");
         String classAttr = "";
         for (int i = 0; i < dataset.features.size(); i++) {
             if (class_uri != null && dataset.features.get(i).uri.equals(class_uri)) {
@@ -148,14 +154,14 @@ public class DatasetService {
                 }
                 classAttr = "@attribute " + dataset.features.get(i).uri + attributeValues;
             } else {
-                arff += "@attribute " + dataset.features.get(i).uri + " " + featureIsNumeric.get(dataset.features.get(i).uri) + "\n";
+                arff.append("@attribute ").append(dataset.features.get(i).uri).append(" ").append(featureIsNumeric.get(dataset.features.get(i).uri)).append("\n");
             }
         }
-        arff += classAttr;
-        arff += dataStr;
+        arff.append(classAttr);
+        arff.append(dataStr);
         Dao datasetDao = new Dao();
         try {
-            dataset.arff = arff;
+            dataset.arff = arff.toString();
             Gson gson = new Gson();
             Document document = Document.parse(gson.toJson(dataset));
             datasetDao.saveData("dataset", document);
@@ -164,8 +170,28 @@ public class DatasetService {
         }finally {
             datasetDao.close();
         }
-        return arff;
+        return arff.toString();
     }
 
+
+    static String toArffWeka(String bla) {
+        ArrayList<Attribute> atts = new ArrayList<Attribute>();
+        ArrayList<Attribute> attVals = new ArrayList<Attribute>();
+        // - numeric
+        atts.add(new Attribute("att1"));
+        atts.add(new Attribute("att2"));
+        // 2. create Instances object
+        Instances data = new Instances("MyRelation", atts, 0);
+
+        double[] vals = new double[data.numAttributes()];
+
+        // - numeric
+        vals[0] = Math.PI;
+        // - nominal
+        vals[1] = attVals.indexOf("val3");
+
+        System.out.println(data);
+        return "";
+    }
 
 }

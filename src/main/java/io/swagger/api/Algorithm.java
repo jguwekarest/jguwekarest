@@ -83,7 +83,7 @@ public class Algorithm  {
 */
     @GET
     @Produces({ "text/uri-list" })
-    @ApiOperation(value = "Get a list of all available algorithms.", notes = "Get a list of all algorithms.", response = void.class, tags={ "algorithm", },extensions = @Extension(name = "my-extension", properties = { @ExtensionProperty(name = "test1", value = "value1")}))
+    @ApiOperation(value = "Get a list of all available algorithms.", notes = "Get a list of all algorithms.", response = void.class, tags={ "algorithm", })
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "OK", response = void.class),
         @ApiResponse(code = 400, message = "Bad Request", response = void.class),

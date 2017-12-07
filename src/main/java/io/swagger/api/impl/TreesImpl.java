@@ -26,8 +26,8 @@ public class TreesImpl extends TreesService {
 
         Object[] params = {binarySplits, confidenceFactor, minNumObj, numFolds, reducedErrorPruning, seed, subtreeRaising, unpruned, useLaplace};
 
-        for (int i = 0; i < params.length; i++) {
-            System.out.println("param are: " + params[i]);
+        for (Object param : params) {
+            System.out.println("param are: " + param);
         }
 
         String txtStr = DatasetService.getArff(fileInputStream, fileDetail, datasetUri);
@@ -77,8 +77,8 @@ public class TreesImpl extends TreesService {
 
         System.out.println("parameterstring for weka: weka.classifiers.trees.J48 " + parameters);
 
-        J48 j48 = new J48();
-        String[] options = new String[0];
+        J48 classifier = new J48();
+        String[] options;
 
         Instances instances = WekaUtils.instancesFromString(txtStr);
 
@@ -88,23 +88,22 @@ public class TreesImpl extends TreesService {
             return Response.serverError().entity(e.getMessage()).build();
         }
         try {
-            j48.setOptions(options);
+            classifier.setOptions(options);
         } catch (Exception e) {
             e.printStackTrace();
             return Response.serverError().entity("Error: check options for WEKA weka.classifiers.trees.j48\n parameters: \"" + parameters + "\"\nWeka error message: " + e.getMessage() + "\n").build();
         }
         try {
-            j48.buildClassifier(instances);
+            classifier.buildClassifier(instances);
         } catch (Exception e) {
             e.printStackTrace();
             return Response.serverError().entity("Error: WEKA weka.classifiers.trees.j48\n parameters: \"" + parameters + "\"\nWeka error message: " + e.getMessage() + "\n").build();
         }
 
-        String validation = "";
-        validation = Validation.crossValidation(instances, j48);
+        String validation = Validation.crossValidation(instances, classifier);
 
-        Vector v = new Vector();
-        v.add(j48);
+        Vector<Object> v = new Vector<>();
+        v.add(classifier);
         v.add(new Instances(instances, 0));
 
         String contextBasePath = servletContext.getRealPath("/");

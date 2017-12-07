@@ -20,6 +20,7 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
+import java.util.Objects;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -63,7 +64,7 @@ public class AuthorizationService {
      *
      * @param username username
      * @param password password
-     * @return
+     * @return String token
      * @throws Exeption.AAException
      */
     public static String login(String username, String password) throws Exeption.AAException {
@@ -91,7 +92,7 @@ public class AuthorizationService {
      * Validates an authentication token.
      *
      * @param token an authentication token
-     * @return
+     * @return boolean validity of the token
      * @throws Exeption.AAException
      */
     public boolean validate(String token) {
@@ -111,7 +112,7 @@ public class AuthorizationService {
      * Logs out a user given their authentication token.
      *
      * @param token an authentication token
-     * @return
+     * @return boolean if it was possible to devalue the token
      * @throws Exeption.AAException
      */
     public static boolean logout(String token) throws Exeption.AAException {
@@ -121,13 +122,10 @@ public class AuthorizationService {
         Response response = client.target(SSOlogout)
                 .request()
                 .post(Entity.form(formData));
-        int status = response.getStatus();
+        Integer status = response.getStatus();
+        Integer positiveStatus = 200;
         response.close();
-        if (200 != status) {
-            //throw new Exeption.AAException(401, "Token is not valid");
-            return false;
-        }
-        return status == 200;
+        return Objects.equals(positiveStatus, status);
     }
 
     /**

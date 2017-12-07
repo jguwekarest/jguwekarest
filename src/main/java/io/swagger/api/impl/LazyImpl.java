@@ -54,23 +54,23 @@ public class LazyImpl extends LazyService {
 
         System.out.println("parameterstring for weka: IBk " + parameters.replaceAll("( )+", " "));
 
-        IBk kNN = new IBk();
+        IBk classifier = new IBk();
 
         Instances instances = WekaUtils.instancesFromString(txtStr);
 
         try {
-            kNN.setOptions( weka.core.Utils.splitOptions(parameters.replaceAll("( )+", " ")) );
-            kNN.buildClassifier(instances);
+            classifier.setOptions( weka.core.Utils.splitOptions(parameters.replaceAll("( )+", " ")) );
+            classifier.buildClassifier(instances);
         } catch (Exception e) {
             e.printStackTrace();
             return Response.serverError().entity("Error: check options for WEKA weka.classifiers.lazy.IBk\n parameters: \"" + parameters + "\"\nWeka error message: " + e.getMessage() + "\n").build();
         }
 
         String validation = "";
-        validation = Validation.crossValidation(instances, kNN);
+        validation = Validation.crossValidation(instances, classifier);
 
-        Vector v = new Vector();
-        v.add(kNN);
+        Vector<Object> v = new Vector<>();
+        v.add(classifier);
         v.add(new Instances(instances, 0));
 
         return Response.ok(v.toString() + "\n" + validation + "\n", "text/x-arff").build();

@@ -1,6 +1,5 @@
 package io.swagger.api.authorization;
 
-import io.swagger.annotations.Api;
 import io.swagger.annotations.*;
 import io.swagger.api.Exeption;
 import org.glassfish.jersey.media.multipart.FormDataParam;

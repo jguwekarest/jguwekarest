@@ -42,23 +42,37 @@ public class FunctionsImpl extends FunctionsService {
         parameters += " -num-decimal-places 4 ";
 
         System.out.println("parameterstring for weka: linearRegression " + parameters.replaceAll("( )+", " "));
-        LinearRegression LR = new LinearRegression();
+        LinearRegression classifier = new LinearRegression();
 
         Instances instances = WekaUtils.instancesFromString(txtStr);
 
+        String[] options;
+
         try {
-            LR.setOptions( weka.core.Utils.splitOptions(parameters.replaceAll("( )+", " ")) );
-            LR.buildClassifier(instances);
+            options = weka.core.Utils.splitOptions(parameters);
+        } catch (Exception e) {
+            return Response.serverError().entity(e.getMessage()).build();
+        }
+        try {
+            classifier.setOptions(options);
+            // ? classifier.setOptions( weka.core.Utils.splitOptions(parameters.replaceAll("( )+", " ")) );
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Response.serverError().entity("Error: check options for WEKA weka.classifiers.functions.LinearRegression\n parameters: \"" + parameters + "\"\nWeka error message: " + e.getMessage() + "\n").build();
+        }
+
+        try {
+            classifier.buildClassifier(instances);
         } catch (Exception e) {
             e.printStackTrace();
             return Response.serverError().entity("Error: check options for WEKA weka.classifiers.functions.LinearRegression\n parameters: \"" + parameters + "\"\nWeka error message: " + e.getMessage() + "\n").build();
         }
 
         String validation = "";
-        validation = crossValidation(instances, LR);
+        validation = crossValidation(instances, classifier);
 
-        Vector v = new Vector();
-        v.add(LR);
+        Vector<Object> v = new Vector<>();
+        v.add(classifier);
         v.add(new Instances(instances, 0));
 
 

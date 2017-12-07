@@ -51,38 +51,38 @@ public class BayesImpl extends BayesService {
             parameters += estimatorParams;
         }
         System.out.println("parameterstring for weka: " + parameters);
-        BayesNet net = new BayesNet();
-        String[] options = new String[0];
+
+        BayesNet classifier = new BayesNet();
 
         Instances instances = WekaUtils.instancesFromString(txtStr);
 
+        String[] options = new String[0];
         try {
             options = weka.core.Utils.splitOptions(parameters);
         } catch (Exception e) {
             return Response.serverError().entity(e.getMessage()).build();
         }
         try {
-            net.setOptions(options);
+            classifier.setOptions(options);
         } catch (Exception e) {
             e.printStackTrace();
             return Response.serverError().entity("Error: check options for WEKA weka.classifiers.bayes.net.search." + searchAlgorithm + "\n parameters: \"" + parameters + "\"\nWeka error message: " + e.getMessage() + "\n").build();
         }
         try {
-            net.buildClassifier(instances);
+            classifier.buildClassifier(instances);
         } catch (Exception e) {
             e.printStackTrace();
             return Response.serverError().entity("Error: WEKA weka.classifiers.bayes.net.search." + searchAlgorithm + "\n parameters: \"" + parameters + "\"\nWeka error message: " + e.getMessage() + "\n").build();
         }
 
         String validation = "";
-        validation = Validation.crossValidation(instances, net);
+        validation = Validation.crossValidation(instances, classifier);
 
-        Vector v = new Vector();
-        v.add(net);
+        Vector<Object> v = new Vector<>();
+        v.add(classifier);
         v.add(new Instances(instances, 0));
         try {
-
-            ModelService.saveModel(net, net.getOptions(), validation,"");
+            ModelService.saveModel(classifier, classifier.getOptions(), validation,"");
         } catch (Exception e) {
             e.printStackTrace();
             return Response.serverError().entity("Error: WEKA weka.classifiers.bayes.net.search." + searchAlgorithm + "\n parameters: \"" + parameters + "\"\nWeka error message: " + e.getMessage() + "\n").build();

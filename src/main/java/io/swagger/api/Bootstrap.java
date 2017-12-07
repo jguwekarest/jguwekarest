@@ -10,10 +10,17 @@ import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Bootstrap extends HttpServlet {
   @Override
   public void init(ServletConfig config) throws ServletException {
+    final Map<String, Object> map = new HashMap<String, Object>();
+    map.put("type", "H2020");
+    map.put("name", "OpenRiskNet");
+    map.put("cordis", "http://www.cordis.europa.eu/project/rcn/206759_en.html");
+
     Info info = new Info()
       .title("JGU WEKA REST Service")
       .description("RESTful API Webservice to WEKA Machine Learning Algorithms.\n" +
@@ -27,6 +34,7 @@ public class Bootstrap extends HttpServlet {
         .name("GNU General Public License 3")
         .url("https://www.gnu.org/licenses/gpl-3.0.de.html"))
       .version("0.0.2");
+      info.setVendorExtension("x-project", map);
 
     ServletContext context = config.getServletContext();
     Swagger swagger = new Swagger().info(info);

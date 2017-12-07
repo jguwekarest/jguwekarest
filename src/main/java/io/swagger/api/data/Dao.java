@@ -17,6 +17,7 @@ import javax.ws.rs.core.UriInfo;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -26,7 +27,7 @@ public class Dao {
     private String  dbName;
     private String  dbHost;
     private Integer dbPort;
-    private String  dbUser = "";
+    private String  dbUser;
     private String  dbPassword;
 
     private MongoClient     mongoClient = null;
@@ -53,7 +54,7 @@ public class Dao {
             e.printStackTrace();
             LOG.log(Level.SEVERE, "Database configuration can not be loaded!");
         } finally {
-            if (dbUser != "" && dbPassword != null) {
+            if (!Objects.equals(dbUser, "") && dbPassword != null) {
                 MongoCredential mongoCredential = MongoCredential.createScramSha1Credential(dbUser, dbName, dbPassword.toCharArray());
                 mongoClient = new MongoClient(new ServerAddress(dbHost, dbPort), Arrays.asList(mongoCredential));
             } else {
@@ -66,14 +67,14 @@ public class Dao {
 
     @Produces({"text/uri-list", "application/json"})
     public String listData(String collection, UriInfo ui, String accept) {
-        String result = "";
+        StringBuilder result = new StringBuilder();
         int i = 0;
         //System.out.println("accept header string is: " + accept);
         mongoCollection = mongoDB.getCollection(collection);
         try (MongoCursor<Document> cursor = mongoCollection.find().iterator()) {
             while(cursor.hasNext()) {
                 Document document = cursor.next();
-                result += (ui.getBaseUri() + collection + "/" + document.get("_id") + "\n");
+                result.append(ui.getBaseUri()).append(collection).append("/").append(document.get("_id")).append("\n");
                 i++;
             }
             cursor.close();
@@ -81,7 +82,7 @@ public class Dao {
 
         }
         LOG.log(Level.INFO, "Retrieved " + i + " " + collection + "\n" + result);
-        return result;
+        return result.toString();
     }
 
     public String getDatasetArff(String id){
@@ -123,7 +124,7 @@ public class Dao {
         //strictJSON = strictJSON.replaceAll("(\"[^\"]*)(\\.)([^\"]*\".:)", "$1\\(DOT\\)$3");
         //strictJSON = strictJSON.replaceAll("(\"[^\"]*)(\\.)([^\"]*\".:)", "$1\\(DOT\\)$3");
 
-        while (strictJSON != strictJSON.replaceAll("(\"[^\"]*)(\\.)([^\"]*\".:)", "$1\\(DOT\\)$3")) {
+        while (!Objects.equals(strictJSON, strictJSON.replaceAll("(\"[^\"]*)(\\.)([^\"]*\".:)", "$1\\(DOT\\)$3"))) {
             strictJSON = strictJSON.replaceAll("(\"[^\"]*)(\\.)([^\"]*\".:)", "$1\\(DOT\\)$3");
         }
 
