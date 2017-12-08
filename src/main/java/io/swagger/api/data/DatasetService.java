@@ -211,7 +211,6 @@ public class DatasetService {
             norm.setOptions(options);
             Instances instances = WekaUtils.instancesFromString(out);
             norm.setInputFormat(instances);
-
             Instances newData = Filter.useFilter(instances, norm);
             out = newData.toString();
         } else if (standardize != null && standardize){
@@ -223,7 +222,6 @@ public class DatasetService {
             Instances newData = Filter.useFilter(instances, stand);
             out = newData.toString();
         }
-
         return out;
     }
 
