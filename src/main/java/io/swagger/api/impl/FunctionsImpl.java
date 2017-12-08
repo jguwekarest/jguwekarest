@@ -29,7 +29,7 @@ public class FunctionsImpl extends FunctionsService {
             System.out.println("LR param " + i + " are: " + params[i]);
         }
 
-        String txtStr = DatasetService.getArff(fileInputStream, fileDetail, datasetUri);
+        String txtStr = DatasetService.getArff(fileInputStream, fileDetail, datasetUri, subjectid);
 
         String parameters = "";
 

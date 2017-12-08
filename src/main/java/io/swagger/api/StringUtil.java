@@ -1,5 +1,8 @@
 package io.swagger.api;
 
+
+import org.apache.commons.validator.routines.UrlValidator;
+
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2017-09-11T12:03:46.572Z")
 public class StringUtil {
   /**
@@ -66,5 +69,17 @@ public class StringUtil {
     } else {
       return false;
     }
+  }
+
+  /**
+   * Check if a String is a URI.
+   *
+   * @param str The URI string
+   * @return true or false
+   */
+  public static Boolean isUri(String uriString){
+    String[] schemes = {"http","https"};
+    UrlValidator urlValidator = new UrlValidator(schemes);
+    return urlValidator.isValid(uriString);
   }
 }

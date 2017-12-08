@@ -10,6 +10,7 @@ import weka.core.Instances;
 
 import javax.servlet.ServletContext;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import java.io.IOException;
@@ -22,15 +23,15 @@ public class TreesImpl extends TreesService {
 
     @Override
     @Produces("text/plain")
-    public Response algorithmJ48Post(InputStream fileInputStream, FormDataContentDisposition fileDetail, String datasetUri, Integer binarySplits, BigDecimal confidenceFactor, Integer minNumObj, Integer numFolds, Integer reducedErrorPruning, Integer seed, Integer subtreeRaising, Integer unpruned, Integer useLaplace, SecurityContext securityContext, ServletContext servletContext) throws NotFoundException, IOException {
+    public Response algorithmJ48Post(InputStream fileInputStream, FormDataContentDisposition fileDetail, String datasetUri, Integer binarySplits, BigDecimal confidenceFactor, Integer minNumObj, Integer numFolds, Integer reducedErrorPruning, Integer seed, Integer subtreeRaising, Integer unpruned, Integer useLaplace, SecurityContext securityContext, ServletContext servletContext, HttpHeaders headers) throws NotFoundException, IOException {
 
         Object[] params = {binarySplits, confidenceFactor, minNumObj, numFolds, reducedErrorPruning, seed, subtreeRaising, unpruned, useLaplace};
 
         for (Object param : params) {
             System.out.println("param are: " + param);
         }
-
-        String txtStr = DatasetService.getArff(fileInputStream, fileDetail, datasetUri);
+        String subjectid = headers.getRequestHeaders().getFirst("subjectid");
+        String txtStr = DatasetService.getArff(fileInputStream, fileDetail, datasetUri, subjectid);
 
         String parameters = "";
 

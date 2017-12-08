@@ -24,7 +24,7 @@ public class RulesImpl extends RulesService {
     @Produces("text/plain")
     public Response algorithmZeroRPost(InputStream fileInputStream, FormDataContentDisposition fileDetail, String datasetUri, String subjectid, SecurityContext securityContext) throws NotFoundException, IOException {
 
-        String txtStr = DatasetService.getArff(fileInputStream, fileDetail, datasetUri);
+        String txtStr = DatasetService.getArff(fileInputStream, fileDetail, datasetUri, subjectid);
 
         ZeroR zeror = new ZeroR();
         String[] options = new String[0];
@@ -54,7 +54,7 @@ public class RulesImpl extends RulesService {
                                          Integer unpruned, Integer useUnsmoothed, Double minNumInstances, Integer buildRegressionTree,
                                          String subjectid, SecurityContext securityContext) throws NotFoundException, IOException {
 
-        String txtStr = DatasetService.getArff(fileInputStream, fileDetail, datasetUri);
+        String txtStr = DatasetService.getArff(fileInputStream, fileDetail, datasetUri, subjectid);
 
         String parameters = "";
 

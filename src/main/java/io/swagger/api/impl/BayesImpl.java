@@ -23,8 +23,8 @@ public class BayesImpl extends BayesService {
     @Override
     @Produces("text/plain")
     public Response algorithmBayesNetPost(InputStream fileInputStream, FormDataContentDisposition fileDetail, String datasetUri, String estimator, BigDecimal estimatorParams, Integer useADTree, String searchAlgorithm, String searchParams, HttpHeaders headers, UriInfo ui, SecurityContext securityContext) throws NotFoundException, IOException {
-
-        String txtStr = DatasetService.getArff(fileInputStream, fileDetail, datasetUri);
+        String subjectid = headers.getRequestHeaders().getFirst("subjectid");
+        String txtStr = DatasetService.getArff(fileInputStream, fileDetail, datasetUri, subjectid);
 
         String parameters = "";
 

@@ -26,7 +26,7 @@ public class LazyImpl extends LazyService {
             System.out.println("kNN param " + i + " are: " + params[i]);
         }
 
-        String txtStr = DatasetService.getArff(fileInputStream, fileDetail, datasetUri);
+        String txtStr = DatasetService.getArff(fileInputStream, fileDetail, datasetUri, subjectid);
 
         String parameters = "";
 

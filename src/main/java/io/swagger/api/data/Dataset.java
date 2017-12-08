@@ -106,6 +106,49 @@ public class Dataset {
                 .build();
     }
 
+
+    @POST
+    @Path("/dataset/{id}")
+    @Consumes({ "multipart/form-data" })
+    @Produces({ "text/x-arff" })
+    @ApiOperation(
+            value = "Filter an internal dataset with weka filter in weka arff format.",
+            notes = "Filter an internal dataset with weka filter in weka arff format.",
+            tags={ "dataset", },
+            response = void.class,
+            produces = "text/x-arff")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "OK", response = void.class),
+            @ApiResponse(code = 400, message = "Bad Request", response = void.class),
+            @ApiResponse(code = 401, message = "Unauthorized", response = void.class),
+            @ApiResponse(code = 403, message = "Forbidden", response = void.class),
+            @ApiResponse(code = 404, message = "Resource Not Found", response = void.class) })
+    public Response filter(
+            @ApiParam(value = "Dataset ID" )@PathParam("id") String id
+            , @ApiParam(value = "Feature(s) to remove. ID or comma separated IDs of the attribute(s)(column(s)) to remove.", required=false)@FormDataParam("idx_remove") String idx_remove
+            , @ApiParam(value = "Normalize all numeric values - scale: - The factor for scaling the output range (default: 1).", required=false)@FormDataParam("scale") String scale
+            , @ApiParam(value = "Normalize all numeric values - translation: The translation of the output range (default: 0).", required=false)@FormDataParam("translation") String translation
+            , @ApiParam(value = "Standardizes all numeric attributes in the given dataset to have zero mean and unit variance (apart from the class attribute, if set).", required=false)@FormDataParam("standardize") Boolean standardize
+            , @ApiParam(value = "Ignore class (ignore class attribute for Normalization or Standization).", required=false)@FormDataParam("ignore") Boolean ignore
+            , @ApiParam(value = "Authorization token" )@HeaderParam("subjectid") String subjectid) throws Exception {
+
+        String arff = DatasetService.getArff(null,null, id, subjectid);
+        Dataset ds = new Dataset();
+        ds.datasetURI = id; // @ToDo replace with full URI
+        ds.arff = arff;
+        String newArff = DatasetService.filter(ds, idx_remove, scale, translation, standardize, ignore);
+
+        //System.out.println(arff);
+
+        return Response
+                .ok(newArff)
+                .status(Response.Status.OK)
+                .build();
+    }
+
+
+    //dataset structure
+
     public String datasetURI;
     public LinkedTreeMap meta;
     public List<Feature> features;

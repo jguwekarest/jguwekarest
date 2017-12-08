@@ -4,10 +4,15 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import io.swagger.api.ApiException;
 import io.swagger.api.StringUtil;
+import io.swagger.api.WekaUtils;
 import org.bson.Document;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import weka.core.Attribute;
 import weka.core.Instances;
+import weka.filters.Filter;
+import weka.filters.unsupervised.attribute.Normalize;
+import weka.filters.unsupervised.attribute.Remove;
+import weka.filters.unsupervised.attribute.Standardize;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -18,28 +23,40 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class DatasetService {
+
+    private static final Logger LOG = Logger.getLogger(DatasetService.class.getName());
 
     static String listDatasets(UriInfo ui, String accept, String token) {
         Dao datasetDao = new Dao();
         String dslist = datasetDao.listData("dataset", ui, accept);
         datasetDao.close();
-        System.out.println(toArffWeka("test"));
+        //System.out.println(toArffWeka("test"));
         return dslist;
     }
 
     static String getDatasetArff(String id, String token){
+        String arff = "";
         Dao datasetDao = new Dao();
-        String arff = datasetDao.getDatasetArff(id);
-        datasetDao.close();
+        try {
+            arff = datasetDao.getDatasetArff(id);
+        }finally {
+            datasetDao.close();
+        }
         return arff;
     }
 
-    public static String getArff(InputStream fileInputStream, FormDataContentDisposition fileDetail, String datasetURI) throws IOException {
+    public static String getArff(InputStream fileInputStream, FormDataContentDisposition fileDetail, String datasetURI, String subjectid) throws IOException {
         StringBuilder txtStr = new StringBuilder();
         if (datasetURI != null && !Objects.equals(datasetURI, "")) {
-            txtStr.append(DatasetService.getDatasetArff(datasetURI, null));
+            if(StringUtil.isUri(datasetURI)) {
+                System.out.println("isUri true: " + datasetURI);
+            } else {
+                txtStr.append(DatasetService.getDatasetArff(datasetURI, subjectid));
+            }
         } else {
             int c;
             while ((c = fileInputStream.read()) != -1) {
@@ -173,6 +190,42 @@ public class DatasetService {
         return arff.toString();
     }
 
+    static String filter(Dataset dataset, String idx_remove, String scale, String translation, Boolean standardize, Boolean ignore) throws Exception {
+        String out = dataset.arff;
+        if(idx_remove != null && !idx_remove.equals("0")){
+            LOG.log(Level.INFO, "Remove filter: attributes: {0}", idx_remove);
+            Remove rm = new Remove();
+            String[] options = new String[]{"-R",idx_remove};
+            rm.setOptions(options);
+            Instances instances = WekaUtils.instancesFromString(out);
+            rm.setInputFormat(instances);
+            Instances newData = Filter.useFilter(instances,rm);
+            out = newData.toString();
+        }
+        if (ignore == null) ignore = false;
+        if(scale != null && translation != null){
+            LOG.log(Level.INFO, "Normalize filter: scale: {0}, translation: {1}, ignore class: {2}", new Object[]{scale,translation, ignore});
+            Normalize norm = new Normalize();
+            if(ignore) norm.setIgnoreClass(true);
+            String[] options = { "-S", scale, "-T", translation };
+            norm.setOptions(options);
+            Instances instances = WekaUtils.instancesFromString(out);
+            norm.setInputFormat(instances);
+
+            Instances newData = Filter.useFilter(instances, norm);
+            out = newData.toString();
+        } else if (standardize != null && standardize){
+            LOG.log(Level.INFO, "Standardize filter: ignore class: {0}",ignore);
+            Standardize stand = new Standardize();
+            if(ignore) stand.setIgnoreClass(true);
+            Instances instances = WekaUtils.instancesFromString(out);
+            stand.setInputFormat(instances);
+            Instances newData = Filter.useFilter(instances, stand);
+            out = newData.toString();
+        }
+
+        return out;
+    }
 
     static String toArffWeka(String bla) {
         ArrayList<Attribute> atts = new ArrayList<Attribute>();
