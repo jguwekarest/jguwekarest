@@ -28,7 +28,7 @@ public class BayesImpl extends BayesService {
 
         String parameters = "";
 
-        if (useADTree != 1) { parameters += " -D ";}
+        if (useADTree != null && useADTree != 1) { parameters += " -D ";}
 
         // Set the parameter for the searchAlgo
         parameters += " -Q ";

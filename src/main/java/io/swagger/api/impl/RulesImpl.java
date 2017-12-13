@@ -59,10 +59,10 @@ public class RulesImpl extends RulesService {
         String parameters = "";
 
         // set unpruned
-        if (unpruned == 1) { parameters += " -N ";}
+        if (unpruned != null && unpruned == 1) { parameters += " -N ";}
 
         // set use unsmoothed
-        if (useUnsmoothed == 1) { parameters += " -U ";}
+        if (useUnsmoothed != null && useUnsmoothed == 1) { parameters += " -U ";}
 
         // Set minNumInstances
         if (minNumInstances != null) {
@@ -72,7 +72,7 @@ public class RulesImpl extends RulesService {
         }
 
         // set buildRegressionTree
-        if (buildRegressionTree == 1) { parameters += " -R ";}
+        if (buildRegressionTree != null && buildRegressionTree == 1) { parameters += " -R ";}
 
         System.out.println("parameterstring for weka: M5Rules " + parameters);
 

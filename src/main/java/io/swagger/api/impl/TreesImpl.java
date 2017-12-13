@@ -35,7 +35,7 @@ public class TreesImpl extends TreesService {
 
         String parameters = "";
 
-        if (binarySplits == 1) {
+        if (binarySplits != null && binarySplits == 1) {
             parameters += " -B ";
         }
 
@@ -45,7 +45,7 @@ public class TreesImpl extends TreesService {
             parameters += " -M 2 ";
         }
 
-        if (reducedErrorPruning == 1) {
+        if (reducedErrorPruning != null && reducedErrorPruning == 1) {
             if (numFolds != null) {
                 parameters += " -R -N " + numFolds;
             } else {
@@ -59,10 +59,10 @@ public class TreesImpl extends TreesService {
             parameters += " -Q 2 ";
         }
 
-        if (unpruned == 1) {
+        if (unpruned != null && unpruned == 1) {
             parameters += " -U ";
         } else {
-            if (subtreeRaising == 0) {
+            if (subtreeRaising != null && subtreeRaising == 0) {
                 parameters += " -S ";
             }
             if (confidenceFactor != null) {
