@@ -13,6 +13,7 @@ import weka.filters.Filter;
 import weka.filters.unsupervised.attribute.Normalize;
 import weka.filters.unsupervised.attribute.Remove;
 import weka.filters.unsupervised.attribute.Standardize;
+import weka.filters.unsupervised.attribute.StringToNominal;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -190,7 +191,7 @@ public class DatasetService {
         return arff.toString();
     }
 
-    static String filter(Dataset dataset, String idx_remove, String scale, String translation, Boolean standardize, Boolean ignore) throws Exception {
+    static String filter(Dataset dataset, String idx_remove, String scale, String translation, Boolean standardize, Boolean ignore, String attributeRange) throws Exception {
         String out = dataset.arff;
         if(idx_remove != null && !idx_remove.equals("0")){
             LOG.log(Level.INFO, "Remove filter: attributes: {0}", idx_remove);
@@ -220,6 +221,15 @@ public class DatasetService {
             Instances instances = WekaUtils.instancesFromString(out);
             stand.setInputFormat(instances);
             Instances newData = Filter.useFilter(instances, stand);
+            out = newData.toString();
+        }
+        // String to Nominal
+        if(attributeRange != null) {
+            StringToNominal s2n = new StringToNominal();
+            s2n.setAttributeRange(attributeRange);
+            Instances instances = WekaUtils.instancesFromString(out);
+            s2n.setInputFormat(instances);
+            Instances newData = new Instances(StringToNominal.useFilter(instances, s2n));
             out = newData.toString();
         }
         return out;

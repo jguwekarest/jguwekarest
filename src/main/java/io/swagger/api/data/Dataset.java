@@ -130,13 +130,14 @@ public class Dataset {
             , @ApiParam(value = "Normalize all numeric values - translation: The translation of the output range (default: 0).", required=false)@FormDataParam("translation") String translation
             , @ApiParam(value = "Standardize all numeric attributes in the given dataset to have zero mean and unit variance (apart from the class attribute, if set).", required=false)@FormDataParam("standardize") Boolean standardize
             , @ApiParam(value = "Ignore class (ignore class attribute for Normalization or Standization).", required=false)@FormDataParam("ignore") Boolean ignore
+            , @ApiParam(value = "String to Nominal: Sets which attributes to process. This attributes must be string attributes (\"first\" and \"last\" are valid values as well as ranges and lists. Empty value do not process the filter).", required=false)@FormDataParam("attributeRange") String attributeRange
             , @ApiParam(value = "Authorization token" )@HeaderParam("subjectid") String subjectid) throws Exception {
 
         String arff = DatasetService.getArff(null,null, id, subjectid);
         Dataset ds = new Dataset();
         ds.datasetURI = id; // @ToDo replace with full URI
         ds.arff = arff;
-        String newArff = DatasetService.filter(ds, idx_remove, scale, translation, standardize, ignore);
+        String newArff = DatasetService.filter(ds, idx_remove, scale, translation, standardize, ignore, attributeRange);
 
         return Response
                 .ok(newArff)
