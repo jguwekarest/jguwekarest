@@ -1,6 +1,11 @@
 package io.swagger.api.cluster;
 
-public class ClusterService {
-    //public abstract Response clusterBayesNetPost(InputStream fileInputStream, FormDataContentDisposition fileDetail,String estimator,BigDecimal estimatorParams,Integer useADTree,String searchAlgorithm,String searchParams,SecurityContext securityContext) throws NotFoundException, IOException;
+import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.SecurityContext;
+import java.io.InputStream;
+
+public abstract class ClusterService {
+    public abstract Response clusterEMPost(InputStream fileInputStream, FormDataContentDisposition fileDetail, String datasetUri, SecurityContext securityContext, String subjectid) throws Exception;
 }

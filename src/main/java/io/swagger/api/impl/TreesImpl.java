@@ -81,7 +81,7 @@ public class TreesImpl extends TreesService {
         J48 classifier = new J48();
         String[] options;
 
-        Instances instances = WekaUtils.instancesFromString(txtStr);
+        Instances instances = WekaUtils.instancesFromString(txtStr, true);
 
         try {
             options = weka.core.Utils.splitOptions(parameters);

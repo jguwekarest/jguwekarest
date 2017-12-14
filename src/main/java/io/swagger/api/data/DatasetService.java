@@ -198,7 +198,7 @@ public class DatasetService {
             Remove rm = new Remove();
             String[] options = new String[]{"-R",idx_remove};
             rm.setOptions(options);
-            Instances instances = WekaUtils.instancesFromString(out);
+            Instances instances = WekaUtils.instancesFromString(out, true);
             rm.setInputFormat(instances);
             Instances newData = Filter.useFilter(instances,rm);
             out = newData.toString();
@@ -210,7 +210,7 @@ public class DatasetService {
             if(ignore) norm.setIgnoreClass(true);
             String[] options = { "-S", scale, "-T", translation };
             norm.setOptions(options);
-            Instances instances = WekaUtils.instancesFromString(out);
+            Instances instances = WekaUtils.instancesFromString(out, true);
             norm.setInputFormat(instances);
             Instances newData = Filter.useFilter(instances, norm);
             out = newData.toString();
@@ -218,7 +218,7 @@ public class DatasetService {
             LOG.log(Level.INFO, "Standardize filter: ignore class: {0}",ignore);
             Standardize stand = new Standardize();
             if(ignore) stand.setIgnoreClass(true);
-            Instances instances = WekaUtils.instancesFromString(out);
+            Instances instances = WekaUtils.instancesFromString(out, true);
             stand.setInputFormat(instances);
             Instances newData = Filter.useFilter(instances, stand);
             out = newData.toString();
@@ -227,7 +227,7 @@ public class DatasetService {
         if(attributeRange != null) {
             StringToNominal s2n = new StringToNominal();
             s2n.setAttributeRange(attributeRange);
-            Instances instances = WekaUtils.instancesFromString(out);
+            Instances instances = WekaUtils.instancesFromString(out, true);
             s2n.setInputFormat(instances);
             Instances newData = new Instances(StringToNominal.useFilter(instances, s2n));
             out = newData.toString();

@@ -29,7 +29,7 @@ public class RulesImpl extends RulesService {
         ZeroR zeror = new ZeroR();
         String[] options = new String[0];
 
-        Instances instances = WekaUtils.instancesFromString(txtStr);
+        Instances instances = WekaUtils.instancesFromString(txtStr, true);
 
         try {
             zeror.buildClassifier(instances);
@@ -79,7 +79,7 @@ public class RulesImpl extends RulesService {
         M5Rules classifier = new M5Rules();
         String[] options = new String[0];
 
-        Instances instances = WekaUtils.instancesFromString(txtStr);
+        Instances instances = WekaUtils.instancesFromString(txtStr, true);
 
         try {
             classifier.setOptions(weka.core.Utils.splitOptions(parameters));

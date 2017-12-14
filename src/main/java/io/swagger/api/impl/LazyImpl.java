@@ -56,7 +56,7 @@ public class LazyImpl extends LazyService {
 
         IBk classifier = new IBk();
 
-        Instances instances = WekaUtils.instancesFromString(txtStr);
+        Instances instances = WekaUtils.instancesFromString(txtStr, true);
 
         try {
             classifier.setOptions( weka.core.Utils.splitOptions(parameters.replaceAll("( )+", " ")) );

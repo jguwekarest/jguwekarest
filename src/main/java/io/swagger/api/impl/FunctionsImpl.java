@@ -69,7 +69,7 @@ public class FunctionsImpl extends FunctionsService {
 
         LibSVM classifier = new LibSVM();
 
-        Instances instances = WekaUtils.instancesFromString(txtStr);
+        Instances instances = WekaUtils.instancesFromString(txtStr, true);
 
         String[] options;
 
@@ -129,7 +129,7 @@ public class FunctionsImpl extends FunctionsService {
 
         LinearRegression classifier = new LinearRegression();
 
-        Instances instances = WekaUtils.instancesFromString(txtStr);
+        Instances instances = WekaUtils.instancesFromString(txtStr, true);
 
         String[] options;
 

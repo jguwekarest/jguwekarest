@@ -54,7 +54,7 @@ public class BayesImpl extends BayesService {
 
         BayesNet classifier = new BayesNet();
 
-        Instances instances = WekaUtils.instancesFromString(txtStr);
+        Instances instances = WekaUtils.instancesFromString(txtStr, true);
 
         String[] options = new String[0];
         try {
