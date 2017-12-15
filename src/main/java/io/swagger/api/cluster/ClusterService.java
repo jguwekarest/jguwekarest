@@ -7,5 +7,5 @@ import javax.ws.rs.core.SecurityContext;
 import java.io.InputStream;
 
 public abstract class ClusterService {
-    public abstract Response clusterEMPost(InputStream fileInputStream, FormDataContentDisposition fileDetail, String datasetUri, SecurityContext securityContext, String subjectid) throws Exception;
+    public abstract Response clusterEMPost(InputStream fileInputStream, FormDataContentDisposition fileDetail, String datasetUri, Integer numFolds, Integer numKMeansRuns, Integer maximumNumberOfClusters, Integer numClusters, Integer maxIterations, SecurityContext securityContext, String subjectid) throws Exception;
 }

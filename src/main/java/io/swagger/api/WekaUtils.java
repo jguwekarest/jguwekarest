@@ -25,4 +25,8 @@ public class WekaUtils {
         return true;
     }
 
+    public static String getParamString(Object value, String option, Object defaultValue ){
+        return ((value != null) ? (" -" + option + " " + value + " ") : (" -" + option + " " + defaultValue + " ") );
+    }
+
 }

@@ -17,15 +17,33 @@ import java.io.InputStream;
 public class ClusterImpl extends ClusterService {
     @Override
     @Produces("text/plain")
-    public Response clusterEMPost(InputStream fileInputStream, FormDataContentDisposition fileDetail, String datasetUri, SecurityContext securityContext, String subjectid) throws Exception {
+    public Response clusterEMPost(InputStream fileInputStream, FormDataContentDisposition fileDetail, String datasetUri, Integer numFolds, Integer numKMeansRuns, Integer maximumNumberOfClusters, Integer numClusters, Integer maxIterations,SecurityContext securityContext, String subjectid) throws Exception {
         String txtStr = DatasetService.getArff(fileInputStream, fileDetail, datasetUri, subjectid);
         Instances instances = WekaUtils.instancesFromString(txtStr, true);
-        String[] options = new String[2];
-        options[0] = "-I";
-        options[1] = "100";
+
+
+        String parameters = "";
+        // set parameters
+        // numFolds
+        parameters += WekaUtils.getParamString(numFolds, "X", 10);
+        // numKMeansRuns
+        parameters += WekaUtils.getParamString(numKMeansRuns, "K", 10);
+        // maximumNumberOfClusters
+        parameters += WekaUtils.getParamString(maximumNumberOfClusters,"max", -1);
+        // numClusters
+        parameters += WekaUtils.getParamString(numClusters,"N", -1);
+        // maxIterations
+        parameters += WekaUtils.getParamString(maxIterations,"I", 100);
+
+
+        String[] options;
+        try {
+            options = weka.core.Utils.splitOptions(parameters);
+        } catch (Exception e) {
+            return Response.serverError().entity(e.getMessage()).build();
+        }
         EM clusterer = new EM();
         clusterer.setOptions(options);
-
 
         StringToNominal s2n = new StringToNominal();
         s2n.setAttributeRange("first-last");
