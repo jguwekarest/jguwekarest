@@ -19,7 +19,7 @@ public class ClusterImpl extends ClusterService {
     @Produces("text/plain")
     public Response clusterEMPost(InputStream fileInputStream, FormDataContentDisposition fileDetail, String datasetUri, Integer numFolds, Integer numKMeansRuns, Integer maximumNumberOfClusters, Integer numClusters, Integer maxIterations,SecurityContext securityContext, String subjectid) throws Exception {
         String txtStr = DatasetService.getArff(fileInputStream, fileDetail, datasetUri, subjectid);
-        Instances instances = WekaUtils.instancesFromString(txtStr, true);
+        Instances instances = WekaUtils.instancesFromString(txtStr, false);
 
 
         String parameters = "";
