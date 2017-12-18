@@ -1,5 +1,9 @@
 package io.swagger.api.impl;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import io.swagger.api.ApiService;
 import io.swagger.api.NotFoundException;
 import org.apache.commons.io.IOUtils;
@@ -20,14 +24,20 @@ public class ApiImpl extends ApiService {
 
 
         InputStream in = new URL( ui.getBaseUri() + "swagger.json" ).openStream();
-        String jsonContent;
+        String jsonString;
         try {
-            jsonContent = new String(IOUtils.toString(in, "UTF-8"));
+            jsonString = new String(IOUtils.toString(in, "UTF-8"));
         } finally {
             IOUtils.closeQuietly(in);
         }
 
-        return Response.ok(jsonContent).build();
+        JsonParser parser = new JsonParser();
+        JsonObject json = parser.parse(jsonString).getAsJsonObject();
+
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        String prettyJson = gson.toJson(json);
+
+        return Response.ok(prettyJson).build();
 
     }
 }
