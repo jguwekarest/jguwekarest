@@ -75,9 +75,11 @@ public class Trees  {
             , @ApiParam(value = "Whether to consider the subtree raising operation when pruning.", allowableValues="0, 1", defaultValue = "1")@FormDataParam("subtreeRaising") Integer subtreeRaising
             , @ApiParam(value = "Whether pruning is performed.", defaultValue = "1", allowableValues="0, 1")@FormDataParam("unpruned") Integer unpruned
             , @ApiParam(value = "Whether counts at leaves are smoothed based on Laplace.", defaultValue = "0", allowableValues="0, 1")@FormDataParam("useLaplace") Integer useLaplace
+            , @ApiParam(value = "Save the model.", defaultValue="false")@FormDataParam("save") Boolean save
             , @Context SecurityContext securityContext, @Context HttpHeaders headers)
             throws NotFoundException, IOException {
-        return delegate.algorithmJ48Post(fileInputStream, fileDetail,datasetUri,binarySplits,confidenceFactor,minNumObj,numFolds,reducedErrorPruning,seed,subtreeRaising,unpruned,useLaplace,securityContext,servletContext,headers);
+        return delegate.algorithmJ48Post(fileInputStream, fileDetail,datasetUri,binarySplits,confidenceFactor,minNumObj,numFolds,reducedErrorPruning,
+                seed,subtreeRaising,unpruned,useLaplace,save,securityContext,servletContext,headers);
     }
 
 }

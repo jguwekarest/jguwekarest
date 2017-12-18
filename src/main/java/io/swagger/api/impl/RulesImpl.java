@@ -4,6 +4,7 @@ import io.swagger.api.algorithm.RulesService;
 import io.swagger.api.NotFoundException;
 import io.swagger.api.WekaUtils;
 import io.swagger.api.data.DatasetService;
+import io.swagger.api.data.ModelService;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import weka.classifiers.rules.M5Rules;
 import weka.classifiers.rules.ZeroR;
@@ -22,28 +23,31 @@ public class RulesImpl extends RulesService {
 
     @Override
     @Produces("text/plain")
-    public Response algorithmZeroRPost(InputStream fileInputStream, FormDataContentDisposition fileDetail, String datasetUri, String subjectid, SecurityContext securityContext) throws NotFoundException, IOException {
+    public Response algorithmZeroRPost(InputStream fileInputStream, FormDataContentDisposition fileDetail, String datasetUri, Boolean save,
+                                       String subjectid, SecurityContext securityContext) throws NotFoundException, IOException {
 
         String txtStr = DatasetService.getArff(fileInputStream, fileDetail, datasetUri, subjectid);
 
-        ZeroR zeror = new ZeroR();
+        ZeroR classifier = new ZeroR();
         String[] options = new String[0];
 
         Instances instances = WekaUtils.instancesFromString(txtStr, true);
 
         try {
-            zeror.buildClassifier(instances);
+            classifier.buildClassifier(instances);
         } catch (Exception e) {
             e.printStackTrace();
             return Response.serverError().entity("Error: WEKA weka.classifiers.rules.ZeroR\nWeka error message: " + e.getMessage() + "\n").build();
         }
 
         String validation = "";
-        validation = crossValidation(instances, zeror);
+        validation = crossValidation(instances, classifier);
 
         Vector<Object> v = new Vector<>();
-        v.add(zeror);
+        v.add(classifier);
         v.add(new Instances(instances, 0));
+
+        if(save != null && save) ModelService.saveModel(classifier, classifier.getOptions(), validation, subjectid);
 
         return Response.ok(v.toString() + "\n" + validation ).build();
 
@@ -52,7 +56,8 @@ public class RulesImpl extends RulesService {
     @Produces("text/plain")
     public Response algorithmM5RulesPost(InputStream fileInputStream, FormDataContentDisposition fileDetail, String datasetUri,
                                          Integer unpruned, Integer useUnsmoothed, Double minNumInstances, Integer buildRegressionTree,
-                                         String subjectid, SecurityContext securityContext) throws NotFoundException, IOException {
+                                         Boolean save, String subjectid, SecurityContext securityContext)
+            throws NotFoundException, IOException {
 
         String txtStr = DatasetService.getArff(fileInputStream, fileDetail, datasetUri, subjectid);
 
@@ -65,11 +70,7 @@ public class RulesImpl extends RulesService {
         if (useUnsmoothed != null && useUnsmoothed == 1) { parameters += " -U ";}
 
         // Set minNumInstances
-        if (minNumInstances != null) {
-            parameters += " -M " + minNumInstances + " ";
-        } else {
-            parameters += " -M 4.0 ";
-        }
+        parameters += WekaUtils.getParamString(minNumInstances, "M", "4.0");
 
         // set buildRegressionTree
         if (buildRegressionTree != null && buildRegressionTree == 1) { parameters += " -R ";}
@@ -95,6 +96,8 @@ public class RulesImpl extends RulesService {
         Vector<Object> v = new Vector<>();
         v.add(classifier);
         v.add(new Instances(instances, 0));
+
+        if(save != null && save) ModelService.saveModel(classifier, classifier.getOptions(), validation, subjectid);
 
         return Response.ok(v.toString() + "\n" + validation ).build();
 

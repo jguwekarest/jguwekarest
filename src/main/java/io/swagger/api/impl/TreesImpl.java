@@ -4,6 +4,7 @@ import io.swagger.api.NotFoundException;
 import io.swagger.api.WekaUtils;
 import io.swagger.api.algorithm.TreesService;
 import io.swagger.api.data.DatasetService;
+import io.swagger.api.data.ModelService;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import weka.classifiers.trees.J48;
 import weka.core.Instances;
@@ -23,7 +24,10 @@ public class TreesImpl extends TreesService {
 
     @Override
     @Produces("text/plain")
-    public Response algorithmJ48Post(InputStream fileInputStream, FormDataContentDisposition fileDetail, String datasetUri, Integer binarySplits, BigDecimal confidenceFactor, Integer minNumObj, Integer numFolds, Integer reducedErrorPruning, Integer seed, Integer subtreeRaising, Integer unpruned, Integer useLaplace, SecurityContext securityContext, ServletContext servletContext, HttpHeaders headers) throws NotFoundException, IOException {
+    public Response algorithmJ48Post(InputStream fileInputStream, FormDataContentDisposition fileDetail, String datasetUri, Integer binarySplits,
+                                     BigDecimal confidenceFactor, Integer minNumObj, Integer numFolds, Integer reducedErrorPruning, Integer seed,
+                                     Integer subtreeRaising, Integer unpruned, Integer useLaplace, Boolean save, SecurityContext securityContext,
+                                     ServletContext servletContext, HttpHeaders headers) throws NotFoundException, IOException {
 
         Object[] params = {binarySplits, confidenceFactor, minNumObj, numFolds, reducedErrorPruning, seed, subtreeRaising, unpruned, useLaplace};
 
@@ -39,11 +43,7 @@ public class TreesImpl extends TreesService {
             parameters += " -B ";
         }
 
-        if (minNumObj != null) {
-            parameters += " -M " + minNumObj;
-        } else {
-            parameters += " -M 2 ";
-        }
+        parameters += WekaUtils.getParamString(minNumObj, "M", 2);
 
         if (reducedErrorPruning != null && reducedErrorPruning == 1) {
             if (numFolds != null) {
@@ -53,11 +53,7 @@ public class TreesImpl extends TreesService {
             }
         }
 
-        if (seed != null) {
-            parameters += " -Q " + seed;
-        } else {
-            parameters += " -Q 2 ";
-        }
+        parameters += WekaUtils.getParamString(seed, "Q", 2);
 
         if (unpruned != null && unpruned == 1) {
             parameters += " -U ";
@@ -107,10 +103,8 @@ public class TreesImpl extends TreesService {
         v.add(classifier);
         v.add(new Instances(instances, 0));
 
-        String contextBasePath = servletContext.getRealPath("/");
-        if (WekaUtils.saveWekaModel(v, contextBasePath + "/j48.model")) {
-            System.out.println("Model is saved to ");
-        }
+        if(save != null && save) ModelService.saveModel(classifier, classifier.getOptions(), validation, subjectid);
+
         return Response.ok(v.toString() + "\n" + validation + "\n").build();
     }
 

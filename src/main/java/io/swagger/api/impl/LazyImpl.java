@@ -4,6 +4,7 @@ import io.swagger.api.NotFoundException;
 import io.swagger.api.WekaUtils;
 import io.swagger.api.algorithm.LazyService;
 import io.swagger.api.data.DatasetService;
+import io.swagger.api.data.ModelService;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import weka.classifiers.lazy.IBk;
 import weka.core.Instances;
@@ -18,8 +19,11 @@ import java.util.Vector;
 public class LazyImpl extends LazyService {
     @Override
     @Produces("text/plain")
-    public Response algorithmKNNclassificationPost(InputStream fileInputStream, FormDataContentDisposition fileDetail, String datasetUri, Integer windowSize, Integer KNN, Integer crossValidate, String distanceWeighting, Integer meanSquared, String nearestNeighbourSearchAlgorithm, String subjectid, SecurityContext securityContext) throws NotFoundException, IOException {
-        // do some magic!
+    public Response algorithmKNNclassificationPost(InputStream fileInputStream, FormDataContentDisposition fileDetail, String datasetUri,
+                                Integer windowSize, Integer KNN, Integer crossValidate, String distanceWeighting, Integer meanSquared,
+                                String nearestNeighbourSearchAlgorithm, Boolean save, String subjectid, SecurityContext securityContext)
+            throws NotFoundException, IOException {
+
         Object[] params = {windowSize, KNN, crossValidate, distanceWeighting, meanSquared, nearestNeighbourSearchAlgorithm, subjectid};
 
         for (int i= 0; i < params.length; i ++  ) {
@@ -30,13 +34,9 @@ public class LazyImpl extends LazyService {
 
         String parameters = "";
 
-        parameters += ((windowSize != null) ? (" -W " + windowSize + " ") : (" -W 0 ") );
+        parameters += WekaUtils.getParamString(windowSize, "W", 0);
 
-        if (KNN != null && KNN != 1) {
-            parameters += " -K " + KNN + " ";
-        } else {
-            parameters += " -K 1 ";
-        }
+        parameters += WekaUtils.getParamString(KNN, "K", 1);
 
         parameters += ((crossValidate != null && crossValidate != 0) ? " -X " : "");
 
@@ -72,10 +72,10 @@ public class LazyImpl extends LazyService {
         Vector<Object> v = new Vector<>();
         v.add(classifier);
         v.add(new Instances(instances, 0));
+        if(save != null && save) ModelService.saveModel(classifier, classifier.getOptions(), validation, subjectid);
 
         return Response.ok(v.toString() + "\n" + validation + "\n", "text/x-arff").build();
 
-        //return Response.ok(MediaType.APPLICATION_JSON).entity(new ApiResponseMessage(ApiResponseMessage.OK, "Here it is magic!")).build();
     }
 
 }

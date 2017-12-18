@@ -56,11 +56,12 @@ public class Rules {
     public Response algorithmKNNclassificationPost(
             @FormDataParam("file") InputStream fileInputStream,
             @FormDataParam("file") FormDataContentDisposition fileDetail
-            ,@ApiParam(value = "Dataset URI or local dataset ID (to the arff representation of a dataset).")@FormDataParam("datasetURI")  String datasetUri
-            ,@ApiParam(value = "authorization token") @HeaderParam("subjectid") String subjectid
-            ,@Context SecurityContext securityContext)
+            , @ApiParam(value = "Dataset URI or local dataset ID (to the arff representation of a dataset).")@FormDataParam("datasetURI")  String datasetUri
+            , @ApiParam(value = "Save the model.", defaultValue="false")@FormDataParam("save") Boolean save
+            , @ApiParam(value = "authorization token") @HeaderParam("subjectid") String subjectid
+            , @Context SecurityContext securityContext)
             throws io.swagger.api.NotFoundException, IOException {
-        return delegate.algorithmZeroRPost(fileInputStream,fileDetail,datasetUri,subjectid,securityContext);
+        return delegate.algorithmZeroRPost(fileInputStream,fileDetail,datasetUri,save,subjectid,securityContext);
     }
 
 
@@ -80,15 +81,17 @@ public class Rules {
     public Response algorithmM5RclassificationPost(
             @FormDataParam("file") InputStream fileInputStream,
             @FormDataParam("file") FormDataContentDisposition fileDetail
-            ,@ApiParam(value = "Dataset URI or local dataset ID (to the arff representation of a dataset).")@FormDataParam("datasetURI")  String datasetUri
-            ,@ApiParam(value = "Whether pruning is performed.", example = "0", defaultValue = "0", allowableValues="0,1")@FormDataParam("unpruned") Integer unpruned
-            ,@ApiParam(value = "Whether to use unsmoothed predictions.", defaultValue = "0", allowableValues="0,1")@FormDataParam("useUnsmoothed") Integer useUnsmoothed
-            ,@ApiParam(value = "The minimum number of instances to allow at a leaf node.", defaultValue = "4")@FormDataParam("minNumInstances") Double minNumInstances
-            ,@ApiParam(value = "Whether to generate a regression tree/rule instead of a model tree/rule.", defaultValue = "0", allowableValues="0,1")@FormDataParam("buildRegressionTree") Integer buildRegressionTree
-            ,@ApiParam(value = "authorization token") @HeaderParam("subjectid") String subjectid
-            ,@Context SecurityContext securityContext)
+            , @ApiParam(value = "Dataset URI or local dataset ID (to the arff representation of a dataset).")@FormDataParam("datasetURI")  String datasetUri
+            , @ApiParam(value = "Whether pruning is performed.", example = "0", defaultValue = "0", allowableValues="0,1")@FormDataParam("unpruned") Integer unpruned
+            , @ApiParam(value = "Whether to use unsmoothed predictions.", defaultValue = "0", allowableValues="0,1")@FormDataParam("useUnsmoothed") Integer useUnsmoothed
+            , @ApiParam(value = "The minimum number of instances to allow at a leaf node.", defaultValue = "4")@FormDataParam("minNumInstances") Double minNumInstances
+            , @ApiParam(value = "Whether to generate a regression tree/rule instead of a model tree/rule.", defaultValue = "0", allowableValues="0,1")@FormDataParam("buildRegressionTree") Integer buildRegressionTree
+            , @ApiParam(value = "Save the model.", defaultValue="false")@FormDataParam("save") Boolean save
+            , @ApiParam(value = "authorization token") @HeaderParam("subjectid") String subjectid
+            , @Context SecurityContext securityContext)
             throws io.swagger.api.NotFoundException, IOException {
-        return delegate.algorithmM5RulesPost(fileInputStream,fileDetail,datasetUri,unpruned,useUnsmoothed,minNumInstances,buildRegressionTree,subjectid,securityContext);
+        return delegate.algorithmM5RulesPost(fileInputStream,fileDetail,datasetUri,unpruned,useUnsmoothed,minNumInstances,buildRegressionTree,
+                save,subjectid,securityContext);
     }
 
 }

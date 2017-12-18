@@ -3,6 +3,7 @@ package io.swagger.api.impl;
 import io.swagger.api.WekaUtils;
 import io.swagger.api.algorithm.FunctionsService;
 import io.swagger.api.data.DatasetService;
+import io.swagger.api.data.ModelService;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import weka.classifiers.functions.LibSVM;
 import weka.classifiers.functions.LinearRegression;
@@ -25,8 +26,8 @@ public class FunctionsImpl extends FunctionsService {
     public Response libSVMPost(InputStream fileInputStream, FormDataContentDisposition fileDetail, String datasetUri, Integer svmType,
                                Float coef0, Float cost, Integer degree, BigDecimal eps, BigDecimal gamma, Integer kernelType,
                                BigDecimal loss, Boolean normalize, BigDecimal nu, Boolean probabilityEstimates, Boolean shrinking,
-                               String weights, String subjectid, SecurityContext securityContext
-                               ) throws IOException {
+                               String weights, Boolean save, String subjectid, SecurityContext securityContext)
+            throws IOException {
 
         Object[] params = {svmType, coef0, cost, degree, eps, gamma, kernelType, loss, normalize, nu, subjectid};
 
@@ -38,25 +39,18 @@ public class FunctionsImpl extends FunctionsService {
 
         String parameters = "";
 
-        parameters += ((svmType != null) ? (" -S " + svmType + " ") : (" -S 0 ") );
-
-        parameters += ((coef0 != null) ? (" -R " + coef0 + " ") : (" -R 0 ") );
-
-        parameters += ((cost != null) ? (" -C " + cost + " ") : (" -C 1.0 ") );
-
-        parameters += ((degree != null) ? (" -D " + degree + " ") : (" -D 3 ") );
-
-        parameters += ((eps != null) ? (" -E " + eps + " ") : (" -E 0.001 ") );
-
-        parameters += ((gamma != null) ? (" -G " + gamma + " ") : (" -G 0.0 ") );
-
-        parameters += ((kernelType != null) ? (" -K " + kernelType + " ") : (" -K 0 ") );
-
-        parameters += ((loss != null) ? (" -P " + loss + " ") : (" -P 0.1 ") );
+        parameters += WekaUtils.getParamString(svmType, "S", 0);
+        parameters += WekaUtils.getParamString(coef0, "R", 0);
+        parameters += WekaUtils.getParamString(cost, "C", "1.0");
+        parameters += WekaUtils.getParamString(degree, "D", 3);
+        parameters += WekaUtils.getParamString(eps, "E", "0.001");
+        parameters += WekaUtils.getParamString(gamma, "G", "0.0");
+        parameters += WekaUtils.getParamString(kernelType, "K", 0);
+        parameters += WekaUtils.getParamString(loss, "P", "0.1");
 
         if(normalize != null && normalize) parameters += " -Z ";
 
-        parameters += ((nu != null) ? (" -N " + nu + " ") : (" -N 0.5 ") );
+        parameters += WekaUtils.getParamString(nu, "N", "0.5");
 
         if (probabilityEstimates != null && probabilityEstimates) parameters +=  " -B ";
 
@@ -100,14 +94,17 @@ public class FunctionsImpl extends FunctionsService {
         v.add(classifier);
         v.add(new Instances(instances, 0));
 
+        if(save != null && save) ModelService.saveModel(classifier, classifier.getOptions(), validation, subjectid);
 
         return Response.ok(v.toString() + "\n" + validation + "\n", "text/x-arff").build();
     }
 
 
-    public Response linearRegressionPost(InputStream fileInputStream, FormDataContentDisposition fileDetail, String datasetUri, Integer attributeSelectionMethod, Integer eliminateColinearAttributes, BigDecimal ridge, String subjectid, SecurityContext securityContext) throws IOException {
+    public Response linearRegressionPost(InputStream fileInputStream, FormDataContentDisposition fileDetail, String datasetUri,
+                                         Integer attributeSelectionMethod, Integer eliminateColinearAttributes, BigDecimal ridge,
+                                         Boolean save, String subjectid, SecurityContext securityContext) throws IOException {
 
-        Object[] params = {/* predictionFeature, datasetUri, datasetService, */  attributeSelectionMethod, eliminateColinearAttributes, ridge, subjectid};
+        Object[] params = {datasetUri,  attributeSelectionMethod, eliminateColinearAttributes, ridge, subjectid};
 
         for (int i= 0; i < params.length; i ++  ) {
             System.out.println("LR param " + i + " are: " + params[i]);
@@ -160,6 +157,7 @@ public class FunctionsImpl extends FunctionsService {
         v.add(classifier);
         v.add(new Instances(instances, 0));
 
+        if(save != null && save) ModelService.saveModel(classifier, classifier.getOptions(), validation, subjectid);
 
         return Response.ok(v.toString() + "\n" + validation + "\n", "text/x-arff").build();
     }

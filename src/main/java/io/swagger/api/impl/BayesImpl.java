@@ -22,7 +22,11 @@ import java.util.Vector;
 public class BayesImpl extends BayesService {
     @Override
     @Produces("text/plain")
-    public Response algorithmBayesNetPost(InputStream fileInputStream, FormDataContentDisposition fileDetail, String datasetUri, String estimator, BigDecimal estimatorParams, Integer useADTree, String searchAlgorithm, String searchParams, HttpHeaders headers, UriInfo ui, SecurityContext securityContext) throws NotFoundException, IOException {
+    public Response algorithmBayesNetPost(InputStream fileInputStream, FormDataContentDisposition fileDetail, String datasetUri, String estimator,
+                                          BigDecimal estimatorParams, Integer useADTree, String searchAlgorithm, String searchParams,
+                                          Boolean save, HttpHeaders headers, UriInfo ui, SecurityContext securityContext)
+            throws NotFoundException, IOException {
+
         String subjectid = headers.getRequestHeaders().getFirst("subjectid");
         String txtStr = DatasetService.getArff(fileInputStream, fileDetail, datasetUri, subjectid);
 
@@ -81,12 +85,9 @@ public class BayesImpl extends BayesService {
         Vector<Object> v = new Vector<>();
         v.add(classifier);
         v.add(new Instances(instances, 0));
-        try {
-            ModelService.saveModel(classifier, classifier.getOptions(), validation,"");
-        } catch (Exception e) {
-            e.printStackTrace();
-            return Response.serverError().entity("Error: WEKA weka.classifiers.bayes.net.search." + searchAlgorithm + "\n parameters: \"" + parameters + "\"\nWeka error message: " + e.getMessage() + "\n").build();
-        }
+
+        if(save != null && save) ModelService.saveModel(classifier, classifier.getOptions(), validation, subjectid);
+
         return Response.ok(v.toString() + "\n" + validation ).build();
     }
 

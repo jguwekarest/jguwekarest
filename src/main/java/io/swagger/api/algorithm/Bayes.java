@@ -71,10 +71,11 @@ public class Bayes {
             , @ApiParam(value = "Whether to use ADTrees for searching (using will increase the speed of the search, but will also raise the memory use (Default: 0).", allowableValues="0, 1", defaultValue="0")@FormDataParam("useADTree") Integer useADTree
             , @ApiParam(value = "The algorithmn to be used for searching in the compound. Must be local.K2, local.GeneticSearch, local.HillClimber, local.LAGDHillClimber, local.RepeatedHillClimber, local.SimulatedAnnealing, local.TabuSearch, local.TAN, global.K2, global.GeneticSearch, global.HillClimber, global.RepeatedHillClimber, global.SimulatedAnnealing, global.TabuSearch, global.TAN, ci.CISearchAlgorithm, ci.ICSSearchAlgorithm (Default: local.K2).", allowableValues="local.K2, local.GeneticSearch, local.HillClimber, local.LAGDHillClimber, local.RepeatedHillClimber, local.SimulatedAnnealing, local.TabuSearch, local.TAN, global.K2, global.GeneticSearch, global.HillClimber, global.RepeatedHillClimber, global.SimulatedAnnealing, global.TabuSearch, global.TAN, ci.CISearchAlgorithm, ci.ICSSearchAlgorithm", defaultValue="local.K2")@FormDataParam("searchAlgorithm")  String searchAlgorithm
             , @ApiParam(value = "The parameter for algorithmn to be used for searching in the compound. Are set automatically (WEKA's standard parameter setting).", defaultValue="-P 1 -S BAYES")@FormDataParam("searchParams")  String searchParams
+            , @ApiParam(value = "Save the model.", defaultValue="false")@FormDataParam("save") Boolean save
             , @ApiParam(value = "authorization token") @HeaderParam("subjectid") String subjectid
             , @Context UriInfo ui, @Context HttpHeaders headers, @Context SecurityContext securityContext)
             throws io.swagger.api.NotFoundException, IOException {
-        return delegate.algorithmBayesNetPost(fileInputStream, fileDetail,datasetUri,estimator,estimatorParams,useADTree,searchAlgorithm,searchParams,headers,ui,securityContext);
+        return delegate.algorithmBayesNetPost(fileInputStream, fileDetail,datasetUri,estimator,estimatorParams,useADTree,searchAlgorithm,searchParams,save,headers,ui,securityContext);
     }
 
 

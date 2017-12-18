@@ -59,6 +59,7 @@ public class ModelService {
             id = "1";
         } catch (Exception e) {
             e.printStackTrace();
+            return "";
         } finally {
             modelDao.close();
         }
