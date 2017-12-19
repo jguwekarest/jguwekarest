@@ -2,10 +2,21 @@
 
 This describes an example dockerized development environment for a Java web project with a MongoDB database. A Jenkins server is used as a build setup for the code deployment. A Tomcat container hosts the application war file. Jenkins and Tomcat do share a file storage for easy deployment via copying within the Jenkins instance. 
 
+
+## MongoDB Setup
+
+Start a MongoDB container with a local file storage, restart policy and container name:
+
+```
+docker run -d --restart unless-stopped --name mongodb -v ~/mongodb:/data/db mongo
+```
+You can access MongoDB by local its IP not from the intenet. 
+
+
 ## Tomcat Container Setup
 
 ```
-docker run -d --restart unless-stopped --name ORN_tomcat -p 8081:8081 -v ~/jenkins/workspace/tomcat:/usr/local/tomcat/webapps tomcat:8.0-jre8
+docker run -d --restart unless-stopped --name tomcat --link mongodb:mongodb -p 8081:8081 -v ~/jenkins/workspace/tomcat:/usr/local/tomcat/webapps tomcat:8.0-jre8
 ```
 
 Add a proxy entry to  /usr/local/tomcat/conf/server.xml to proxy from host Apache2 or Nginx to the Tomcat docker IP:8081
@@ -25,19 +36,6 @@ Import it into the Tomcat truststore
 docker cp in-silicoch.crt ORN_tomcat:/usr/local/tomcat
 docker exec -it ORN_tomcat keytool -keystore /etc/ssl/certs/java/cacerts -importcert -alias openam.in-silico.ch -file in-silicoch.crt
 ```
-
-## MongoDB Setup
-
-Start a MongoDB container with a local file storage, restart policy and container name:
-
-```
-docker run -d --restart unless-stopped --name ORN_mongodb -v ~/mongodb:/data/db mongo
-```
-Check the container IP because it is not exposed to the internet. You can only access MongoDB by local IP.
-```
-docker inspect ORN_mongodb
-```
-Find the value for **IPAddress**.
 
 ## Jenkins
 

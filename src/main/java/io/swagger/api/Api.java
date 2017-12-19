@@ -44,7 +44,7 @@ public class Api  {
     @GET
     @Path("/api.json")
     
-    @Produces({ "application/json" })
+    @Produces({ "application/json", "application/ld+json" })
     @io.swagger.annotations.ApiOperation(value = "", notes = "Get swagger api in JSON", response = void.class, tags={ "api", })
     @io.swagger.annotations.ApiResponses(value = { 
         @io.swagger.annotations.ApiResponse(code = 200, message = "OK", response = void.class),
