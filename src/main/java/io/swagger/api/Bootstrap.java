@@ -21,6 +21,10 @@ public class Bootstrap extends HttpServlet {
     map.put("name", "OpenRiskNet");
     map.put("cordis", "http://www.cordis.europa.eu/project/rcn/206759_en.html");
 
+    final Map<String, Object> contextmap = new HashMap<String, Object>();
+    contextmap.put("@vocab", "http://schema.org/");
+    contextmap.put("email", "email");
+
     Info info = new Info()
       .title("JGU WEKA REST Service")
       .description("RESTful API Webservice to WEKA Machine Learning Algorithms.\n" +
@@ -34,7 +38,8 @@ public class Bootstrap extends HttpServlet {
         .name("GNU General Public License 3")
         .url("https://www.gnu.org/licenses/gpl-3.0.de.html"))
       .version("0.0.2");
-      info.setVendorExtension("x-project", map);
+    info.setVendorExtension("x-project", map);
+    info.setVendorExtension("@context", contextmap);
 
     ServletContext context = config.getServletContext();
     Swagger swagger = new Swagger().info(info);

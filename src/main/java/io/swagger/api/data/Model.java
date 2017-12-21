@@ -3,21 +3,21 @@ package io.swagger.api.data;
 
 import io.swagger.annotations.*;
 import io.swagger.api.ApiException;
+import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
+import org.glassfish.jersey.media.multipart.FormDataParam;
 
 import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
+import javax.ws.rs.core.*;
+import java.io.InputStream;
 import java.util.Map;
 
-@Path("/")
+@Path("/model")
 @Api(description = "Model API")
 
 public class Model {
 
     @GET
-    @Path("/model")
+    @Path("/")
     @Consumes({ "multipart/form-data" })
     @Produces({ "text/uri-list", "application/json" })
     @ApiOperation(
@@ -46,7 +46,7 @@ public class Model {
 
 
     @GET
-    @Path("/model/{id}")
+    @Path("/{id}")
     @Consumes({ "multipart/form-data" })
     @Produces({ "text/plain" })
     @ApiOperation(
@@ -72,6 +72,31 @@ public class Model {
                 .build();
     }
 
+    @POST
+    @Path("/{id}")
+    @Consumes({ "multipart/form-data" })
+    @Produces({ "text/x-arff" })
+    @ApiOperation(value = "Predict testdata with a model.", notes = "Predict testdata with a model.", response = void.class, tags={ "model", }, position = 0)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "OK", response = void.class),
+            @ApiResponse(code = 400, message = "Bad Request", response = void.class),
+            @ApiResponse(code = 401, message = "Unauthorized", response = void.class),
+            @ApiResponse(code = 403, message = "Forbidden", response = void.class),
+            @ApiResponse(code = 404, message = "Resource Not Found", response = void.class) })
+    public Response algorithmBayesNetPost(
+            @FormDataParam("file") InputStream fileInputStream,
+            @FormDataParam("file") FormDataContentDisposition fileDetail
+            , @ApiParam(value = "Dataset ID (to the arff representation of a dataset).")@FormDataParam("datasetID")  String datasetID
+            , @ApiParam(value = "model ID" )@PathParam("id") String id
+            , @ApiParam(value = "authorization token") @HeaderParam("subjectid") String subjectid
+            , @Context UriInfo ui, @Context HttpHeaders headers, @Context SecurityContext securityContext)
+            throws Exception {
+        return Response
+                .ok(ModelService.predictModel(fileInputStream, fileDetail,datasetID,id,subjectid))
+                .status(Response.Status.OK)
+                .build();
+    }
+
 
     public Map<String, String> meta;
     public String hasSources;
@@ -90,8 +115,5 @@ public class Model {
     public byte[] model;
 
     public String validation;
-
-
-
 
 }

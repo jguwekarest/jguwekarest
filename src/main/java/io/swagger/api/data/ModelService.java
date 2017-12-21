@@ -3,8 +3,12 @@ package io.swagger.api.data;
 import com.google.common.collect.Maps;
 import com.google.gson.Gson;
 import io.swagger.api.ApiException;
+import io.swagger.api.WekaUtils;
 import org.bson.Document;
+import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import weka.classifiers.Classifier;
+import weka.core.Instance;
+import weka.core.Instances;
 
 import javax.ws.rs.core.UriInfo;
 import java.io.*;
@@ -12,6 +16,7 @@ import java.util.Map;
 
 public class ModelService {
 
+    private static String dataDirectory = System.getProperty("user.home") + "/.jguweka/data/";
 
     public static String listModels(UriInfo ui, String accept, String token) {
         Dao modelDao = new Dao();
@@ -41,7 +46,6 @@ public class ModelService {
         Dao modelDao = new Dao();
         String id = "";
         try {
-
             Model model = new Model();
             model.model = ModelService.serialize(classifier);
 
@@ -55,8 +59,8 @@ public class ModelService {
 
             Gson gson = new Gson();
             Document document = Document.parse(gson.toJson(model));
-            modelDao.saveData("model", document);
-            id = "1";
+            id = modelDao.saveData("model", document);
+            weka.core.SerializationHelper.write(dataDirectory + id + ".model", classifier);
         } catch (Exception e) {
             e.printStackTrace();
             return "";
@@ -66,7 +70,40 @@ public class ModelService {
         return id;
     }
 
+    public static String predictModel(InputStream fileInputStream, FormDataContentDisposition fileDetail, String datasetId, String modelId, String subjectid) throws Exception {
+        StringBuilder out = new StringBuilder();
+        Classifier cls = getClassifier(modelId);
+        String arff = DatasetService.getArff(fileInputStream, fileDetail, datasetId, subjectid);
+        Instances instances = WekaUtils.instancesFromString(arff, true);
+        for (Instance instance: instances) {
+            Double result = cls.classifyInstance(instance);
+            out.append(instance).append(" :: ").append(result).append("\n");
+        }
+        return out.toString();
+    }
 
+    /**
+    * Get a WEKA classifier from mongodb
+    * @param id ID of the model
+    * @return weka.classifiers.Classifier
+    */
+    public static Classifier getClassifier(String id) throws Exception {
+        Model model = null;
+        Dao modelDao = new Dao();
+        try {
+            model = modelDao.getModel(id);
+        }catch (Exception e) {
+            e.printStackTrace();
+        }finally {
+            modelDao.close();
+        }
+        Classifier cls;
+        ByteArrayInputStream in = new ByteArrayInputStream(model.model);
+        ObjectInputStream ois = new ObjectInputStream(in);
+        cls = (Classifier) ois.readObject();
+        ois.close();
+        return cls;
+    }
 
     public static byte[] serialize(Object obj) throws IOException {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -79,8 +116,5 @@ public class ModelService {
         ObjectInputStream is = new ObjectInputStream(in);
         return is.readObject();
     }
-
-
-
 
 }

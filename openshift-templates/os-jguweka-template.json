@@ -206,9 +206,6 @@
           "kind": "Service",
           "name": "jguweka"
         },
-        "port": {
-          "targetPort": "8080"
-        },
         "tls": {
           "termination": "edge"
         }

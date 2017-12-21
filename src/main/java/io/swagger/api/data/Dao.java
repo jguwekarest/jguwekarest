@@ -22,6 +22,11 @@ import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * <h3>Data Access Object library</h3>
+ * communicates with the mongodb
+ * @author m.rautenberg
+ */
 public class Dao {
 
     private String  dbName;
@@ -65,6 +70,13 @@ public class Dao {
         }
     }
 
+    /**
+     * Lists dataset or model - URI list or JSON
+     * @param collection dataset or model
+     * @param ui
+     * @param accept
+     * @return
+     */
     @Produces({"text/uri-list", "application/json"})
     public String listData(String collection, UriInfo ui, String accept) {
         StringBuilder result = new StringBuilder();
@@ -85,6 +97,12 @@ public class Dao {
         return result.toString();
     }
 
+    /**
+     * Returns arff representation of a dataset
+     *
+     * @param id dataset ID to search
+     * @return String arff
+     */
     public String getDatasetArff(String id){
         String output = "";
         mongoCollection = mongoDB.getCollection("dataset");
@@ -102,6 +120,11 @@ public class Dao {
         return dataset.arff;
     }
 
+    /**
+     * Returns GSON model object
+     * @param id model ID to search
+     * @return GSON model representation
+     */
     public Model getModel(String id){
         String output = "";
         mongoCollection = mongoDB.getCollection("model");
@@ -117,26 +140,30 @@ public class Dao {
         return model;
     }
 
-    public void saveData(String collection, Document document) {
+    /**
+     * Saves JSON to mongodb
+     * @param collection to save to (e.G.: model or dataset)
+     * @param document GSON of a dataset, model ...
+     * @return String ID of the saved collection
+     */
+    public String saveData(String collection, Document document) {
         mongoCollection = mongoDB.getCollection(collection);
         String strictJSON = document.toJson();
-        //TODO make loop for parsing dots
-        //strictJSON = strictJSON.replaceAll("(\"[^\"]*)(\\.)([^\"]*\".:)", "$1\\(DOT\\)$3");
-        //strictJSON = strictJSON.replaceAll("(\"[^\"]*)(\\.)([^\"]*\".:)", "$1\\(DOT\\)$3");
 
         while (!Objects.equals(strictJSON, strictJSON.replaceAll("(\"[^\"]*)(\\.)([^\"]*\".:)", "$1\\(DOT\\)$3"))) {
             strictJSON = strictJSON.replaceAll("(\"[^\"]*)(\\.)([^\"]*\".:)", "$1\\(DOT\\)$3");
         }
 
-        //System.out.println(strictJSON);
         Document documentParsed = Document.parse(strictJSON);
         mongoCollection.insertOne(documentParsed);
-        System.out.println("saveData _id is: " + documentParsed.get("_id"));
+        return documentParsed.get("_id").toString();
 
     }
 
 
-
+    /**
+     * Close the conection of the mongoclient to the mongodb
+     */
     public void close(){
         mongoClient.close();
     }

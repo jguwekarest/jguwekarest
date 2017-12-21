@@ -57,7 +57,7 @@ public class StringUtil {
   /**
    * Check a String for a trailing slash and removes it.
    *
-   * @param str     The URI string
+   * @param str the URI string
    * @return the resulting string
    */
   public static String removeTrailingSlash(String str) { return str.endsWith("/") ? (str.substring(0, str.length() - 1)) : str; }
@@ -72,10 +72,10 @@ public class StringUtil {
   }
 
   /**
-   * Check if a String is a URI.
+   * Check if a String is an URI.
    *
-   * @param str The URI string
-   * @return true or false
+   * @param uriString The URI string
+   * @return Boolean true or false
    */
   public static Boolean isUri(String uriString){
     String[] schemes = {"http","https"};
