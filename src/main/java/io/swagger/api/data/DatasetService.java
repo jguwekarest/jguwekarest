@@ -104,29 +104,31 @@ public class DatasetService {
     static String toArff(Dataset dataset, String class_uri) {
 
         StringBuilder arff = new StringBuilder();
+        StringBuilder comment = new StringBuilder();
+
         //add comments datasetURI and dataset metadata
-        arff.append("% JGU weka service converted dataset from :").append(dataset.datasetURI).append("\n%\n");
-        arff.append("% Using ").append(class_uri != null ? ("feature " + class_uri) : "no feature").append(" for the weka class.\n%\n");
+        comment.append("% JGU weka service converted dataset from :").append(dataset.datasetURI).append("\n%\n");
+        comment.append("% Using ").append(class_uri != null ? ("feature " + class_uri) : "no feature").append(" for the weka class.\n%\n");
         if (dataset.meta != null) {
             Set metaEntries = dataset.meta.entrySet();
             for (Object metaEntry : metaEntries) {
                 Map.Entry me = (Map.Entry) metaEntry;
-                arff.append("% meta ").append(me.getKey()).append(": ").append(me.getValue().toString().replaceAll("^[\\[]|[\\]]$", "")).append("\n");
+                comment.append("% meta ").append(me.getKey()).append(": ").append(me.getValue().toString().replaceAll("^[\\[]|[\\]]$", "")).append("\n");
             }
         }
 
         for (int i = 0; i < dataset.features.size(); i++) {
             Dataset.Feature feat = dataset.features.get(i);
-            if (feat.uri != null) arff.append("% feature:     uri: ").append(feat.uri).append("\n");
-            if (feat.name != null) arff.append("%             name: ").append(feat.name).append("\n");
-            if (feat.units != null) arff.append("%            units: ").append(feat.units).append("\n");
-            if (feat.category != null) arff.append("%         category: ").append(feat.category).append("\n");
-            if (feat.conditions != null) arff.append("%       conditions: ").append(feat.conditions).append("\n%\n");
+            if (feat.uri != null) comment.append("% feature:     uri: ").append(feat.uri).append("\n");
+            if (feat.name != null) comment.append("%             name: ").append(feat.name).append("\n");
+            if (feat.units != null) comment.append("%            units: ").append(feat.units).append("\n");
+            if (feat.category != null) comment.append("%         category: ").append(feat.category).append("\n");
+            if (feat.conditions != null) comment.append("%       conditions: ").append(feat.conditions).append("\n%\n");
         }
 
         //add current date
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
-        arff.append("% created: ").append(sdf.format(new Date())).append("\n\n");
+        comment.append("% created: ").append(sdf.format(new Date())).append("\n\n");
         arff.append("@relation ").append(dataset.datasetURI).append("\n");
 
         StringBuilder dataStr = new StringBuilder("\n@data\n");
@@ -180,6 +182,7 @@ public class DatasetService {
         Dao datasetDao = new Dao();
         try {
             dataset.arff = arff.toString();
+            dataset.comment = comment.toString();
             Gson gson = new Gson();
             Document document = Document.parse(gson.toJson(dataset));
             datasetDao.saveData("dataset", document);
@@ -188,7 +191,7 @@ public class DatasetService {
         }finally {
             datasetDao.close();
         }
-        return arff.toString();
+        return comment.toString() + "\n" + arff.toString();
     }
 
     static String filter(Dataset dataset, String idx_remove, String scale, String translation, Boolean standardize, Boolean ignore, String attributeRange) throws Exception {

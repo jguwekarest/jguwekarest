@@ -21,7 +21,7 @@ public class Dataset {
     @POST
     @Path("/dataset")
     @Consumes({ "multipart/form-data" })
-    @Produces({ "text/x-arff" })
+    @Produces({ "text/x-arff", "text/uri-list" })
     @ApiOperation(
             value = "Download dataset and convert into weka arff format",
             notes = "Download an external dataset and convert it into weka arff format.",
@@ -41,12 +41,10 @@ public class Dataset {
 
         Dataset ds = DatasetService.readExternalDataset(dataset_uri, subjectid);
         if (ds.datasetURI == null) ds.datasetURI = dataset_uri;
-        String arff = DatasetService.toArff(ds, class_uri);
-
-        //System.out.println(arff);
+        String out = DatasetService.toArff(ds, class_uri);
 
         return Response
-                .ok(arff)
+                .ok(out)
                 .status(Response.Status.OK)
                 .build();
     }
@@ -155,6 +153,7 @@ public class Dataset {
 
     public String arffFileName;
     public String arff;
+    public String comment;
 
     public class DataEntry {
         public LinkedTreeMap compound;

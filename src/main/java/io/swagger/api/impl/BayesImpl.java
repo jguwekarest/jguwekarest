@@ -60,6 +60,13 @@ public class BayesImpl extends BayesService {
 
         Instances instances = WekaUtils.instancesFromString(txtStr, true);
 
+        /*
+        System.out.println("num instances: "+ instances.numAttributes());
+        for ( int i = 0; i < instances.numAttributes(); i++ ){
+            System.out.println("att: " + instances.attribute(i).name() + " type: " + instances.attribute(i).type());
+        }
+        */
+
         String[] options = new String[0];
         try {
             options = weka.core.Utils.splitOptions(parameters);

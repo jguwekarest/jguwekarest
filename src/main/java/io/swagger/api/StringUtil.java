@@ -1,6 +1,7 @@
 package io.swagger.api;
 
 
+import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.commons.validator.routines.UrlValidator;
 
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2017-09-11T12:03:46.572Z")
@@ -64,7 +65,7 @@ public class StringUtil {
 
   public static Boolean isNumeric(String str) {
     if (str == null) return true;
-    if (str.matches("((-|\\+)?[0-9]+(\\.[0-9]+)?)+")) {
+    if (NumberUtils.isNumber(str)) {
       return true;
     } else {
       return false;
