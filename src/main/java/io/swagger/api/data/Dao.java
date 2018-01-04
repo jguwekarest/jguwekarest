@@ -126,7 +126,8 @@ public class Dao {
         if (dataset == null) {
             throw new NotFoundException("Could not find Dataset with id:" + id);
         }
-        return dataset.comment + dataset.arff;
+        System.out.println( "comment ==>>" + dataset.comment);
+        return (dataset.comment != null ? dataset.comment : "") + dataset.arff;
     }
 
     /**

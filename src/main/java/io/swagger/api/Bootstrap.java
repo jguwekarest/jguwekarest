@@ -37,7 +37,7 @@ public class Bootstrap extends HttpServlet {
       .license(new License()
         .name("GNU General Public License 3")
         .url("https://www.gnu.org/licenses/gpl-3.0.de.html"))
-      .version("0.0.2");
+      .version("0.0.3");
     info.setVendorExtension("x-project", map);
     info.setVendorExtension("@context", contextmap);
 

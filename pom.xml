@@ -3,7 +3,7 @@
   <groupId>org.openrisknet.jgu</groupId>
   <artifactId>weka_rs</artifactId>
   <packaging>war</packaging>
-  <name>swagger-jaxrs-server</name>
+  <name>jgu_weka_rest</name>
   <version>0.0.1</version>
 
   <licenses>
