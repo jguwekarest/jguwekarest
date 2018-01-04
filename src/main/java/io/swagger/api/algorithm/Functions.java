@@ -42,25 +42,21 @@ public class Functions {
         this.delegate = delegate;
     }
 
-
     @POST
     @Path("/linearRegression")
     @Consumes({"multipart/form-data"})
     @Produces({"text/x-arff", "application/json"})
-    @ApiOperation(value = "REST interface to the WEKA linear regression classifier.", notes = "REST interface to the WEKA linear regression classifier.", response = void.class, tags = {"algorithm",}, position=3
+    @ApiOperation(value = "REST interface to the WEKA linear regression classifier.", notes = "REST interface to the WEKA linear regression classifier.", tags = {"algorithm",}, position=3
             ,extensions = @Extension(name = "algorithm", properties = { @ExtensionProperty(name = "Linear Regression", value = "https://en.wikipedia.org/wiki/Linear_regression")}))
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "OK", response = void.class),
-            @ApiResponse(code = 400, message = "Bad Request", response = void.class),
-            @ApiResponse(code = 401, message = "Unauthorized", response = void.class),
-            @ApiResponse(code = 403, message = "Forbidden", response = void.class),
-            @ApiResponse(code = 404, message = "Resource Not Found", response = void.class)})
+            @ApiResponse(code = 200, message = "OK"),
+            @ApiResponse(code = 400, message = "Bad Request"/*, response = ApiException.class*/),
+            @ApiResponse(code = 401, message = "Unauthorized"),
+            @ApiResponse(code = 403, message = "Forbidden"),
+            @ApiResponse(code = 404, message = "Resource Not Found")})
     public Response algorithmLRPost(
             @FormDataParam("file") InputStream fileInputStream,
             @FormDataParam("file") FormDataContentDisposition fileDetail
-            // , @ApiParam(value = "URI of the feature to predict", required = true) @FormDataParam("prediction_feature") String predictionFeature
-            // , @ApiParam(value = "URI of the dataset to be used.", required = true) @FormDataParam("dataset_uri") String datasetUri
-            // , @ApiParam(value = "URI of the data service to be used.", required = true) @FormDataParam("dataset_service") String datasetService
             , @ApiParam(value = "Dataset URI or local dataset ID (to the arff representation of a dataset).")@FormDataParam("datasetURI")  String datasetUri
             , @ApiParam(value = "Attribute selection method to be used (Default M5 method).Available methods are: no attribute selection(Value:1), attribute selection using M5's method (Value:0) and a greedy selection using the Akaike information metric(Value:2). One of 0,1,2 (Default: 0).", defaultValue = "0", allowableValues = "0, 1, 2" ) @FormDataParam("attributeSelectionMethod") Integer attributeSelectionMethod
             , @ApiParam(value = "Whether to eliminate colinear attributes. Must be 0 or 1 (Default: 1).", defaultValue = "1", allowableValues = "0, 1") @FormDataParam("eliminateColinearAttributes") Integer eliminateColinearAttributes
@@ -78,14 +74,14 @@ public class Functions {
     @Path("/libsvm")
     @Consumes({"multipart/form-data"})
     @Produces({"text/x-arff", "application/json"})
-    @ApiOperation(value = "REST interface to the WEKA support vector machine wrapper library classifier.", notes = "REST interface to the WEKA support vector machine wrapper library classifier.", response = void.class, tags = {"algorithm",}, position=3
+    @ApiOperation(value = "REST interface to the WEKA support vector machine wrapper library classifier.", notes = "REST interface to the WEKA support vector machine wrapper library classifier.", tags = {"algorithm",}, position=3
             ,extensions = @Extension(name = "algorithm", properties = { @ExtensionProperty(name = "support vector machine", value = "https://en.wikipedia.org/wiki/Support_vector_machine")}))
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "OK", response = void.class),
-            @ApiResponse(code = 400, message = "Bad Request", response = void.class),
-            @ApiResponse(code = 401, message = "Unauthorized", response = void.class),
-            @ApiResponse(code = 403, message = "Forbidden", response = void.class),
-            @ApiResponse(code = 404, message = "Resource Not Found", response = void.class)})
+            @ApiResponse(code = 200, message = "OK"),
+            @ApiResponse(code = 400, message = "Bad Request"),
+            @ApiResponse(code = 401, message = "Unauthorized"),
+            @ApiResponse(code = 403, message = "Forbidden"),
+            @ApiResponse(code = 404, message = "Resource Not Found")})
     public Response algorithmLibSVMPost(
             @FormDataParam("file") InputStream fileInputStream,
             @FormDataParam("file") FormDataContentDisposition fileDetail

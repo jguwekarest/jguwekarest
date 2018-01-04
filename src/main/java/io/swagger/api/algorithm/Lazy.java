@@ -45,14 +45,14 @@ public class Lazy {
     @Path("/kNNclassification")
     @Consumes({ "multipart/form-data" })
     @Produces({ "text/x-arff", "application/json"})
-    @ApiOperation(value = "REST interface to the WEKA K-nearest neighbours classifier.", notes = "REST interface to the WEKA K-nearest neighbours classifier.", response = void.class, tags={ "algorithm", }, position = 2
+    @ApiOperation(value = "REST interface to the WEKA K-nearest neighbours classifier.", notes = "REST interface to the WEKA K-nearest neighbours classifier.", tags={ "algorithm", }, position = 2
             ,extensions = @Extension(name = "algorithm", properties = { @ExtensionProperty(name = "k-nearest neighbors algorithm", value = "https://en.wikipedia.org/wiki/K-nearest_neighbors_algorithm")}))
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "OK", response = void.class),
-            @ApiResponse(code = 400, message = "Bad Request", response = void.class),
-            @ApiResponse(code = 401, message = "Unauthorized", response = void.class),
-            @ApiResponse(code = 403, message = "Forbidden", response = void.class),
-            @ApiResponse(code = 404, message = "Resource Not Found", response = void.class) })
+            @ApiResponse(code = 200, message = "OK"),
+            @ApiResponse(code = 400, message = "Bad Request"),
+            @ApiResponse(code = 401, message = "Unauthorized"),
+            @ApiResponse(code = 403, message = "Forbidden"),
+            @ApiResponse(code = 404, message = "Resource Not Found") })
     public Response algorithmKNNclassificationPost(
             @FormDataParam("file") InputStream fileInputStream,
             @FormDataParam("file") FormDataContentDisposition fileDetail
@@ -70,6 +70,5 @@ public class Lazy {
         return delegate.algorithmKNNclassificationPost(fileInputStream,fileDetail,datasetUri,windowSize,KNN,crossValidate,distanceWeighting,meanSquared,
                 nearestNeighbourSearchAlgorithm,save,subjectid,securityContext);
     }
-
 
 }

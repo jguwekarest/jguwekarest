@@ -1,10 +1,7 @@
 package io.swagger.api.data;
 
 import com.google.gson.Gson;
-import com.mongodb.BasicDBObject;
-import com.mongodb.MongoClient;
-import com.mongodb.MongoCredential;
-import com.mongodb.ServerAddress;
+import com.mongodb.*;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
@@ -16,9 +13,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.UriInfo;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Arrays;
-import java.util.Objects;
-import java.util.Properties;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -42,7 +37,7 @@ public class Dao {
     private static Properties dbProperties = new Properties();
     private static final Logger LOG = Logger.getLogger(Dao.class.getName());
 
-    public Dao() {
+    Dao() {
         ClassLoader classLoader = this.getClass().getClassLoader();
         InputStream is = classLoader.getResourceAsStream("config/db.properties");
         try {
@@ -61,7 +56,7 @@ public class Dao {
         } finally {
             if (!Objects.equals(dbUser, "") && dbPassword != null) {
                 MongoCredential mongoCredential = MongoCredential.createScramSha1Credential(dbUser, dbName, dbPassword.toCharArray());
-                mongoClient = new MongoClient(new ServerAddress(dbHost, dbPort), Arrays.asList(mongoCredential));
+                mongoClient = new MongoClient(new ServerAddress(dbHost, dbPort), Collections.singletonList(mongoCredential));
             } else {
                 mongoClient = new MongoClient(dbHost, dbPort);
             }
@@ -73,28 +68,42 @@ public class Dao {
     /**
      * Lists dataset or model - URI list or JSON
      * @param collection dataset or model
-     * @param ui
-     * @param accept
-     * @return
+     * @param ui URI info object
+     * @param accept requested mime-type
+     * @return list of models or datasets
      */
     @Produces({"text/uri-list", "application/json"})
-    public String listData(String collection, UriInfo ui, String accept) {
+    public Object listData(String collection, UriInfo ui, String accept) {
         StringBuilder result = new StringBuilder();
-        int i = 0;
-        //System.out.println("accept header string is: " + accept);
         mongoCollection = mongoDB.getCollection(collection);
-        try (MongoCursor<Document> cursor = mongoCollection.find().iterator()) {
-            while(cursor.hasNext()) {
-                Document document = cursor.next();
-                result.append(ui.getBaseUri()).append(collection).append("/").append(document.get("_id")).append("\n");
-                i++;
-            }
-            cursor.close();
-        } finally {
+        switch (accept) {
+            case "text/uri-list":
+                try (MongoCursor<Document> cursor = mongoCollection.find().iterator()) {
+                    while(cursor.hasNext()) {
+                        Document document = cursor.next();
+                        result.append(ui.getBaseUri()).append(collection).append("/").append(document.get("_id")).append("\n");
+                    }
+                    cursor.close();
+                }
+                return result.toString();
+            case "application/json":
+
+                final ArrayList<Document> results = new ArrayList<>();
+                Block<Document> printBlock = document -> {
+                    document.replace("_id", document.get("_id").toString());
+                    document.put("URI", ui.getBaseUri() + collection + "/" + document.get("_id").toString());
+                    results.add(document);
+                };
+
+                mongoCollection.find().projection(new Document("datasetURI", 1)
+                    .append("meta", 1)
+                    .append("_id", 1))
+                  .forEach(printBlock);
+
+                return results;
 
         }
-        LOG.log(Level.INFO, "Retrieved " + i + " " + collection + "\n" + result);
-        return result.toString();
+        return null;
     }
 
     /**
@@ -103,8 +112,8 @@ public class Dao {
      * @param id dataset ID to search
      * @return String arff
      */
-    public String getDatasetArff(String id){
-        String output = "";
+    String getDatasetArff(String id){
+
         mongoCollection = mongoDB.getCollection("dataset");
 
         BasicDBObject query = new BasicDBObject();
@@ -125,8 +134,7 @@ public class Dao {
      * @param id model ID to search
      * @return GSON model representation
      */
-    public Model getModel(String id){
-        String output = "";
+    Model getModel(String id){
         mongoCollection = mongoDB.getCollection("model");
         BasicDBObject query = new BasicDBObject();
         query.put("_id", new ObjectId(id));
@@ -146,7 +154,7 @@ public class Dao {
      * @param document GSON of a dataset, model ...
      * @return String ID of the saved collection
      */
-    public String saveData(String collection, Document document) {
+    String saveData(String collection, Document document) {
         mongoCollection = mongoDB.getCollection(collection);
         String strictJSON = document.toJson();
 
@@ -168,9 +176,9 @@ public class Dao {
         mongoClient.close();
     }
 
-    public void setMongoClient(final MongoClient mongoClient) {
-        this.mongoClient = mongoClient;
-    }
+   // public void setMongoClient(final MongoClient mongoClient) {
+   //     this.mongoClient = mongoClient;
+   // }
 
 
 }

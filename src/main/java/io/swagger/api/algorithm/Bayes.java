@@ -41,12 +41,11 @@ public class Bayes {
     }
 
 
-
     @POST
     @Path("/BayesNet")
     @Consumes({ "multipart/form-data" })
     @Produces({ "text/x-arff" })
-    @ApiOperation(value = "REST interface to the WEKA BayesNet classifier.", notes = "REST interface to the WEKA BayesNet classifier.", response = void.class, tags={ "algorithm", }, position = 0
+    @ApiOperation(value = "REST interface to the WEKA BayesNet classifier.", notes = "REST interface to the WEKA BayesNet classifier.", tags={ "algorithm", }
             ,extensions = @Extension(name = "algorithm", properties = {
                 @ExtensionProperty(name = "http://purl.obolibrary.org/obo/IAO_0000064",  value = "http://purl.enanomapper.org/onto/ENM_8000001"),
                 @ExtensionProperty(name = "http://purl.enanomapper.org/onto/ENM_8000001",value = "http://purl.enanomapper.org/onto/ENM_8000002"),
@@ -57,11 +56,11 @@ public class Bayes {
             })
     )
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "OK", response = void.class),
-            @ApiResponse(code = 400, message = "Bad Request", response = void.class),
-            @ApiResponse(code = 401, message = "Unauthorized", response = void.class),
-            @ApiResponse(code = 403, message = "Forbidden", response = void.class),
-            @ApiResponse(code = 404, message = "Resource Not Found", response = void.class) })
+            @ApiResponse(code = 200, message = "OK"),
+            @ApiResponse(code = 400, message = "Bad Request"),
+            @ApiResponse(code = 401, message = "Unauthorized"),
+            @ApiResponse(code = 403, message = "Forbidden"),
+            @ApiResponse(code = 404, message = "Resource Not Found") })
     public Response algorithmBayesNetPost(
             @FormDataParam("file") InputStream fileInputStream,
             @FormDataParam("file") FormDataContentDisposition fileDetail
@@ -77,6 +76,5 @@ public class Bayes {
             throws io.swagger.api.NotFoundException, IOException {
         return delegate.algorithmBayesNetPost(fileInputStream, fileDetail,datasetUri,estimator,estimatorParams,useADTree,searchAlgorithm,searchParams,save,headers,ui,securityContext);
     }
-
 
 }

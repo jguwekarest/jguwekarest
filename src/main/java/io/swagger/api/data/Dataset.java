@@ -26,17 +26,16 @@ public class Dataset {
             value = "Download dataset and convert into weka arff format",
             notes = "Download an external dataset and convert it into weka arff format.",
             tags={ "dataset", },
-            response = void.class,
-            produces = "text/x-arff")
+            produces = "text/x-arff" )
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "OK", response = void.class),
-            @ApiResponse(code = 400, message = "Bad Request", response = void.class),
-            @ApiResponse(code = 401, message = "Unauthorized", response = void.class),
-            @ApiResponse(code = 403, message = "Forbidden", response = void.class),
-            @ApiResponse(code = 404, message = "Resource Not Found", response = void.class) })
+            @ApiResponse(code = 200, message = "OK"),
+            @ApiResponse(code = 400, message = "Bad Request"),
+            @ApiResponse(code = 401, message = "Unauthorized"),
+            @ApiResponse(code = 403, message = "Forbidden"),
+            @ApiResponse(code = 404, message = "Resource Not Found") })
     public Response create(
               @ApiParam(value = "URI of the dataset to be used.", required=true)@FormDataParam("dataset_uri") String dataset_uri
-            , @ApiParam(value = "URI of the feature to define as weka class", required=false)@FormDataParam("class_uri") String class_uri
+            , @ApiParam(value = "URI of the feature to define as weka class")@FormDataParam("class_uri") String class_uri
             , @ApiParam(value = "Authorization token" )@HeaderParam("subjectid") String subjectid) throws ApiException {
 
         Dataset ds = DatasetService.readExternalDataset(dataset_uri, subjectid);
@@ -56,20 +55,20 @@ public class Dataset {
     @ApiOperation(
             value = "List all converted datasets.",
             notes = "List all converted datasets.",
-            tags={ "dataset", },
-            response = void.class)
+            tags={ "dataset", })
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "OK", response = void.class),
-            @ApiResponse(code = 400, message = "Bad Request", response = void.class),
-            @ApiResponse(code = 401, message = "Unauthorized", response = void.class),
-            @ApiResponse(code = 403, message = "Forbidden", response = void.class),
-            @ApiResponse(code = 404, message = "Resource Not Found", response = void.class) })
+            @ApiResponse(code = 200, message = "OK"),
+            @ApiResponse(code = 400, message = "Bad Request"),
+            @ApiResponse(code = 401, message = "Unauthorized"),
+            @ApiResponse(code = 403, message = "Forbidden"),
+            @ApiResponse(code = 404, message = "Resource Not Found") })
     public Response list(
             @ApiParam(value = "Authorization token" )@HeaderParam("subjectid") String subjectid,
             @Context UriInfo ui, @Context HttpHeaders headers) throws ApiException {
 
         String accept = headers.getRequestHeaders().getFirst("accept");
-        String datasetList = DatasetService.listDatasets(ui, accept, subjectid);
+        System.out.println("D accept: " + accept);
+        Object datasetList = DatasetService.listDatasets(ui, accept, subjectid);
 
         return Response
                 .ok(datasetList)
@@ -84,14 +83,13 @@ public class Dataset {
     @ApiOperation(
             value = "Get arff representation of a dataset.",
             notes = "Get arff representation of a dataset.",
-            tags={ "dataset", },
-            response = void.class)
+            tags={ "dataset", })
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "OK", response = void.class),
-            @ApiResponse(code = 400, message = "Bad Request", response = void.class),
-            @ApiResponse(code = 401, message = "Unauthorized", response = void.class),
-            @ApiResponse(code = 403, message = "Forbidden", response = void.class),
-            @ApiResponse(code = 404, message = "Resource Not Found", response = void.class) })
+            @ApiResponse(code = 200, message = "OK"),
+            @ApiResponse(code = 400, message = "Bad Request"),
+            @ApiResponse(code = 401, message = "Unauthorized"),
+            @ApiResponse(code = 403, message = "Forbidden"),
+            @ApiResponse(code = 404, message = "Resource Not Found") })
     public Response getDatasetArff(
             @ApiParam(value = "Dataset ID" )@PathParam("id") String id,
             @ApiParam(value = "Authorization token" )@HeaderParam("subjectid") String subjectid, @Context UriInfo ui) throws ApiException, NotFoundException {
@@ -113,7 +111,6 @@ public class Dataset {
             value = "Filter an internal dataset with weka filter.",
             notes = "Filter an internal dataset with weka filter. Remove attributes and normalize or standardize all numeric attributes of a dataset.",
             tags={ "dataset" },
-            response = void.class,
             produces = "text/x-arff")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "OK"),
@@ -123,12 +120,12 @@ public class Dataset {
             @ApiResponse(code = 404, message = "Resource Not Found") })
     public Response filter(
             @ApiParam(value = "Dataset ID" )@PathParam("id") String id
-            , @ApiParam(value = "Feature(s) to remove. ID or comma separated IDs of the attribute(s)(column(s)) to remove. (0 = no attribute will be deleted)", required=false,defaultValue = "0")@FormDataParam("idx_remove") String idx_remove
-            , @ApiParam(value = "Normalize all numeric values - scale: - The factor for scaling the output range (default: 1).", required=false)@FormDataParam("scale") String scale
-            , @ApiParam(value = "Normalize all numeric values - translation: The translation of the output range (default: 0).", required=false)@FormDataParam("translation") String translation
-            , @ApiParam(value = "Standardize all numeric attributes in the given dataset to have zero mean and unit variance (apart from the class attribute, if set).", required=false)@FormDataParam("standardize") Boolean standardize
-            , @ApiParam(value = "Ignore class (ignore class attribute for Normalization or Standization).", required=false)@FormDataParam("ignore") Boolean ignore
-            , @ApiParam(value = "String to Nominal: Sets which attributes to process. This attributes must be string attributes (\"first\" and \"last\" are valid values as well as ranges and lists. Empty value do not process the filter).", required=false)@FormDataParam("attributeRange") String attributeRange
+            , @ApiParam(value = "Feature(s) to remove. ID or comma separated IDs of the attribute(s)(column(s)) to remove. (0 = no attribute will be deleted)",defaultValue = "0")@FormDataParam("idx_remove") String idx_remove
+            , @ApiParam(value = "Normalize all numeric values - scale: - The factor for scaling the output range (default: 1).")@FormDataParam("scale") String scale
+            , @ApiParam(value = "Normalize all numeric values - translation: The translation of the output range (default: 0).")@FormDataParam("translation") String translation
+            , @ApiParam(value = "Standardize all numeric attributes in the given dataset to have zero mean and unit variance (apart from the class attribute, if set).")@FormDataParam("standardize") Boolean standardize
+            , @ApiParam(value = "Ignore class (ignore class attribute for Normalization or Standization).")@FormDataParam("ignore") Boolean ignore
+            , @ApiParam(value = "String to Nominal: Sets which attributes to process. This attributes must be string attributes (\"first\" and \"last\" are valid values as well as ranges and lists. Empty value do not process the filter).")@FormDataParam("attributeRange") String attributeRange
             , @ApiParam(value = "Authorization token" )@HeaderParam("subjectid") String subjectid) throws Exception {
 
         String arff = DatasetService.getArff(null,null, id, subjectid);
@@ -146,6 +143,8 @@ public class Dataset {
 
     //dataset structure
 
+
+    public String URI;
     public String datasetURI;
     public LinkedTreeMap meta;
     public List<Feature> features;
@@ -173,4 +172,8 @@ public class Dataset {
         public String descriptions;
         public String titles;
     }
+
+
+
+
 }

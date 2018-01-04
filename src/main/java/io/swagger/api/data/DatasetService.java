@@ -31,11 +31,10 @@ public class DatasetService {
 
     private static final Logger LOG = Logger.getLogger(DatasetService.class.getName());
 
-    static String listDatasets(UriInfo ui, String accept, String token) {
+    static Object listDatasets(UriInfo ui, String accept, String token) {
         Dao datasetDao = new Dao();
-        String dslist = datasetDao.listData("dataset", ui, accept);
+        Object dslist = datasetDao.listData("dataset", ui, accept);
         datasetDao.close();
-        //System.out.println(toArffWeka("test"));
         return dslist;
     }
 

@@ -18,9 +18,9 @@ public class ModelService {
 
     private static String dataDirectory = System.getProperty("user.home") + "/.jguweka/data/";
 
-    public static String listModels(UriInfo ui, String accept, String token) {
+    public static Object listModels(UriInfo ui, String accept, String token) {
         Dao modelDao = new Dao();
-        String modellist = modelDao.listData("model", ui, accept);
+        Object modellist = modelDao.listData("model", ui, accept);
         modelDao.close();
         return modellist;
     }

@@ -13,5 +13,7 @@ import java.math.BigDecimal;
 
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2017-09-11T12:03:46.572Z")
 public abstract class BayesService {
-    public abstract Response algorithmBayesNetPost(InputStream fileInputStream, FormDataContentDisposition fileDetail, String datasetURI, String estimator, BigDecimal estimatorParams, Integer useADTree, String searchAlgorithm, String searchParams, Boolean save, HttpHeaders headers, UriInfo ui, SecurityContext securityContext) throws NotFoundException, IOException;
+    public abstract Response algorithmBayesNetPost(InputStream fileInputStream, FormDataContentDisposition fileDetail, String datasetURI, String estimator,
+                                                   BigDecimal estimatorParams, Integer useADTree, String searchAlgorithm, String searchParams, Boolean save,
+                                                   HttpHeaders headers, UriInfo ui, SecurityContext securityContext) throws NotFoundException, IOException;
 }

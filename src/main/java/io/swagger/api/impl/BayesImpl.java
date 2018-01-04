@@ -67,7 +67,7 @@ public class BayesImpl extends BayesService {
         }
         */
 
-        String[] options = new String[0];
+        String[] options;
         try {
             options = weka.core.Utils.splitOptions(parameters);
         } catch (Exception e) {
@@ -86,7 +86,7 @@ public class BayesImpl extends BayesService {
             return Response.serverError().entity("Error: WEKA weka.classifiers.bayes.net.search." + searchAlgorithm + "\n parameters: \"" + parameters + "\"\nWeka error message: " + e.getMessage() + "\n").build();
         }
 
-        String validation = "";
+        String validation;
         validation = Validation.crossValidation(instances, classifier);
 
         Vector<Object> v = new Vector<>();
