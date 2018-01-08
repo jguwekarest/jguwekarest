@@ -44,7 +44,7 @@ public class ModelService {
 
     public static String saveModel(Classifier classifier, String[] options, String validation, String token) {
         Dao modelDao = new Dao();
-        String id = "";
+        String id;
         try {
             Model model = new Model();
             model.model = ModelService.serialize(classifier);

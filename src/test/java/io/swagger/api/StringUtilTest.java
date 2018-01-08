@@ -6,6 +6,7 @@ import org.junit.Test;
 public class StringUtilTest {
     @Test
     public void containsIgnoreCase() throws Exception {
+        //function not in use
     }
 
     @Test

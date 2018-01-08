@@ -95,7 +95,7 @@ public class AuthorizationService {
      * @return boolean validity of the token
      * @throws Exeption.AAException
      */
-    public boolean validate(String token) {
+    public static boolean validate(String token) {
         Client client = ClientBuilder.newClient();
         MultivaluedMap<String, String> formData = new MultivaluedHashMap<>();
         formData.putSingle("tokenid", token);
