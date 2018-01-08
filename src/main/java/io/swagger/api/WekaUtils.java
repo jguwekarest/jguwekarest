@@ -40,10 +40,10 @@ public class WekaUtils {
     }
 
    /**
-    * Option-string helper method for WEKA options from optionname, value and defaultValue.
+    * Option-string helper method for WEKA options build from option, value and defaultValue.
     * <ul>
-    *     <li>sets a value to a given optionname</li>
-    *     <li>sets a defaultValue to a given optionname when value is null</li>
+    *     <li>sets a value to a given option</li>
+    *     <li>sets a defaultValue to a given option when value is null</li>
     *     <li>sets an option when both values are null</li>
     * </ul>
     * <pre>{@code
@@ -52,7 +52,7 @@ public class WekaUtils {
     * WekaUtils.getParamString(null, "X", null) => " -X "
     * }</pre>
     * @param value        value of the option
-    * @param option       optionname to set
+    * @param option       option to set
     * @param defaultValue default value is set when value is null
     * @return String the resulting string
     */
