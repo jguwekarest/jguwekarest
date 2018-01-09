@@ -1,20 +1,18 @@
 package io.swagger.api;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.testng.Assert;
+import org.testng.annotations.Test;
 import weka.core.Instances;
 
 public class WekaUtilsTest {
     @Test
     public void instancesFromString() throws Exception {
         String arff = "@relation weather-weka.filters.unsupervised.instance.RemoveRange-R5-last\n" +
-                "\n" +
                 "@attribute outlook {sunny,overcast,rainy}\n" +
                 "@attribute temperature numeric\n" +
                 "@attribute humidity numeric\n" +
                 "@attribute windy {TRUE,FALSE}\n" +
                 "@attribute play {yes,no}\n" +
-                "\n" +
                 "@data\n" +
                 "sunny,87,87,TRUE,yes\n" +
                 "sunny,75,90,FALSE,no\n" +
@@ -23,7 +21,7 @@ public class WekaUtilsTest {
         Instances instances = WekaUtils.instancesFromString(arff, true);
         Assert.assertEquals(instances.getClass(), Instances.class);
         Assert.assertEquals(5, instances.numAttributes());
-        Assert.assertEquals(4, instances.classIndex());
+        Assert.assertEquals(4, instances.classIndex(),"Class index error.");
         Assert.assertEquals(4, instances.size());
     }
 

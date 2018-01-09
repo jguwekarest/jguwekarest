@@ -25,12 +25,13 @@
     <path refid="library.nz.ac.waikato.cms.weka:weka-stable:3.8.1.classpath"/>
     <path refid="library.com.google.code.gson:gson:2.8.2.classpath"/>
     <path refid="library.org.mongodb:mongo-java-driver:3.5.0.classpath"/>
+    <path refid="library.libsvm.classpath"/>
+    <path refid="library.junit-4.12.classpath"/>
     <path refid="library.maven:_io.swagger:swagger-jersey2-jaxrs:1.5.15.classpath"/>
     <path refid="library.maven:_io.swagger:swagger-jaxrs:1.5.15.classpath"/>
     <path refid="library.maven:_io.swagger:swagger-core:1.5.15.classpath"/>
     <path refid="library.maven:_org.apache.commons:commons-lang3:3.2.1.classpath"/>
     <path refid="library.maven:_com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.8.7.classpath"/>
-    <path refid="library.maven:_org.yaml:snakeyaml:1.17.classpath"/>
     <path refid="library.maven:_io.swagger:swagger-models:1.5.15.classpath"/>
     <path refid="library.maven:_io.swagger:swagger-annotations:1.5.15.classpath"/>
     <path refid="library.maven:_org.reflections:reflections:0.9.11.classpath"/>
@@ -72,6 +73,16 @@
     <path refid="library.maven:_com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:2.8.9.classpath"/>
     <path refid="library.maven:_com.fasterxml.jackson.jaxrs:jackson-jaxrs-base:2.8.9.classpath"/>
     <path refid="library.maven:_com.fasterxml.jackson.module:jackson-module-jaxb-annotations:2.8.9.classpath"/>
+    <path refid="library.maven:_com.github.jsonld-java:jsonld-java:0.11.1.classpath"/>
+    <path refid="library.maven:_org.apache.httpcomponents:httpclient-osgi:4.5.3.classpath"/>
+    <path refid="library.maven:_org.apache.httpcomponents:httpclient:4.5.3.classpath"/>
+    <path refid="library.maven:_commons-codec:commons-codec:1.9.classpath"/>
+    <path refid="library.maven:_org.apache.httpcomponents:httpmime:4.5.3.classpath"/>
+    <path refid="library.maven:_org.apache.httpcomponents:httpclient-cache:4.5.3.classpath"/>
+    <path refid="library.maven:_org.apache.httpcomponents:fluent-hc:4.5.3.classpath"/>
+    <path refid="library.maven:_org.apache.httpcomponents:httpcore-osgi:4.4.6.classpath"/>
+    <path refid="library.maven:_org.apache.httpcomponents:httpcore:4.4.6.classpath"/>
+    <path refid="library.maven:_org.apache.httpcomponents:httpcore-nio:4.4.6.classpath"/>
     <path refid="library.maven:_com.brsanthu:migbase64:2.2.classpath"/>
     <path refid="library.maven:_org.json:json:20170516.classpath"/>
     <path refid="library.maven:_org.glassfish:javax.json:1.0.4.classpath"/>
@@ -99,9 +110,25 @@
     <path refid="library.maven:_net.sourceforge.f2j:arpack_combined_all:0.1.classpath"/>
     <path refid="library.maven:_com.googlecode.netlib-java:netlib-java:1.1.classpath"/>
     <path refid="library.maven:_com.github.fommil.netlib:core:1.1.classpath"/>
+    <path refid="library.maven:_nz.ac.waikato.cms.weka:libsvm:1.0.10.classpath"/>
+    <path refid="library.maven:_nz.ac.waikato.cms.weka:weka-dev:3.9.2.classpath"/>
+    <path refid="library.maven:_tw.edu.ntu.csie:libsvm:3.17.classpath"/>
     <path refid="library.maven:_com.google.code.gson:gson:2.8.2.classpath"/>
     <path refid="library.maven:_org.mongodb:mongo-java-driver:3.5.0.classpath"/>
-    <path refid="library.commons-validator:commons-validator:1.6.classpath"/>
+    <path refid="library.maven:_commons-validator:commons-validator:1.6.classpath"/>
+    <path refid="library.maven:_commons-beanutils:commons-beanutils:1.9.2.classpath"/>
+    <path refid="library.maven:_commons-digester:commons-digester:1.8.1.classpath"/>
+    <path refid="library.maven:_commons-logging:commons-logging:1.2.classpath"/>
+    <path refid="library.maven:_commons-collections:commons-collections:3.2.2.classpath"/>
+    <path refid="library.maven:_org.testng:testng:6.9.6.classpath"/>
+    <path refid="library.maven:_com.google.inject:guice:no_aop:4.0.classpath"/>
+    <path refid="library.maven:_javax.inject:javax.inject:1.classpath"/>
+    <path refid="library.maven:_aopalliance:aopalliance:1.0.classpath"/>
+    <path refid="library.maven:_org.beanshell:bsh:2.0b4.classpath"/>
+    <path refid="library.maven:_org.apache.ant:ant:1.7.0.classpath"/>
+    <path refid="library.maven:_org.apache.ant:ant-launcher:1.7.0.classpath"/>
+    <path refid="library.maven:_com.beust:jcommander:1.48.classpath"/>
+    <path refid="library.maven:_org.yaml:snakeyaml:1.15.classpath"/>
   </path>
   
   <path id="weka_rs.runtime.production.module.classpath">
@@ -114,12 +141,13 @@
     <path refid="library.nz.ac.waikato.cms.weka:weka-stable:3.8.1.classpath"/>
     <path refid="library.com.google.code.gson:gson:2.8.2.classpath"/>
     <path refid="library.org.mongodb:mongo-java-driver:3.5.0.classpath"/>
+    <path refid="library.libsvm.classpath"/>
+    <path refid="library.junit-4.12.classpath"/>
     <path refid="library.maven:_io.swagger:swagger-jersey2-jaxrs:1.5.15.classpath"/>
     <path refid="library.maven:_io.swagger:swagger-jaxrs:1.5.15.classpath"/>
     <path refid="library.maven:_io.swagger:swagger-core:1.5.15.classpath"/>
     <path refid="library.maven:_org.apache.commons:commons-lang3:3.2.1.classpath"/>
     <path refid="library.maven:_com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.8.7.classpath"/>
-    <path refid="library.maven:_org.yaml:snakeyaml:1.17.classpath"/>
     <path refid="library.maven:_io.swagger:swagger-models:1.5.15.classpath"/>
     <path refid="library.maven:_io.swagger:swagger-annotations:1.5.15.classpath"/>
     <path refid="library.maven:_org.reflections:reflections:0.9.11.classpath"/>
@@ -161,6 +189,17 @@
     <path refid="library.maven:_com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:2.8.9.classpath"/>
     <path refid="library.maven:_com.fasterxml.jackson.jaxrs:jackson-jaxrs-base:2.8.9.classpath"/>
     <path refid="library.maven:_com.fasterxml.jackson.module:jackson-module-jaxb-annotations:2.8.9.classpath"/>
+    <path refid="library.maven:_com.github.jsonld-java:jsonld-java:0.11.1.classpath"/>
+    <path refid="library.maven:_org.apache.httpcomponents:httpclient-osgi:4.5.3.classpath"/>
+    <path refid="library.maven:_org.apache.httpcomponents:httpclient:4.5.3.classpath"/>
+    <path refid="library.maven:_commons-codec:commons-codec:1.9.classpath"/>
+    <path refid="library.maven:_org.apache.httpcomponents:httpmime:4.5.3.classpath"/>
+    <path refid="library.maven:_org.apache.httpcomponents:httpclient-cache:4.5.3.classpath"/>
+    <path refid="library.maven:_org.apache.httpcomponents:fluent-hc:4.5.3.classpath"/>
+    <path refid="library.maven:_org.apache.httpcomponents:httpcore-osgi:4.4.6.classpath"/>
+    <path refid="library.maven:_org.apache.httpcomponents:httpcore:4.4.6.classpath"/>
+    <path refid="library.maven:_org.apache.httpcomponents:httpcore-nio:4.4.6.classpath"/>
+    <path refid="library.maven:_org.slf4j:jcl-over-slf4j:1.7.25.classpath"/>
     <path refid="library.maven:_com.brsanthu:migbase64:2.2.classpath"/>
     <path refid="library.maven:_org.json:json:20170516.classpath"/>
     <path refid="library.maven:_org.glassfish:javax.json:1.0.4.classpath"/>
@@ -188,9 +227,25 @@
     <path refid="library.maven:_net.sourceforge.f2j:arpack_combined_all:0.1.classpath"/>
     <path refid="library.maven:_com.googlecode.netlib-java:netlib-java:1.1.classpath"/>
     <path refid="library.maven:_com.github.fommil.netlib:core:1.1.classpath"/>
+    <path refid="library.maven:_nz.ac.waikato.cms.weka:libsvm:1.0.10.classpath"/>
+    <path refid="library.maven:_nz.ac.waikato.cms.weka:weka-dev:3.9.2.classpath"/>
+    <path refid="library.maven:_tw.edu.ntu.csie:libsvm:3.17.classpath"/>
     <path refid="library.maven:_com.google.code.gson:gson:2.8.2.classpath"/>
     <path refid="library.maven:_org.mongodb:mongo-java-driver:3.5.0.classpath"/>
-    <path refid="library.commons-validator:commons-validator:1.6.classpath"/>
+    <path refid="library.maven:_commons-validator:commons-validator:1.6.classpath"/>
+    <path refid="library.maven:_commons-beanutils:commons-beanutils:1.9.2.classpath"/>
+    <path refid="library.maven:_commons-digester:commons-digester:1.8.1.classpath"/>
+    <path refid="library.maven:_commons-logging:commons-logging:1.2.classpath"/>
+    <path refid="library.maven:_commons-collections:commons-collections:3.2.2.classpath"/>
+    <path refid="library.maven:_org.testng:testng:6.9.6.classpath"/>
+    <path refid="library.maven:_com.google.inject:guice:no_aop:4.0.classpath"/>
+    <path refid="library.maven:_javax.inject:javax.inject:1.classpath"/>
+    <path refid="library.maven:_aopalliance:aopalliance:1.0.classpath"/>
+    <path refid="library.maven:_org.beanshell:bsh:2.0b4.classpath"/>
+    <path refid="library.maven:_org.apache.ant:ant:1.7.0.classpath"/>
+    <path refid="library.maven:_org.apache.ant:ant-launcher:1.7.0.classpath"/>
+    <path refid="library.maven:_com.beust:jcommander:1.48.classpath"/>
+    <path refid="library.maven:_org.yaml:snakeyaml:1.15.classpath"/>
   </path>
   
   <path id="weka_rs.module.classpath">
@@ -204,12 +259,13 @@
     <path refid="library.nz.ac.waikato.cms.weka:weka-stable:3.8.1.classpath"/>
     <path refid="library.com.google.code.gson:gson:2.8.2.classpath"/>
     <path refid="library.org.mongodb:mongo-java-driver:3.5.0.classpath"/>
+    <path refid="library.libsvm.classpath"/>
+    <path refid="library.junit-4.12.classpath"/>
     <path refid="library.maven:_io.swagger:swagger-jersey2-jaxrs:1.5.15.classpath"/>
     <path refid="library.maven:_io.swagger:swagger-jaxrs:1.5.15.classpath"/>
     <path refid="library.maven:_io.swagger:swagger-core:1.5.15.classpath"/>
     <path refid="library.maven:_org.apache.commons:commons-lang3:3.2.1.classpath"/>
     <path refid="library.maven:_com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.8.7.classpath"/>
-    <path refid="library.maven:_org.yaml:snakeyaml:1.17.classpath"/>
     <path refid="library.maven:_io.swagger:swagger-models:1.5.15.classpath"/>
     <path refid="library.maven:_io.swagger:swagger-annotations:1.5.15.classpath"/>
     <path refid="library.maven:_org.reflections:reflections:0.9.11.classpath"/>
@@ -253,6 +309,17 @@
     <path refid="library.maven:_com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:2.8.9.classpath"/>
     <path refid="library.maven:_com.fasterxml.jackson.jaxrs:jackson-jaxrs-base:2.8.9.classpath"/>
     <path refid="library.maven:_com.fasterxml.jackson.module:jackson-module-jaxb-annotations:2.8.9.classpath"/>
+    <path refid="library.maven:_com.github.jsonld-java:jsonld-java:0.11.1.classpath"/>
+    <path refid="library.maven:_org.apache.httpcomponents:httpclient-osgi:4.5.3.classpath"/>
+    <path refid="library.maven:_org.apache.httpcomponents:httpclient:4.5.3.classpath"/>
+    <path refid="library.maven:_commons-codec:commons-codec:1.9.classpath"/>
+    <path refid="library.maven:_org.apache.httpcomponents:httpmime:4.5.3.classpath"/>
+    <path refid="library.maven:_org.apache.httpcomponents:httpclient-cache:4.5.3.classpath"/>
+    <path refid="library.maven:_org.apache.httpcomponents:fluent-hc:4.5.3.classpath"/>
+    <path refid="library.maven:_org.apache.httpcomponents:httpcore-osgi:4.4.6.classpath"/>
+    <path refid="library.maven:_org.apache.httpcomponents:httpcore:4.4.6.classpath"/>
+    <path refid="library.maven:_org.apache.httpcomponents:httpcore-nio:4.4.6.classpath"/>
+    <path refid="library.maven:_org.slf4j:jcl-over-slf4j:1.7.25.classpath"/>
     <path refid="library.maven:_com.brsanthu:migbase64:2.2.classpath"/>
     <path refid="library.maven:_org.json:json:20170516.classpath"/>
     <path refid="library.maven:_org.glassfish:javax.json:1.0.4.classpath"/>
@@ -280,9 +347,25 @@
     <path refid="library.maven:_net.sourceforge.f2j:arpack_combined_all:0.1.classpath"/>
     <path refid="library.maven:_com.googlecode.netlib-java:netlib-java:1.1.classpath"/>
     <path refid="library.maven:_com.github.fommil.netlib:core:1.1.classpath"/>
+    <path refid="library.maven:_nz.ac.waikato.cms.weka:libsvm:1.0.10.classpath"/>
+    <path refid="library.maven:_nz.ac.waikato.cms.weka:weka-dev:3.9.2.classpath"/>
+    <path refid="library.maven:_tw.edu.ntu.csie:libsvm:3.17.classpath"/>
     <path refid="library.maven:_com.google.code.gson:gson:2.8.2.classpath"/>
     <path refid="library.maven:_org.mongodb:mongo-java-driver:3.5.0.classpath"/>
-    <path refid="library.commons-validator:commons-validator:1.6.classpath"/>
+    <path refid="library.maven:_commons-validator:commons-validator:1.6.classpath"/>
+    <path refid="library.maven:_commons-beanutils:commons-beanutils:1.9.2.classpath"/>
+    <path refid="library.maven:_commons-digester:commons-digester:1.8.1.classpath"/>
+    <path refid="library.maven:_commons-logging:commons-logging:1.2.classpath"/>
+    <path refid="library.maven:_commons-collections:commons-collections:3.2.2.classpath"/>
+    <path refid="library.maven:_org.testng:testng:6.9.6.classpath"/>
+    <path refid="library.maven:_com.google.inject:guice:no_aop:4.0.classpath"/>
+    <path refid="library.maven:_javax.inject:javax.inject:1.classpath"/>
+    <path refid="library.maven:_aopalliance:aopalliance:1.0.classpath"/>
+    <path refid="library.maven:_org.beanshell:bsh:2.0b4.classpath"/>
+    <path refid="library.maven:_org.apache.ant:ant:1.7.0.classpath"/>
+    <path refid="library.maven:_org.apache.ant:ant-launcher:1.7.0.classpath"/>
+    <path refid="library.maven:_com.beust:jcommander:1.48.classpath"/>
+    <path refid="library.maven:_org.yaml:snakeyaml:1.15.classpath"/>
   </path>
   
   <path id="weka_rs.runtime.module.classpath">
@@ -296,12 +379,13 @@
     <path refid="library.nz.ac.waikato.cms.weka:weka-stable:3.8.1.classpath"/>
     <path refid="library.com.google.code.gson:gson:2.8.2.classpath"/>
     <path refid="library.org.mongodb:mongo-java-driver:3.5.0.classpath"/>
+    <path refid="library.libsvm.classpath"/>
+    <path refid="library.junit-4.12.classpath"/>
     <path refid="library.maven:_io.swagger:swagger-jersey2-jaxrs:1.5.15.classpath"/>
     <path refid="library.maven:_io.swagger:swagger-jaxrs:1.5.15.classpath"/>
     <path refid="library.maven:_io.swagger:swagger-core:1.5.15.classpath"/>
     <path refid="library.maven:_org.apache.commons:commons-lang3:3.2.1.classpath"/>
     <path refid="library.maven:_com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.8.7.classpath"/>
-    <path refid="library.maven:_org.yaml:snakeyaml:1.17.classpath"/>
     <path refid="library.maven:_io.swagger:swagger-models:1.5.15.classpath"/>
     <path refid="library.maven:_io.swagger:swagger-annotations:1.5.15.classpath"/>
     <path refid="library.maven:_org.reflections:reflections:0.9.11.classpath"/>
@@ -345,6 +429,17 @@
     <path refid="library.maven:_com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:2.8.9.classpath"/>
     <path refid="library.maven:_com.fasterxml.jackson.jaxrs:jackson-jaxrs-base:2.8.9.classpath"/>
     <path refid="library.maven:_com.fasterxml.jackson.module:jackson-module-jaxb-annotations:2.8.9.classpath"/>
+    <path refid="library.maven:_com.github.jsonld-java:jsonld-java:0.11.1.classpath"/>
+    <path refid="library.maven:_org.apache.httpcomponents:httpclient-osgi:4.5.3.classpath"/>
+    <path refid="library.maven:_org.apache.httpcomponents:httpclient:4.5.3.classpath"/>
+    <path refid="library.maven:_commons-codec:commons-codec:1.9.classpath"/>
+    <path refid="library.maven:_org.apache.httpcomponents:httpmime:4.5.3.classpath"/>
+    <path refid="library.maven:_org.apache.httpcomponents:httpclient-cache:4.5.3.classpath"/>
+    <path refid="library.maven:_org.apache.httpcomponents:fluent-hc:4.5.3.classpath"/>
+    <path refid="library.maven:_org.apache.httpcomponents:httpcore-osgi:4.4.6.classpath"/>
+    <path refid="library.maven:_org.apache.httpcomponents:httpcore:4.4.6.classpath"/>
+    <path refid="library.maven:_org.apache.httpcomponents:httpcore-nio:4.4.6.classpath"/>
+    <path refid="library.maven:_org.slf4j:jcl-over-slf4j:1.7.25.classpath"/>
     <path refid="library.maven:_com.brsanthu:migbase64:2.2.classpath"/>
     <path refid="library.maven:_org.json:json:20170516.classpath"/>
     <path refid="library.maven:_org.glassfish:javax.json:1.0.4.classpath"/>
@@ -372,9 +467,25 @@
     <path refid="library.maven:_net.sourceforge.f2j:arpack_combined_all:0.1.classpath"/>
     <path refid="library.maven:_com.googlecode.netlib-java:netlib-java:1.1.classpath"/>
     <path refid="library.maven:_com.github.fommil.netlib:core:1.1.classpath"/>
+    <path refid="library.maven:_nz.ac.waikato.cms.weka:libsvm:1.0.10.classpath"/>
+    <path refid="library.maven:_nz.ac.waikato.cms.weka:weka-dev:3.9.2.classpath"/>
+    <path refid="library.maven:_tw.edu.ntu.csie:libsvm:3.17.classpath"/>
     <path refid="library.maven:_com.google.code.gson:gson:2.8.2.classpath"/>
     <path refid="library.maven:_org.mongodb:mongo-java-driver:3.5.0.classpath"/>
-    <path refid="library.commons-validator:commons-validator:1.6.classpath"/>
+    <path refid="library.maven:_commons-validator:commons-validator:1.6.classpath"/>
+    <path refid="library.maven:_commons-beanutils:commons-beanutils:1.9.2.classpath"/>
+    <path refid="library.maven:_commons-digester:commons-digester:1.8.1.classpath"/>
+    <path refid="library.maven:_commons-logging:commons-logging:1.2.classpath"/>
+    <path refid="library.maven:_commons-collections:commons-collections:3.2.2.classpath"/>
+    <path refid="library.maven:_org.testng:testng:6.9.6.classpath"/>
+    <path refid="library.maven:_com.google.inject:guice:no_aop:4.0.classpath"/>
+    <path refid="library.maven:_javax.inject:javax.inject:1.classpath"/>
+    <path refid="library.maven:_aopalliance:aopalliance:1.0.classpath"/>
+    <path refid="library.maven:_org.beanshell:bsh:2.0b4.classpath"/>
+    <path refid="library.maven:_org.apache.ant:ant:1.7.0.classpath"/>
+    <path refid="library.maven:_org.apache.ant:ant-launcher:1.7.0.classpath"/>
+    <path refid="library.maven:_com.beust:jcommander:1.48.classpath"/>
+    <path refid="library.maven:_org.yaml:snakeyaml:1.15.classpath"/>
   </path>
   
   
@@ -396,6 +507,7 @@
   <path id="weka_rs.module.test.sourcepath">
     <dirset dir="${module.weka_rs.basedir}">
       <include name="src/main/webapp"/>
+      <include name="src/test/java"/>
     </dirset>
   </path>
   
@@ -436,6 +548,10 @@
     
     <copy todir="${weka_rs.testoutput.dir}">
       <fileset dir="${module.weka_rs.basedir}/src/main/webapp">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+      <fileset dir="${module.weka_rs.basedir}/src/test/java">
         <patternset refid="compiler.resources"/>
         <type type="file"/>
       </fileset>

@@ -1,7 +1,7 @@
 package io.swagger.api;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.testng.Assert;
+import org.testng.annotations.Test;
 
 public class StringUtilTest {
     @Test
@@ -33,7 +33,6 @@ public class StringUtilTest {
     @Test
     public void isNumeric() throws Exception {
         Assert.assertTrue(StringUtil.isNumeric("1.234"));
-        System.out.println("bla");
         Assert.assertTrue(StringUtil.isNumeric("123"));
         Assert.assertTrue(StringUtil.isNumeric("-1e8"));
         Assert.assertTrue(StringUtil.isNumeric("0.0002"));

@@ -1,15 +1,15 @@
 package io.swagger.api.authorization;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.testng.Assert;
+import org.testng.annotations.Test;
 
 public class AuthorizationServiceTest {
-    String user     = "guest";
-    String password = "guest";
+    private String user     = "guest";
+    private String password = "guest";
 
     @Test
     public void login() throws Exception {
-        Assert.assertTrue(AuthorizationService.login(user, password) instanceof String);
+        Assert.assertTrue(AuthorizationService.login(user, password) != null);
     }
 
     @Test

@@ -1,10 +1,11 @@
 package io.swagger.api.authorization;
 
-import org.junit.Test;
+
+import org.testng.annotations.Test;
 
 public class AuthorizationTest {
-    String user     = "guest";
-    String password = "guest";
+    private String user     = "guest";
+    private String password = "guest";
 
     @Test
     public void login() throws Exception {

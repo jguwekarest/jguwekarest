@@ -70,6 +70,15 @@ public class ModelService {
         return id;
     }
 
+    /**
+    * Predict a dataset in arff format with an existing local model.
+    * @param fileInputStream file handle to upload an arff file
+    * @param fileDetail file handle to upload an arff file
+    * @param datasetId ID of a local dataset
+    * @param modelId ID of the local model in mongoDB
+    * @param subjectid token for authentication and authorization
+    *
+    */
     public static String predictModel(InputStream fileInputStream, FormDataContentDisposition fileDetail, String datasetId, String modelId, String subjectid) throws Exception {
         StringBuilder out = new StringBuilder();
         Classifier cls = getClassifier(modelId);
