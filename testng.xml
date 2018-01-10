@@ -1,0 +1,11 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+<suite name="AllTests" verbose="2" >
+    <parameter name="host"  value="http://0.0.0.0:8081"/>
+    <test name="Test1">
+        <packages>
+            <package name="integration.*"/>
+            <package name="authsystem.*"/>
+            <package name="unit.*"/>
+        </packages>
+    </test>
+</suite>

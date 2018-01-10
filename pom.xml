@@ -3,8 +3,8 @@
   <groupId>org.openrisknet.jgu</groupId>
   <artifactId>weka_rs</artifactId>
   <packaging>war</packaging>
-  <name>jgu_weka_rest</name>
-  <version>0.0.1</version>
+  <name>JGU WEKA REST</name>
+  <version>0.0.3</version>
 
   <licenses>
     <license>
@@ -39,10 +39,6 @@
             <name>surefire.testng.verbose</name>
             <value>2</value>
           </property>
-          <property>
-            <name>host</name>
-            <value>http://0.0.0.0:8081</value>
-          </property>
           </properties>
         </configuration>
         <executions>
@@ -53,21 +49,21 @@
                 <exclude>**/unit/**</exclude>
                 <exclude>**/integration/**</exclude>
                 <exclude>**/authsystem/**</exclude>
+                <exclude>**/helper/**</exclude>
               </excludes>
             </configuration>
           </execution>
           <execution>
             <id>integration-test</id>
             <phase>integration-test</phase>
+
             <goals>
               <goal>test</goal>
             </goals>
             <configuration>
-              <includes>
-                <include>**/unit/**</include>
-                <include>**/integration/**</include>
-                <include>**/authsystem/**</include>
-              </includes>
+              <suiteXmlFiles>
+                <suiteXmlFile>testng.xml</suiteXmlFile>
+              </suiteXmlFiles>
             </configuration>
           </execution>
         </executions>

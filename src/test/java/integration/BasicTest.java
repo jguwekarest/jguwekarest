@@ -1,27 +1,28 @@
 package integration;
 
-import org.glassfish.jersey.client.ClientConfig;
-import org.glassfish.jersey.jackson.JacksonFeature;
+import helper.TestHelper;
 import org.testng.Assert;
 import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
 import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Invocation;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class BasicTest {
 
+    private static final Logger LOG = Logger.getLogger(BasicTest.class.getName());
+
     @Test()
-    @Parameters({"host"})
+    @Parameters({"host"}) // variable host from testng.xml
     public void indexGet( @Optional  String host) throws Exception {
 
-        host = (host != null ? host : "http://0.0.0.0:8081");
-        Client client = getClient();
+        Client client = TestHelper.getClient();
         WebTarget webTarget = client.target(host);
         Invocation.Builder request = webTarget.request(MediaType.TEXT_HTML);
         Response response = request.get();
@@ -34,9 +35,8 @@ public class BasicTest {
     @Parameters({"host"})
     public void swaggerJSONGet( @Optional  String host) throws Exception {
 
-        host = (host != null ? host : "http://0.0.0.0:8081") + "/swagger.json";
-        Client client = getClient();
-        WebTarget webTarget = client.target(host);
+        Client client = TestHelper.getClient();
+        WebTarget webTarget = client.target(host + "/swagger.json");
         Invocation.Builder request = webTarget.request(MediaType.APPLICATION_JSON);
         Response response = request.get();
         Assert.assertTrue(response.getStatus() == 200);
@@ -44,11 +44,24 @@ public class BasicTest {
 
     }
 
-    public Client getClient(){
-        ClientConfig clientConfig = new ClientConfig();
-        clientConfig.register(JacksonFeature.class);
-        Client client = ClientBuilder.newClient(clientConfig);
-        return client;
+    @Test()
+    @Parameters({"host"})
+    public void dataJSONGet( @Optional  String host) throws Exception {
+
+        Client client = TestHelper.getClient();
+        String[]  arr = { "dataset", "model" };
+
+        for (String subdir : arr) {
+            WebTarget webTarget = client.target(host + "/" + subdir);
+            Invocation.Builder request = webTarget.request(MediaType.APPLICATION_JSON);
+            Response response = request.get();
+            Assert.assertTrue(response.getStatus() == 200, "Data at host: " + host + "/" + subdir + " not available.");
+            Assert.assertTrue(response.getMediaType().toString().equals(MediaType.APPLICATION_JSON), "Data at host: " + host + "/" + subdir + " not available in mime-type JSON.");
+            LOG.log(Level.INFO, "Datatest: " + subdir);
+        }
+
     }
+
+
 
 }
