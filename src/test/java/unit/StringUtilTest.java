@@ -1,5 +1,6 @@
-package io.swagger.api;
+package unit;
 
+import io.swagger.api.StringUtil;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

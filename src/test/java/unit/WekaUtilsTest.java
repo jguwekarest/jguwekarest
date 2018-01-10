@@ -1,5 +1,6 @@
-package io.swagger.api;
+package unit;
 
+import io.swagger.api.WekaUtils;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import weka.core.Instances;

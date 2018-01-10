@@ -1,5 +1,6 @@
-package io.swagger.api.authorization;
+package authsystem;
 
+import io.swagger.api.authorization.AuthorizationService;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
