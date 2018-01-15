@@ -14,7 +14,6 @@ import java.io.IOException;
 
 @Path("/api")
 
-
 @io.swagger.annotations.Api(description = "the api API")
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2017-09-11T12:03:46.572Z")
 public class Api  {

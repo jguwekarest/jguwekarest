@@ -9,11 +9,10 @@ import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import weka.classifiers.trees.J48;
 import weka.core.Instances;
 
-import javax.servlet.ServletContext;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.SecurityContext;
+import javax.ws.rs.core.UriInfo;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
@@ -26,15 +25,15 @@ public class TreesImpl extends TreesService {
     @Produces("text/plain")
     public Response algorithmJ48Post(InputStream fileInputStream, FormDataContentDisposition fileDetail, String datasetUri, Integer binarySplits,
                                      BigDecimal confidenceFactor, Integer minNumObj, Integer numFolds, Integer reducedErrorPruning, Integer seed,
-                                     Integer subtreeRaising, Integer unpruned, Integer useLaplace, Boolean save, SecurityContext securityContext,
-                                     ServletContext servletContext, HttpHeaders headers) throws NotFoundException, IOException {
+                                     Integer subtreeRaising, Integer unpruned, Integer useLaplace, String subjectid, HttpHeaders headers, UriInfo uriInfo
+                                    ) throws NotFoundException, IOException {
 
         Object[] params = {binarySplits, confidenceFactor, minNumObj, numFolds, reducedErrorPruning, seed, subtreeRaising, unpruned, useLaplace};
 
         for (Object param : params) {
             System.out.println("param are: " + param);
         }
-        String subjectid = headers.getRequestHeaders().getFirst("subjectid");
+
         String txtStr = DatasetService.getArff(fileInputStream, fileDetail, datasetUri, subjectid);
 
         String parameters = "";
@@ -103,9 +102,15 @@ public class TreesImpl extends TreesService {
         v.add(classifier);
         v.add(new Instances(instances, 0));
 
-        if(save != null && save) ModelService.saveModel(classifier, classifier.getOptions(), validation, subjectid);
+        String accept = headers.getHeaderString(HttpHeaders.ACCEPT);
+        if(accept.equals("text/uri-list")) {
+            String id = ModelService.saveModel(classifier, classifier.getOptions(), validation, subjectid);
+            String baseuri = uriInfo.getBaseUri().toString();
+            return Response.ok(baseuri + "model/" + id).build();
+        } else {
+            return Response.ok(v.toString() + "\n" + validation + "\n", "text/x-arff").build();
+        }
 
-        return Response.ok(v.toString() + "\n" + validation + "\n").build();
     }
 
     public void showParams(TreeMap<String, String> parameters){

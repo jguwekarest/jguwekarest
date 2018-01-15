@@ -8,9 +8,7 @@ import org.glassfish.jersey.media.multipart.FormDataParam;
 
 import javax.servlet.ServletConfig;
 import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.SecurityContext;
+import javax.ws.rs.core.*;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
@@ -42,11 +40,12 @@ public class Functions {
         this.delegate = delegate;
     }
 
+    public static final String SAVE_NOTE = "Save the model by posting the content-type text/uri-list.";
     @POST
     @Path("/linearRegression")
     @Consumes({"multipart/form-data"})
-    @Produces({"text/x-arff", "application/json"})
-    @ApiOperation(value = "REST interface to the WEKA linear regression classifier.", notes = "REST interface to the WEKA linear regression classifier.", tags = {"algorithm",}, position=3
+    @Produces({"text/x-arff", "text/uri-list"})
+    @ApiOperation(value = "REST interface to the WEKA linear regression classifier.", notes = "REST interface to the WEKA linear regression classifier." + SAVE_NOTE, tags = {"algorithm",}, position=3
             ,extensions = @Extension(name = "algorithm", properties = { @ExtensionProperty(name = "Linear Regression", value = "https://en.wikipedia.org/wiki/Linear_regression")}))
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "OK"),
@@ -61,20 +60,19 @@ public class Functions {
             , @ApiParam(value = "Attribute selection method to be used (Default M5 method).Available methods are: no attribute selection(Value:1), attribute selection using M5's method (Value:0) and a greedy selection using the Akaike information metric(Value:2). One of 0,1,2 (Default: 0).", defaultValue = "0", allowableValues = "0, 1, 2" ) @FormDataParam("attributeSelectionMethod") Integer attributeSelectionMethod
             , @ApiParam(value = "Whether to eliminate colinear attributes. Must be 0 or 1 (Default: 1).", defaultValue = "1", allowableValues = "0, 1") @FormDataParam("eliminateColinearAttributes") Integer eliminateColinearAttributes
             , @ApiParam(value = "The ridge parameter (Default: 1.0E-8).", defaultValue = "1.0E-8") @FormDataParam("ridge") BigDecimal ridge
-            , @ApiParam(value = "Save the model.", defaultValue="false")@FormDataParam("save") Boolean save
             , @ApiParam(value = "authorization token") @HeaderParam("subjectid") String subjectid
-            , @Context SecurityContext securityContext)
+            , @Context UriInfo ui, @Context HttpHeaders headers, @Context SecurityContext securityContext)
             throws io.swagger.api.NotFoundException, IOException {
         return delegate.linearRegressionPost(fileInputStream, fileDetail, datasetUri, attributeSelectionMethod, eliminateColinearAttributes, ridge,
-                save, subjectid, securityContext);
+                subjectid, headers, ui, securityContext);
     }
 
 
     @POST
     @Path("/libsvm")
     @Consumes({"multipart/form-data"})
-    @Produces({"text/x-arff", "application/json"})
-    @ApiOperation(value = "REST interface to the WEKA support vector machine wrapper library classifier.", notes = "REST interface to the WEKA support vector machine wrapper library classifier.", tags = {"algorithm",}, position=3
+    @Produces({"text/x-arff", "text/uri-list"})
+    @ApiOperation(value = "REST interface to the WEKA support vector machine wrapper library classifier.", notes = "REST interface to the WEKA support vector machine wrapper library classifier." + SAVE_NOTE, tags = {"algorithm",}, position=3
             ,extensions = @Extension(name = "algorithm", properties = { @ExtensionProperty(name = "support vector machine", value = "https://en.wikipedia.org/wiki/Support_vector_machine")}))
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "OK"),
@@ -99,11 +97,10 @@ public class Functions {
             , @ApiParam(value = "probabilityEstimates -- Whether to generate probability estimates instead of -1/+1 for classification problems.", defaultValue = "false") @FormDataParam("probabilityEstimates") Boolean probabilityEstimates
             , @ApiParam(value = "shrinking -- Whether to use the shrinking heuristic.", defaultValue = "true") @FormDataParam("shrinking") Boolean shrinking
             , @ApiParam(value = "weights -- The weights to use for the classes (blank-separated list, eg, \"1 1 1\" for a 3-class problem), if empty 1 is used by default.") @FormDataParam("weights") String weights
-            , @ApiParam(value = "Save the model.", defaultValue="false")@FormDataParam("save") Boolean save
             , @ApiParam(value = "authorization token") @HeaderParam("subjectid") String subjectid
-            , @Context SecurityContext securityContext)
+            , @Context UriInfo ui, @Context HttpHeaders headers, @Context SecurityContext securityContext)
             throws io.swagger.api.NotFoundException, IOException {
         return delegate.libSVMPost(fileInputStream, fileDetail, datasetUri, svmType, coef0, cost, degree, eps, gamma, kernelType, loss,
-                normalize, nu, probabilityEstimates, shrinking, weights, save, subjectid, securityContext);
+                normalize, nu, probabilityEstimates, shrinking, weights, subjectid, headers, ui, securityContext);
     }
 }

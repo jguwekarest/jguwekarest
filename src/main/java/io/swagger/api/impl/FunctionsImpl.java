@@ -10,8 +10,10 @@ import weka.classifiers.functions.LinearRegression;
 import weka.core.Instances;
 
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
+import javax.ws.rs.core.UriInfo;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
@@ -26,7 +28,7 @@ public class FunctionsImpl extends FunctionsService {
     public Response libSVMPost(InputStream fileInputStream, FormDataContentDisposition fileDetail, String datasetUri, Integer svmType,
                                Float coef0, Float cost, Integer degree, BigDecimal eps, BigDecimal gamma, Integer kernelType,
                                BigDecimal loss, Boolean normalize, BigDecimal nu, Boolean probabilityEstimates, Boolean shrinking,
-                               String weights, Boolean save, String subjectid, SecurityContext securityContext)
+                               String weights, String subjectid, HttpHeaders headers, UriInfo ui, SecurityContext securityContext)
             throws IOException {
 
         Object[] params = {svmType, coef0, cost, degree, eps, gamma, kernelType, loss, normalize, nu, subjectid};
@@ -94,15 +96,20 @@ public class FunctionsImpl extends FunctionsService {
         v.add(classifier);
         v.add(new Instances(instances, 0));
 
-        if(save != null && save) ModelService.saveModel(classifier, classifier.getOptions(), validation, subjectid);
-
-        return Response.ok(v.toString() + "\n" + validation + "\n", "text/x-arff").build();
+        String accept = headers.getHeaderString(HttpHeaders.ACCEPT);
+        if(accept.equals("text/uri-list")) {
+            String id = ModelService.saveModel(classifier, classifier.getOptions(), validation, subjectid);
+            String baseuri = ui.getBaseUri().toString();
+            return Response.ok(baseuri + "model/" + id).build();
+        } else {
+            return Response.ok(v.toString() + "\n" + validation + "\n", "text/x-arff").build();
+        }
     }
 
 
     public Response linearRegressionPost(InputStream fileInputStream, FormDataContentDisposition fileDetail, String datasetUri,
                                          Integer attributeSelectionMethod, Integer eliminateColinearAttributes, BigDecimal ridge,
-                                         Boolean save, String subjectid, SecurityContext securityContext) throws IOException {
+                                         String subjectid, HttpHeaders headers, UriInfo ui, SecurityContext securityContext) throws IOException {
 
         Object[] params = {datasetUri,  attributeSelectionMethod, eliminateColinearAttributes, ridge, subjectid};
 
@@ -157,9 +164,15 @@ public class FunctionsImpl extends FunctionsService {
         v.add(classifier);
         v.add(new Instances(instances, 0));
 
-        if(save != null && save) ModelService.saveModel(classifier, classifier.getOptions(), validation, subjectid);
+        String accept = headers.getHeaderString(HttpHeaders.ACCEPT);
+        if(accept.equals("text/uri-list")) {
+            String id = ModelService.saveModel(classifier, classifier.getOptions(), validation, subjectid);
+            String baseuri = ui.getBaseUri().toString();
+            return Response.ok(baseuri + "model/" + id).build();
+        } else {
+            return Response.ok(v.toString() + "\n" + validation + "\n", "text/x-arff").build();
+        }
 
-        return Response.ok(v.toString() + "\n" + validation + "\n", "text/x-arff").build();
     }
 
 

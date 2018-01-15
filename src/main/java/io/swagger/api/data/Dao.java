@@ -13,7 +13,10 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.UriInfo;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Objects;
+import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -165,8 +168,8 @@ public class Dao {
 
         Document documentParsed = Document.parse(strictJSON);
         mongoCollection.insertOne(documentParsed);
-        return documentParsed.get("_id").toString();
 
+        return documentParsed.get("_id").toString();
     }
 
 

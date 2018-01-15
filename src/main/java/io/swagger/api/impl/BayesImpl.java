@@ -24,11 +24,11 @@ public class BayesImpl extends BayesService {
     @Produces("text/plain")
     public Response algorithmBayesNetPost(InputStream fileInputStream, FormDataContentDisposition fileDetail, String datasetUri, String estimator,
                                           BigDecimal estimatorParams, Integer useADTree, String searchAlgorithm, String searchParams,
-                                          Boolean save, HttpHeaders headers, UriInfo ui, SecurityContext securityContext)
+                                          HttpHeaders headers, UriInfo ui, SecurityContext securityContext)
             throws NotFoundException, IOException {
 
         String subjectid = headers.getRequestHeaders().getFirst("subjectid");
-        String txtStr = DatasetService.getArff(fileInputStream, fileDetail, datasetUri, subjectid);
+        String txtStr    = DatasetService.getArff(fileInputStream, fileDetail, datasetUri, subjectid);
 
         String parameters = "";
 
@@ -93,9 +93,16 @@ public class BayesImpl extends BayesService {
         v.add(classifier);
         v.add(new Instances(instances, 0));
 
-        if(save != null && save) ModelService.saveModel(classifier, classifier.getOptions(), validation, subjectid);
+        //if(save != null && save) ModelService.saveModel(classifier, classifier.getOptions(), validation, subjectid);
+        String accept = headers.getHeaderString(HttpHeaders.ACCEPT);
+        if(accept.equals("text/uri-list")) {
+            String id = ModelService.saveModel(classifier, classifier.getOptions(), validation, subjectid);
+            String baseuri = ui.getBaseUri().toString();
+            return Response.ok(baseuri + "model/" + id).build();
+        } else {
+            return Response.ok(v.toString() + "\n" + validation + "\n", "text/x-arff").build();
+        }
 
-        return Response.ok(v.toString() + "\n" + validation ).build();
     }
 
 }

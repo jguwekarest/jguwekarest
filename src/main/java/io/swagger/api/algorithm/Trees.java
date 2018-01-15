@@ -8,14 +8,8 @@ import org.glassfish.jersey.media.multipart.FormDataParam;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.SecurityContext;
+import javax.ws.rs.*;
+import javax.ws.rs.core.*;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
@@ -48,13 +42,15 @@ public class Trees  {
         this.delegate = delegate;
     }
 
+    public static final String SAVE_NOTE = "Save the model by posting the content-type text/uri-list.";
+
     @Context ServletContext servletContext;
     @POST
     @Path("/J48")
     @Consumes({ "multipart/form-data" })
-    @Produces({ "text/x-arff" })
+    @Produces({ "text/x-arff", "text/uri-list" })
 
-    @ApiOperation(value = "REST interface to the WEKA J48 classifier.", notes = "REST interface to the WEKA J48 classifier.", tags={ "algorithm", }, position = 1
+    @ApiOperation(value = "REST interface to the WEKA J48 classifier.", notes = "REST interface to the WEKA J48 classifier." + SAVE_NOTE, tags={ "algorithm", }, position = 1
             ,extensions = @Extension(name = "algorithm", properties = { @ExtensionProperty(name = "J48", value = "https://en.wikipedia.org/wiki/C4.5_algorithm#Implementations")}))
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "OK"),
@@ -75,11 +71,11 @@ public class Trees  {
             , @ApiParam(value = "Whether to consider the subtree raising operation when pruning.", allowableValues="0, 1", defaultValue = "1")@FormDataParam("subtreeRaising") Integer subtreeRaising
             , @ApiParam(value = "Whether pruning is performed.", defaultValue = "1", allowableValues="0, 1")@FormDataParam("unpruned") Integer unpruned
             , @ApiParam(value = "Whether counts at leaves are smoothed based on Laplace.", defaultValue = "0", allowableValues="0, 1")@FormDataParam("useLaplace") Integer useLaplace
-            , @ApiParam(value = "Save the model.", defaultValue="false")@FormDataParam("save") Boolean save
-            , @Context SecurityContext securityContext, @Context HttpHeaders headers)
+            , @ApiParam(value = "Authorization token" )@HeaderParam("subjectid") String subjectid
+            , @Context UriInfo ui, @Context HttpHeaders headers)
             throws NotFoundException, IOException {
         return delegate.algorithmJ48Post(fileInputStream, fileDetail,datasetUri,binarySplits,confidenceFactor,minNumObj,numFolds,reducedErrorPruning,
-                seed,subtreeRaising,unpruned,useLaplace,save,securityContext,servletContext,headers);
+                seed,subtreeRaising,unpruned,useLaplace,subjectid,headers,ui);
     }
 
 }

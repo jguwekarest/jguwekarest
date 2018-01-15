@@ -7,9 +7,7 @@ import org.glassfish.jersey.media.multipart.FormDataParam;
 
 import javax.servlet.ServletConfig;
 import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.SecurityContext;
+import javax.ws.rs.core.*;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -40,12 +38,12 @@ public class Lazy {
         this.delegate = delegate;
     }
 
-
+    public static final String SAVE_NOTE = "Save the model by posting the content-type text/uri-list.";
     @POST
     @Path("/kNNclassification")
     @Consumes({ "multipart/form-data" })
-    @Produces({ "text/x-arff", "application/json"})
-    @ApiOperation(value = "REST interface to the WEKA K-nearest neighbours classifier.", notes = "REST interface to the WEKA K-nearest neighbours classifier.", tags={ "algorithm", }, position = 2
+    @Produces({ "text/x-arff", "text/uri-list"})
+    @ApiOperation(value = "REST interface to the WEKA K-nearest neighbours classifier.", notes = "REST interface to the WEKA K-nearest neighbours classifier." + SAVE_NOTE, tags={ "algorithm", }, position = 2
             ,extensions = @Extension(name = "algorithm", properties = { @ExtensionProperty(name = "k-nearest neighbors algorithm", value = "https://en.wikipedia.org/wiki/K-nearest_neighbors_algorithm")}))
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "OK"),
@@ -65,10 +63,10 @@ public class Lazy {
             , @ApiParam(value = "The nearest neighbour search algorithm to use (Default: weka.core.neighboursearch.LinearNNSearch). Fixed.", defaultValue="LinearNNSearch")@FormDataParam("nearestNeighbourSearchAlgorithm")  String nearestNeighbourSearchAlgorithm
             , @ApiParam(value = "Save the model.", defaultValue="false")@FormDataParam("save") Boolean save
             , @ApiParam(value = "Authorization token" )@HeaderParam("subjectid") String subjectid
-            , @Context SecurityContext securityContext)
+            , @Context UriInfo ui, @Context HttpHeaders headers)
             throws io.swagger.api.NotFoundException, IOException {
         return delegate.algorithmKNNclassificationPost(fileInputStream,fileDetail,datasetUri,windowSize,KNN,crossValidate,distanceWeighting,meanSquared,
-                nearestNeighbourSearchAlgorithm,save,subjectid,securityContext);
+                nearestNeighbourSearchAlgorithm,subjectid,headers,ui);
     }
 
 }

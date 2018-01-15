@@ -60,7 +60,7 @@ public class ModelService {
             Gson gson = new Gson();
             Document document = Document.parse(gson.toJson(model));
             id = modelDao.saveData("model", document);
-            weka.core.SerializationHelper.write(dataDirectory + id + ".model", classifier);
+            //weka.core.SerializationHelper.write(dataDirectory + id + ".model", classifier);
         } catch (Exception e) {
             e.printStackTrace();
             return "";

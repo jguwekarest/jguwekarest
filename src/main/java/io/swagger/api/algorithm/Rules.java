@@ -7,9 +7,7 @@ import org.glassfish.jersey.media.multipart.FormDataParam;
 
 import javax.servlet.ServletConfig;
 import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.SecurityContext;
+import javax.ws.rs.core.*;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -40,12 +38,13 @@ public class Rules {
         this.delegate = delegate;
     }
 
+    public static final String SAVE_NOTE = "Save the model by posting the content-type text/uri-list.";
 
     @POST
     @Path("/ZeroR")
     @Consumes({ "multipart/form-data" })
-    @Produces({ "text/x-arff", "application/json"})
-    @ApiOperation(value = "REST interface to the WEKA ZeroR classifier.", notes = "REST interface to the WEKA ZeroR classifier.", tags={ "algorithm", }, position = 2
+    @Produces({ "text/x-arff", "text/uri-list"})
+    @ApiOperation(value = "REST interface to the WEKA ZeroR classifier.", notes = "REST interface to the WEKA ZeroR classifier." + SAVE_NOTE, tags={ "algorithm", }, position = 2
             ,extensions = @Extension(name = "algorithm", properties = { @ExtensionProperty(name = "ZeroR", value = "http://weka.sourceforge.net/doc.dev/weka/classifiers/rules/ZeroR.html")}))
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "OK"),
@@ -57,19 +56,18 @@ public class Rules {
             @FormDataParam("file") InputStream fileInputStream,
             @FormDataParam("file") FormDataContentDisposition fileDetail
             , @ApiParam(value = "Dataset URI or local dataset ID (to the arff representation of a dataset).")@FormDataParam("datasetURI")  String datasetUri
-            , @ApiParam(value = "Save the model.", defaultValue="false")@FormDataParam("save") Boolean save
             , @ApiParam(value = "authorization token") @HeaderParam("subjectid") String subjectid
-            , @Context SecurityContext securityContext)
+            , @Context UriInfo uriInfo, @Context HttpHeaders headers, @Context SecurityContext securityContext)
             throws io.swagger.api.NotFoundException, IOException {
-        return delegate.algorithmZeroRPost(fileInputStream,fileDetail,datasetUri,save,subjectid,securityContext);
+        return delegate.algorithmZeroRPost(fileInputStream,fileDetail,datasetUri,subjectid,headers,uriInfo);
     }
 
 
     @POST
     @Path("/M5Rules")
     @Consumes({ "multipart/form-data" })
-    @Produces({ "text/x-arff"})
-    @ApiOperation(value = "REST interface to the WEKA M5Rules classifier.", notes = "REST interface to the WEKA M5Rules classifier.", tags={ "algorithm", }, position = 2
+    @Produces({ "text/x-arff", "text/uri-list"})
+    @ApiOperation(value = "REST interface to the WEKA M5Rules classifier.", notes = "REST interface to the WEKA M5Rules classifier." + SAVE_NOTE, tags={ "algorithm", }, position = 2
             ,extensions = @Extension(name = "algorithm", properties = { @ExtensionProperty(name = "M5Rules", value = "http://weka.sourceforge.net/doc.dev/weka/classifiers/rules/M5Rules.html")}))
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "OK"),
@@ -85,12 +83,11 @@ public class Rules {
             , @ApiParam(value = "Whether to use unsmoothed predictions.", defaultValue = "0", allowableValues="0,1")@FormDataParam("useUnsmoothed") Integer useUnsmoothed
             , @ApiParam(value = "The minimum number of instances to allow at a leaf node.", defaultValue = "4")@FormDataParam("minNumInstances") Double minNumInstances
             , @ApiParam(value = "Whether to generate a regression tree/rule instead of a model tree/rule.", defaultValue = "0", allowableValues="0,1")@FormDataParam("buildRegressionTree") Integer buildRegressionTree
-            , @ApiParam(value = "Save the model.", defaultValue="false")@FormDataParam("save") Boolean save
             , @ApiParam(value = "authorization token") @HeaderParam("subjectid") String subjectid
-            , @Context SecurityContext securityContext)
+            , @Context UriInfo uriInfo, @Context HttpHeaders headers, @Context SecurityContext securityContext)
             throws io.swagger.api.NotFoundException, IOException {
         return delegate.algorithmM5RulesPost(fileInputStream,fileDetail,datasetUri,unpruned,useUnsmoothed,minNumInstances,buildRegressionTree,
-                save,subjectid,securityContext);
+                subjectid,headers,uriInfo);
     }
 
 }
