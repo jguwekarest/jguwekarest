@@ -13,10 +13,13 @@ import weka.core.Instances;
 import javax.ws.rs.core.UriInfo;
 import java.io.*;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class ModelService {
 
     private static String dataDirectory = System.getProperty("user.home") + "/.jguweka/data/";
+    private static final Logger LOG = Logger.getLogger(ModelService.class.getName());
 
     public static Object listModels(UriInfo ui, String accept, String token) {
         Dao modelDao = new Dao();
@@ -70,6 +73,28 @@ public class ModelService {
         return id;
     }
 
+
+    /**
+     * Delete a model.
+     * @param id of the model
+     * @return true on success
+     * @throws ApiException
+     */
+    public static Boolean deleteModel(String id) throws ApiException {
+        Dao dao = new Dao();
+        try {
+            Boolean status = dao.delete("model", id);
+            LOG.log(Level.INFO, "Model : " + id + " deleted.");
+            return status;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            dao.close();
+        }
+    }
+
+
     /**
     * Predict a dataset in arff format with an existing local model.
     * @param fileInputStream file handle to upload an arff file
@@ -86,7 +111,7 @@ public class ModelService {
         Instances instances = WekaUtils.instancesFromString(arff, true);
         for (Instance instance: instances) {
             Double result = cls.classifyInstance(instance);
-            out.append(instance).append(" :: ").append(result).append("\n");
+            out.append(instance).append(",").append(result).append("\n");
         }
         return out.toString();
     }

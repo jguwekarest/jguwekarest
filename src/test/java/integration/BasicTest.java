@@ -18,7 +18,7 @@ public class BasicTest {
 
     private static final Logger LOG = Logger.getLogger(BasicTest.class.getName());
 
-    @Test()
+    @Test(description = "Get index page")
     @Parameters({"host"}) // variable host from testng.xml
     public void indexGet( @Optional  String host) throws Exception {
 
@@ -31,7 +31,7 @@ public class BasicTest {
 
     }
 
-    @Test()
+    @Test(description = "Get /swagger.json")
     @Parameters({"host"})
     public void swaggerJSONGet( @Optional  String host) throws Exception {
 
@@ -44,7 +44,7 @@ public class BasicTest {
 
     }
 
-    @Test()
+    @Test(description = "Get JSON representation of /dataset and /model")
     @Parameters({"host"})
     public void dataJSONGet( @Optional  String host) throws Exception {
 

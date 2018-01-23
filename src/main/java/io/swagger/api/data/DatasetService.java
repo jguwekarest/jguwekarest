@@ -237,6 +237,28 @@ public class DatasetService {
         return out;
     }
 
+
+    /**
+     * Delete a dataset.
+     * @param id of the dataset
+     * @return true on success
+     * @throws ApiException
+     */
+    public static Boolean deleteDataset(String id) throws ApiException {
+        Dao dao = new Dao();
+        try {
+            Boolean status = dao.delete("dataset",id);
+            LOG.log(Level.INFO,"Dataset : " + id + " deleted.");
+            return status;
+        }catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }finally {
+            dao.close();
+        }
+    }
+
+
     static String toArffWeka(String bla) {
         ArrayList<Attribute> atts = new ArrayList<Attribute>();
         ArrayList<Attribute> attVals = new ArrayList<Attribute>();

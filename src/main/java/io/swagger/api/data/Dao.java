@@ -173,6 +173,17 @@ public class Dao {
     }
 
 
+    Boolean delete(String collection, String id){
+        mongoCollection = mongoDB.getCollection(collection);
+        try {
+            mongoCollection.deleteOne(new Document("_id", new ObjectId(id)));
+            return true;
+        } catch (MongoException e){
+            e.printStackTrace();
+            return false;
+        }
+    }
+
     /**
      * Close the conection of the mongoclient to the mongodb
      */

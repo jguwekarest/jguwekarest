@@ -37,6 +37,15 @@ docker cp in-silicoch.crt ORN_tomcat:/usr/local/tomcat
 docker exec -it ORN_tomcat keytool -keystore /etc/ssl/certs/java/cacerts -importcert -alias openam.in-silico.ch -file in-silicoch.crt
 ```
 
+## Tomcat Setup with Dockerfile
+
+Alternative you can build the tomcat image and container with needed certificate and java application with the [Dockerfile](../Dockerfile).
+
+```
+docker build -t jguweka/jguweka -f Dockerfile .
+docker run -d  -p 0.0.0.0:8080:8080 rautenberg/jguweka
+```
+
 ## Jenkins
 
 Run a Jenkins Docker container on port 8089, with a filestorage on the hosts machine. Here the jenkins_home directory is stored at ~/jenkins in your homedirectory on the host machine.
@@ -75,7 +84,7 @@ to compile the java code
 * Copy the compiled war file to the tomcat containers file storage 
 EXECUTE SHELL
 ```
-cp /var/jenkins_home/workspace/weka_rest_service/target/weka_rs-0.0.1.war /var/jenkins_home/workspace/tomcat/ROOT.war
+cp /var/jenkins_home/workspace/weka_rest_service/target/weka_rs-{VERSION}.war /var/jenkins_home/workspace/tomcat/ROOT.war
 ```
 
 ## Apache2 Setup 

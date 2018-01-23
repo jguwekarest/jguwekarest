@@ -6,7 +6,7 @@ import org.testng.annotations.Test;
 import weka.core.Instances;
 
 public class WekaUtilsTest {
-    @Test
+    @Test(description = "Create instances from an arff string")
     public void instancesFromString() throws Exception {
         String arff = "@relation weather-weka.filters.unsupervised.instance.RemoveRange-R5-last\n" +
                 "@attribute outlook {sunny,overcast,rainy}\n" +
@@ -30,7 +30,7 @@ public class WekaUtilsTest {
     public void saveWekaModel() throws Exception {
     }
 
-    @Test
+    @Test(description = "Test param string helper for WEKA params")
     public void getParamString() throws Exception {
         Assert.assertEquals(" -R 100 ", WekaUtils.getParamString(100, "R", 2));
         Assert.assertEquals(" -H 2 ", WekaUtils.getParamString(null, "H", 2));

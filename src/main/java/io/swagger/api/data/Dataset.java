@@ -107,6 +107,7 @@ public class Dataset {
     @Path("/dataset/{id}")
     @Consumes({ "multipart/form-data" })
     @Produces({ "text/x-arff" })
+    //@Authorization()
     @ApiOperation(
             value = "Filter an internal dataset with weka filter.",
             notes = "Filter an internal dataset with weka filter. Remove attributes and normalize or standardize all numeric attributes of a dataset.",

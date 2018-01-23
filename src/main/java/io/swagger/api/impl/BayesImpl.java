@@ -27,9 +27,8 @@ public class BayesImpl extends BayesService {
                                           HttpHeaders headers, UriInfo ui, SecurityContext securityContext)
             throws NotFoundException, IOException {
 
-        String subjectid = headers.getRequestHeaders().getFirst("subjectid");
-        String txtStr    = DatasetService.getArff(fileInputStream, fileDetail, datasetUri, subjectid);
-
+        String subjectid  = headers.getRequestHeaders().getFirst("subjectid");
+        String txtStr     = DatasetService.getArff(fileInputStream, fileDetail, datasetUri, subjectid);
         String parameters = "";
 
         if (useADTree != null && useADTree != 1) { parameters += " -D ";}

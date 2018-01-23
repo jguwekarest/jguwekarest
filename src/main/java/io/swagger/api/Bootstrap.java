@@ -5,6 +5,8 @@ import io.swagger.models.Contact;
 import io.swagger.models.Info;
 import io.swagger.models.License;
 import io.swagger.models.Swagger;
+import io.swagger.models.auth.ApiKeyAuthDefinition;
+import io.swagger.models.auth.In;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
@@ -43,6 +45,8 @@ public class Bootstrap extends HttpServlet {
 
     ServletContext context = config.getServletContext();
     Swagger swagger = new Swagger().info(info);
+
+    swagger.securityDefinition("subjectid", new ApiKeyAuthDefinition("subjectid", In.HEADER));
 
     new SwaggerContextService().withServletConfig(config).updateSwagger(swagger);
   }

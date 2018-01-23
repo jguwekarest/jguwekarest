@@ -10,14 +10,14 @@ public class StringUtilTest {
         //function not in use
     }
 
-    @Test
+    @Test(description = "Function join for ruby like String join")
     public void join() throws Exception {
         String[] testStr = {"sub", "test", "subdir"};
         String proofStr = "sub/test/subdir";
         Assert.assertEquals(proofStr, StringUtil.join(testStr, "/"));
     }
 
-    @Test
+    @Test()
     public void checkTrailingSlash() throws Exception {
         String testStr = "http://test.tt/subdir/";
         String proofStr = "http://test.tt/subdir";

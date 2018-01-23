@@ -32,8 +32,10 @@ docker run -d mongo
 
 POST an arff file to the WEKA BayesNet algorithm using curl:
 ```
-curl  -X POST -H "Content-Type: multipart/form-data" -F "file=@/yourpathtowekadata/weka-3-8-1/data/weather.nominal.arff;" -F "estimatorParams=0.5"  -F "searchAlgorithm=local.K2" -F useADTree=0 -F "estimator=SimpleEstimator" -F searchParams='-P 1 -S BAYES' http://0.0.0.0:8081/algorithm/BayesNet
+curl  -X POST -H "Content-Type: multipart/form-data" -H "Accept:text/x-arff" -F "file=@/yourpathtowekadata/weka-3-8-1/data/weather.nominal.arff;" -F "estimatorParams=0.5"  -F "searchAlgorithm=local.K2" -F useADTree=0 -F "estimator=SimpleEstimator" -F searchParams='-P 1 -S BAYES' http://0.0.0.0:8081/algorithm/BayesNet
 ```
 
 ## Documentation
-* **See:** full example for a **[local or server hosted development environment](./doc/DockerizedDevEnvSetup.md).** 
+**See:**
+ * Full example for a **[local or server hosted development environment](./doc/DockerizedDevEnvSetup.md).** 
+ * Build the Docker image by **[Dockerfile](./Dockerfile)**.
