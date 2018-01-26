@@ -211,12 +211,12 @@
 .swagger-ui .opblock.opblock-post {
   border-color: #49cc90;
   background: rgba(73, 204, 144, .1);
-  background: rgba(193,  0,  43, .1)
+  background: rgba(16,  165,  74, .1)
 }
 
 .swagger-ui .opblock.opblock-post .opblock-summary-method {
-  background: #49cc90;
-  background: #C1002A;
+  /* background: #49cc90; */
+  background: #10A54A;
 }
 
 .swagger-ui .opblock.opblock-post .opblock-summary {
@@ -1547,7 +1547,7 @@
 
  .swagger-ui .opblock.opblock-post .opblock-summary-method {
    background: #009688;
-   background: #C1002A;
+   background: #10A54A;
  }
 
  .swagger-ui .opblock.opblock-post .opblock-summary {
