@@ -50,7 +50,7 @@
 .swagger-ui .opblock-tag {
   font-size: 24px;
   margin: 0 0 5px;
-  font-family: Titillium Web, sans-serif;
+  font-family: "Trebuchet MS", Helvetica, sans-serif;
   color: #3b4151
 }
 
@@ -72,15 +72,15 @@
   -webkit-box-flex: 1;
   -ms-flex: 1;
   flex: 1;
-  font-family: Open Sans, sans-serif;
+  font-family: Verdana, Geneva, sans-serif;
   color: #3b4151
 }
 
 .swagger-ui .parаmeter__type {
   font-size: 12px;
   padding: 5px 0;
-  font-family: Source Code Pro, monospace;
-  font-weight: 600;
+  font-family: "Lucida Console", Monaco, monospace;
+  font-weight: 300;
   color: #3b4151
 }
 
@@ -124,7 +124,7 @@
   font-size: 12px;
   font-weight: 700;
   margin: 0;
-  font-family: Titillium Web, sans-serif;
+  font-family: "Trebuchet MS", Helvetica, sans-serif;
   color: #3b4151
 }
 
@@ -138,31 +138,32 @@
   -webkit-box-flex: 1;
   -ms-flex: 1;
   flex: 1;
-  font-family: Titillium Web, sans-serif;
+  font-family: "Trebuchet MS", Helvetica, sans-serif;
   color: #3b4151
 }
 
 .swagger-ui .opblock .opblock-summary-method {
-  font-size: 14px;
+  font-size: 12px;
   font-weight: 700;
   min-width: 80px;
-  padding: 6px 15px;
+  padding: 9px 15px;
   text-align: center;
   border-radius: 3px;
   background: #000;
   text-shadow: 0 1px 0 rgba(0, 0, 0, .1);
-  font-family: Titillium Web, sans-serif;
+  font-family: "Trebuchet MS", Helvetica, sans-serif;
   color: #fff
 }
 
 .swagger-ui .opblock .opblock-summary-path, .swagger-ui .opblock .opblock-summary-path__deprecated {
-  font-size: 16px;
+  font-size: 15px;
+  letter-spacing: 1px;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
   padding: 0 10px;
-  font-family: Source Code Pro, monospace;
-  font-weight: 600;
+  font-family: "Lucida Console", Monaco, monospace;
+  font-weight: 300;
   color: #3b4151;
   -webkit-box-align: center;
   -ms-flex-align: center;
@@ -193,7 +194,7 @@
   -webkit-box-flex: 1;
   -ms-flex: 1;
   flex: 1;
-  font-family: Open Sans, sans-serif;
+  font-family: Verdana, Geneva, sans-serif;
   color: #3b4151
 }
 
@@ -330,7 +331,7 @@
   min-width: 90px;
   padding: 0;
   cursor: pointer;
-  font-family: Titillium Web, sans-serif;
+  font-family: "Trebuchet MS", Helvetica, sans-serif;
   color: #3b4151
 }
 
@@ -360,14 +361,14 @@
 .swagger-ui .opblock-description-wrapper, .swagger-ui .opblock-description-wrapper h4, .swagger-ui .opblock-title_normal, .swagger-ui .opblock-title_normal h4 {
   font-size: 12px;
   margin: 0 0 5px;
-  font-family: Open Sans, sans-serif;
+  font-family: Verdana, Geneva, sans-serif;
   color: #3b4151
 }
 
 .swagger-ui .opblock-description-wrapper p, .swagger-ui .opblock-title_normal p {
   font-size: 14px;
   margin: 0;
-  font-family: Open Sans, sans-serif;
+  font-family: Verdana, Geneva, sans-serif;
   color: #3b4151
 }
 
@@ -410,20 +411,20 @@
 .swagger-ui .responses-inner h4, .swagger-ui .responses-inner h5 {
   font-size: 12px;
   margin: 10px 0 5px;
-  font-family: Open Sans, sans-serif;
+  font-family: Verdana, Geneva, sans-serif;
   color: #3b4151
 }
 
 .swagger-ui .response-col_status {
   font-size: 14px;
-  font-family: Open Sans, sans-serif;
+  font-family: Verdana, Geneva, sans-serif;
   color: #3b4151
 }
 
 .swagger-ui .response-col_status .response-undocumented {
   font-size: 11px;
-  font-family: Source Code Pro, monospace;
-  font-weight: 600;
+  font-family: "Lucida Console", Monaco, monospace;
+  font-weight: 300;
   color: #999
 }
 
@@ -435,8 +436,8 @@
   padding: 10px;
   border-radius: 4px;
   background: #41444e;
-  font-family: Source Code Pro, monospace;
-  font-weight: 600;
+  font-family: "Lucida Console", Monaco, monospace;
+  font-weight: 300;
   color: #fff
 }
 
@@ -451,8 +452,8 @@
   white-space: pre-wrap;
   border-radius: 4px;
   background: #41444e;
-  font-family: Source Code Pro, monospace;
-  font-weight: 600;
+  font-family: "Lucida Console", Monaco, monospace;
+  font-weight: 300;
   color: #fff
 }
 
@@ -487,7 +488,7 @@
   -ms-flex-direction: column;
   flex-direction: column;
   margin: -20px 15px 0 0;
-  font-family: Titillium Web, sans-serif;
+  font-family: "Trebuchet MS", Helvetica, sans-serif;
   color: #3b4151
 }
 
@@ -514,7 +515,7 @@
   -webkit-transform: translate(-50%, -50%);
   transform: translate(-50%, -50%);
   text-transform: uppercase;
-  font-family: Titillium Web, sans-serif;
+  font-family: "Trebuchet MS", Helvetica, sans-serif;
   color: #3b4151
 }
 
@@ -573,7 +574,7 @@
   border-radius: 4px;
   background: transparent;
   box-shadow: 0 1px 2px rgba(0, 0, 0, .1);
-  font-family: Titillium Web, sans-serif;
+  font-family: "Trebuchet MS", Helvetica, sans-serif;
   color: #3b4151
 }
 
@@ -588,7 +589,7 @@
 
 .swagger-ui .btn.cancel {
   border-color: #ff6060;
-  font-family: Titillium Web, sans-serif;
+  font-family: "Trebuchet MS", Helvetica, sans-serif;
   color: #ff6060
 }
 
@@ -720,7 +721,7 @@
   background: #f7f7f7 url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMCAyMCI+ICAgIDxwYXRoIGQ9Ik0xMy40MTggNy44NTljLjI3MS0uMjY4LjcwOS0uMjY4Ljk3OCAwIC4yNy4yNjguMjcyLjcwMSAwIC45NjlsLTMuOTA4IDMuODNjLS4yNy4yNjgtLjcwNy4yNjgtLjk3OSAwbC0zLjkwOC0zLjgzYy0uMjctLjI2Ny0uMjctLjcwMSAwLS45NjkuMjcxLS4yNjguNzA5LS4yNjguOTc4IDBMMTAgMTFsMy40MTgtMy4xNDF6Ii8+PC9zdmc+) right 10px center no-repeat;
   background-size: 20px;
   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, .25);
-  font-family: Titillium Web, sans-serif;
+  font-family: "Trebuchet MS", Helvetica, sans-serif;
   color: #3b4151;
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -741,7 +742,7 @@
   font-size: 12px;
   font-weight: 700;
   margin: 0 0 5px;
-  font-family: Titillium Web, sans-serif;
+  font-family: "Trebuchet MS", Helvetica, sans-serif;
   color: #3b4151
 }
 
@@ -808,8 +809,8 @@
   border-radius: 4px;
   outline: none;
   background: hsla(0, 0%, 100%, .8);
-  font-family: Source Code Pro, monospace;
-  font-weight: 600;
+  font-family: "Lucida Console", Monaco, monospace;
+  font-weight: 300;
   color: #3b4151
 }
 
@@ -825,8 +826,8 @@
   resize: none;
   border-radius: 4px;
   background: #41444e;
-  font-family: Source Code Pro, monospace;
-  font-weight: 600;
+  font-family: "Lucida Console", Monaco, monospace;
+  font-weight: 300;
   color: #fff
 }
 
@@ -847,8 +848,8 @@
   font-weight: 400!important;
   font-style: italic;
   margin: 0!important;
-  font-family: Source Code Pro, monospace;
-  font-weight: 600;
+  font-family: "Lucida Console", Monaco, monospace;
+  font-weight: 300;
   color: #3b4151
 }
 
@@ -926,7 +927,7 @@
   font-size: 12px;
   margin: 0 0 5px;
   color: #41444e;
-  font-family: Open Sans, sans-serif;
+  font-family: Verdana, Geneva, sans-serif;
   color: #3b4151
 }
 
@@ -934,7 +935,7 @@
   font-size: 18px;
   font-weight: 600;
   margin: 15px 0 0;
-  font-family: Titillium Web, sans-serif;
+  font-family: "Trebuchet MS", Helvetica, sans-serif;
   color: #3b4151
 }
 
@@ -966,15 +967,15 @@
   -webkit-box-flex: 1;
   -ms-flex: 1;
   flex: 1;
-  font-family: Titillium Web, sans-serif;
+  font-family: "Trebuchet MS", Helvetica, sans-serif;
   color: #3b4151
 }
 
 .swagger-ui .model {
   font-size: 12px;
   font-weight: 300;
-  font-family: Source Code Pro, monospace;
-  font-weight: 600;
+  font-family: "Lucida Console", Monaco, monospace;
+  font-weight: 300;
   color: #3b4151
 }
 
@@ -1069,7 +1070,7 @@
   cursor: pointer;
   -webkit-transition: all .2s;
   transition: all .2s;
-  font-family: Titillium Web, sans-serif;
+  font-family: "Trebuchet MS", Helvetica, sans-serif;
   color: #777;
   -webkit-box-align: center;
   -ms-flex-align: center;
@@ -1094,7 +1095,7 @@
 .swagger-ui section.models h5 {
   font-size: 16px;
   margin: 0 0 10px;
-  font-family: Titillium Web, sans-serif;
+  font-family: "Trebuchet MS", Helvetica, sans-serif;
   color: #777
 }
 
@@ -1140,7 +1141,7 @@
 
 .swagger-ui .model-title {
   font-size: 16px;
-  font-family: Titillium Web, sans-serif;
+  font-family: "Trebuchet MS", Helvetica, sans-serif;
   color: #555
 }
 
@@ -1180,8 +1181,8 @@
   font-size: 12px;
   font-weight: 300;
   vertical-align: middle;
-  font-family: Source Code Pro, monospace;
-  font-weight: 600;
+  font-family: "Lucida Console", Monaco, monospace;
+  font-weight: 300;
   color: #3b4151
 }
 
@@ -1201,14 +1202,14 @@
   padding: 12px 0;
   text-align: left;
   border-bottom: 1px solid rgba(59, 65, 81, .2);
-  font-family: Open Sans, sans-serif;
+  font-family: Verdana, Geneva, sans-serif;
   color: #3b4151
 }
 
 .swagger-ui .parameters-col_description p {
   font-size: 14px;
   margin: 0;
-  font-family: Open Sans, sans-serif;
+  font-family: Verdana, Geneva, sans-serif;
   color: #3b4151
 }
 
@@ -1220,7 +1221,7 @@
 .swagger-ui .parameter__name {
   font-size: 16px;
   font-weight: 400;
-  font-family: Titillium Web, sans-serif;
+  font-family: "Trebuchet MS", Helvetica, sans-serif;
   color: #3b4151
 }
 
@@ -1240,8 +1241,8 @@
 .swagger-ui .parameter__in {
   font-size: 12px;
   font-style: italic;
-  font-family: Source Code Pro, monospace;
-  font-weight: 600;
+  font-family: "Lucida Console", Monaco, monospace;
+  font-weight: 300;
   color: #888
 }
 
@@ -1266,8 +1267,9 @@
   align-items: center
 }
 
-.topbar-wrapper img:after {
-  content: url("./jgu-logo.png");
+.swagger-ui .topbar .topbar-wrapper span {
+  font-size: 22px;
+  font-family: "Trebuchet MS", Helvetica, sans-serif sans-serif;
 }
 
 .swagger-ui .topbar a {
@@ -1278,7 +1280,7 @@
   -ms-flex: 1;
   flex: 1;
   -ms-flex-align: center;
-  font-family: Titillium Web, sans-serif;
+  font-family: "Trebuchet MS", Helvetica, sans-serif;
   color: #fff
 }
 
@@ -1308,16 +1310,16 @@
   border: none;
   border-radius: 0 4px 4px 0;
   background: #547f00;
-  font-family: Titillium Web, sans-serif;
+  font-family: "Trebuchet MS", Helvetica, sans-serif;
   color: #fff
 }
 
 .swagger-ui .info {
-  margin: 50px 0
+  margin: 20px 0 10px 0;
 }
 
 .swagger-ui .info hgroup.main {
-  margin: 0 0 20px
+  margin: 0 0 0;
 }
 
 .swagger-ui .info hgroup.main a {
@@ -1326,7 +1328,7 @@
 
 .swagger-ui .info p {
   font-size: 14px;
-  font-family: Open Sans, sans-serif;
+  font-family: Verdana, Geneva, sans-serif;
   color: #3b4151
 }
 
@@ -1334,8 +1336,8 @@
   padding: 3px 5px;
   border-radius: 4px;
   background: rgba(0, 0, 0, .05);
-  font-family: Source Code Pro, monospace;
-  font-weight: 600;
+  font-family: "Lucida Console", Monaco, monospace;
+  font-weight: 300;
   color: #9012fe
 }
 
@@ -1343,7 +1345,7 @@
   font-size: 14px;
   -webkit-transition: all .4s;
   transition: all .4s;
-  font-family: Open Sans, sans-serif;
+  font-family: Verdana, Geneva, sans-serif;
   color: #4990e2
 }
 
@@ -1359,15 +1361,16 @@
   font-size: 12px;
   font-weight: 300!important;
   margin: 0;
-  font-family: Source Code Pro, monospace;
-  font-weight: 600;
+  font-family: "Lucida Console", Monaco, monospace;
+  font-weight: 300;
   color: #3b4151
 }
 
 .swagger-ui .info .title {
   font-size: 36px;
+  letter-spacing: 1px;
   margin: 0;
-  font-family: Open Sans, sans-serif;
+  font-family: "Trebuchet MS", Helvetica, sans-serif;
   color: #3b4151
 }
 
@@ -1385,7 +1388,7 @@
 
 .swagger-ui .info .title small pre {
   margin: 0;
-  font-family: Titillium Web, sans-serif;
+  font-family: "Trebuchet MS", Helvetica, sans-serif;
   color: #fff
 }
 
@@ -1444,14 +1447,14 @@
   font-size: 12px;
   padding: 10px;
   border-radius: 4px;
-  font-family: Source Code Pro, monospace;
-  font-weight: 600;
+  font-family: "Lucida Console", Monaco, monospace;
+  font-weight: 300;
   color: #3b4151
 }
 
 .swagger-ui .scopes h2 {
   font-size: 14px;
-  font-family: Titillium Web, sans-serif;
+  font-family: "Trebuchet MS", Helvetica, sans-serif;
   color: #3b4151
 }
 
@@ -1476,8 +1479,8 @@
 .swagger-ui .errors-wrapper .errors h4 {
   font-size: 14px;
   margin: 0;
-  font-family: Source Code Pro, monospace;
-  font-weight: 600;
+  font-family: "Lucida Console", Monaco, monospace;
+  font-weight: 300;
   color: #3b4151
 }
 
@@ -1496,7 +1499,7 @@
   -webkit-box-flex: 1;
   -ms-flex: 1;
   flex: 1;
-  font-family: Titillium Web, sans-serif;
+  font-family: "Trebuchet MS", Helvetica, sans-serif;
   color: #3b4151
 }
 
@@ -1587,6 +1590,7 @@
 
  .swagger-ui .opblock.opblock-get .opblock-summary-method {
    background: #3F51B5;
+   background: #474987;
  }
 
  .swagger-ui .opblock.opblock-get .opblock-summary {
@@ -1653,7 +1657,7 @@
    border: none;
    border-radius: 0 4px 4px 0;
    background: #ffffff;
-   font-family: Titillium Web, sans-serif;
+   font-family: "Trebuchet MS", Helvetica, sans-serif;
    color: #332222;
  }
 
@@ -1661,7 +1665,7 @@
    font-size: 14px;
    -webkit-transition: all .4s;
    transition: all .4s;
-   font-family: Open Sans, sans-serif;
+   font-family: Verdana, Geneva, sans-serif;
    color: #3f51b5;
  }
 

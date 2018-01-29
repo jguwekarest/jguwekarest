@@ -33,7 +33,7 @@ public class StaticContent {
 
     // delivers static CSS and JavaScript file
     @GET
-    @Path("{path : .*\\.css|.*\\.js}")
+    @Path("{path : .*\\.css|.*\\.js|.*\\.map}")
     @Produces("text/css;charset=UTF-8")
     public Response staticContent(@PathParam("path") String path) throws IOException {
         String contextBasePath = servletContext.getRealPath("/");
