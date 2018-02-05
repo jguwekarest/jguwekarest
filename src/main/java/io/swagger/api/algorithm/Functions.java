@@ -13,6 +13,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
 
+import static io.swagger.api.Constants.SAVE_MODEL_NOTE;
+
 @Path("/algorithm")
 @Api(description = "the functions algorithm API")
 
@@ -40,12 +42,11 @@ public class Functions {
         this.delegate = delegate;
     }
 
-    public static final String SAVE_NOTE = "Save the model by posting the content-type text/uri-list.";
     @POST
     @Path("/linearRegression")
     @Consumes({"multipart/form-data"})
     @Produces({"text/x-arff", "text/uri-list"})
-    @ApiOperation(value = "REST interface to the WEKA linear regression classifier.", notes = "REST interface to the WEKA linear regression classifier." + SAVE_NOTE, tags = {"algorithm",}, position=3
+    @ApiOperation(value = "REST interface to the WEKA linear regression classifier.", notes = "REST interface to the WEKA linear regression classifier. " + SAVE_MODEL_NOTE, tags = {"algorithm",}
             ,extensions = @Extension(name = "algorithm", properties = { @ExtensionProperty(name = "Linear Regression", value = "https://en.wikipedia.org/wiki/Linear_regression")}))
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "OK"),
@@ -72,7 +73,7 @@ public class Functions {
     @Path("/libsvm")
     @Consumes({"multipart/form-data"})
     @Produces({"text/x-arff", "text/uri-list"})
-    @ApiOperation(value = "REST interface to the WEKA support vector machine wrapper library classifier.", notes = "REST interface to the WEKA support vector machine wrapper library classifier." + SAVE_NOTE, tags = {"algorithm",}, position=3
+    @ApiOperation(value = "REST interface to the WEKA support vector machine wrapper library classifier.", notes = "REST interface to the WEKA support vector machine wrapper library classifier." + SAVE_MODEL_NOTE, tags = {"algorithm",}
             ,extensions = @Extension(name = "algorithm", properties = { @ExtensionProperty(name = "support vector machine", value = "https://en.wikipedia.org/wiki/Support_vector_machine")}))
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "OK"),

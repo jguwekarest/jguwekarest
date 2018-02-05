@@ -13,6 +13,8 @@ import javax.ws.rs.core.UriInfo;
 import java.util.List;
 import java.util.TreeMap;
 
+import static io.swagger.api.Constants.SAVE_DATASSET_NOTE;
+
 @Path("/")
 @Api(description = "Dataset API")
 
@@ -23,10 +25,9 @@ public class Dataset {
     @Consumes({ "multipart/form-data" })
     @Produces({ "text/x-arff", "text/uri-list" })
     @ApiOperation(
-            value = "Download dataset and convert into weka arff format",
-            notes = "Download an external dataset and convert it into weka arff format.",
-            tags={ "dataset", },
-            produces = "text/x-arff" )
+            value = "Download dataset and convert into weka arff format.",
+            notes = "Download an external dataset and convert it into weka arff format. " + SAVE_DATASSET_NOTE,
+            tags={ "dataset", })
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "OK"),
             @ApiResponse(code = 400, message = "Bad Request"),
@@ -36,11 +37,14 @@ public class Dataset {
     public Response create(
               @ApiParam(value = "URI of the dataset to be used.", required=true)@FormDataParam("dataset_uri") String dataset_uri
             , @ApiParam(value = "URI of the feature to define as weka class")@FormDataParam("class_uri") String class_uri
-            , @ApiParam(value = "Authorization token" )@HeaderParam("subjectid") String subjectid) throws ApiException {
+            , @ApiParam(value = "Authorization token" )@HeaderParam("subjectid") String subjectid
+            , @Context HttpHeaders headers, @Context UriInfo ui) throws ApiException {
 
         Dataset ds = DatasetService.readExternalDataset(dataset_uri, subjectid);
         if (ds.datasetURI == null) ds.datasetURI = dataset_uri;
-        String out = DatasetService.toArff(ds, class_uri);
+        String accept = headers.getRequestHeaders().getFirst("accept");
+
+        String out = DatasetService.toArff(ds, class_uri, accept, ui);
 
         return Response
                 .ok(out)
@@ -67,7 +71,6 @@ public class Dataset {
             @Context UriInfo ui, @Context HttpHeaders headers) throws ApiException {
 
         String accept = headers.getRequestHeaders().getFirst("accept");
-        System.out.println("D accept: " + accept);
         Object datasetList = DatasetService.listDatasets(ui, accept, subjectid);
 
         return Response

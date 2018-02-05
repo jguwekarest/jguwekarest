@@ -11,6 +11,8 @@ import javax.ws.rs.core.*;
 import java.io.IOException;
 import java.io.InputStream;
 
+import static io.swagger.api.Constants.SAVE_MODEL_NOTE;
+
 @Path("/algorithm")
 @Api(description = "the lazy algorithm API")
 
@@ -38,12 +40,11 @@ public class Lazy {
         this.delegate = delegate;
     }
 
-    public static final String SAVE_NOTE = "Save the model by posting the content-type text/uri-list.";
     @POST
     @Path("/kNNclassification")
     @Consumes({ "multipart/form-data" })
     @Produces({ "text/x-arff", "text/uri-list"})
-    @ApiOperation(value = "REST interface to the WEKA K-nearest neighbours classifier.", notes = "REST interface to the WEKA K-nearest neighbours classifier." + SAVE_NOTE, tags={ "algorithm", }, position = 2
+    @ApiOperation(value = "REST interface to the WEKA K-nearest neighbours classifier.", notes = "REST interface to the WEKA K-nearest neighbours classifier. " + SAVE_MODEL_NOTE, tags={ "algorithm", }
             ,extensions = @Extension(name = "algorithm", properties = { @ExtensionProperty(name = "k-nearest neighbors algorithm", value = "https://en.wikipedia.org/wiki/K-nearest_neighbors_algorithm")}))
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "OK"),

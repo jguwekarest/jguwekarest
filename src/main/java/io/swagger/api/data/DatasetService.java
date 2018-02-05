@@ -76,7 +76,6 @@ public class DatasetService {
     static Dataset readExternalDataset(String uri, String token) throws ApiException {
         String jsonString = "";
         Client client = ClientBuilder.newClient();
-        // MultivaluedMap<String, String> formData = new MultivaluedHashMap<>();
 
         Response response = client.target(uri)
                 .request()
@@ -100,10 +99,12 @@ public class DatasetService {
      * @param dataset a Dataset object
      * @return an arff String
      */
-    static String toArff(Dataset dataset, String class_uri) {
+    static String toArff(Dataset dataset, String class_uri, String accept, UriInfo ui) {
 
         StringBuilder arff = new StringBuilder();
         StringBuilder comment = new StringBuilder();
+
+        System.out.println("######### \n\n accept header is: "+ accept + "\n\n#######################");
 
         //add comments datasetURI and dataset metadata
         comment.append("% JGU weka service converted dataset from :").append(dataset.datasetURI).append("\n%\n");
@@ -178,19 +179,28 @@ public class DatasetService {
         }
         arff.append(classAttr);
         arff.append(dataStr);
-        Dao datasetDao = new Dao();
-        try {
-            dataset.arff = arff.toString();
-            dataset.comment = comment.toString();
-            Gson gson = new Gson();
-            Document document = Document.parse(gson.toJson(dataset));
-            datasetDao.saveData("dataset", document);
-        }catch (Exception e){
-            e.printStackTrace();
-        }finally {
-            datasetDao.close();
+        String out = "";
+        // take text/x-arff as the default case else because swagger ui sends accept=*/* after reload swagger.json in UI
+        if (accept.equals("text/uri-list")) {
+            Dao datasetDao = new Dao();
+            try {
+                dataset.arff = arff.toString();
+                dataset.comment = comment.toString();
+                Gson gson = new Gson();
+                Document document = Document.parse(gson.toJson(dataset));
+                String id = datasetDao.saveData("dataset", document);
+                String baseuri = ui.getBaseUri().toString();
+                out = baseuri + "dataset/" + id;
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                datasetDao.close();
+            }
+        } else {
+             out = comment.toString() + "\n" + arff.toString();
         }
-        return comment.toString() + "\n" + arff.toString();
+
+        return out;
     }
 
     static String filter(Dataset dataset, String idx_remove, String scale, String translation, Boolean standardize, Boolean ignore, String attributeRange) throws Exception {

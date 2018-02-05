@@ -12,6 +12,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
 
+import static io.swagger.api.Constants.SAVE_MODEL_NOTE;
+
 
 @Path("/algorithm")
 
@@ -41,13 +43,11 @@ public class Bayes {
     }
 
 
-    public static final String SAVE_NOTE = "Save the model by posting the content-type text/uri-list.";
-
     @POST
     @Path("/BayesNet")
     @Consumes({ "multipart/form-data" })
     @Produces({ "text/x-arff", "text/uri-list" })
-    @ApiOperation(value = "REST interface to the WEKA BayesNet classifier.", notes = "REST interface to the WEKA BayesNet classifier. " + SAVE_NOTE, tags={ "algorithm", }
+    @ApiOperation(value = "REST interface to the WEKA BayesNet classifier.", notes = "REST interface to the WEKA BayesNet classifier. " + SAVE_MODEL_NOTE, tags={ "algorithm", }
             ,extensions = @Extension(name = "algorithm", properties = {
                 @ExtensionProperty(name = "http://purl.obolibrary.org/obo/IAO_0000064",  value = "http://purl.enanomapper.org/onto/ENM_8000001"),
                 @ExtensionProperty(name = "http://purl.enanomapper.org/onto/ENM_8000001",value = "http://purl.enanomapper.org/onto/ENM_8000002"),

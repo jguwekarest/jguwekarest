@@ -14,6 +14,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
 
+import static io.swagger.api.Constants.SAVE_MODEL_NOTE;
+
 
 @Path("/algorithm")
 
@@ -42,7 +44,7 @@ public class Trees  {
         this.delegate = delegate;
     }
 
-    public static final String SAVE_NOTE = "Save the model by posting the content-type text/uri-list.";
+
 
     @Context ServletContext servletContext;
     @POST
@@ -50,7 +52,7 @@ public class Trees  {
     @Consumes({ "multipart/form-data" })
     @Produces({ "text/x-arff", "text/uri-list" })
 
-    @ApiOperation(value = "REST interface to the WEKA J48 classifier.", notes = "REST interface to the WEKA J48 classifier." + SAVE_NOTE, tags={ "algorithm", }, position = 1
+    @ApiOperation(value = "REST interface to the WEKA J48 classifier.", notes = "REST interface to the WEKA J48 classifier. " + SAVE_MODEL_NOTE, tags={ "algorithm", }
             ,extensions = @Extension(name = "algorithm", properties = { @ExtensionProperty(name = "J48", value = "https://en.wikipedia.org/wiki/C4.5_algorithm#Implementations")}))
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "OK"),

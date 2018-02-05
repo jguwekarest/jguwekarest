@@ -14,6 +14,7 @@ import javax.ws.rs.core.Response;
 import java.io.File;
 
 public class ModelTest {
+
     @Test(description = "Post an arff file to BayesNet algorithm and get a text representation.")
     @Parameters({"host"})
     public void algorithmBayesNetPost( @Optional  String host) throws Exception {

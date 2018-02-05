@@ -11,6 +11,8 @@ import javax.ws.rs.core.*;
 import java.io.IOException;
 import java.io.InputStream;
 
+import static io.swagger.api.Constants.SAVE_MODEL_NOTE;
+
 @Path("/algorithm")
 @Api(description = "the rules algorithm API")
 
@@ -38,13 +40,12 @@ public class Rules {
         this.delegate = delegate;
     }
 
-    public static final String SAVE_NOTE = "Save the model by posting the content-type text/uri-list.";
 
     @POST
     @Path("/ZeroR")
     @Consumes({ "multipart/form-data" })
     @Produces({ "text/x-arff", "text/uri-list"})
-    @ApiOperation(value = "REST interface to the WEKA ZeroR classifier.", notes = "REST interface to the WEKA ZeroR classifier." + SAVE_NOTE, tags={ "algorithm", }, position = 2
+    @ApiOperation(value = "REST interface to the WEKA ZeroR classifier.", notes = "REST interface to the WEKA ZeroR classifier. " + SAVE_MODEL_NOTE, tags={ "algorithm", }
             ,extensions = @Extension(name = "algorithm", properties = { @ExtensionProperty(name = "ZeroR", value = "http://weka.sourceforge.net/doc.dev/weka/classifiers/rules/ZeroR.html")}))
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "OK"),
@@ -52,7 +53,7 @@ public class Rules {
             @ApiResponse(code = 401, message = "Unauthorized"),
             @ApiResponse(code = 403, message = "Forbidden"),
             @ApiResponse(code = 404, message = "Resource Not Found") })
-    public Response algorithmKNNclassificationPost(
+    public Response algorithmZeroRclassificationPost(
             @FormDataParam("file") InputStream fileInputStream,
             @FormDataParam("file") FormDataContentDisposition fileDetail
             , @ApiParam(value = "Dataset URI or local dataset ID (to the arff representation of a dataset).")@FormDataParam("datasetURI")  String datasetUri
@@ -67,7 +68,7 @@ public class Rules {
     @Path("/M5Rules")
     @Consumes({ "multipart/form-data" })
     @Produces({ "text/x-arff", "text/uri-list"})
-    @ApiOperation(value = "REST interface to the WEKA M5Rules classifier.", notes = "REST interface to the WEKA M5Rules classifier." + SAVE_NOTE, tags={ "algorithm", }, position = 2
+    @ApiOperation(value = "REST interface to the WEKA M5Rules classifier.", notes = "REST interface to the WEKA M5Rules classifier. " + SAVE_MODEL_NOTE, tags={ "algorithm", }
             ,extensions = @Extension(name = "algorithm", properties = { @ExtensionProperty(name = "M5Rules", value = "http://weka.sourceforge.net/doc.dev/weka/classifiers/rules/M5Rules.html")}))
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "OK"),

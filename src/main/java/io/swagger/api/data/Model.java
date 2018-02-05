@@ -76,14 +76,14 @@ public class Model {
     @Path("/{id}")
     @Consumes({ "multipart/form-data" })
     @Produces({ "text/x-arff" })
-    @ApiOperation(value = "Predict testdata with a model.", notes = "Predict testdata with a model.", response = void.class, tags={ "model", }, position = 0)
+    @ApiOperation(value = "Predict testdata with a model.", notes = "Predict testdata with a model.", response = void.class, tags={ "model", })
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "OK", response = void.class),
             @ApiResponse(code = 400, message = "Bad Request", response = void.class),
             @ApiResponse(code = 401, message = "Unauthorized", response = void.class),
             @ApiResponse(code = 403, message = "Forbidden", response = void.class),
             @ApiResponse(code = 404, message = "Resource Not Found", response = void.class) })
-    public Response algorithmBayesNetPost(
+    public Response modelPost(
             @FormDataParam("file") InputStream fileInputStream,
             @FormDataParam("file") FormDataContentDisposition fileDetail
             , @ApiParam(value = "Dataset ID (to the arff representation of a dataset).")@FormDataParam("datasetID")  String datasetID

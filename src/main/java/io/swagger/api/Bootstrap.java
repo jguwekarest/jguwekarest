@@ -23,7 +23,6 @@ public class Bootstrap extends HttpServlet {
 
     final Map<String, Object> contextmap = new HashMap<String, Object>();
     contextmap.put("@vocab", "http://schema.org/");
-    contextmap.put("email", "email");
 
     Info info = new Info()
       .title("JGU WEKA REST Service")
@@ -38,11 +37,13 @@ public class Bootstrap extends HttpServlet {
         .name("GNU General Public License 3")
         .url("https://www.gnu.org/licenses/gpl-3.0.de.html"))
       .version("0.0.4");
-    info.setVendorExtension("x-project", map);
-    info.setVendorExtension("@context", contextmap);
+    info.setVendorExtension("x-orn-@project", map);
+    info.setVendorExtension("x-orn-@context", contextmap);
 
     ServletContext context = config.getServletContext();
     Swagger swagger = new Swagger().info(info);
+    swagger.setVendorExtension("x-orn-@type", "x-orn:Service");
+    swagger.setVendorExtension("x-orn-@id", "weka rest service");
 
     //swagger.securityDefinition("subjectid", new ApiKeyAuthDefinition("subjectid", In.HEADER));
 

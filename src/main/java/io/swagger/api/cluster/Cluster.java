@@ -48,7 +48,7 @@ public class Cluster {
     @Consumes({ "multipart/form-data" })
     @Produces({ "text/x-arff" })
 
-    @ApiOperation(value = "REST interface to the WEKA EM clusterer.", notes = "REST interface to the WEKA EM (expectation maximisation) clusterer.", response = void.class, tags={ "cluster", }, position = 1
+    @ApiOperation(value = "REST interface to the WEKA EM clusterer.", notes = "REST interface to the WEKA EM (expectation maximisation) clusterer.", response = void.class, tags={ "cluster", }
             ,extensions = @Extension(name = "algorithm", properties = { @ExtensionProperty(name = "EM", value = "https://en.wikipedia.org/wiki/Expectation%E2%80%93maximization_algorithm")}))
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "OK", response = void.class),
