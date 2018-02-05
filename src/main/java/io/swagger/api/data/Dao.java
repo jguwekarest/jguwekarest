@@ -5,6 +5,7 @@ import com.mongodb.*;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.result.DeleteResult;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 
@@ -40,7 +41,7 @@ public class Dao {
     private static Properties dbProperties = new Properties();
     private static final Logger LOG = Logger.getLogger(Dao.class.getName());
 
-    Dao() {
+    public Dao() {
         ClassLoader classLoader = this.getClass().getClassLoader();
         InputStream is = classLoader.getResourceAsStream("config/db.properties");
         try {
@@ -79,34 +80,52 @@ public class Dao {
     public Object listData(String collection, UriInfo ui, String accept) {
         StringBuilder result = new StringBuilder();
         mongoCollection = mongoDB.getCollection(collection);
-        switch (accept) {
-            case "text/uri-list":
-                try (MongoCursor<Document> cursor = mongoCollection.find().iterator()) {
-                    while(cursor.hasNext()) {
-                        Document document = cursor.next();
-                        result.append(ui.getBaseUri()).append(collection).append("/").append(document.get("_id")).append("\n");
-                    }
-                    cursor.close();
-                }
-                return result.toString();
-            case "application/json":
-
-                final ArrayList<Document> results = new ArrayList<>();
-                Block<Document> printBlock = document -> {
-                    document.replace("_id", document.get("_id").toString());
-                    document.put("URI", ui.getBaseUri() + collection + "/" + document.get("_id").toString());
-                    results.add(document);
-                };
-
-                mongoCollection.find().projection(new Document("datasetURI", 1)
+        if (accept.equals("application/json")) {
+            final ArrayList<Document> results = new ArrayList<>();
+            Block<Document> printBlock = document -> {
+                document.replace("_id", document.get("_id").toString());
+                document.put("URI", ui.getBaseUri() + collection + "/" + document.get("_id").toString());
+                results.add(document);
+            };
+            mongoCollection.find().projection(new Document("datasetURI", 1)
                     .append("meta", 1)
                     .append("_id", 1))
-                  .forEach(printBlock);
-
-                return results;
-
+                    .forEach(printBlock);
+            return results;
+        }else {
+            try (MongoCursor<Document> cursor = mongoCollection.find().iterator()) {
+                while(cursor.hasNext()) {
+                    Document document = cursor.next();
+                    result.append(ui.getBaseUri()).append(collection).append("/").append(document.get("_id")).append("\n");
+                }
+                cursor.close();
+            }
+            return result.toString();
         }
-        return null;
+    }
+
+    /**
+     * Returns Dataset
+     *
+     * @param id dataset ID to search
+     * @return Dataset
+     */
+    Dataset getDataset(String id){
+
+        mongoCollection = mongoDB.getCollection("dataset");
+
+        BasicDBObject query = new BasicDBObject();
+        query.put("_id", new ObjectId(id));
+
+        Object datasetobj = mongoCollection.find(query).first();
+        Gson gson = new Gson();
+        String jsonString = gson.toJson(datasetobj);
+        Dataset dataset = gson.fromJson(jsonString, Dataset.class);
+        if (dataset == null) {
+            throw new NotFoundException("Could not find Dataset with id:" + id);
+        }
+
+        return dataset;
     }
 
     /**
@@ -158,7 +177,7 @@ public class Dao {
      * @param document GSON of a dataset, model ...
      * @return String ID of the saved collection
      */
-    String saveData(String collection, Document document) {
+    public String saveData(String collection, Document document) {
         mongoCollection = mongoDB.getCollection(collection);
         String strictJSON = document.toJson();
 
@@ -176,8 +195,14 @@ public class Dao {
     Boolean delete(String collection, String id){
         mongoCollection = mongoDB.getCollection(collection);
         try {
-            mongoCollection.deleteOne(new Document("_id", new ObjectId(id)));
-            return true;
+            DeleteResult result = mongoCollection.deleteOne(new Document("_id", new ObjectId(id)));
+            long count = result.getDeletedCount();
+            if (count > 0) {
+                return true;
+            } else {
+                return false;
+            }
+
         } catch (MongoException e){
             e.printStackTrace();
             return false;

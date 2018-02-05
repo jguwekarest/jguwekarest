@@ -6,14 +6,13 @@ import io.swagger.api.ApiException;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 
 import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
+import javax.ws.rs.core.*;
 import java.util.List;
 import java.util.TreeMap;
 
 import static io.swagger.api.Constants.SAVE_DATASSET_NOTE;
+import static io.swagger.api.Constants.TEXT_ARFF;
+import static io.swagger.api.Constants.TEXT_URILIST;
 
 @Path("/")
 @Api(description = "Dataset API")
@@ -23,7 +22,7 @@ public class Dataset {
     @POST
     @Path("/dataset")
     @Consumes({ "multipart/form-data" })
-    @Produces({ "text/x-arff", "text/uri-list" })
+    @Produces({ TEXT_ARFF, TEXT_URILIST })
     @ApiOperation(
             value = "Download dataset and convert into weka arff format.",
             notes = "Download an external dataset and convert it into weka arff format. " + SAVE_DATASSET_NOTE,
@@ -55,7 +54,7 @@ public class Dataset {
 
     @GET
     @Path("/dataset")
-    @Produces({ "text/uri-list", "application/json" })
+    @Produces({ TEXT_URILIST, MediaType.APPLICATION_JSON})
     @ApiOperation(
             value = "List all converted datasets.",
             notes = "List all converted datasets.",
@@ -82,7 +81,7 @@ public class Dataset {
 
     @GET
     @Path("/dataset/{id}/arff")
-    @Produces({ "text/x-arff" })
+    @Produces({ TEXT_ARFF })
     @ApiOperation(
             value = "Get arff representation of a dataset.",
             notes = "Get arff representation of a dataset.",
@@ -109,13 +108,11 @@ public class Dataset {
     @POST
     @Path("/dataset/{id}")
     @Consumes({ "multipart/form-data" })
-    @Produces({ "text/x-arff" })
-    //@Authorization()
+    @Produces({TEXT_ARFF, TEXT_URILIST})
     @ApiOperation(
             value = "Filter an internal dataset with weka filter.",
-            notes = "Filter an internal dataset with weka filter. Remove attributes and normalize or standardize all numeric attributes of a dataset.",
-            tags={ "dataset" },
-            produces = "text/x-arff")
+            notes = "Filter an internal dataset with weka filter. Remove attributes and normalize or standardize all numeric attributes of a dataset." + SAVE_DATASSET_NOTE,
+            tags={ "dataset" })
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "OK"),
             @ApiResponse(code = 400, message = "Bad Request"),
@@ -130,16 +127,17 @@ public class Dataset {
             , @ApiParam(value = "Standardize all numeric attributes in the given dataset to have zero mean and unit variance (apart from the class attribute, if set).")@FormDataParam("standardize") Boolean standardize
             , @ApiParam(value = "Ignore class (ignore class attribute for Normalization or Standization).")@FormDataParam("ignore") Boolean ignore
             , @ApiParam(value = "String to Nominal: Sets which attributes to process. This attributes must be string attributes (\"first\" and \"last\" are valid values as well as ranges and lists. Empty value do not process the filter).")@FormDataParam("attributeRange") String attributeRange
-            , @ApiParam(value = "Authorization token" )@HeaderParam("subjectid") String subjectid) throws Exception {
+            , @ApiParam(value = "Authorization token" )@HeaderParam("subjectid") String subjectid
+            , @Context HttpHeaders headers, @Context UriInfo ui ) throws Exception{
 
-        String arff = DatasetService.getArff(null,null, id, subjectid);
-        Dataset ds = new Dataset();
-        ds.datasetURI = id; // @ToDo replace with full URI
-        ds.arff = arff;
-        String newArff = DatasetService.filter(ds, idx_remove, scale, translation, standardize, ignore, attributeRange);
+        String accept = headers.getRequestHeaders().getFirst("accept");
+        Dataset ds = DatasetService.getDataset(id, subjectid);
+        String uri = ui.getBaseUri().toString();
+
+        String output = DatasetService.filter(ds, idx_remove, scale, translation, standardize, ignore, attributeRange, accept, uri);
 
         return Response
-                .ok(newArff)
+                .ok(output)
                 .status(Response.Status.OK)
                 .build();
     }

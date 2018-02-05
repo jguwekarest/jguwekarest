@@ -31,11 +31,23 @@ public class DatasetService {
 
     private static final Logger LOG = Logger.getLogger(DatasetService.class.getName());
 
+
     static Object listDatasets(UriInfo ui, String accept, String token) {
         Dao datasetDao = new Dao();
         Object dslist = datasetDao.listData("dataset", ui, accept);
         datasetDao.close();
         return dslist;
+    }
+
+    static Dataset getDataset(String id, String token){
+        Dataset ds = new Dataset();
+        Dao datasetDao = new Dao();
+        try {
+            ds = datasetDao.getDataset(id);
+        }finally {
+            datasetDao.close();
+        }
+        return ds;
     }
 
     static String getDatasetArff(String id, String token){
@@ -203,7 +215,7 @@ public class DatasetService {
         return out;
     }
 
-    static String filter(Dataset dataset, String idx_remove, String scale, String translation, Boolean standardize, Boolean ignore, String attributeRange) throws Exception {
+    public static String filter(Dataset dataset, String idx_remove, String scale, String translation, Boolean standardize, Boolean ignore, String attributeRange, String accept, String uri) throws Exception {
         String out = dataset.arff;
         if(idx_remove != null && !idx_remove.equals("0")){
             LOG.log(Level.INFO, "Remove filter: attributes: {0}", idx_remove);
@@ -244,7 +256,27 @@ public class DatasetService {
             Instances newData = new Instances(StringToNominal.useFilter(instances, s2n));
             out = newData.toString();
         }
-        return out;
+        if (accept.equals("text/uri-list")){
+            Dataset newDataset = new Dataset();
+            newDataset = dataset;
+            newDataset.arff = out;
+            Dao datasetDao = new Dao();
+            try {
+                Gson gson = new Gson();
+                Document document = Document.parse(gson.toJson(dataset));
+                String id = datasetDao.saveData("dataset", document);
+                out = uri + "dataset/" + id;
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                datasetDao.close();
+            }
+
+            return out;
+        } else{
+            return out;
+        }
+
     }
 
 
@@ -257,7 +289,7 @@ public class DatasetService {
     public static Boolean deleteDataset(String id) throws ApiException {
         Dao dao = new Dao();
         try {
-            Boolean status = dao.delete("dataset",id);
+            Boolean status = dao.delete("dataset", id);
             LOG.log(Level.INFO,"Dataset : " + id + " deleted.");
             return status;
         }catch (Exception e) {

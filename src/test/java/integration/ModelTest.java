@@ -112,9 +112,6 @@ public class ModelTest {
     public void deleteModelFalse() throws Exception {
         String id = "1234567890abcdef12345678";
         Boolean resultDelete = ModelService.deleteModel(id);
-        Assert.assertTrue(resultDelete);
+        Assert.assertFalse(resultDelete);
     }
-
-
-
 }
