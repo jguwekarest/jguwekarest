@@ -1,0 +1,21 @@
+@relation 'weather-weka.filters.unsupervised.attribute.Remove-R1,2'
+
+@attribute humidity numeric
+@attribute windy {TRUE,FALSE}
+@attribute play {yes,no}
+
+@data
+85,FALSE,no
+90,TRUE,no
+86,FALSE,yes
+96,FALSE,yes
+80,FALSE,yes
+70,TRUE,no
+65,TRUE,yes
+95,FALSE,no
+70,FALSE,yes
+80,FALSE,yes
+70,TRUE,yes
+90,TRUE,yes
+75,FALSE,yes
+91,TRUE,no

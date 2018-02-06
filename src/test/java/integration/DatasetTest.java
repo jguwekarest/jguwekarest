@@ -84,7 +84,7 @@ public class DatasetTest {
         Assert.assertTrue(response.getStatus() == 200);
         Assert.assertTrue(response.getMediaType().toString().equals("text/uri-list"));
         System.out.println("Dataset URI of the saved external dataset is: " + dataset_uri);
-        Assert.assertTrue(dataset_uri.matches(host + "/dataset/[0-9,a-f,A-F]{24}"));
+        Assert.assertTrue(dataset_uri.matches(host + "/dataset/[a-fA-F\\d]{24}"));
         String id = dataset_uri.substring(dataset_uri.length() - 24);
         Boolean resultDelete = DatasetService.deleteDataset(id);
         Assert.assertTrue(resultDelete);

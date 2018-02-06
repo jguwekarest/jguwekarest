@@ -78,7 +78,7 @@ public class ModelTest {
 
         Assert.assertTrue(response.getStatus() == 200);
         Assert.assertTrue(response.getMediaType().toString().equals("text/uri-list"));
-        Assert.assertTrue(model_uri.matches(host + "/model/[0-9,a-f,A-F]{24}"));
+        Assert.assertTrue(model_uri.matches(host + "/model/[a-fA-F\\d]{24}$"));
 
         // Prediction part
 

@@ -48,22 +48,8 @@ public class StringUtilTest {
         Assert.assertFalse(StringUtil.isUri("tralala://www....google.de//subdir?bla=23&blubb=test"));
     }
 
-    @Test
-    public void switching() throws Exception {
-        String val = "text/uri-list";
-        switch (val){
-            case "":
-                System.out.println("empty String out");
-            case "text/uri-list":
-                System.out.println("text/uri-list out");
-            default:
-                System.out.println("default out");
-        }
-        Assert.assertTrue(StringUtil.isUri("http://www.google.de"));
-        Assert.assertTrue(StringUtil.isUri("https://www.google.de/subdir"));
-        Assert.assertTrue(StringUtil.isUri("https://www.google.de/subdir?bla=23&blubb=test"));
-        Assert.assertFalse(StringUtil.isUri("tralala://www....google.de//subdir?bla=23&blubb=test"));
-    }
+
+
 
 
 }
