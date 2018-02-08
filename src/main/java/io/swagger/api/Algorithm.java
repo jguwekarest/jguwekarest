@@ -9,11 +9,10 @@ import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.SecurityContext;
-import javax.ws.rs.core.UriInfo;
+import javax.ws.rs.core.*;
 import java.io.IOException;
+
+import static io.swagger.api.Constants.TEXT_URILIST;
 
 @Path("/algorithm")
 
@@ -82,7 +81,7 @@ public class Algorithm  {
 
 */
     @GET
-    @Produces({ "text/uri-list" })
+    @Produces({ TEXT_URILIST, MediaType.APPLICATION_JSON})
     @ApiOperation(value = "Get a list of all available algorithms.", notes = "Get a list of all algorithms.", response = void.class, tags={ "algorithm", })
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "OK", response = void.class),
@@ -90,11 +89,13 @@ public class Algorithm  {
         @ApiResponse(code = 401, message = "Unauthorized", response = void.class),
         @ApiResponse(code = 404, message = "Resource Not Found", response = void.class),
         @ApiResponse(code = 500, message = "Server Error", response = void.class) })
-    public Response algorithmGet(@ApiParam(value = "requested Content-Type" ,required=true, allowableValues="text/uri-list, application/json")@HeaderParam("Accept") String accept
-    , @ApiParam(value = "authorization token" )@HeaderParam("subjectid") String subjectid
-    , @Context SecurityContext securityContext
-    , @Context UriInfo uriinfo)
+    public Response algorithmGet(
+        @ApiParam(value = "authorization token" )@HeaderParam("subjectid") String subjectid
+        , @Context SecurityContext securityContext
+        , @Context UriInfo uriinfo, @Context HttpHeaders headers)
             throws NotFoundException, IOException, io.swagger.api.NotFoundException {
+
+            String accept = headers.getRequestHeaders().getFirst("accept");
             return delegate.algorithmGet(accept, subjectid, securityContext, uriinfo);
     }
 

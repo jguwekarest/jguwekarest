@@ -8,6 +8,7 @@ import org.apache.commons.io.IOUtils;
 import org.json.JSONObject;
 
 import javax.servlet.ServletContext;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
@@ -43,7 +44,6 @@ public class AlgorithmImpl extends AlgorithmService {
     @Override
     public Response algorithmGet(String accept, String subjectid, SecurityContext securityContext, UriInfo ui) throws NotFoundException, IOException {
         String baseuri = ui.getBaseUri().toString();
-        System.out.println("baseuri: " + baseuri);
         InputStream in = new URL( ui.getBaseUri() + "swagger.json" ).openStream();
         String jsonContent;
         try {
@@ -56,6 +56,8 @@ public class AlgorithmImpl extends AlgorithmService {
         //sort the JSONObject somehow
         String output = new String("");
         JSONObject paths = (JSONObject) apiObject.getJSONObject("paths");
+        JSONObject jsonout = new JSONObject();
+
         Iterator<?> keys = paths.keys();
         while( keys.hasNext() ) {
             String key = (String)keys.next();
@@ -66,10 +68,13 @@ public class AlgorithmImpl extends AlgorithmService {
                     String methodVal = (String)methodKeys.next();
                     if (!key.contains("{") && key.startsWith("/algorithm/")) {
                         output += "" + StringUtil.removeTrailingSlash(baseuri) + key + "\n";
+                        if (accept.equals(MediaType.APPLICATION_JSON)) jsonout.put( StringUtil.removeTrailingSlash(baseuri) + key, paths.getJSONObject(key));
                     }
                 }
             }
         }
+
+        if (accept.equals(MediaType.APPLICATION_JSON)) return Response.ok(jsonout.toString()).build();
         return Response.ok(output).build();
     }
 

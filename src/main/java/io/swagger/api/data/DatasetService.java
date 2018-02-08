@@ -7,7 +7,6 @@ import io.swagger.api.StringUtil;
 import io.swagger.api.WekaUtils;
 import org.bson.Document;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
-import weka.core.Attribute;
 import weka.core.Instances;
 import weka.filters.Filter;
 import weka.filters.unsupervised.attribute.Normalize;
@@ -31,7 +30,13 @@ public class DatasetService {
 
     private static final Logger LOG = Logger.getLogger(DatasetService.class.getName());
 
-
+    /**
+     * Get a list of datasets from mongoDB.
+     * @param ui UriInfos
+     * @param accept requested mime-type
+     * @param token security token
+     * @return dataset list
+     */
     static Object listDatasets(UriInfo ui, String accept, String token) {
         Dao datasetDao = new Dao();
         Object dslist = datasetDao.listData("dataset", ui, accept);
@@ -39,8 +44,14 @@ public class DatasetService {
         return dslist;
     }
 
+    /**
+     * Get a dataset from mongoDB.
+     * @param id dataset/mongodb id
+     * @param token  security token
+     * @return dataset object
+     */
     static Dataset getDataset(String id, String token){
-        Dataset ds = new Dataset();
+        Dataset ds;
         Dao datasetDao = new Dao();
         try {
             ds = datasetDao.getDataset(id);
@@ -50,8 +61,14 @@ public class DatasetService {
         return ds;
     }
 
+    /**
+     * Get an arff representation of a dataset from mongoDB.
+     * @param id dataset/mongodb id
+     * @param token security token
+     * @return
+     */
     static String getDatasetArff(String id, String token){
-        String arff = "";
+        String arff;
         Dao datasetDao = new Dao();
         try {
             arff = datasetDao.getDatasetArff(id);
@@ -61,6 +78,15 @@ public class DatasetService {
         return arff;
     }
 
+    /**
+     * Get arff representation from dataset in mongoDB or from a posted file.
+     * @param fileInputStream sended file
+     * @param fileDetail details of sended file
+     * @param datasetURI dataset/mongodb id
+     * @param subjectid security token
+     * @return
+     * @throws IOException
+     */
     public static String getArff(InputStream fileInputStream, FormDataContentDisposition fileDetail, String datasetURI, String subjectid) throws IOException {
         StringBuilder txtStr = new StringBuilder();
         if (datasetURI != null && !Objects.equals(datasetURI, "")) {
@@ -86,7 +112,7 @@ public class DatasetService {
     */
 
     static Dataset readExternalDataset(String uri, String token) throws ApiException {
-        String jsonString = "";
+        String jsonString;
         Client client = ClientBuilder.newClient();
 
         Response response = client.target(uri)
@@ -215,6 +241,28 @@ public class DatasetService {
         return out;
     }
 
+    /**
+     * WEKA filter methods
+     * @param dataset dataset/mongodb id
+     * @param uri URI of the dataset
+     * @return filtered arff string
+     * @throws Exception
+     */
+
+    /**
+     * WEKA filter methods
+     * @param dataset dataset/mongodb id
+     * @param idx_remove attributes to remove (comma seperated String)
+     * @param scale factor for scaling the output range
+     * @param translation translation of the output range
+     * @param standardize null/true Standardizes all numeric attributes in the given dataset to have zero mean and unit variance
+     * @param ignore ignore the class attribute for standardize
+     * @param attributeRange range (comma separated list) of string attributes to convert to nominal
+     * @param accept requested mime-type
+     * @param uri URI of the dataset
+     * @return filtered arff string
+     * @throws Exception exceptions
+     */
     public static String filter(Dataset dataset, String idx_remove, String scale, String translation, Boolean standardize, Boolean ignore, String attributeRange, String accept, String uri) throws Exception {
         String out = dataset.arff;
         if(idx_remove != null && !idx_remove.equals("0")){
@@ -257,7 +305,7 @@ public class DatasetService {
             out = newData.toString();
         }
         if (accept.equals("text/uri-list")){
-            Dataset newDataset = new Dataset();
+            Dataset newDataset;
             newDataset = dataset;
             newDataset.arff = out;
             Dao datasetDao = new Dao();
@@ -284,7 +332,7 @@ public class DatasetService {
      * Delete a dataset.
      * @param id of the dataset
      * @return true on success
-     * @throws ApiException
+     * @throws ApiException API exception
      */
     public static Boolean deleteDataset(String id) throws ApiException {
         Dao dao = new Dao();
@@ -300,7 +348,7 @@ public class DatasetService {
         }
     }
 
-
+/*
     static String toArffWeka(String bla) {
         ArrayList<Attribute> atts = new ArrayList<Attribute>();
         ArrayList<Attribute> attVals = new ArrayList<Attribute>();
@@ -320,5 +368,5 @@ public class DatasetService {
         System.out.println(data);
         return "";
     }
-
+*/
 }
