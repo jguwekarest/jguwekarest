@@ -39,4 +39,4 @@ curl  -X POST -H "Content-Type: multipart/form-data" -H "Accept:text/x-arff" -F 
 **See:**
  * Full example for a **[local or server hosted development environment](./doc/DockerizedDevEnvSetup.md).** 
  * Build the Docker image by **[Dockerfile](./Dockerfile)**.
- * Java Docs on gh-pages **[JavaDocs](https://jguwekarest.github.io/javadoc/index.html)**.
+ * Java Docs on gh-pages **[JavaDocs](https://jguwekarest.github.io/jguwekarest/javadoc/index.html)**.
