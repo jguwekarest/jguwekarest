@@ -22,7 +22,6 @@ public class WekaUtils {
         return insts;
     }
 
-
     /**
      * Write a model to filesystem
      * @param model WEKA model
@@ -39,29 +38,5 @@ public class WekaUtils {
         return true;
     }
 
-   /**
-    * Option-string helper method for WEKA options build from option, value and defaultValue.
-    * <ul>
-    *     <li>sets a value to a given option</li>
-    *     <li>sets a defaultValue to a given option when value is null</li>
-    *     <li>sets an option when both values are null</li>
-    * </ul>
-    * <pre>{@code
-    * WekaUtils.getParamString(100, "R", 2) => " -R 100 "
-    * WekaUtils.getParamString(null, "H", 2) => " -H 2 "
-    * WekaUtils.getParamString(null, "X", null) => " -X "
-    * }</pre>
-    * @param value        value of the option
-    * @param option       option to set
-    * @param defaultValue default value is set when value is null
-    * @return String the resulting string
-    */
-    public static String getParamString(Object value, String option, Object defaultValue ){
-        if (value == null && defaultValue == null){
-            return " -" + option + " ";
-        } else {
-            return ((value != null) ? (" -" + option + " " + value + " ") : (" -" + option + " " + defaultValue + " ") );
-        }
-    }
 
 }

@@ -4,10 +4,13 @@ package io.swagger.api;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.commons.validator.routines.UrlValidator;
 
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2017-09-11T12:03:46.572Z")
+/**
+ * Diverse String Helper-Utilities
+ *
+ */
 public class StringUtil {
   /**
-   * Check if the given array contains the given value (with case-insensitive comparison).
+   * Check if an array contains a specific value (with case-insensitive comparison).
    *
    * @param array The array
    * @param value The value to search
@@ -22,7 +25,7 @@ public class StringUtil {
   }
 
   /**
-   * Join an array of strings with the given separator.
+   * Join an array of strings with a separator.
    * <p>
    * Note: This might be replaced by utility method from commons-lang or guava someday
    * if one of those libraries is added as dependency.
@@ -56,7 +59,7 @@ public class StringUtil {
 
 
   /**
-   * Check a String for a trailing slash and removes it.
+   * Check a String for trailing slash and removes it.
    *
    * @param str the URI string
    * @return the resulting string

@@ -1,0 +1,176 @@
+AdaBoostM1: Base classifiers and their weights:
+
+J48 unpruned tree
+------------------
+
+humidity <= 86
+|   temperature <= 65: no (2.0)
+|   temperature > 65: yes (6.0/1.0)
+humidity > 86: no (6.0)
+
+Number of Leaves  : 	3
+
+Size of the tree : 	5
+
+
+Weight: 0.92
+
+J48 unpruned tree
+------------------
+
+outlook = sunny: no (5.0/1.0)
+outlook = overcast: yes (5.0)
+outlook = rainy: yes (4.0/1.0)
+
+Number of Leaves  : 	3
+
+Size of the tree : 	4
+
+
+Weight: 1.39
+
+J48 unpruned tree
+------------------
+
+windy = TRUE
+|   humidity <= 70: yes (3.0/1.0)
+|   humidity > 70: no (3.0)
+windy = FALSE: yes (8.0/1.0)
+
+Number of Leaves  : 	3
+
+Size of the tree : 	5
+
+
+Weight: 0.79
+
+J48 unpruned tree
+------------------
+
+humidity <= 90: yes (11.0/2.0)
+humidity > 90: no (3.0)
+
+Number of Leaves  : 	2
+
+Size of the tree : 	3
+
+
+Weight: 0.39
+
+J48 unpruned tree
+------------------
+
+humidity <= 85: no (7.0)
+humidity > 85: yes (7.0)
+
+Number of Leaves  : 	2
+
+Size of the tree : 	3
+
+
+Weight: 0.39
+
+J48 unpruned tree
+------------------
+
+outlook = sunny
+|   humidity <= 70: yes (4.0)
+|   humidity > 70: no (3.0)
+outlook = overcast: yes (2.0)
+outlook = rainy: no (5.0)
+
+Number of Leaves  : 	4
+
+Size of the tree : 	6
+
+
+Weight: 2.13
+
+J48 unpruned tree
+------------------
+
+windy = TRUE: no (4.0/1.0)
+windy = FALSE: yes (10.0)
+
+Number of Leaves  : 	2
+
+Size of the tree : 	3
+
+
+Weight: 1.17
+
+J48 unpruned tree
+------------------
+
+temperature <= 81: yes (9.0/1.0)
+temperature > 81: no (5.0)
+
+Number of Leaves  : 	2
+
+Size of the tree : 	3
+
+
+Weight: 1.45
+
+J48 unpruned tree
+------------------
+
+outlook = sunny: no (4.0/1.0)
+outlook = overcast: yes (2.0)
+outlook = rainy
+|   windy = TRUE: no (4.0)
+|   windy = FALSE: yes (4.0)
+
+Number of Leaves  : 	4
+
+Size of the tree : 	6
+
+
+Weight: 2.31
+
+J48 unpruned tree
+------------------
+
+humidity <= 80
+|   temperature <= 65: no (2.0)
+|   temperature > 65: yes (9.0)
+humidity > 80: no (3.0)
+
+Number of Leaves  : 	3
+
+Size of the tree : 	5
+
+
+Weight: 1.91
+
+Number of performed Iterations: 10
+
+
+=== Crossvalidation Results ===
+
+Correctly Classified Instances           8               57.1429 %
+Incorrectly Classified Instances         6               42.8571 %
+Kappa statistic                          0.0667
+Mean absolute error                      0.4413
+Root mean squared error                  0.6159
+Relative absolute error                 92.6732 %
+Root relative squared error            124.8358 %
+Total Number of Instances               14     
+
+=== Detailed Accuracy By Class ===
+
+                 TP Rate  FP Rate  Precision  Recall   F-Measure  MCC      ROC Area  PRC Area  Class
+                 0,667    0,600    0,667      0,667    0,667      0,067    0,511     0,721     yes
+                 0,400    0,333    0,400      0,400    0,400      0,067    0,511     0,398     no
+Weighted Avg.    0,571    0,505    0,571      0,571    0,571      0,067    0,511     0,606     
+
+
+=== Confusion Matrix ===
+
+ a b   <-- classified as
+ 6 3 | a = yes
+ 3 2 | b = no
+
+
+Model build options:
+weka.classifiers.meta.AdaBoostM1 -Q -P 100 -S 1 -I 10 -W weka.classifiers.trees.J48 -- -U -M 2 -U -M 2

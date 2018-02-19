@@ -1,9 +1,11 @@
 package io.swagger.api;
 
-import io.swagger.annotations.*;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import io.swagger.api.factories.AlgorithmFactory;
 
-import javax.annotation.Generated;
 import javax.servlet.ServletConfig;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
@@ -17,7 +19,6 @@ import static io.swagger.api.Constants.TEXT_URILIST;
 @Path("/algorithm")
 
 @io.swagger.annotations.Api(description = "the algorithm API")
-@Generated(value = "io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2017-09-11T12:03:46.572Z")
 public class Algorithm  {
    private final AlgorithmService delegate;
 

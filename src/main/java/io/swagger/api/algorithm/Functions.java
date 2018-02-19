@@ -2,6 +2,7 @@ package io.swagger.api.algorithm;
 
 
 import io.swagger.annotations.*;
+import io.swagger.api.NotFoundException;
 import io.swagger.api.factories.FunctionsFactory;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
@@ -63,7 +64,7 @@ public class Functions {
             , @ApiParam(value = "The ridge parameter (Default: 1.0E-8).", defaultValue = "1.0E-8") @FormDataParam("ridge") BigDecimal ridge
             , @ApiParam(value = "authorization token") @HeaderParam("subjectid") String subjectid
             , @Context UriInfo ui, @Context HttpHeaders headers, @Context SecurityContext securityContext)
-            throws io.swagger.api.NotFoundException, IOException {
+            throws NotFoundException, IOException {
         return delegate.linearRegressionPost(fileInputStream, fileDetail, datasetUri, attributeSelectionMethod, eliminateColinearAttributes, ridge,
                 subjectid, headers, ui, securityContext);
     }
@@ -100,7 +101,7 @@ public class Functions {
             , @ApiParam(value = "weights -- The weights to use for the classes (blank-separated list, eg, \"1 1 1\" for a 3-class problem), if empty 1 is used by default.") @FormDataParam("weights") String weights
             , @ApiParam(value = "authorization token") @HeaderParam("subjectid") String subjectid
             , @Context UriInfo ui, @Context HttpHeaders headers, @Context SecurityContext securityContext)
-            throws io.swagger.api.NotFoundException, IOException {
+            throws NotFoundException, IOException {
         return delegate.libSVMPost(fileInputStream, fileDetail, datasetUri, svmType, coef0, cost, degree, eps, gamma, kernelType, loss,
                 normalize, nu, probabilityEstimates, shrinking, weights, subjectid, headers, ui, securityContext);
     }

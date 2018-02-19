@@ -1,6 +1,7 @@
 package io.swagger.api.impl;
 
 import io.swagger.api.NotFoundException;
+import io.swagger.api.WekaOptionHelper;
 import io.swagger.api.WekaUtils;
 import io.swagger.api.algorithm.LazyService;
 import io.swagger.api.data.DatasetService;
@@ -12,7 +13,6 @@ import weka.core.Instances;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
 import java.io.IOException;
 import java.io.InputStream;
@@ -26,61 +26,33 @@ public class LazyImpl extends LazyService {
                                                    String nearestNeighbourSearchAlgorithm, String subjectid, HttpHeaders headers, UriInfo uriInfo)
             throws NotFoundException, IOException {
 
-        Object[] params = {windowSize, KNN, crossValidate, distanceWeighting, meanSquared, nearestNeighbourSearchAlgorithm, subjectid};
-
-        for (int i= 0; i < params.length; i ++  ) {
-            System.out.println("kNN param " + i + " are: " + params[i]);
-        }
-
+        String accept = headers.getHeaderString(HttpHeaders.ACCEPT);
         String txtStr = DatasetService.getArff(fileInputStream, fileDetail, datasetUri, subjectid);
 
-        String parameters = "";
-
-        parameters += WekaUtils.getParamString(windowSize, "W", 0);
-
-        parameters += WekaUtils.getParamString(KNN, "K", 1);
-
-        parameters += ((crossValidate != null && crossValidate != 0) ? " -X " : "");
-
-        if (distanceWeighting != null) {
-            if (distanceWeighting.equals("F") || distanceWeighting.equals("I")) {
-                parameters += " -" + distanceWeighting + " ";
-            }
-        }
-
-        if (meanSquared != null && meanSquared != 0) parameters += " -E ";
-
-        //use LinearNNSearch fixed
-        parameters += " -A ";
-        parameters += "\"weka.core.neighboursearch.LinearNNSearch -A \\\"weka.core.EuclideanDistance -R first-last\\\"\"";
-
-        System.out.println("parameterstring for weka: IBk " + parameters.replaceAll("( )+", " "));
+        String[] options = WekaOptionHelper.getKNNOptions(windowSize, KNN, crossValidate, distanceWeighting, meanSquared, nearestNeighbourSearchAlgorithm);
 
         IBk classifier = new IBk();
 
         Instances instances = WekaUtils.instancesFromString(txtStr, true);
 
         try {
-            classifier.setOptions( weka.core.Utils.splitOptions(parameters.replaceAll("( )+", " ")) );
+            classifier.setOptions( options );
             classifier.buildClassifier(instances);
         } catch (Exception e) {
             e.printStackTrace();
-            return Response.serverError().entity("Error: check options for WEKA weka.classifiers.lazy.IBk\n parameters: \"" + parameters + "\"\nWeka error message: " + e.getMessage() + "\n").build();
+            return Response.serverError().entity("Error: check options for WEKA weka.classifiers.lazy.IBk\n parameters: \"" + options.toString() + "\"\nWeka error message: " + e.getMessage() + "\n").build();
         }
 
-        String validation = "";
-        validation = Validation.crossValidation(instances, classifier);
+        String validation = Validation.crossValidation(instances, classifier);
 
-        Vector<Object> v = new Vector<>();
-        v.add(classifier);
-        v.add(new Instances(instances, 0));
-
-        String accept = headers.getHeaderString(HttpHeaders.ACCEPT);
         if(accept.equals("text/uri-list")) {
             String id = ModelService.saveModel(classifier, classifier.getOptions(), validation, subjectid);
             String baseuri = uriInfo.getBaseUri().toString();
             return Response.ok(baseuri + "model/" + id).build();
         } else {
+            Vector<Object> v = new Vector<>();
+            v.add(classifier);
+            v.add(new Instances(instances, 0));
             return Response.ok(v.toString() + "\n" + validation + "\n", "text/x-arff").build();
         }
 

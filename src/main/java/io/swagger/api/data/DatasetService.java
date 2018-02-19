@@ -84,7 +84,7 @@ public class DatasetService {
      * @param fileDetail details of sended file
      * @param datasetURI dataset/mongodb id
      * @param subjectid security token
-     * @return
+     * @return arff string
      * @throws IOException
      */
     public static String getArff(InputStream fileInputStream, FormDataContentDisposition fileDetail, String datasetURI, String subjectid) throws IOException {
@@ -141,8 +141,6 @@ public class DatasetService {
 
         StringBuilder arff = new StringBuilder();
         StringBuilder comment = new StringBuilder();
-
-        System.out.println("######### \n\n accept header is: "+ accept + "\n\n#######################");
 
         //add comments datasetURI and dataset metadata
         comment.append("% JGU weka service converted dataset from :").append(dataset.datasetURI).append("\n%\n");

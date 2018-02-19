@@ -1,6 +1,7 @@
 package io.swagger.api.algorithm;
 
 import io.swagger.annotations.*;
+import io.swagger.api.NotFoundException;
 import io.swagger.api.factories.RulesFactory;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
@@ -59,7 +60,7 @@ public class Rules {
             , @ApiParam(value = "Dataset URI or local dataset ID (to the arff representation of a dataset).")@FormDataParam("datasetURI")  String datasetUri
             , @ApiParam(value = "authorization token") @HeaderParam("subjectid") String subjectid
             , @Context UriInfo uriInfo, @Context HttpHeaders headers, @Context SecurityContext securityContext)
-            throws io.swagger.api.NotFoundException, IOException {
+            throws NotFoundException, IOException {
         return delegate.algorithmZeroRPost(fileInputStream,fileDetail,datasetUri,subjectid,headers,uriInfo);
     }
 
@@ -86,7 +87,7 @@ public class Rules {
             , @ApiParam(value = "Whether to generate a regression tree/rule instead of a model tree/rule.", defaultValue = "0", allowableValues="0,1")@FormDataParam("buildRegressionTree") Integer buildRegressionTree
             , @ApiParam(value = "authorization token") @HeaderParam("subjectid") String subjectid
             , @Context UriInfo uriInfo, @Context HttpHeaders headers, @Context SecurityContext securityContext)
-            throws io.swagger.api.NotFoundException, IOException {
+            throws Exception {
         return delegate.algorithmM5RulesPost(fileInputStream,fileDetail,datasetUri,unpruned,useUnsmoothed,minNumInstances,buildRegressionTree,
                 subjectid,headers,uriInfo);
     }

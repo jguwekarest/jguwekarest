@@ -19,6 +19,7 @@ import java.io.InputStream;
 import java.math.BigDecimal;
 import java.util.Vector;
 
+import static io.swagger.api.WekaOptionHelper.getLibSVMOptions;
 import static io.swagger.api.impl.Validation.crossValidation;
 
 public class FunctionsImpl extends FunctionsService {
@@ -31,62 +32,26 @@ public class FunctionsImpl extends FunctionsService {
                                String weights, String subjectid, HttpHeaders headers, UriInfo ui, SecurityContext securityContext)
             throws IOException {
 
-        Object[] params = {svmType, coef0, cost, degree, eps, gamma, kernelType, loss, normalize, nu, subjectid};
-
-        for (int i= 0; i < params.length; i ++  ) {
-            System.out.println("LibSVM param " + i + " are: " + params[i]);
-        }
-
         String txtStr = DatasetService.getArff(fileInputStream, fileDetail, datasetUri, subjectid);
-
-        String parameters = "";
-
-        parameters += WekaUtils.getParamString(svmType, "S", 0);
-        parameters += WekaUtils.getParamString(coef0, "R", 0);
-        parameters += WekaUtils.getParamString(cost, "C", "1.0");
-        parameters += WekaUtils.getParamString(degree, "D", 3);
-        parameters += WekaUtils.getParamString(eps, "E", "0.001");
-        parameters += WekaUtils.getParamString(gamma, "G", "0.0");
-        parameters += WekaUtils.getParamString(kernelType, "K", 0);
-        parameters += WekaUtils.getParamString(loss, "P", "0.1");
-
-        if(normalize != null && normalize) parameters += " -Z ";
-
-        parameters += WekaUtils.getParamString(nu, "N", "0.5");
-
-        if (probabilityEstimates != null && probabilityEstimates) parameters +=  " -B ";
-
-        if (shrinking != null && !shrinking) parameters +=  " -H ";
-
-        if(weights != null && weights != "") parameters +=  " -W \"" + weights + "\"";
-
-
-        System.out.println("parameterstring for weka: LibSVM " + parameters.replaceAll("( )+", " "));
 
         LibSVM classifier = new LibSVM();
 
         Instances instances = WekaUtils.instancesFromString(txtStr, true);
 
-        String[] options;
+        String[] options = getLibSVMOptions(svmType, coef0, cost, degree, eps, gamma, kernelType, loss, normalize, nu, probabilityEstimates, shrinking, weights);
 
         try {
-            options = weka.core.Utils.splitOptions(parameters);
-        } catch (Exception e) {
-            return Response.serverError().entity(e.getMessage()).build();
-        }
-        try {
             classifier.setOptions(options);
-            // ? classifier.setOptions( weka.core.Utils.splitOptions(parameters.replaceAll("( )+", " ")) );
         } catch (Exception e) {
             e.printStackTrace();
-            return Response.serverError().entity("Error: check options for WEKA weka.classifiers.functions.LibSVM\n parameters: \"" + parameters + "\"\nWeka error message: " + e.getMessage() + "\n").build();
+            return Response.serverError().entity("Error: check options for WEKA weka.classifiers.functions.LibSVM\n parameters: \"" + options.toString() + "\"\nWeka error message: " + e.getMessage() + "\n").build();
         }
 
         try {
             classifier.buildClassifier(instances);
         } catch (Exception e) {
             e.printStackTrace();
-            return Response.serverError().entity("Error: check options for WEKA weka.classifiers.functions.LibSVM\n parameters: \"" + parameters + "\"\nWeka error message: " + e.getMessage() + "\n").build();
+            return Response.serverError().entity("Error: check options for WEKA weka.classifiers.functions.LibSVM\n parameters: \"" + options.toString() + "\"\nWeka error message: " + e.getMessage() + "\n").build();
         }
 
         String validation = "";

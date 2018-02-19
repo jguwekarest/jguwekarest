@@ -15,7 +15,7 @@ public class Validation {
         String eval_out = "";
         try {
             Evaluation eval = new Evaluation(instances);
-            eval.crossValidateModel(algorithm, instances, 10, new Random(1));
+            eval.crossValidateModel(algorithm, instances, folds, new Random(1));
             eval_out = eval.toSummaryString("\n=== Crossvalidation Results ===\n", false);
             eval_out += "\n" + eval.toClassDetailsString() + "\n";
             eval_out += "\n" + eval.toMatrixString() + "\n";

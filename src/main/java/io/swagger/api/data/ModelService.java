@@ -21,6 +21,14 @@ public class ModelService {
     private static String dataDirectory = System.getProperty("user.home") + "/.jguweka/data/";
     private static final Logger LOG = Logger.getLogger(ModelService.class.getName());
 
+
+    /**
+     * Get a list of models from mongoDB.
+     * @param ui UriInfo
+     * @param accept requested mime-type
+     * @param token security token
+     * @return list of models
+     */
     public static Object listModels(UriInfo ui, String accept, String token) {
         Dao modelDao = new Dao();
         Object modellist = modelDao.listData("model", ui, accept);
@@ -28,6 +36,11 @@ public class ModelService {
         return modellist;
     }
 
+    /**
+     * Get a model from mongoDB.
+     * @param id dataset/mongodb id
+     * @return model as string
+     */
     public static String getModel(String id) throws ApiException {
         String out = "";
         Dao modelDao = new Dao();
@@ -45,6 +58,14 @@ public class ModelService {
         return out;
     }
 
+    /**
+     * Save a model
+     * @param classifier classifier
+     * @param options build options
+     * @param validation validation
+     * @param token security token
+     * @return model id
+     */
     public static String saveModel(Classifier classifier, String[] options, String validation, String token) {
         Dao modelDao = new Dao();
         String id;

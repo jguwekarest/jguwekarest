@@ -10,11 +10,21 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
 
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2017-09-11T12:03:46.572Z")
 public abstract class TreesService {
     public abstract Response algorithmJ48Post(InputStream fileInputStream, FormDataContentDisposition fileDetail, String datasetUri,
                                               Integer binarySplits, BigDecimal confidenceFactor, Integer minNumObj, Integer numFolds,
                                               Integer reducedErrorPruning, Integer seed, Integer subtreeRaising, Integer unpruned,
-                                              Integer useLaplace, String subjectid, HttpHeaders headers, UriInfo ui
+                                              Integer useLaplace, String subjectid, HttpHeaders headers, UriInfo uriInfo
+                                              )throws NotFoundException, IOException;
+    public abstract Response algorithmJ48AdaBoostPost(InputStream fileInputStream, FormDataContentDisposition fileDetail, String datasetUri,
+                                              Integer batchSize, Integer numIterations, Integer useResampling, Integer weightThreshold,
+                                              Integer binarySplits, BigDecimal confidenceFactor, Integer minNumObj, Integer numFolds,
+                                              Integer reducedErrorPruning, Integer seed, Integer subtreeRaising, Integer unpruned,
+                                              Integer useLaplace, String subjectid, HttpHeaders headers, UriInfo uriInfo
+                                              )throws NotFoundException, IOException;
+    public abstract Response algorithmJ48BaggingPost(InputStream fileInputStream, FormDataContentDisposition fileDetail, String datasetUri, Integer bagSizePercent,
+                                              Integer batchSize, Integer numIterations, Integer binarySplits, BigDecimal confidenceFactor, Integer minNumObj,
+                                              Integer numFolds, Integer reducedErrorPruning, Integer seed, Integer subtreeRaising, Integer unpruned,
+                                              Integer useLaplace, String subjectid, HttpHeaders headers, UriInfo uriInfo
                                               )throws NotFoundException, IOException;
 }

@@ -19,6 +19,8 @@ import java.io.InputStream;
 import java.math.BigDecimal;
 import java.util.Vector;
 
+import static io.swagger.api.WekaOptionHelper.getBayesNetOptions;
+
 public class BayesImpl extends BayesService {
     @Override
     @Produces("text/plain")
@@ -28,61 +30,26 @@ public class BayesImpl extends BayesService {
             throws NotFoundException, IOException {
 
         String subjectid  = headers.getRequestHeaders().getFirst("subjectid");
+
         String txtStr     = DatasetService.getArff(fileInputStream, fileDetail, datasetUri, subjectid);
-        String parameters = "";
 
-        if (useADTree != null && useADTree != 1) { parameters += " -D ";}
-
-        // Set the parameter for the searchAlgo
-        parameters += " -Q ";
-        parameters += "weka.classifiers.bayes.net.search." + searchAlgorithm;
-        System.out.println("searchAlgorithm is: " + searchAlgorithm);
-        // Set the search parameters
-        if (searchParams != null) {
-            parameters += " -- ";
-            parameters += searchParams;
-        }
-        // Set estimator
-        if (estimator != null) {
-            parameters += " -E ";
-            parameters += "weka.classifiers.bayes.net.estimate." + estimator;
-        }
-        // Set the parameters for the estimator
-        if (estimatorParams != null) {
-            parameters += " -- ";
-            parameters += " -A ";
-            parameters += estimatorParams;
-        }
-        System.out.println("parameterstring for weka: " + parameters);
+        String[] options = getBayesNetOptions(estimator, estimatorParams, useADTree, searchAlgorithm, searchParams);
 
         BayesNet classifier = new BayesNet();
 
         Instances instances = WekaUtils.instancesFromString(txtStr, true);
 
-        /*
-        System.out.println("num instances: "+ instances.numAttributes());
-        for ( int i = 0; i < instances.numAttributes(); i++ ){
-            System.out.println("att: " + instances.attribute(i).name() + " type: " + instances.attribute(i).type());
-        }
-        */
-
-        String[] options;
-        try {
-            options = weka.core.Utils.splitOptions(parameters);
-        } catch (Exception e) {
-            return Response.serverError().entity(e.getMessage()).build();
-        }
         try {
             classifier.setOptions(options);
         } catch (Exception e) {
             e.printStackTrace();
-            return Response.serverError().entity("Error: check options for WEKA weka.classifiers.bayes.net.search." + searchAlgorithm + "\n parameters: \"" + parameters + "\"\nWeka error message: " + e.getMessage() + "\n").build();
+            return Response.serverError().entity("Error: check options for WEKA weka.classifiers.bayes.net.search." + searchAlgorithm + "\n parameters: \"" + options.toString() + "\"\nWeka error message: " + e.getMessage() + "\n").build();
         }
         try {
             classifier.buildClassifier(instances);
         } catch (Exception e) {
             e.printStackTrace();
-            return Response.serverError().entity("Error: WEKA weka.classifiers.bayes.net.search." + searchAlgorithm + "\n parameters: \"" + parameters + "\"\nWeka error message: " + e.getMessage() + "\n").build();
+            return Response.serverError().entity("Error: WEKA weka.classifiers.bayes.net.search." + searchAlgorithm + "\n parameters: \"" + options.toString() + "\"\nWeka error message: " + e.getMessage() + "\n").build();
         }
 
         String validation;

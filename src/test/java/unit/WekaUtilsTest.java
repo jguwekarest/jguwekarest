@@ -1,5 +1,6 @@
 package unit;
 
+import io.swagger.api.WekaOptionHelper;
 import io.swagger.api.WekaUtils;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -32,9 +33,9 @@ public class WekaUtilsTest {
 
     @Test(description = "Test param string helper for WEKA params")
     public void getParamString() throws Exception {
-        Assert.assertEquals(" -R 100 ", WekaUtils.getParamString(100, "R", 2));
-        Assert.assertEquals(" -H 2 ", WekaUtils.getParamString(null, "H", 2));
-        Assert.assertEquals(" -X ", WekaUtils.getParamString(null, "X", null));
+        Assert.assertEquals(" -R 100 ", WekaOptionHelper.getParamString(100, "R", 2));
+        Assert.assertEquals(" -H 2 ", WekaOptionHelper.getParamString(null, "H", 2));
+        Assert.assertEquals(" -X ", WekaOptionHelper.getParamString(null, "X", null));
     }
 
 }

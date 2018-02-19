@@ -1,5 +1,6 @@
 package io.swagger.api.impl;
 
+import io.swagger.api.WekaOptionHelper;
 import io.swagger.api.WekaUtils;
 import io.swagger.api.cluster.ClusterService;
 import io.swagger.api.data.DatasetService;
@@ -25,15 +26,15 @@ public class ClusterImpl extends ClusterService {
         String parameters = "";
         // set parameters
         // numFolds
-        parameters += WekaUtils.getParamString(numFolds, "X", 10);
+        parameters += WekaOptionHelper.getParamString(numFolds, "X", 10);
         // numKMeansRuns
-        parameters += WekaUtils.getParamString(numKMeansRuns, "K", 10);
+        parameters += WekaOptionHelper.getParamString(numKMeansRuns, "K", 10);
         // maximumNumberOfClusters
-        parameters += WekaUtils.getParamString(maximumNumberOfClusters,"max", -1);
+        parameters += WekaOptionHelper.getParamString(maximumNumberOfClusters,"max", -1);
         // numClusters
-        parameters += WekaUtils.getParamString(numClusters,"N", -1);
+        parameters += WekaOptionHelper.getParamString(numClusters,"N", -1);
         // maxIterations
-        parameters += WekaUtils.getParamString(maxIterations,"I", 100);
+        parameters += WekaOptionHelper.getParamString(maxIterations,"I", 100);
 
 
         String[] options;

@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Vector;
 
+import static io.swagger.api.WekaOptionHelper.getM5RuleOptions;
 import static io.swagger.api.impl.Validation.crossValidation;
 
 public class RulesImpl extends RulesService {
@@ -30,7 +31,7 @@ public class RulesImpl extends RulesService {
         String txtStr = DatasetService.getArff(fileInputStream, fileDetail, datasetUri, subjectid);
 
         ZeroR classifier = new ZeroR();
-        String[] options = new String[0];
+        //String[] options = new String[0];
 
         Instances instances = WekaUtils.instancesFromString(txtStr, true);
 
@@ -41,8 +42,7 @@ public class RulesImpl extends RulesService {
             return Response.serverError().entity("Error: WEKA weka.classifiers.rules.ZeroR\nWeka error message: " + e.getMessage() + "\n").build();
         }
 
-        String validation = "";
-        validation = crossValidation(instances, classifier);
+        String validation = crossValidation(instances, classifier);
 
         Vector<Object> v = new Vector<>();
         v.add(classifier);
@@ -62,47 +62,32 @@ public class RulesImpl extends RulesService {
     public Response algorithmM5RulesPost(InputStream fileInputStream, FormDataContentDisposition fileDetail, String datasetUri,
                                          Integer unpruned, Integer useUnsmoothed, Double minNumInstances, Integer buildRegressionTree,
                                          String subjectid, HttpHeaders headers, UriInfo uriInfo)
-            throws NotFoundException, IOException {
+            throws Exception {
 
         String txtStr = DatasetService.getArff(fileInputStream, fileDetail, datasetUri, subjectid);
 
-        String parameters = "";
-
-        // set unpruned
-        if (unpruned != null && unpruned == 1) { parameters += " -N ";}
-
-        // set use unsmoothed
-        if (useUnsmoothed != null && useUnsmoothed == 1) { parameters += " -U ";}
-
-        // Set minNumInstances
-        parameters += WekaUtils.getParamString(minNumInstances, "M", "4.0");
-
-        // set buildRegressionTree
-        if (buildRegressionTree != null && buildRegressionTree == 1) { parameters += " -R ";}
-
-        System.out.println("parameterstring for weka: M5Rules " + parameters);
-
         M5Rules classifier = new M5Rules();
-        String[] options = new String[0];
 
         Instances instances = WekaUtils.instancesFromString(txtStr, true);
 
+        String[] options = getM5RuleOptions(unpruned, useUnsmoothed, minNumInstances, buildRegressionTree);
+
         try {
-            classifier.setOptions(weka.core.Utils.splitOptions(parameters));
+            classifier.setOptions(options);
             classifier.buildClassifier(instances);
         } catch (Exception e) {
             e.printStackTrace();
             return Response.serverError().entity("Error: WEKA weka.classifiers.rules.M5Rules\nWeka error message: " + e.getMessage() + "\n").build();
         }
 
-        String validation = "";
-        validation = crossValidation(instances, classifier);
+        String validation = crossValidation(instances, classifier);
 
         Vector<Object> v = new Vector<>();
         v.add(classifier);
         v.add(new Instances(instances, 0));
 
         String accept = headers.getHeaderString(HttpHeaders.ACCEPT);
+
         if(accept.equals("text/uri-list")) {
             String id = ModelService.saveModel(classifier, classifier.getOptions(), validation, subjectid);
             String baseuri = uriInfo.getBaseUri().toString();
