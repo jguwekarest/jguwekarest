@@ -163,7 +163,7 @@ public class ModelTest {
         final Response modelResponse = modelRequest.get();
         Assert.assertTrue(modelResponse.getStatus() == 200, "Model at host: " + model_uri + " not available.");
         Assert.assertTrue(modelResponse.getMediaType().toString().equals("text/plain"), "Model at host: " + model_uri + " not available in mime-type text/plain. Is: " + modelResponse.getMediaType().toString());
-        Assert.assertEquals(modelResponse.readEntity(String.class), savedModelString);
+        Assert.assertEquals(modelResponse.readEntity(String.class).replaceAll("(?m) +$",""), savedModelString.replaceAll("(?m) +$",""));
 
 
         // Prediction part
@@ -264,7 +264,7 @@ public class ModelTest {
         final Response modelResponse = modelRequest.get();
         Assert.assertTrue(modelResponse.getStatus() == 200, "Model at host: " + model_uri + " not available.");
         Assert.assertTrue(modelResponse.getMediaType().toString().equals("text/plain"), "Model at host: " + model_uri + " not available in mime-type text/plain. Is: " + modelResponse.getMediaType().toString());
-        Assert.assertEquals(modelResponse.readEntity(String.class), savedModelString);
+        Assert.assertEquals(modelResponse.readEntity(String.class).replaceAll("(?m) +$",""), savedModelString.replaceAll("(?m) +$",""));
 
         // Prediction part
 
