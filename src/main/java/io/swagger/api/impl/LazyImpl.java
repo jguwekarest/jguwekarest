@@ -16,6 +16,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
 import java.util.Vector;
 
 public class LazyImpl extends LazyService {
@@ -25,6 +26,15 @@ public class LazyImpl extends LazyService {
                                                    Integer windowSize, Integer KNN, Integer crossValidate, String distanceWeighting, Integer meanSquared,
                                                    String nearestNeighbourSearchAlgorithm, String subjectid, HttpHeaders headers, UriInfo uriInfo)
             throws NotFoundException, IOException {
+
+        HashMap<String,Object> params = new HashMap<String, Object>();
+        params.put("datasetUri", datasetUri);
+        params.put("windowSize", windowSize);
+        params.put("KNN", KNN);
+        params.put("crossValidate", crossValidate);
+        params.put("distanceWeighting", distanceWeighting);
+        params.put("meanSquared", meanSquared);
+        params.put("nearestNeighbourSearchAlgorithm", nearestNeighbourSearchAlgorithm);
 
         String accept = headers.getHeaderString(HttpHeaders.ACCEPT);
         String txtStr = DatasetService.getArff(fileInputStream, fileDetail, datasetUri, subjectid);
@@ -46,7 +56,7 @@ public class LazyImpl extends LazyService {
         String validation = Validation.crossValidation(instances, classifier);
 
         if(accept.equals("text/uri-list")) {
-            String id = ModelService.saveModel(classifier, classifier.getOptions(), validation, subjectid);
+            String id = ModelService.saveModel(classifier, classifier.getOptions(), params, validation, subjectid);
             String baseuri = uriInfo.getBaseUri().toString();
             return Response.ok(baseuri + "model/" + id).build();
         } else {

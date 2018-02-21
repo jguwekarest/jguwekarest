@@ -16,6 +16,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
 import java.util.Vector;
 
 import static io.swagger.api.WekaOptionHelper.getM5RuleOptions;
@@ -64,6 +65,13 @@ public class RulesImpl extends RulesService {
                                          String subjectid, HttpHeaders headers, UriInfo uriInfo)
             throws Exception {
 
+        HashMap<String,Object> params = new HashMap<String, Object>();
+        params.put("datasetUri", datasetUri);
+        params.put("unpruned", unpruned);
+        params.put("useUnsmoothed", useUnsmoothed);
+        params.put("minNumInstances", minNumInstances);
+        params.put("buildRegressionTree", buildRegressionTree);
+
         String txtStr = DatasetService.getArff(fileInputStream, fileDetail, datasetUri, subjectid);
 
         M5Rules classifier = new M5Rules();
@@ -89,7 +97,7 @@ public class RulesImpl extends RulesService {
         String accept = headers.getHeaderString(HttpHeaders.ACCEPT);
 
         if(accept.equals("text/uri-list")) {
-            String id = ModelService.saveModel(classifier, classifier.getOptions(), validation, subjectid);
+            String id = ModelService.saveModel(classifier, classifier.getOptions(), params, validation, subjectid);
             String baseuri = uriInfo.getBaseUri().toString();
             return Response.ok(baseuri + "model/" + id).build();
         } else {

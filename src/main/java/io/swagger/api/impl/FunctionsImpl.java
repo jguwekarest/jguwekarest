@@ -17,6 +17,7 @@ import javax.ws.rs.core.UriInfo;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.Vector;
 
 import static io.swagger.api.WekaOptionHelper.getLibSVMOptions;
@@ -31,6 +32,23 @@ public class FunctionsImpl extends FunctionsService {
                                BigDecimal loss, Boolean normalize, BigDecimal nu, Boolean probabilityEstimates, Boolean shrinking,
                                String weights, String subjectid, HttpHeaders headers, UriInfo ui, SecurityContext securityContext)
             throws IOException {
+
+
+        HashMap<String,Object> params = new HashMap<String, Object>();
+        params.put("datasetUri", datasetUri);
+        params.put("svmType", svmType);
+        params.put("coef0", coef0);
+        params.put("cost", cost);
+        params.put("degree", degree);
+        params.put("eps", eps);
+        params.put("gamma", gamma);
+        params.put("kernelType", kernelType);
+        params.put("loss", loss);
+        params.put("normalize", normalize);
+        params.put("nu", nu);
+        params.put("probabilityEstimates", probabilityEstimates);
+        params.put("shrinking", shrinking);
+        params.put("weights", weights);
 
         String txtStr = DatasetService.getArff(fileInputStream, fileDetail, datasetUri, subjectid);
 
@@ -63,7 +81,7 @@ public class FunctionsImpl extends FunctionsService {
 
         String accept = headers.getHeaderString(HttpHeaders.ACCEPT);
         if(accept.equals("text/uri-list")) {
-            String id = ModelService.saveModel(classifier, classifier.getOptions(), validation, subjectid);
+            String id = ModelService.saveModel(classifier, classifier.getOptions(), params, validation, subjectid);
             String baseuri = ui.getBaseUri().toString();
             return Response.ok(baseuri + "model/" + id).build();
         } else {
@@ -76,11 +94,11 @@ public class FunctionsImpl extends FunctionsService {
                                          Integer attributeSelectionMethod, Integer eliminateColinearAttributes, BigDecimal ridge,
                                          String subjectid, HttpHeaders headers, UriInfo ui, SecurityContext securityContext) throws IOException {
 
-        Object[] params = {datasetUri,  attributeSelectionMethod, eliminateColinearAttributes, ridge, subjectid};
-
-        for (int i= 0; i < params.length; i ++  ) {
-            System.out.println("LR param " + i + " are: " + params[i]);
-        }
+        HashMap<String,Object> params = new HashMap<String, Object>();
+        params.put("datasetUri", datasetUri);
+        params.put("attributeSelectionMethod", attributeSelectionMethod);
+        params.put("eliminateColinearAttributes", eliminateColinearAttributes);
+        params.put("ridge", ridge);
 
         String txtStr = DatasetService.getArff(fileInputStream, fileDetail, datasetUri, subjectid);
 
@@ -131,7 +149,7 @@ public class FunctionsImpl extends FunctionsService {
 
         String accept = headers.getHeaderString(HttpHeaders.ACCEPT);
         if(accept.equals("text/uri-list")) {
-            String id = ModelService.saveModel(classifier, classifier.getOptions(), validation, subjectid);
+            String id = ModelService.saveModel(classifier, classifier.getOptions(), params, validation, subjectid);
             String baseuri = ui.getBaseUri().toString();
             return Response.ok(baseuri + "model/" + id).build();
         } else {

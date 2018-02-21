@@ -19,6 +19,7 @@ import javax.ws.rs.core.UriInfo;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.TreeMap;
 import java.util.Vector;
 
@@ -34,6 +35,18 @@ public class TreesImpl extends TreesService {
                                      BigDecimal confidenceFactor, Integer minNumObj, Integer numFolds, Integer reducedErrorPruning, Integer seed,
                                      Integer subtreeRaising, Integer unpruned, Integer useLaplace, String subjectid, HttpHeaders headers, UriInfo uriInfo
                                     ) throws NotFoundException, IOException {
+
+        HashMap<String,Object> params = new HashMap<String, Object>();
+        params.put("datasetUri", datasetUri);
+        params.put("binarySplits", binarySplits);
+        params.put("confidenceFactor", confidenceFactor);
+        params.put("minNumObj", minNumObj);
+        params.put("numFolds", numFolds);
+        params.put("reducedErrorPruning", reducedErrorPruning);
+        params.put("seed", seed);
+        params.put("subtreeRaising", subtreeRaising);
+        params.put("unpruned", unpruned);
+        params.put("useLaplace", useLaplace);
 
         String txtStr = DatasetService.getArff(fileInputStream, fileDetail, datasetUri, subjectid);
         Instances instances = WekaUtils.instancesFromString(txtStr, true);
@@ -58,7 +71,7 @@ public class TreesImpl extends TreesService {
 
         String accept = headers.getHeaderString(HttpHeaders.ACCEPT);
         if(accept.equals("text/uri-list")) {
-            String id = ModelService.saveModel(classifier, classifier.getOptions(), validation, subjectid);
+            String id = ModelService.saveModel(classifier, classifier.getOptions(), params, validation, subjectid);
             String baseuri = uriInfo.getBaseUri().toString();
             return Response.ok(baseuri + "model/" + id).build();
         } else {

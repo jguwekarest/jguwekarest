@@ -48,7 +48,7 @@ public class Model {
     @GET
     @Path("/{id}")
     @Consumes({ "multipart/form-data" })
-    @Produces({ "text/plain" })
+    @Produces({ "text/plain", "application/json" })
     @ApiOperation(
             value = "Get representation of a model.",
             notes = "Get representation of a model.",
@@ -62,9 +62,11 @@ public class Model {
             @ApiResponse(code = 404, message = "Resource Not Found", response = void.class) })
     public Response getModel(
             @ApiParam(value = "model ID" )@PathParam("id") String id,
-            @ApiParam(value = "Authorization token" )@HeaderParam("subjectid") String subjectid, @Context UriInfo ui) throws ApiException {
-
-        String out = ModelService.getModel(id);
+            @ApiParam(value = "Authorization token" )@HeaderParam("subjectid") String subjectid,
+            @Context UriInfo ui,
+            @Context HttpHeaders headers) throws ApiException {
+        String accept = headers.getRequestHeaders().getFirst("accept");
+        Object out = ModelService.getModel(id, accept);
 
         return Response
                 .ok(out)
@@ -98,7 +100,7 @@ public class Model {
     }
 
 
-    public Map<String, String> meta;
+    public Map<String, Object> meta;
     public String hasSources;
     public Dataset dataset;
 
@@ -106,9 +108,10 @@ public class Model {
         public String info;
         public String className;
         public String options;
+        public Map<String, String> buildParams;
     }
 
-    public void setMeta(Map<String, String> meta) {
+    public void setMeta(Map<String, Object> meta) {
         this.meta = meta;
     }
 

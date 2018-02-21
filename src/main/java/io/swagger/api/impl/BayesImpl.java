@@ -17,6 +17,7 @@ import javax.ws.rs.core.UriInfo;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.Vector;
 
 import static io.swagger.api.WekaOptionHelper.getBayesNetOptions;
@@ -28,6 +29,15 @@ public class BayesImpl extends BayesService {
                                           BigDecimal estimatorParams, Integer useADTree, String searchAlgorithm, String searchParams,
                                           HttpHeaders headers, UriInfo ui, SecurityContext securityContext)
             throws NotFoundException, IOException {
+
+        HashMap<String,Object> params = new HashMap<String, Object>();
+        params.put("datasetUri", datasetUri);
+        params.put("estimator", estimator);
+        params.put("estimatorParams", estimatorParams);
+        params.put("estimator", estimator);
+        params.put("useADTree", useADTree);
+        params.put("searchAlgorithm", searchAlgorithm);
+        params.put("searchParams", searchParams);
 
         String subjectid  = headers.getRequestHeaders().getFirst("subjectid");
 
@@ -62,7 +72,7 @@ public class BayesImpl extends BayesService {
         //if(save != null && save) ModelService.saveModel(classifier, classifier.getOptions(), validation, subjectid);
         String accept = headers.getHeaderString(HttpHeaders.ACCEPT);
         if(accept.equals("text/uri-list")) {
-            String id = ModelService.saveModel(classifier, classifier.getOptions(), validation, subjectid);
+            String id = ModelService.saveModel(classifier, classifier.getOptions(), params, validation, subjectid);
             String baseuri = ui.getBaseUri().toString();
             return Response.ok(baseuri + "model/" + id).build();
         } else {

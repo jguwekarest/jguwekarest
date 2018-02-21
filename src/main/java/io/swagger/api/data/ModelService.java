@@ -41,15 +41,20 @@ public class ModelService {
      * @param id dataset/mongodb id
      * @return model as string
      */
-    public static String getModel(String id) throws ApiException {
-        String out = "";
+    public static Object getModel(String id, String accept) throws ApiException {
+        Object out = "";
         Dao modelDao = new Dao();
         try {
             Model model = modelDao.getModel(id);
-            out = ModelService.deserialize(model.model).toString();
-            out += "\n" + model.validation;
-            out += "\nModel build options:";
-            out += "\n" + model.meta.get("className") + " " + model.meta.get("options");
+            System.out.println("===================\nAccept: " + accept + "\n====================\n");
+            if (accept.equals("text/plain")) {
+                out = ModelService.deserialize(model.model).toString();
+                out += "\n" + model.validation;
+                out += "\nModel build options:";
+                out += "\n" + model.meta.get("className") + " " + model.meta.get("options");
+            } else {
+                out = model;
+            }
         }catch (Exception e) {
             e.printStackTrace();
         }finally {
@@ -74,7 +79,7 @@ public class ModelService {
             model.model = ModelService.serialize(classifier);
 
             System.out.println("Class is: " + classifier.getClass().getName());
-            Map<String, String> map = Maps.newHashMap();
+            Map<String, Object> map = Maps.newHashMap();
 
             map.put("options", String.join(" ", options));
             map.put("className", classifier.getClass().getName());
@@ -93,7 +98,44 @@ public class ModelService {
         }
         return id;
     }
+    /**
+     * Save a model
+     * @param classifier classifier
+     * @param options build options
+     * @param params build parameter
+     * @param validation validation
+     * @param token security token
+     * @return model id
+     */
+    public static String saveModel(Classifier classifier, String[] options, Map params, String validation, String token) {
+        Dao modelDao = new Dao();
+        String id;
+        try {
+            Model model = new Model();
+            model.model = ModelService.serialize(classifier);
 
+            System.out.println("Class is: " + classifier.getClass().getName());
+            Map<String, Object> map = Maps.newHashMap();
+
+            map.put("options", String.join(" ", options));
+            map.put("className", classifier.getClass().getName());
+            //map.put("buildParams", params);
+            model.setMeta(map);
+            model.validation = validation;
+            model.meta.put("buildParams", params);
+
+            Gson gson = new Gson();
+            Document document = Document.parse(gson.toJson(model));
+            id = modelDao.saveData("model", document);
+            //weka.core.SerializationHelper.write(dataDirectory + id + ".model", classifier);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "";
+        } finally {
+            modelDao.close();
+        }
+        return id;
+    }
 
     /**
      * Delete a model.
