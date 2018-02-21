@@ -4,6 +4,7 @@ RESTful API Webservice to WEKA Machine Learning Algorithms.
 This webservice provides an [OpenRiskNet](https://openrisknet.org/) compliant REST interface to machine learning algorithms from the WEKA Java Library.
 This application is developed by the [Institute of Computer Science](http://www.datamining.informatik.uni-mainz.de/) at the Johannes Gutenberg University Mainz.
 OpenRiskNet is funded by the European Commission GA 731075. WEKA is developed by the [Machine Learning Group](https://www.cs.waikato.ac.nz/ml/index.html) at the University of Waikato.
+See [Documentation](https://jguwekarest.github.io/jguwekarest/), [Issue Tracker](https://github.com/jguwekarest/jguwekarest/issues) and [Code](https://github.com/jguwekarest/jguwekarest) at GitHub.
 
 ## Quickstart
 This is an a swagger-enabled JAX-RS server. The API is in OpenAPI Specification Version 2.0 [OpenAPI-Specification 2.0](https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md).
