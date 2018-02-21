@@ -1,0 +1,28 @@
+---
+---
+
+@import "{{ site.theme }}";
+
+#header_wrap{
+ background: #C1002A;
+}
+#project_title {
+  margin: 0;
+  color: #fff;
+  font-size: 42px;
+  font-weight: 700;
+  text-shadow: #7B0B24 0px 0px 10px;
+}
+
+#project_tagline {
+  color: #fff;
+  font-size: 24px;
+  font-weight: 300;
+  background: none;
+  text-shadow: #7B0B24 0px 0px 10px;
+}
+
+#forkme_banner{
+  box-shadow: 0 0 10px rgba(123,11,36,.5);
+}
+
