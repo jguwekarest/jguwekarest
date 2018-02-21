@@ -7,7 +7,6 @@ import io.swagger.models.License;
 import io.swagger.models.Swagger;
 
 import javax.servlet.ServletConfig;
-import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import java.util.HashMap;
@@ -16,12 +15,12 @@ import java.util.Map;
 public class Bootstrap extends HttpServlet {
   @Override
   public void init(ServletConfig config) throws ServletException {
-    final Map<String, Object> map = new HashMap<String, Object>();
+    final Map<String, Object> map = new HashMap< >();
     map.put("type", "H2020");
     map.put("name", "OpenRiskNet");
     map.put("cordis", "http://www.cordis.europa.eu/project/rcn/206759_en.html");
 
-    final Map<String, Object> contextmap = new HashMap<String, Object>();
+    final Map<String, Object> contextmap = new HashMap< >();
     contextmap.put("@vocab", "http://schema.org/");
 
     Info info = new Info()
@@ -40,7 +39,7 @@ public class Bootstrap extends HttpServlet {
     info.setVendorExtension("x-orn-@project", map);
     info.setVendorExtension("x-orn-@context", contextmap);
 
-    ServletContext context = config.getServletContext();
+    //ServletContext context = config.getServletContext();
     Swagger swagger = new Swagger().info(info);
     swagger.setVendorExtension("x-orn-@type", "x-orn:Service");
     swagger.setVendorExtension("x-orn-@id", "weka rest service");
