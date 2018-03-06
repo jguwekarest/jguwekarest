@@ -1,7 +1,10 @@
 package io.swagger.api.authorization;
 
-import io.swagger.annotations.*;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import io.swagger.api.Exeption;
+import io.swagger.api.annotations.GroupedApiResponsesOk;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.json.JSONObject;
 
@@ -24,15 +27,11 @@ public class Authorization {
             value = "Request a security token.",
             notes = "Uses OpenAM server to get a security token.",
             tags={ "authorization", })
-    @ApiResponses(value = {
-            @ApiResponse(code = 401, message = "Wrong, missing or insufficient credentials. Error report is produced."),
-            @ApiResponse(code = 200, message = "Logged in - authentication token can be found in the response body (in JSON)")
-    })
+    @GroupedApiResponsesOk
     public Response login(
             @ApiParam("Username") @FormDataParam("username") String username,
             @ApiParam("Password") @FormDataParam("password") String password,
             @Context HttpHeaders headers) throws Exeption.AAException {
-
 
         String token = AuthorizationService.login(username, password);
         String accept = headers.getRequestHeaders().getFirst("accept");
@@ -50,6 +49,7 @@ public class Authorization {
                 .build();
     }
 
+
     @POST
     @Path("/logout")
     @Produces(MediaType.TEXT_PLAIN)
@@ -59,10 +59,7 @@ public class Authorization {
             notes = "Invalidates a security token and logs out the corresponding user.",
             tags={ "authorization", },
             produces = "text/plain")
-    @ApiResponses(value = {
-            @ApiResponse(code = 401, message = "Wrong, missing or invalid token."),
-            @ApiResponse(code = 200, message = "Token invalidated.")
-    })
+    @GroupedApiResponsesOk
     public Response logout(
             @HeaderParam("subjectid") String subjectId
     ) throws Exeption.AAException {

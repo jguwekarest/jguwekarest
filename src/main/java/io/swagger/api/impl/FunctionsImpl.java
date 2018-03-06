@@ -17,6 +17,7 @@ import javax.ws.rs.core.UriInfo;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Vector;
 
@@ -34,7 +35,7 @@ public class FunctionsImpl extends FunctionsService {
             throws IOException {
 
 
-        HashMap<String,Object> params = new HashMap<String, Object>();
+        HashMap<String,Object> params = new HashMap<>();
         params.put("datasetUri", datasetUri);
         params.put("svmType", svmType);
         params.put("coef0", coef0);
@@ -62,18 +63,17 @@ public class FunctionsImpl extends FunctionsService {
             classifier.setOptions(options);
         } catch (Exception e) {
             e.printStackTrace();
-            return Response.serverError().entity("Error: check options for WEKA weka.classifiers.functions.LibSVM\n parameters: \"" + options.toString() + "\"\nWeka error message: " + e.getMessage() + "\n").build();
+            return Response.serverError().entity("Error: check options for WEKA weka.classifiers.functions.LibSVM\n parameters: \"" + Arrays.toString(options) + "\"\nWeka error message: " + e.getMessage() + "\n").build();
         }
 
         try {
             classifier.buildClassifier(instances);
         } catch (Exception e) {
             e.printStackTrace();
-            return Response.serverError().entity("Error: check options for WEKA weka.classifiers.functions.LibSVM\n parameters: \"" + options.toString() + "\"\nWeka error message: " + e.getMessage() + "\n").build();
+            return Response.serverError().entity("Error: check options for WEKA weka.classifiers.functions.LibSVM\n parameters: \"" + Arrays.toString(options) + "\"\nWeka error message: " + e.getMessage() + "\n").build();
         }
 
-        String validation = "";
-        validation = crossValidation(instances, classifier);
+        String validation = crossValidation(instances, classifier);
 
         Vector<Object> v = new Vector<>();
         v.add(classifier);
@@ -94,7 +94,7 @@ public class FunctionsImpl extends FunctionsService {
                                          Integer attributeSelectionMethod, Integer eliminateColinearAttributes, BigDecimal ridge,
                                          String subjectid, HttpHeaders headers, UriInfo ui, SecurityContext securityContext) throws IOException {
 
-        HashMap<String,Object> params = new HashMap<String, Object>();
+        HashMap<String,Object> params = new HashMap<>();
         params.put("datasetUri", datasetUri);
         params.put("attributeSelectionMethod", attributeSelectionMethod);
         params.put("eliminateColinearAttributes", eliminateColinearAttributes);
@@ -140,8 +140,7 @@ public class FunctionsImpl extends FunctionsService {
             return Response.serverError().entity("Error: check options for WEKA weka.classifiers.functions.LinearRegression\n parameters: \"" + parameters + "\"\nWeka error message: " + e.getMessage() + "\n").build();
         }
 
-        String validation = "";
-        validation = crossValidation(instances, classifier);
+        String validation = crossValidation(instances, classifier);
 
         Vector<Object> v = new Vector<>();
         v.add(classifier);

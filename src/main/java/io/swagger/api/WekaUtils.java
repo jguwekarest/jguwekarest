@@ -13,7 +13,7 @@ public class WekaUtils {
      * @param arff String arff data
      * @param setClass Boolean set a class
      * @return Instances
-     * @throws IOException
+     * @throws IOException error
      */
     public static Instances instancesFromString(String arff, Boolean setClass) throws IOException {
         StringReader reader = new StringReader(arff);

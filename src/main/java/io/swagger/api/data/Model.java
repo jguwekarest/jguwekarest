@@ -21,24 +21,29 @@ public class Model {
     @Consumes({ "multipart/form-data" })
     @Produces({ "text/uri-list", "application/json" })
     @ApiOperation(
-            value = "List all Models",
-            notes = "List all Models.",
-            tags={ "model", },
-            response = void.class)
+        value = "List all Models",
+        notes = "List all Models.",
+        tags={ "model"},
+        extensions = {
+            @Extension(properties = {@ExtensionProperty(name = "orn-@id", value = "/model")}),
+            @Extension(properties = {@ExtensionProperty(name = "orn-@type", value = "x-orn:Model")}),
+            @Extension(name = "orn:expects", properties = {@ExtensionProperty(name = "x-orn-@id", value = "x-orn:void")}),
+            @Extension(name = "orn:returns", properties = {@ExtensionProperty(name = "x-orn-@id", value = "x-orn:Models")})
+        })
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "OK", response = void.class),
-            @ApiResponse(code = 400, message = "Bad Request", response = void.class),
-            @ApiResponse(code = 401, message = "Unauthorized", response = void.class),
-            @ApiResponse(code = 403, message = "Forbidden", response = void.class),
-            @ApiResponse(code = 404, message = "Resource Not Found", response = void.class) })
+        @ApiResponse(code = 200, message = "OK"),
+        @ApiResponse(code = 400, message = "Bad Request"),
+        @ApiResponse(code = 401, message = "Unauthorized"),
+        @ApiResponse(code = 403, message = "Forbidden"),
+        @ApiResponse(code = 404, message = "Resource Not Found") })
     public Response getModelList(
-            @ApiParam(value = "Authorization token" )@HeaderParam("subjectid") String subjectid,
-            @Context UriInfo ui, @Context HttpHeaders headers) throws ApiException {
+        @ApiParam(value = "Authorization token" )@HeaderParam("subjectid") String subjectid,
+        @Context UriInfo ui, @Context HttpHeaders headers) throws ApiException {
 
-        String accept = headers.getRequestHeaders().getFirst("accept");
-        Object model_list = ModelService.listModels(ui, accept, subjectid);
+            String accept = headers.getRequestHeaders().getFirst("accept");
+            Object model_list = ModelService.listModels(ui, accept, subjectid);
 
-        return Response
+            return Response
                 .ok(model_list)
                 .status(Response.Status.OK)
                 .build();
@@ -50,25 +55,31 @@ public class Model {
     @Consumes({ "multipart/form-data" })
     @Produces({ "text/plain", "application/json" })
     @ApiOperation(
-            value = "Get representation of a model.",
-            notes = "Get representation of a model.",
-            tags={ "model", },
-            response = void.class)
+        value = "Get representation of a model.",
+        notes = "Get representation of a model.",
+        tags={ "model" },
+            extensions = {
+                @Extension(properties = {@ExtensionProperty(name = "orn-@id", value = "/model/{id}")}),
+                @Extension(properties = {@ExtensionProperty(name = "orn-@type", value = "x-orn:Model")}),
+                @Extension(name = "orn:expects", properties = {@ExtensionProperty(name = "x-orn-@id", value = "x-orn:ID")}),
+                @Extension(name = "orn:returns", properties = {@ExtensionProperty(name = "x-orn-@id", value = "x-orn:Model")})
+            })
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "OK", response = void.class),
-            @ApiResponse(code = 400, message = "Bad Request", response = void.class),
-            @ApiResponse(code = 401, message = "Unauthorized", response = void.class),
-            @ApiResponse(code = 403, message = "Forbidden", response = void.class),
-            @ApiResponse(code = 404, message = "Resource Not Found", response = void.class) })
+        @ApiResponse(code = 200, message = "OK"),
+        @ApiResponse(code = 400, message = "Bad Request"),
+        @ApiResponse(code = 401, message = "Unauthorized"),
+        @ApiResponse(code = 403, message = "Forbidden"),
+        @ApiResponse(code = 404, message = "Resource Not Found") })
     public Response getModel(
-            @ApiParam(value = "model ID" )@PathParam("id") String id,
-            @ApiParam(value = "Authorization token" )@HeaderParam("subjectid") String subjectid,
-            @Context UriInfo ui,
-            @Context HttpHeaders headers) throws ApiException {
-        String accept = headers.getRequestHeaders().getFirst("accept");
-        Object out = ModelService.getModel(id, accept);
+        @ApiParam(value = "model ID" )@PathParam("id") String id,
+        @ApiParam(value = "Authorization token" )@HeaderParam("subjectid") String subjectid,
+        @Context UriInfo ui,
+        @Context HttpHeaders headers) throws ApiException {
 
-        return Response
+            String accept = headers.getRequestHeaders().getFirst("accept");
+            Object out = ModelService.getModel(id, accept);
+
+            return Response
                 .ok(out)
                 .status(Response.Status.OK)
                 .build();
@@ -78,22 +89,28 @@ public class Model {
     @Path("/{id}")
     @Consumes({ "multipart/form-data" })
     @Produces({ "text/x-arff" })
-    @ApiOperation(value = "Predict testdata with a model.", notes = "Predict testdata with a model.", response = void.class, tags={ "model", })
+    @ApiOperation(value = "Predict testdata with a model.", notes = "Predict testdata with a model.", tags={ "model", },
+        extensions = {
+            @Extension(properties = {@ExtensionProperty(name = "orn-@id", value = "/model/{id}")}),
+            @Extension(properties = {@ExtensionProperty(name = "orn-@type", value = "x-orn:Model")}),
+            @Extension(name = "orn:expects", properties = {@ExtensionProperty(name = "x-orn-@id", value = "x-orn:ID")}),
+            @Extension(name = "orn:returns", properties = {@ExtensionProperty(name = "x-orn-@id", value = "x-orn:Prediction")})
+        })
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "OK", response = void.class),
-            @ApiResponse(code = 400, message = "Bad Request", response = void.class),
-            @ApiResponse(code = 401, message = "Unauthorized", response = void.class),
-            @ApiResponse(code = 403, message = "Forbidden", response = void.class),
-            @ApiResponse(code = 404, message = "Resource Not Found", response = void.class) })
+        @ApiResponse(code = 200, message = "OK"),
+        @ApiResponse(code = 400, message = "Bad Request"),
+        @ApiResponse(code = 401, message = "Unauthorized"),
+        @ApiResponse(code = 403, message = "Forbidden"),
+        @ApiResponse(code = 404, message = "Resource Not Found") })
     public Response modelPost(
-            @FormDataParam("file") InputStream fileInputStream,
-            @FormDataParam("file") FormDataContentDisposition fileDetail
-            , @ApiParam(value = "Dataset ID (to the arff representation of a dataset).")@FormDataParam("datasetID")  String datasetID
-            , @ApiParam(value = "model ID" )@PathParam("id") String id
-            , @ApiParam(value = "authorization token") @HeaderParam("subjectid") String subjectid
-            , @Context UriInfo ui, @Context HttpHeaders headers, @Context SecurityContext securityContext)
-            throws Exception {
-        return Response
+        @FormDataParam("file") InputStream fileInputStream,
+        @FormDataParam("file") FormDataContentDisposition fileDetail,
+        @ApiParam(value = "Dataset ID (to the arff representation of a dataset).")@FormDataParam("datasetID")  String datasetID,
+        @ApiParam(value = "model ID" )@PathParam("id") String id,
+        @ApiParam(value = "authorization token") @HeaderParam("subjectid") String subjectid,
+        @Context UriInfo ui, @Context HttpHeaders headers, @Context SecurityContext securityContext)
+        throws Exception {
+            return Response
                 .ok(ModelService.predictModel(fileInputStream, fileDetail,datasetID,id,subjectid))
                 .status(Response.Status.OK)
                 .build();

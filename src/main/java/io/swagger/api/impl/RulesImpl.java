@@ -65,7 +65,7 @@ public class RulesImpl extends RulesService {
                                          String subjectid, HttpHeaders headers, UriInfo uriInfo)
             throws Exception {
 
-        HashMap<String,Object> params = new HashMap<String, Object>();
+        HashMap<String,Object> params = new HashMap<>();
         params.put("datasetUri", datasetUri);
         params.put("unpruned", unpruned);
         params.put("useUnsmoothed", useUnsmoothed);

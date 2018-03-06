@@ -12,7 +12,7 @@ public class Validation {
     }
 
     public static String crossValidation(Instances instances, Classifier algorithm, Integer folds) {
-        String eval_out = "";
+        String eval_out;
         try {
             Evaluation eval = new Evaluation(instances);
             eval.crossValidateModel(algorithm, instances, folds, new Random(1));

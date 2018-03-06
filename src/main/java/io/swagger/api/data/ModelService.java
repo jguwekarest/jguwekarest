@@ -16,6 +16,7 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+@SuppressWarnings("ALL")
 public class ModelService {
 
     private static String dataDirectory = System.getProperty("user.home") + "/.jguweka/data/";
@@ -46,7 +47,7 @@ public class ModelService {
         Dao modelDao = new Dao();
         try {
             Model model = modelDao.getModel(id);
-            System.out.println("===================\nAccept: " + accept + "\n====================\n");
+
             if (accept.equals("text/plain")) {
                 out = ModelService.deserialize(model.model).toString();
                 out += "\n" + model.validation;
@@ -71,7 +72,7 @@ public class ModelService {
      * @param token security token
      * @return model id
      */
-    public static String saveModel(Classifier classifier, String[] options, String validation, String token) {
+    public static String saveModel(Classifier classifier, String[] options, String validation, @SuppressWarnings("unused") String token) {
         Dao modelDao = new Dao();
         String id;
         try {
@@ -141,7 +142,7 @@ public class ModelService {
      * Delete a model.
      * @param id of the model
      * @return true on success
-     * @throws ApiException
+     * @throws ApiException error message
      */
     public static Boolean deleteModel(String id) throws ApiException {
         Dao dao = new Dao();
@@ -208,6 +209,7 @@ public class ModelService {
         os.writeObject(obj);
         return out.toByteArray();
     }
+
     public static Object deserialize(byte[] data) throws IOException, ClassNotFoundException {
         ByteArrayInputStream in = new ByteArrayInputStream(data);
         ObjectInputStream is = new ObjectInputStream(in);

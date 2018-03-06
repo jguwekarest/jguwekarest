@@ -19,13 +19,11 @@ import javax.ws.rs.core.UriInfo;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
+import java.util.Arrays;
 import java.util.HashMap;
-import java.util.TreeMap;
 import java.util.Vector;
 
-import static io.swagger.api.WekaOptionHelper.getAdaOptions;
-import static io.swagger.api.WekaOptionHelper.getBaggingOptions;
-import static io.swagger.api.WekaOptionHelper.getJ48Options;
+import static io.swagger.api.WekaOptionHelper.*;
 
 public class TreesImpl extends TreesService {
 
@@ -36,7 +34,7 @@ public class TreesImpl extends TreesService {
                                      Integer subtreeRaising, Integer unpruned, Integer useLaplace, String subjectid, HttpHeaders headers, UriInfo uriInfo
                                     ) throws NotFoundException, IOException {
 
-        HashMap<String,Object> params = new HashMap<String, Object>();
+        HashMap<String,Object> params = new HashMap<>();
         params.put("datasetUri", datasetUri);
         params.put("binarySplits", binarySplits);
         params.put("confidenceFactor", confidenceFactor);
@@ -60,7 +58,7 @@ public class TreesImpl extends TreesService {
             classifier.buildClassifier(instances);
         } catch (Exception e) {
             e.printStackTrace();
-            return Response.serverError().entity("Error: WEKA weka.classifiers.trees.j48\n parameters: \"" + options.toString() + "\"\nWeka error message: " + e.getMessage() + "\n").build();
+            return Response.serverError().entity("Error: WEKA weka.classifiers.trees.j48\n parameters: \"" + Arrays.toString(options) + "\"\nWeka error message: " + e.getMessage() + "\n").build();
         }
 
         String validation = Validation.crossValidation(instances, classifier);
@@ -101,16 +99,16 @@ public class TreesImpl extends TreesService {
             classifier.setOptions(options);
         } catch (Exception e) {
             e.printStackTrace();
-            return Response.serverError().entity("Error: check options for WEKA weka.classifiers.trees.j48\n parameters: \"" + options.toString() + "\"\nWeka error message: " + e.getMessage() + "\n").build();
+            return Response.serverError().entity("Error: check options for WEKA weka.classifiers.trees.j48\n parameters: \"" + Arrays.toString(options) + "\"\nWeka error message: " + e.getMessage() + "\n").build();
         }
 
         try {
-            adaBoost.setOptions(adaOptions);
+            if(adaOptions != null) adaBoost.setOptions(adaOptions);
             adaBoost.setClassifier(classifier);
             adaBoost.buildClassifier(instances);
         } catch (Exception e) {
             e.printStackTrace();
-            return Response.serverError().entity("Error: WEKA weka.classifiers.meta.adaboost\n parameters: \"" + adaOptions.toString() + "\"\nWeka error message: " + e.getMessage() + "\n").build();
+            return Response.serverError().entity("Error: WEKA weka.classifiers.meta.adaboost\n parameters: \"" + Arrays.toString(adaOptions) + "\"\nWeka error message: " + e.getMessage() + "\n").build();
         }
 
         String validation = Validation.crossValidation(instances, adaBoost);
@@ -121,7 +119,7 @@ public class TreesImpl extends TreesService {
 
         String accept = headers.getHeaderString(HttpHeaders.ACCEPT);
         if(accept.equals("text/uri-list")) {
-            String id = ModelService.saveModel(adaBoost, ((String[]) ArrayUtils.addAll(adaBoost.getOptions(), classifier.getOptions())), validation, subjectid);
+            String id = ModelService.saveModel(adaBoost, ArrayUtils.addAll(adaBoost.getOptions(), classifier.getOptions()), validation, subjectid);
             String baseuri = uriInfo.getBaseUri().toString();
             return Response.ok(baseuri + "model/" + id).build();
         } else {
@@ -151,16 +149,16 @@ public class TreesImpl extends TreesService {
             classifier.setOptions(options);
         } catch (Exception e) {
             e.printStackTrace();
-            return Response.serverError().entity("Error: check options for WEKA weka.classifiers.trees.j48\n parameters: \"" + options.toString() + "\"\nWeka error message: " + e.getMessage() + "\n").build();
+            return Response.serverError().entity("Error: check options for WEKA weka.classifiers.trees.j48\n parameters: \"" + Arrays.toString(options) + "\"\nWeka error message: " + e.getMessage() + "\n").build();
         }
 
         try {
-            bagging.setOptions(bagginOptions);
+            if(bagginOptions != null)bagging.setOptions(bagginOptions);
             bagging.setClassifier(classifier);
             bagging.buildClassifier(instances);
         } catch (Exception e) {
             e.printStackTrace();
-            return Response.serverError().entity("Error: WEKA weka.classifiers.meta.bagging\n parameters: \"" + bagginOptions.toString() + "\"\nWeka error message: " + e.getMessage() + "\n").build();
+            return Response.serverError().entity("Error: WEKA weka.classifiers.meta.bagging\n parameters: \"" + Arrays.toString(bagginOptions) + "\"\nWeka error message: " + e.getMessage() + "\n").build();
         }
 
         String validation = Validation.crossValidation(instances, bagging);
@@ -171,7 +169,7 @@ public class TreesImpl extends TreesService {
 
         String accept = headers.getHeaderString(HttpHeaders.ACCEPT);
         if(accept.equals("text/uri-list")) {
-            String id = ModelService.saveModel(bagging, ((String[]) ArrayUtils.addAll(bagging.getOptions(), classifier.getOptions())), validation, subjectid);
+            String id = ModelService.saveModel(bagging, ArrayUtils.addAll(bagging.getOptions(), classifier.getOptions()), validation, subjectid);
             String baseuri = uriInfo.getBaseUri().toString();
             return Response.ok(baseuri + "model/" + id).build();
         } else {
@@ -181,8 +179,8 @@ public class TreesImpl extends TreesService {
     }
 
 
-    public void showParams(TreeMap<String, String> parameters){
+    /* public void showParams(TreeMap<String, String> parameters){
         System.out.println(parameters);
-    }
+    } */
 
 }

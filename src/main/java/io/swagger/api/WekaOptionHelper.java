@@ -78,9 +78,12 @@ public class WekaOptionHelper {
 
         if (meanSquared != null && meanSquared != 0) parameters += " -E ";
 
-        //use LinearNNSearch fixed
-        parameters += " -A ";
-        parameters += "\"weka.core.neighboursearch.LinearNNSearch -A \\\"weka.core.EuclideanDistance -R first-last\\\"\"";
+
+        //if (nearestNeighbourSearchAlgorithm != null && !nearestNeighbourSearchAlgorithm.isEmpty()) {
+            //use LinearNNSearch fixed
+            parameters += " -A ";
+            parameters += "\"weka.core.neighboursearch.LinearNNSearch -A \\\"weka.core.EuclideanDistance -R first-last\\\"\"";
+        //}
 
         System.out.println("parameterstring for weka: IBk " + parameters.replaceAll("( )+", " "));
 

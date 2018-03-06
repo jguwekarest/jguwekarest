@@ -23,7 +23,7 @@ public class ApiImpl extends ApiService {
         InputStream in = new URL( ui.getBaseUri() + "swagger.json" ).openStream();
         String jsonString;
         try {
-            jsonString = new String(IOUtils.toString(in, "UTF-8"));
+            jsonString = IOUtils.toString(in, "UTF-8");
         } finally {
             IOUtils.closeQuietly(in);
         }

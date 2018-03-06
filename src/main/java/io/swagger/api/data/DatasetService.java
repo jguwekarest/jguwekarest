@@ -65,7 +65,7 @@ public class DatasetService {
      * Get an arff representation of a dataset from mongoDB.
      * @param id dataset/mongodb id
      * @param token security token
-     * @return
+     * @return arff string
      */
     static String getDatasetArff(String id, String token){
         String arff;
@@ -85,7 +85,7 @@ public class DatasetService {
      * @param datasetURI dataset/mongodb id
      * @param subjectid security token
      * @return arff string
-     * @throws IOException
+     * @throws IOException IOException description
      */
     public static String getArff(InputStream fileInputStream, FormDataContentDisposition fileDetail, String datasetURI, String subjectid) throws IOException {
         StringBuilder txtStr = new StringBuilder();
@@ -239,13 +239,6 @@ public class DatasetService {
         return out;
     }
 
-    /**
-     * WEKA filter methods
-     * @param dataset dataset/mongodb id
-     * @param uri URI of the dataset
-     * @return filtered arff string
-     * @throws Exception
-     */
 
     /**
      * WEKA filter methods

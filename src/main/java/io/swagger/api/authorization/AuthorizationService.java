@@ -65,7 +65,7 @@ public class AuthorizationService {
      * @param username username
      * @param password password
      * @return String token
-     * @throws Exeption.AAException
+     * @throws Exeption.AAException error
      */
     public static String login(String username, String password) throws Exeption.AAException {
         Client client = ClientBuilder.newClient();
@@ -93,7 +93,6 @@ public class AuthorizationService {
      *
      * @param token an authentication token
      * @return boolean validity of the token
-     * @throws Exeption.AAException
      */
     public static boolean validate(String token) {
         Client client = ClientBuilder.newClient();
@@ -113,7 +112,7 @@ public class AuthorizationService {
      *
      * @param token an authentication token
      * @return boolean if it was possible to devalue the token
-     * @throws Exeption.AAException
+     * @throws Exeption.AAException error
      */
     public static boolean logout(String token) throws Exeption.AAException {
         Client client = ClientBuilder.newClient();

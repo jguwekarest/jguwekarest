@@ -17,6 +17,7 @@ import javax.ws.rs.core.UriInfo;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Vector;
 
@@ -30,7 +31,7 @@ public class BayesImpl extends BayesService {
                                           HttpHeaders headers, UriInfo ui, SecurityContext securityContext)
             throws NotFoundException, IOException {
 
-        HashMap<String,Object> params = new HashMap<String, Object>();
+        HashMap<String,Object> params = new HashMap<>();
         params.put("datasetUri", datasetUri);
         params.put("estimator", estimator);
         params.put("estimatorParams", estimatorParams);
@@ -53,13 +54,13 @@ public class BayesImpl extends BayesService {
             classifier.setOptions(options);
         } catch (Exception e) {
             e.printStackTrace();
-            return Response.serverError().entity("Error: check options for WEKA weka.classifiers.bayes.net.search." + searchAlgorithm + "\n parameters: \"" + options.toString() + "\"\nWeka error message: " + e.getMessage() + "\n").build();
+            return Response.serverError().entity("Error: check options for WEKA weka.classifiers.bayes.net.search." + searchAlgorithm + "\n parameters: \"" + Arrays.toString(options) + "\"\nWeka error message: " + e.getMessage() + "\n").build();
         }
         try {
             classifier.buildClassifier(instances);
         } catch (Exception e) {
             e.printStackTrace();
-            return Response.serverError().entity("Error: WEKA weka.classifiers.bayes.net.search." + searchAlgorithm + "\n parameters: \"" + options.toString() + "\"\nWeka error message: " + e.getMessage() + "\n").build();
+            return Response.serverError().entity("Error: WEKA weka.classifiers.bayes.net.search." + searchAlgorithm + "\n parameters: \"" + Arrays.toString(options) + "\"\nWeka error message: " + e.getMessage() + "\n").build();
         }
 
         String validation;

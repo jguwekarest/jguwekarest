@@ -26,7 +26,7 @@ public class AlgorithmImpl extends AlgorithmService {
         // do some magic!
         String jsonString;
         try {
-            String contextBasePath = new String(servletContext.getRealPath("/"));
+            String contextBasePath = servletContext.getRealPath("/");
             jsonString = new String(Files.readAllBytes(Paths.get(contextBasePath + "/swagger.json")));
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -46,15 +46,15 @@ public class AlgorithmImpl extends AlgorithmService {
         InputStream in = new URL( ui.getBaseUri() + "swagger.json" ).openStream();
         String jsonContent;
         try {
-            jsonContent = new String(IOUtils.toString(in, "UTF-8"));
+            jsonContent = IOUtils.toString(in, "UTF-8");
         } finally {
             IOUtils.closeQuietly(in);
         }
 
         JSONObject apiObject  = new JSONObject(jsonContent);
         //sort the JSONObject somehow
-        String output = new String("");
-        JSONObject paths = (JSONObject) apiObject.getJSONObject("paths");
+        StringBuilder output = new StringBuilder();
+        JSONObject paths = apiObject.getJSONObject("paths");
         JSONObject jsonout = new JSONObject();
 
         Iterator<?> keys = paths.keys();
@@ -65,8 +65,9 @@ public class AlgorithmImpl extends AlgorithmService {
                 Iterator<?> methodKeys =  method.keys();
                 while( methodKeys.hasNext() ) {
                     String methodVal = (String)methodKeys.next();
+                    System.out.println("methodVal is:" + methodVal);
                     if (!key.contains("{") && key.startsWith("/algorithm/")) {
-                        output += "" + StringUtil.removeTrailingSlash(baseuri) + key + "\n";
+                        output.append("").append(StringUtil.removeTrailingSlash(baseuri)).append(key).append("\n");
                         if (accept.equals(MediaType.APPLICATION_JSON)) jsonout.put( StringUtil.removeTrailingSlash(baseuri) + key, paths.getJSONObject(key));
                     }
                 }
@@ -74,7 +75,7 @@ public class AlgorithmImpl extends AlgorithmService {
         }
 
         if (accept.equals(MediaType.APPLICATION_JSON)) return Response.ok(jsonout.toString()).build();
-        return Response.ok(output).build();
+        return Response.ok(output.toString()).build();
     }
 
 

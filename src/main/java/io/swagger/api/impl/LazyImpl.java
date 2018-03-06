@@ -16,6 +16,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Vector;
 
@@ -27,7 +28,7 @@ public class LazyImpl extends LazyService {
                                                    String nearestNeighbourSearchAlgorithm, String subjectid, HttpHeaders headers, UriInfo uriInfo)
             throws NotFoundException, IOException {
 
-        HashMap<String,Object> params = new HashMap<String, Object>();
+        HashMap<String,Object> params = new HashMap<>();
         params.put("datasetUri", datasetUri);
         params.put("windowSize", windowSize);
         params.put("KNN", KNN);
@@ -50,7 +51,7 @@ public class LazyImpl extends LazyService {
             classifier.buildClassifier(instances);
         } catch (Exception e) {
             e.printStackTrace();
-            return Response.serverError().entity("Error: check options for WEKA weka.classifiers.lazy.IBk\n parameters: \"" + options.toString() + "\"\nWeka error message: " + e.getMessage() + "\n").build();
+            return Response.serverError().entity("Error: check options for WEKA weka.classifiers.lazy.IBk\n parameters: \"" + Arrays.toString(options) + "\"\nWeka error message: " + e.getMessage() + "\n").build();
         }
 
         String validation = Validation.crossValidation(instances, classifier);
