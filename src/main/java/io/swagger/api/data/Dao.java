@@ -171,6 +171,31 @@ public class Dao {
         return model;
     }
 
+
+    /**
+     * Returns Task
+     *
+     * @param id task ID to search
+     * @return Task
+     */
+    Task getTask(String id){
+
+        mongoCollection = mongoDB.getCollection("task");
+
+        BasicDBObject query = new BasicDBObject();
+        query.put("_id", new ObjectId(id));
+
+        Object taskobj = mongoCollection.find(query).first();
+        Gson gson = new Gson();
+        String jsonString = gson.toJson(taskobj);
+        Task task = gson.fromJson(jsonString, Task.class);
+        if (task == null) {
+            throw new NotFoundException("Could not find Task with id:" + id);
+        }
+        return task;
+    }
+
+
     /**
      * Saves JSON to mongodb
      * @param collection to save to (e.G.: model or dataset)
@@ -192,17 +217,46 @@ public class Dao {
     }
 
 
+    /**
+     * Update JSON to mongodb
+     * @param collection to save to (e.G.: model, dataset or task)
+     * @param document GSON of a dataset, model ...
+     * @param id String of id
+     * @return Boolean
+     */
+    Boolean updateData(String collection, Document document, String id) {
+        try {
+            mongoCollection = mongoDB.getCollection(collection);
+            String strictJSON = document.toJson();
+
+            while (!Objects.equals(strictJSON, strictJSON.replaceAll("(\"[^\"]*)(\\.)([^\"]*\".:)", "$1\\(DOT\\)$3"))) {
+                strictJSON = strictJSON.replaceAll("(\"[^\"]*)(\\.)([^\"]*\".:)", "$1\\(DOT\\)$3");
+            }
+
+            BasicDBObject query = new BasicDBObject();
+            Document documentParsed = Document.parse(strictJSON);
+
+            query.put("_id", new ObjectId(id));
+            mongoCollection.replaceOne(query, documentParsed);
+        } catch (MongoException e){
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * Delete Document in mongodb
+     * @param collection to delete from (e.G.: model, dataset or task)
+     * @param id String of id
+     * @return Boolean
+     */
     Boolean delete(String collection, String id){
         mongoCollection = mongoDB.getCollection(collection);
         try {
             DeleteResult result = mongoCollection.deleteOne(new Document("_id", new ObjectId(id)));
             long count = result.getDeletedCount();
-            if (count > 0) {
-                return true;
-            } else {
-                return false;
-            }
-
+            return count > 0;
         } catch (MongoException e){
             e.printStackTrace();
             return false;

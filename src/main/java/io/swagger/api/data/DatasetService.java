@@ -319,6 +319,28 @@ public class DatasetService {
     }
 
 
+
+    /**
+     * Update dataset in mongodb
+     * @param dataset dataset
+     * @return uri of task
+     */
+    static Boolean update(Dataset dataset, String id){
+        Dao datasetDao = new Dao();
+        Boolean result;
+        try {
+            Gson gson = new Gson();
+            Document document = Document.parse(gson.toJson(dataset, Dataset.class));
+            result = datasetDao.updateData("dataset", document, id);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            datasetDao.close();
+        }
+        return result;
+    }
+
     /**
      * Delete a dataset.
      * @param id of the dataset

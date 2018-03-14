@@ -92,14 +92,14 @@ public class Dataset {
 
 
     @GET
-    @Path("/dataset/{id}/arff")
+    @Path("/dataset/{id}")
     @Produces({ TEXT_ARFF })
     @ApiOperation(
         value = "Get arff representation of a dataset.",
         notes = "Get arff representation of a dataset.",
         tags={ "dataset", },
         extensions = {
-            @Extension(properties = {@ExtensionProperty(name = "orn-@id", value = "/dataset/{id}/arff")}),
+            @Extension(properties = {@ExtensionProperty(name = "orn-@id", value = "/dataset/{id}")}),
             @Extension(properties = {@ExtensionProperty(name = "orn-@type", value = "x-orn:Dataset")}),
             @Extension(name = "orn:expects", properties = {@ExtensionProperty(name = "x-orn-@id", value = "x-orn:ID")}),
             @Extension(name = "orn:returns", properties = {@ExtensionProperty(name = "x-orn-@id", value = "x-orn:Arff")})
