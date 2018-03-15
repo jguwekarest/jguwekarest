@@ -3,6 +3,7 @@ package unit;
 import io.swagger.api.ErrorReport;
 import io.swagger.api.data.Task;
 import io.swagger.api.data.TaskHandler;
+import io.swagger.api.data.TaskService;
 import org.junit.Rule;
 import org.junit.rules.ExpectedException;
 import org.testng.Assert;
@@ -17,7 +18,7 @@ import java.util.logging.Logger;
 public class TaskTest {
     private static final Logger LOG = Logger.getLogger(Task.class.getName());
 
-    @Test(description = "create a task, check if running and completed")
+    @Test(description = "create a task, run and complete it with all possible Steps")
     public void createTask() throws Exception {
         String resultUri = "http://0.0.0.0:8081/test/1";
 
@@ -25,9 +26,36 @@ public class TaskTest {
             @Override
             public void run() {
                 try {
-                    TimeUnit.SECONDS.sleep(3);
+                    TimeUnit.SECONDS.sleep(2);
+                    setState(Task.Step.PREPARATION,10f);
+                    Assert.assertEquals(getPercentageCompleted(), 10f);
+                    Assert.assertEquals(getStep(), Task.Step.PREPARATION);
+                    Task taskDB = TaskService.getTask(getTaskID(),null,null);
+                    Assert.assertEquals(taskDB.getPercentageCompleted(), 10f);
+                    Assert.assertEquals(taskDB.getStep(), Task.Step.PREPARATION);
+                    TimeUnit.SECONDS.sleep(1);
+                    setState(Task.Step.TRAINING,30f);
+                    Assert.assertEquals(getPercentageCompleted(), 30f);
+                    Assert.assertEquals(getStep(), Task.Step.TRAINING);
+                    taskDB = TaskService.getTask(getTaskID(),null,null);
+                    Assert.assertEquals(taskDB.getPercentageCompleted(), 30f);
+                    Assert.assertEquals(taskDB.getStep(), Task.Step.TRAINING);
+                    TimeUnit.SECONDS.sleep(1);
+                    setState(Task.Step.VALIDATION,80f);
+                    Assert.assertEquals(getPercentageCompleted(), 80f);
+                    Assert.assertEquals(getStep(), Task.Step.VALIDATION);
+                    taskDB = TaskService.getTask(getTaskID(),null,null);
+                    Assert.assertEquals(taskDB.getPercentageCompleted(), 80f);
+                    Assert.assertEquals(taskDB.getStep(), Task.Step.VALIDATION);
+                    TimeUnit.SECONDS.sleep(1);
+                    setState(Task.Step.PREDICTION,90f);
+                    Assert.assertEquals(getPercentageCompleted(), 90f);
+                    Assert.assertEquals(getStep(), Task.Step.PREDICTION);
+                    taskDB = TaskService.getTask(getTaskID(),null,null);
+                    Assert.assertEquals(taskDB.getPercentageCompleted(), 90f);
+                    Assert.assertEquals(taskDB.getStep(), Task.Step.PREDICTION);
                     setResultURI(resultUri);
-                    finalize();
+                    finish();
                 } catch (InterruptedException e) {
                     setStatus(Task.Status.CANCELLED);
                     e.printStackTrace();
@@ -46,10 +74,17 @@ public class TaskTest {
         Assert.assertEquals(task.getTaskID().getClass(), String.class);
         Assert.assertEquals(task.getStatus(), Task.Status.RUNNING);
         Assert.assertEquals(task.getPercentageCompleted(), 0f);
-        TimeUnit.SECONDS.sleep(3);
+        Task taskDB = TaskService.getTask(task.getTaskID(),null,null);
+        Assert.assertEquals(taskDB.getPercentageCompleted(), 0f);
+        Assert.assertEquals(taskDB.getStatus(), Task.Status.RUNNING);
+        TimeUnit.SECONDS.sleep(6);
         Assert.assertEquals(task.getStatus(), Task.Status.COMPLETED);
         Assert.assertEquals(task.getPercentageCompleted(), 100f);
         Assert.assertEquals(task.getResultURI(), resultUri);
+        Assert.assertEquals(task.getStep(), Task.Step.SAVED);
+        taskDB = TaskService.getTask(task.getTaskID(),null,null);
+        Assert.assertEquals(taskDB.getPercentageCompleted(), 100f);
+        Assert.assertEquals(taskDB.getStatus(), Task.Status.COMPLETED);
         task.delete();
     }
 
@@ -61,7 +96,7 @@ public class TaskTest {
             public void run() {
                 try {
                     TimeUnit.SECONDS.sleep(8);
-                    finalize();
+                    finish();
                 } catch (InterruptedException e) {
                     LOG.log(Level.INFO,"InterruptedException catched.");
                     setStatus(Task.Status.CANCELLED);
@@ -95,7 +130,7 @@ public class TaskTest {
                     Object o = emptyList.get(0);
                     Assert.assertFalse(1==1,"Code should have thrown error before.");
                     TimeUnit.SECONDS.sleep(5);
-                    finalize();
+                    finish();
                 } catch (InterruptedException e) {
                     LOG.log(Level.INFO,"InterruptedException catched.");
                     setStatus(Task.Status.CANCELLED);
@@ -131,6 +166,15 @@ public class TaskTest {
         Assert.assertEquals("CANCELLED", Task.Status.CANCELLED.toString());
         Assert.assertEquals("COMPLETED", Task.Status.COMPLETED.toString());
         Assert.assertEquals("ERROR",     Task.Status.ERROR.toString());
+    }
+
+    @Test(description = "test available steps")
+    public void stepTest() throws Exception {
+        Assert.assertEquals("PREPARATION", Task.Step.PREPARATION.toString());
+        Assert.assertEquals("TRAINING",    Task.Step.TRAINING.toString());
+        Assert.assertEquals("VALIDATION",  Task.Step.VALIDATION.toString());
+        Assert.assertEquals("PREDICTION",  Task.Step.PREDICTION.toString());
+        Assert.assertEquals("SAVED",       Task.Step.SAVED.toString());
     }
 
 }

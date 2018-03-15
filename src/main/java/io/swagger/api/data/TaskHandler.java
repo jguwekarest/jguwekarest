@@ -1,5 +1,7 @@
 package io.swagger.api.data;
 
+
+
 import io.swagger.api.ErrorReport;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
@@ -9,9 +11,9 @@ import java.util.Date;
 import static io.swagger.api.data.Task.Status.*;
 
 /**
- *
- * <h3>Example how to use the TaskHandler class to execute a task</h3>
- * To execute long running tasks use TaskHandler class to run and control threads.<br />
+ * <h3>TaskHandler class to execute background tasks</h3>
+ * To execute long running jobs use TaskHandler class to run and control threads.<br />
+ * Asynchronous jobs are handled via the TaskHandler class. Task data is stored in <strong>{@link io.swagger.api.data.Task}</strong> class.<br />
  * <b>Example:</b>
  * <pre>
  * {@code
@@ -20,7 +22,7 @@ import static io.swagger.api.data.Task.Status.*;
  *      public void run() {
  *          try {
  *              // here comes the code to run
- *              finalize(); //finalize the task to COMPLETED and 100%
+ *              finish(); //saves task to COMPLETED, SAVED and 100%
  *          } catch (YourException e) {
  *              e.printStackTrace();
  *          }
@@ -58,6 +60,13 @@ public abstract class TaskHandler implements Runnable {
         }
     }
 
+    public void setState(Task.Step step, float percentageComplete){
+        task.percentageCompleted = percentageComplete;
+        task.step = step;
+        update();
+    }
+
+
     /**
      * To cancel a task after it was started
      * interupts thread and set hasStatus to Task.Status.CANCELLED
@@ -70,12 +79,13 @@ public abstract class TaskHandler implements Runnable {
 
     /**
      * Call at end of task to
-     * set percentageCompleted = 100, hasStatus = Task.Status.CANCELLED
+     * set percentageCompleted = 100, hasStatus = Task.Status.CANCELLED, step = Task.Step.SAVED
      * update task in mongodb
      */
-    public void finalize(){
+    public void finish(){
         task.hasStatus = COMPLETED;
         task.percentageCompleted = 100f;
+        task.step = Task.Step.SAVED;
         update();
     }
 
@@ -112,6 +122,8 @@ public abstract class TaskHandler implements Runnable {
 
     public Float getPercentageCompleted() { return task.percentageCompleted; }
     public void  setPercentageCompleted(Float percentageCompleted) { task.percentageCompleted = percentageCompleted; }
+
+    public Task.Step getStep() { return task.step; }
 
     public String getResultURI() { return task.resultURI; }
     protected void   setResultURI(String resultURI) { task.resultURI = resultURI; }

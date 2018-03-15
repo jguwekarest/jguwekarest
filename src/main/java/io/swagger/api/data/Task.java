@@ -1,6 +1,7 @@
 package io.swagger.api.data;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.common.annotations.VisibleForTesting;
 import io.swagger.annotations.*;
 import io.swagger.api.ApiException;
 import io.swagger.api.ErrorReport;
@@ -85,12 +86,43 @@ public class Task {
             .build();
     }
 
+    /**
+     * Status of task execution.
+     */
     public enum Status { ACCEPTED,RUNNING,COMPLETED,CANCELLED,ERROR }
+    public enum Step { PREPARATION,TRAINING,VALIDATION,PREDICTION,SAVED }
 
-    public void setTaskID(String taskID) {
-        this.taskID = taskID;
-    }
+    public String getURI() { return URI; }
+    public void   setURI(String URI) { URI = URI; }
+
+    public Task.Status getStatus() { return hasStatus; }
+    public void   setStatus(Task.Status status) { hasStatus = status; }
+
+    public Date getDate() { return date; }
+
+    public String getTitle() { return title; }
+    public void   setTitle(String title) { title = title; }
+
+    public String getDescription() { return description; }
+    void   setDescription(String description) { description = description; }
+
+    public Float getPercentageCompleted() { return percentageCompleted; }
+    void  setPercentageCompleted(Float percentageCompleted) { percentageCompleted = percentageCompleted; }
+
+    public Task.Step getStep() { return step; }
+
+    public String getResultURI() { return resultURI; }
+    public void   setResultURI(String resultURI) { resultURI = resultURI; }
+
     public String getTaskID() { return taskID; }
+
+    public void setTaskID(String id) {
+        taskID = id;
+    }
+
+    public ErrorReport getErrorReport() { return errorReport; }
+
+
 
     @JsonProperty("taskID")
     String taskID;
@@ -101,13 +133,15 @@ public class Task {
     public Date date;
     @JsonProperty("creator")
     String creator;
-    //public String waitingFor;
+    @JsonProperty("step")
+    Step step;
     @JsonProperty("title")
     String title;
     @JsonProperty("hasStatus")
     Status hasStatus;
     @JsonProperty("description")
     String description;
+    @VisibleForTesting
     @JsonProperty("percentageCompleted")
     Float percentageCompleted;
 

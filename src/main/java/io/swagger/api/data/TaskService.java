@@ -32,7 +32,7 @@ public class TaskService {
      * @param token  security token
      * @return task object
      */
-    static Task getTask(String id, UriInfo ui, String token){
+    public static Task getTask(String id, UriInfo ui, String token){
         Task task;
         Dao taskDao = new Dao();
         try {

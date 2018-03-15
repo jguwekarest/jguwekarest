@@ -65,6 +65,7 @@ public class Bayes {
         })}
     )
     @GroupedApiResponsesOk
+
     public Response algorithmBayesNetPost(
         @FormDataParam("file") InputStream fileInputStream,
         @FormDataParam("file") FormDataContentDisposition fileDetail,
@@ -77,7 +78,6 @@ public class Bayes {
         @ApiParam(value = "authorization token") @HeaderParam("subjectid") String subjectid,
         @Context UriInfo ui, @Context HttpHeaders headers, @Context SecurityContext securityContext)
         throws io.swagger.api.NotFoundException, IOException {
-            return delegate.algorithmBayesNetPost(fileInputStream,fileDetail,datasetUri,estimator,estimatorParams,useADTree,searchAlgorithm,searchParams,headers,ui,securityContext);
+               return delegate.algorithmBayesNetPost(fileInputStream, fileDetail, datasetUri, estimator, estimatorParams, useADTree, searchAlgorithm, searchParams, headers, ui, securityContext);
     }
-
 }
