@@ -47,7 +47,7 @@ public class Bayes {
     @POST
     @Path("/BayesNet")
     @Consumes({ "multipart/form-data" })
-    @Produces({ "text/x-arff", "text/uri-list" })
+    @Produces({ "application/json", "text/uri-list" })
     @ApiOperation(value = "REST interface to the WEKA BayesNet classifier.", notes = "REST interface to the WEKA BayesNet classifier. " + SAVE_MODEL_NOTE, tags={ "algorithm", }
         ,extensions = {
         @Extension(properties = {@ExtensionProperty(name = "orn-@id",  value = "/algorithm/BayesNet")}),

@@ -51,7 +51,6 @@ public class Dao {
             dbPort = Integer.parseInt(dbProperties.getProperty("db.port"));
             if (dbProperties.getProperty("db.user") != null) dbUser = dbProperties.getProperty("db.user");
             if (dbProperties.getProperty("db.password") != null) dbPassword = dbProperties.getProperty("db.password");
-            LOG.log(Level.INFO, "Database configuration read!");
         } catch (IOException ex) {
             LOG.log(Level.SEVERE, "No DB properties file found!", ex);
         } catch (Exception e) {
@@ -65,7 +64,6 @@ public class Dao {
                 mongoClient = new MongoClient(dbHost, dbPort);
             }
             mongoDB = mongoClient.getDatabase(dbName);
-            LOG.log(Level.INFO, "Database configured and connection established successfully!");
         }
     }
 

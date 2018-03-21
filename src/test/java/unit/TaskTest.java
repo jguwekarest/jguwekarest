@@ -35,6 +35,7 @@ public class TaskTest {
                     Assert.assertEquals(taskDB.getStep(), Task.Step.PREPARATION);
                     TimeUnit.SECONDS.sleep(1);
                     setState(Task.Step.TRAINING,30f);
+                    TimeUnit.SECONDS.sleep(1);
                     Assert.assertEquals(getPercentageCompleted(), 30f);
                     Assert.assertEquals(getStep(), Task.Step.TRAINING);
                     taskDB = TaskService.getTask(getTaskID(),null,null);
@@ -65,9 +66,9 @@ public class TaskTest {
 
         Assert.assertEquals(task.getTitle(), "Test Task");
         Assert.assertEquals(task.getDescription(), "Creating a test task - createTask");
-        Date now = new Date();
         TimeUnit.SECONDS.sleep(1); //wait to have at least 1 s date diff
-        Assert.assertTrue(task.getDate().before(now));
+        Date now = new Date();
+        Assert.assertTrue(task.getDate().before(now), task.getDate().toString() + " is not before " + now.toString());
         Assert.assertEquals(task.getStatus(), Task.Status.ACCEPTED);
         Assert.assertEquals(task.getPercentageCompleted(), null);
         task.start();
@@ -77,7 +78,7 @@ public class TaskTest {
         Task taskDB = TaskService.getTask(task.getTaskID(),null,null);
         Assert.assertEquals(taskDB.getPercentageCompleted(), 0f);
         Assert.assertEquals(taskDB.getStatus(), Task.Status.RUNNING);
-        TimeUnit.SECONDS.sleep(6);
+        TimeUnit.SECONDS.sleep(7);
         Assert.assertEquals(task.getStatus(), Task.Status.COMPLETED);
         Assert.assertEquals(task.getPercentageCompleted(), 100f);
         Assert.assertEquals(task.getResultURI(), resultUri);

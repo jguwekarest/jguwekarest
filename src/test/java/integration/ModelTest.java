@@ -1,7 +1,9 @@
 package integration;
 
+import com.google.gson.Gson;
 import helper.TestHelper;
 import io.swagger.api.data.ModelService;
+import io.swagger.api.data.Task;
 import org.glassfish.jersey.media.multipart.FormDataMultiPart;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.glassfish.jersey.media.multipart.file.FileDataBodyPart;
@@ -11,14 +13,16 @@ import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
 import javax.ws.rs.client.*;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.File;
+import java.util.concurrent.TimeUnit;
 
 public class ModelTest {
 
     @Test(description = "Post an arff file to BayesNet algorithm and get a text representation.")
     @Parameters({"host"})
-    public void algorithmBayesNetPost( @Optional  String host) throws Exception {
+    public void algorithmBayesNetPost( @Optional  String host ) throws Exception {
 
         String uri = host + "/algorithm/BayesNet";
 
@@ -36,7 +40,7 @@ public class ModelTest {
 
         final WebTarget target = client.target(uri);
         Invocation.Builder request = target.request();
-        request.accept("text/x-arff");
+        request.accept("text/uri-list");
 
         final Response response = request.post(Entity.entity(multipart, multipart.getMediaType()));
 
@@ -44,7 +48,44 @@ public class ModelTest {
         multipart.close();
 
         Assert.assertTrue(response.getStatus() == 200);
-        Assert.assertTrue(response.getMediaType().toString().equals("text/x-arff"));
+        Assert.assertTrue(response.getMediaType().toString().equals("text/uri-list"));
+        String task_uri = response.readEntity(String.class);
+        Assert.assertTrue(task_uri.startsWith(host + "/task/"), "Task URI is: " + task_uri + ". It do not start with: " + host + "/task/");
+
+        final WebTarget taskTarget = client.target(task_uri);
+        Invocation.Builder taskRequest = taskTarget.request();
+        taskRequest.accept(MediaType.APPLICATION_JSON);
+
+        Response taskResponse = taskRequest.get();
+        Assert.assertTrue(taskResponse.getStatus() == 202, "Task at host: " + task_uri + " has wrong http code. Code is: " + taskResponse.getStatus());
+        Assert.assertTrue(taskResponse.getMediaType().toString().equals(MediaType.APPLICATION_JSON), "Task at host: " + task_uri + " not available in mime-type application/json. Is: " + taskResponse.getMediaType().toString());
+        //Assert.assertEquals(taskResponse.readEntity(String.class).replaceAll("(?m) +$",""), savedModelString.replaceAll("(?m) +$",""));
+        int i = 0;
+        while(taskResponse.getStatus() != 200){
+            i += 1;
+            TimeUnit.SECONDS.sleep(1);
+            taskResponse = taskRequest.get();
+            if (i>20) break;
+        }
+        Assert.assertTrue(taskResponse.getStatus() == 200, "Task at host: " + task_uri + " has wrong http code. Code is: " + taskResponse.getStatus());
+
+        Gson gson = new Gson();
+        String jsonString = taskResponse.readEntity(String.class);
+        Task taskRemote = gson.fromJson(jsonString, Task.class);
+
+        Assert.assertEquals(taskRemote.getStatus(), Task.Status.COMPLETED);
+        Assert.assertEquals(taskRemote.getStep(), Task.Step.SAVED);
+        Assert.assertEquals(taskRemote.getPercentageCompleted(), 100f);
+
+        String model_uri = taskRemote.getResultURI();
+        final WebTarget modelTarget = client.target(model_uri);
+        Invocation.Builder modelRequest = modelTarget.request();
+        modelRequest.accept(MediaType.APPLICATION_JSON);
+
+        Response modelResponse = modelRequest.get();
+        Assert.assertTrue(modelResponse.getStatus() == 200, "Model at host: " + model_uri + " has wrong http code. Code is: " + modelResponse.getStatus());
+
+
 
     }
 
@@ -75,10 +116,39 @@ public class ModelTest {
         formDataMultiPart.close();
         multipart.close();
 
-        String model_uri = response.readEntity(String.class);
+        String task_uri = response.readEntity(String.class);
+
+
+        final WebTarget taskTarget = client.target(task_uri);
+        Invocation.Builder taskRequest = taskTarget.request();
+        taskRequest.accept(MediaType.APPLICATION_JSON);
+
+        Response taskResponse = taskRequest.get();
+
+        int i = 0;
+        while(taskResponse.getStatus() != 200){
+            i += 1;
+            TimeUnit.SECONDS.sleep(1);
+            taskResponse = taskRequest.get();
+            if (i>20) break;
+        }
+
+        Gson gson = new Gson();
+        String jsonString = taskResponse.readEntity(String.class);
+        Task taskRemote = gson.fromJson(jsonString, Task.class);
+
+        Assert.assertEquals(taskRemote.getStatus(), Task.Status.COMPLETED);
+        Assert.assertEquals(taskRemote.getStep(), Task.Step.SAVED);
+        Assert.assertEquals(taskRemote.getPercentageCompleted(), 100f);
+
+        String model_uri = taskRemote.getResultURI();
+
 
         Assert.assertTrue(response.getStatus() == 200);
-        Assert.assertTrue(response.getMediaType().toString().equals("text/uri-list"));
+
+
+
+
         Assert.assertTrue(model_uri.matches(host + "/model/[a-fA-F\\d]{24}$"));
 
         // Prediction part

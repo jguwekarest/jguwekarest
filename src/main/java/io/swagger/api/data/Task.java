@@ -69,6 +69,7 @@ public class Task {
         })
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "OK"),
+        @ApiResponse(code = 202, message = "Created"),
         @ApiResponse(code = 400, message = "Bad Request"),
         @ApiResponse(code = 401, message = "Unauthorized"),
         @ApiResponse(code = 403, message = "Forbidden"),
@@ -79,11 +80,14 @@ public class Task {
         throws ApiException, NotFoundException {
 
         Task out = getTask(id, ui, subjectid);
+        if(out.getStatus() == Status.COMPLETED) {
+            return Response.ok(out).status(Response.Status.OK).build();
+        } else if (out.getStatus() == Status.ACCEPTED || out.getStatus() == Status.RUNNING){
+            return Response.ok(out).status(Response.Status.ACCEPTED).build();
+        } else {
+            return Response.ok(out).build();
+        }
 
-        return Response
-            .ok(out)
-            .status(Response.Status.OK)
-            .build();
     }
 
     /**
