@@ -8,6 +8,7 @@ import org.testng.annotations.Test;
 import weka.core.Instances;
 
 import java.math.BigDecimal;
+import java.util.HashMap;
 
 public class WekaUtilsTest {
     @Test(description = "Create instances from an arff string")
@@ -43,15 +44,33 @@ public class WekaUtilsTest {
 
     @Test(description = "Test WekaOptionHelper for WEKA params")
     public void getOptions() throws Exception {
+        HashMap<String, Object> params = new HashMap<>();
 
-        String[] options = WekaOptionHelper.getJ48Options(0, new BigDecimal(0.25), 2, 3,1, 1,
-                1, 1, 0);
-        Assert.assertEquals("-M 2 -R -N 3 -Q 1 -U", StringUtil.join(options," "), "get J48 options");
+        params.put("binarySplits", "0");
+        params.put("confidenceFactor", "0.25");
+        params.put("minNumObj", "2");
+        params.put("numFolds", "5");
+        params.put("reducedErrorPruning", "1");
+        params.put("seed", "1");
+        params.put("subtreeRaising", "1");
+        params.put("unpruned", "1");
+        params.put("useLaplace", "0");
+
+        String[] options = WekaOptionHelper.getJ48Options(params);
+        Assert.assertEquals("-M 2 -R -N 5 -Q 1 -U", StringUtil.join(options," "), "get J48 options");
 
         options = WekaOptionHelper.getKNNOptions(0, 1, 0, "0",0, "LinearNNSearch");
         Assert.assertEquals("-W 0 -K 1 -A weka.core.neighboursearch.LinearNNSearch -A \"weka.core.EuclideanDistance -R first-last\"",StringUtil.join(options," "), "get KNN options");
 
-        options = WekaOptionHelper.getBayesNetOptions("SimpleEstimator", new BigDecimal(0.5), 0, "local.K2","-P 1 -S BAYES");
+        params = new HashMap<>();
+        params.put("estimator", "SimpleEstimator");
+        params.put("estimatorParams", new BigDecimal(0.5));
+        params.put("useADTree", 1);
+        params.put("searchAlgorithm",  "local.K2");
+        params.put("searchParams", "-P 1 -S BAYES");
+
+        //options = WekaOptionHelper.getBayesNetOptions("SimpleEstimator", new BigDecimal(0.5), 0, "local.K2","-P 1 -S BAYES");
+        options = WekaOptionHelper.getBayesNetOptions(params);
         Assert.assertEquals("-D -Q weka.classifiers.bayes.net.search.local.K2 -- -P 1 -S BAYES -E weka.classifiers.bayes.net.estimate.SimpleEstimator -- -A 0.5",StringUtil.join(options," "), "get BayesNet options");
 
         options = WekaOptionHelper.getLibSVMOptions(0, 0.0F, 1F, 3,new BigDecimal("0.001"), new BigDecimal(0),
@@ -61,10 +80,20 @@ public class WekaUtilsTest {
         options = WekaOptionHelper.getM5RuleOptions(1, 1, 4.0, 1);
         Assert.assertEquals("-N -U -M 4.0 -R",StringUtil.join(options," "), "get M5Rule options");
 
-        options = WekaOptionHelper.getAdaOptions(102, 10, 0, 101);
+        params = new HashMap<>();
+        params.put("batchSize", 102);
+        params.put("numIterations", 10);
+        params.put("useResampling",0);
+        params.put("weightThreshold",101);
+        options = WekaOptionHelper.getAdaBoostOptions(params);
         Assert.assertEquals("-P 101 -I 10 -batch-size 102",StringUtil.join(options," "), "get Ada Boost options");
 
-        options = WekaOptionHelper.getBaggingOptions(75, 100, 10);
+        params = new HashMap<>();
+        params.put("batchSize", 100);
+        params.put("bagSizePercent",75);
+        params.put("numItergations", 10);
+
+        options = WekaOptionHelper.getBaggingOptions(params);
         Assert.assertEquals("-batch-size 100 -P 75 -I 10",StringUtil.join(options," "), "get Bagging options");
 
 

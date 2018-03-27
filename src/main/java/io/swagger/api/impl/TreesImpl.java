@@ -1,16 +1,8 @@
 package io.swagger.api.impl;
 
 import io.swagger.api.NotFoundException;
-import io.swagger.api.WekaUtils;
 import io.swagger.api.algorithm.TreesService;
-import io.swagger.api.data.DatasetService;
-import io.swagger.api.data.ModelService;
-import org.apache.commons.lang3.ArrayUtils;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
-import weka.classifiers.meta.AdaBoostM1;
-import weka.classifiers.meta.Bagging;
-import weka.classifiers.trees.J48;
-import weka.core.Instances;
 
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.HttpHeaders;
@@ -19,11 +11,6 @@ import javax.ws.rs.core.UriInfo;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Vector;
-
-import static io.swagger.api.WekaOptionHelper.*;
 
 public class TreesImpl extends TreesService {
 
@@ -34,7 +21,7 @@ public class TreesImpl extends TreesService {
                                      Integer subtreeRaising, Integer unpruned, Integer useLaplace, String subjectid, HttpHeaders headers, UriInfo uriInfo
                                     ) throws NotFoundException, IOException {
 
-        HashMap<String,Object> params = new HashMap<>();
+        /*HashMap<String,Object> params = new HashMap<>();
         params.put("datasetUri", datasetUri);
         params.put("binarySplits", binarySplits);
         params.put("confidenceFactor", confidenceFactor);
@@ -75,7 +62,8 @@ public class TreesImpl extends TreesService {
         } else {
             return Response.ok(v.toString() + "\n" + validation + "\n", "text/x-arff").build();
         }
-
+*/
+        return null;
     }
 
 
@@ -86,11 +74,11 @@ public class TreesImpl extends TreesService {
                                      Integer useLaplace, String subjectid, HttpHeaders headers, UriInfo uriInfo
                                      ) throws NotFoundException, IOException {
 
-        String txtStr = DatasetService.getArff(fileInputStream, fileDetail, datasetUri, subjectid);
+/*        String txtStr = DatasetService.getArff(fileInputStream, fileDetail, datasetUri, subjectid);
         Instances instances = WekaUtils.instancesFromString(txtStr, true);
 
         String[] options = getJ48Options(binarySplits, confidenceFactor, minNumObj, numFolds, reducedErrorPruning, seed, subtreeRaising, unpruned, useLaplace);
-        String[] adaOptions = getAdaOptions(batchSize, numIterations, useResampling, weightThreshold);
+        String[] adaOptions = getAdaBoostOptions(batchSize, numIterations, useResampling, weightThreshold);
 
         AdaBoostM1 adaBoost = new AdaBoostM1();
         J48 classifier = new J48();
@@ -124,8 +112,8 @@ public class TreesImpl extends TreesService {
             return Response.ok(baseuri + "model/" + id).build();
         } else {
             return Response.ok(v.toString() + "\n" + validation + "\n", "text/x-arff").build();
-        }
-
+        }*/
+return null;
     }
 
 
@@ -136,7 +124,7 @@ public class TreesImpl extends TreesService {
                                              Integer useLaplace, String subjectid, HttpHeaders headers, UriInfo uriInfo
     ) throws NotFoundException, IOException {
 
-        String txtStr = DatasetService.getArff(fileInputStream, fileDetail, datasetUri, subjectid);
+     /*   String txtStr = DatasetService.getArff(fileInputStream, fileDetail, datasetUri, subjectid);
         Instances instances = WekaUtils.instancesFromString(txtStr, true);
 
         String[] options = getJ48Options(binarySplits, confidenceFactor, minNumObj, numFolds, reducedErrorPruning, seed, subtreeRaising, unpruned, useLaplace);
@@ -174,8 +162,8 @@ public class TreesImpl extends TreesService {
             return Response.ok(baseuri + "model/" + id).build();
         } else {
             return Response.ok(v.toString() + "\n" + validation + "\n", "text/x-arff").build();
-        }
-
+        }*/
+return null;
     }
 
 

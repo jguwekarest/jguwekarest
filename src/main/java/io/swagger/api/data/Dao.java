@@ -42,6 +42,7 @@ public class Dao {
     private static final Logger LOG = Logger.getLogger(Dao.class.getName());
 
     public Dao() {
+
         ClassLoader classLoader = this.getClass().getClassLoader();
         InputStream is = classLoader.getResourceAsStream("config/db.properties");
         try {
@@ -223,6 +224,7 @@ public class Dao {
      * @return Boolean
      */
     Boolean updateData(String collection, Document document, String id) {
+        if (id == "") LOG.log(Level.WARNING,"Cannot update document without id: " + document.toJson());
         try {
             mongoCollection = mongoDB.getCollection(collection);
             String strictJSON = document.toJson();
@@ -237,6 +239,10 @@ public class Dao {
             query.put("_id", new ObjectId(id));
             mongoCollection.replaceOne(query, documentParsed);
         } catch (MongoException e){
+            e.printStackTrace();
+            return false;
+        } catch (Exception e) {
+            LOG.log(Level.WARNING,"Cannot update document: " + document.toJson() + "\n to collection: " + collection);
             e.printStackTrace();
             return false;
         }

@@ -3,6 +3,7 @@ package integration;
 import com.google.gson.Gson;
 import io.swagger.api.data.Task;
 import io.swagger.api.data.TaskHandler;
+import io.swagger.api.data.TaskService;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.testng.Assert;
 import org.testng.annotations.Optional;
@@ -43,7 +44,7 @@ public class TaskTest {
         Assert.assertEquals(task.getDescription(), "Creating a test task - createTask");
         task.start();
         Date now = new Date();
-        TimeUnit.SECONDS.sleep(1); //wait to have at least 1 s date diff
+        TimeUnit.SECONDS.sleep(2); //wait to have at least 1 s date diff
         Assert.assertTrue(task.getDate().before(now));
         Assert.assertEquals(task.getStatus(), Task.Status.RUNNING);
         Assert.assertEquals(task.getPercentageCompleted(), 10f);
@@ -69,7 +70,8 @@ public class TaskTest {
         Assert.assertEquals(taskRemote.getPercentageCompleted(), 10f);
         //Assert.assertEquals(taskResponse.readEntity(String.class).replaceAll("(?m) +$",""), savedModelString.replaceAll("(?m) +$",""));
 
-
+        Boolean taskdelete= TaskService.delete(taskRemote);
+        Assert.assertTrue(taskdelete);
 
     }
 }

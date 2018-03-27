@@ -22,8 +22,6 @@ import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Vector;
 
-import static io.swagger.api.WekaOptionHelper.getBayesNetOptions;
-
 public class BayesImpl extends BayesService {
     @Override
     @Produces("text/plain")
@@ -50,7 +48,7 @@ public class BayesImpl extends BayesService {
                     params.put("searchAlgorithm", searchAlgorithm);
                     params.put("searchParams", searchParams);
 
-                    String[] options = getBayesNetOptions(estimator, estimatorParams, useADTree, searchAlgorithm, searchParams);
+                    String[] options = new String[0];// = getBayesNetOptions(estimator, estimatorParams, useADTree, searchAlgorithm, searchParams);
 
                     BayesNet classifier = new BayesNet();
 
@@ -77,13 +75,11 @@ public class BayesImpl extends BayesService {
                     v.add(classifier);
                     v.add(new Instances(instances, 0));
 
-                    //String accept = headers.getHeaderString(HttpHeaders.ACCEPT);
                     String id = ModelService.saveModel(classifier, classifier.getOptions(), params, validation, subjectid);
                     String baseuri = ui.getBaseUri().toString();
                     setResultURI(baseuri + "model/" + id);
                     finish();
                 } catch (IOException e) {
-                    System.out.println("=============================== \n in der IOExeption \n =============================");
                     e.printStackTrace();
                 }
             }

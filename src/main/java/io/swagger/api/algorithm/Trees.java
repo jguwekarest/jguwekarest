@@ -1,8 +1,9 @@
 package io.swagger.api.algorithm;
 
 import io.swagger.annotations.*;
+import io.swagger.api.AlgorithmService;
 import io.swagger.api.NotFoundException;
-import io.swagger.api.factories.TreesFactory;
+import io.swagger.api.factories.AlgorithmFactory;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 
@@ -13,6 +14,7 @@ import javax.ws.rs.core.*;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
+import java.util.HashMap;
 
 import static io.swagger.api.Constants.SAVE_MODEL_NOTE;
 
@@ -22,16 +24,16 @@ import static io.swagger.api.Constants.SAVE_MODEL_NOTE;
 @Api(description = "the trees algorithm API")
 
 public class Trees  {
-    private final TreesService delegate;
+    private final AlgorithmService delegate;
 
     public Trees(@Context ServletConfig servletContext) {
-        TreesService delegate = null;
+        AlgorithmService delegate = null;
 
         if (servletContext != null) {
             String implClass = servletContext.getInitParameter("AlgorithmApi.implementation");
             if (implClass != null && !"".equals(implClass.trim())) {
                 try {
-                    delegate = (TreesService) Class.forName(implClass).newInstance();
+                    delegate = (AlgorithmService) Class.forName(implClass).newInstance();
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
@@ -39,7 +41,7 @@ public class Trees  {
         }
 
         if (delegate == null) {
-            delegate = TreesFactory.getTrees();
+            delegate = AlgorithmFactory.getAlgorithm();
         }
         this.delegate = delegate;
     }
@@ -82,10 +84,24 @@ public class Trees  {
         @ApiParam(value = "Whether pruning is performed.", defaultValue = "1", allowableValues="0, 1")@FormDataParam("unpruned") Integer unpruned,
         @ApiParam(value = "Whether counts at leaves are smoothed based on Laplace.", defaultValue = "0", allowableValues="0, 1")@FormDataParam("useLaplace") Integer useLaplace,
         @ApiParam(value = "Authorization token" )@HeaderParam("subjectid") String subjectid,
-        @Context UriInfo uriInfo, @Context HttpHeaders headers)
+        @Context UriInfo ui, @Context HttpHeaders headers, @Context SecurityContext securityContext)
         throws NotFoundException, IOException {
-        return delegate.algorithmJ48Post(fileInputStream, fileDetail,datasetUri,binarySplits,confidenceFactor,minNumObj,numFolds,reducedErrorPruning,
-            seed,subtreeRaising,unpruned,useLaplace,subjectid,headers,uriInfo);
+
+        HashMap<String, Object> params = new HashMap<>();
+        HashMap<String, Object> metaParams = new HashMap<>();
+        params.put("datasetUri", datasetUri);
+        params.put("binarySplits", binarySplits);
+        params.put("confidenceFactor", confidenceFactor);
+        params.put("minNumObj", minNumObj);
+        params.put("numFolds", numFolds);
+        params.put("reducedErrorPruning", reducedErrorPruning);
+        params.put("seed", seed);
+        params.put("subtreeRaising", subtreeRaising);
+        params.put("unpruned", unpruned);
+        params.put("useLaplace", useLaplace);
+
+        return delegate.algorithmPost(fileInputStream, fileDetail, datasetUri,"J48", params,
+            null, metaParams, headers, ui, securityContext);
     }
 
 
@@ -132,11 +148,30 @@ public class Trees  {
         @ApiParam(value = "Whether counts at leaves are smoothed based on Laplace.", defaultValue = "0", allowableValues = "0, 1") @FormDataParam("useLaplace") Integer useLaplace,
         //general params,
         @ApiParam(value = "Authorization token") @HeaderParam("subjectid") String subjectid,
-        @Context UriInfo uriInfo, @Context HttpHeaders headers)
+        @Context UriInfo ui, @Context HttpHeaders headers, @Context SecurityContext securityContext)
         throws NotFoundException, IOException {
-        return delegate.algorithmJ48AdaBoostPost(fileInputStream, fileDetail, datasetUri, batchSize, numIterations, useResampling, weightThreshold,
-            binarySplits, confidenceFactor, minNumObj, numFolds, reducedErrorPruning, seed, subtreeRaising, unpruned, useLaplace,
-            subjectid, headers, uriInfo);
+
+        HashMap<String, Object> params = new HashMap<>();
+        HashMap<String, Object> metaParams = new HashMap<>();
+        params.put("datasetUri", datasetUri);
+        params.put("binarySplits", binarySplits);
+        params.put("confidenceFactor", confidenceFactor);
+        params.put("minNumObj", minNumObj);
+        params.put("numFolds", numFolds);
+        params.put("reducedErrorPruning", reducedErrorPruning);
+        params.put("seed", seed);
+        params.put("subtreeRaising", subtreeRaising);
+        params.put("unpruned", unpruned);
+        params.put("useLaplace", useLaplace);
+        metaParams.put("batchSize", batchSize);
+        metaParams.put("numIterations", numIterations);
+        metaParams.put("useResampling", useResampling);
+        metaParams.put("weightThreshold", weightThreshold);
+
+
+        return delegate.algorithmPost(fileInputStream, fileDetail, datasetUri,"J48", params,
+            "AdaBoost", metaParams, headers, ui, securityContext);
+
     }
 
 
@@ -144,7 +179,7 @@ public class Trees  {
     @Path("/J48/bagging")
     @Consumes({ "multipart/form-data" })
     @Produces({ "text/x-arff", "text/uri-list" })
-    @ApiOperation(value = "REST interface to the WEKA Adaboost M1 meta classifier.", notes = "REST interface to the WEKA Adaboost M1 meta classifier. " + SAVE_MODEL_NOTE, tags = {"algorithm","meta algorithm"},
+    @ApiOperation(value = "REST interface to the WEKA Bagging meta classifier.", notes = "REST interface to the WEKA Bagging meta classifier. " + SAVE_MODEL_NOTE, tags = {"algorithm","meta algorithm"},
         extensions = {
         @Extension(properties = {@ExtensionProperty(name = "orn-@id",  value = "/algorithm/J48/bagging")}),
         @Extension(properties = {@ExtensionProperty(name = "orn-@type",  value = "x-orn:Algorithm")}),
@@ -179,11 +214,27 @@ public class Trees  {
         @ApiParam(value = "Whether counts at leaves are smoothed based on Laplace.", defaultValue = "0", allowableValues = "0, 1") @FormDataParam("useLaplace") Integer useLaplace,
         //general params,
         @ApiParam(value = "Authorization token") @HeaderParam("subjectid") String subjectid,
-        @Context UriInfo uriInfo, @Context HttpHeaders headers)
+        @Context UriInfo ui, @Context HttpHeaders headers, @Context SecurityContext securityContext)
         throws NotFoundException, IOException {
-        return delegate.algorithmJ48BaggingPost(fileInputStream, fileDetail, datasetUri, bagSizePercent, batchSize, numIterations,
-            binarySplits, confidenceFactor, minNumObj, numFolds, reducedErrorPruning, seed, subtreeRaising, unpruned, useLaplace,
-            subjectid, headers, uriInfo);
+
+        HashMap<String, Object> params = new HashMap<>();
+        HashMap<String, Object> metaParams = new HashMap<>();
+        params.put("datasetUri", datasetUri);
+        params.put("binarySplits", binarySplits);
+        params.put("confidenceFactor", confidenceFactor);
+        params.put("minNumObj", minNumObj);
+        params.put("numFolds", numFolds);
+        params.put("reducedErrorPruning", reducedErrorPruning);
+        params.put("seed", seed);
+        params.put("subtreeRaising", subtreeRaising);
+        params.put("unpruned", unpruned);
+        params.put("useLaplace", useLaplace);
+        metaParams.put("bagSizePercent", bagSizePercent);
+        metaParams.put("batchSize", batchSize);
+        metaParams.put("numIterations", numIterations);
+
+        return delegate.algorithmPost(fileInputStream, fileDetail, datasetUri,"J48", params,
+            "Bagging", metaParams, headers, ui, securityContext);
     }
 
 }

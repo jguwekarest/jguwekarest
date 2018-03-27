@@ -51,12 +51,7 @@ public abstract class TaskHandler implements Runnable {
             thread.start();
             task.percentageCompleted = 0f;
             task.hasStatus = RUNNING;
-            save();
-            if (this.uri != null){
-                setURI(uri + "task/" + task.taskID);
-            } else {
-                setURI("task/" + task.taskID);
-            }
+            update();
         }
     }
 
@@ -104,6 +99,12 @@ public abstract class TaskHandler implements Runnable {
         task.description = description;
         task.date = new Date();
         task.hasStatus = ACCEPTED;
+        save();
+        if (this.uri != null){
+            setURI(uri + "task/" + task.taskID);
+        } else {
+            setURI("task/" + task.taskID);
+        }
     }
 
     public String getURI() { return task.URI; }
@@ -172,7 +173,7 @@ public abstract class TaskHandler implements Runnable {
     }
 
     /**
-     * Delet task in mongodb
+     * Delete task in mongodb
      */
     public void delete(){
         TaskService.delete(task);

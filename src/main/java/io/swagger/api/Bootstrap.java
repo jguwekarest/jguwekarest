@@ -1,10 +1,13 @@
 package io.swagger.api;
 
+import ch.qos.logback.classic.Level;
+import ch.qos.logback.classic.LoggerContext;
 import io.swagger.jaxrs.config.SwaggerContextService;
 import io.swagger.models.Contact;
 import io.swagger.models.Info;
 import io.swagger.models.License;
 import io.swagger.models.Swagger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -15,6 +18,9 @@ import java.util.Map;
 public class Bootstrap extends HttpServlet {
   @Override
   public void init(ServletConfig config) throws ServletException {
+
+    ((LoggerContext) LoggerFactory.getILoggerFactory()).getLogger("org.mongodb.driver").setLevel(Level.ERROR);
+    ((LoggerContext) LoggerFactory.getILoggerFactory()).getLogger("org.mongodb.driver.cluster").setLevel(Level.ERROR);
     final Map<String, Object> map = new HashMap< >();
     map.put("type", "H2020");
     map.put("name", "OpenRiskNet");

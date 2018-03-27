@@ -1,48 +1,82 @@
 package io.swagger.api;
 
 import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.Objects;
 
 public class WekaOptionHelper {
+
+
+
+    public static String[] getClassifierOptions(String classifier, HashMap params){
+        String[] options = null;
+        switch (classifier) {
+            case "J48":
+                options = getJ48Options(params);
+                break;
+            case "KNN":
+                //options = getKNNOptions(params);
+                break;
+            case "BayesNet":
+                options = getBayesNetOptions(params);
+                break;
+            case "LibSVM":
+                //options = getLibSVMOptions(params);
+                break;
+            case "M5Rule":
+                //options = getM5RuleOptions(params);
+                break;
+            case "AdaBoost":
+                options = getAdaBoostOptions(params);
+                break;
+            case "Bagging":
+                options = getBaggingOptions(params);
+                break;
+        }
+
+        return options;
+    }
 
     /**
      * Generate option string for J48
      * @return options array
      */
-    public static String[] getJ48Options(Integer binarySplits, BigDecimal confidenceFactor, Integer minNumObj, Integer numFolds,
-                                         Integer reducedErrorPruning, Integer seed, Integer subtreeRaising, Integer unpruned, Integer useLaplace) {
+    public static String[] getJ48Options(HashMap params) {
+
+                                         //Integer binarySplits, BigDecimal confidenceFactor, Integer minNumObj, Integer numFolds,
+                                         //Integer reducedErrorPruning, Integer seed, Integer subtreeRaising, Integer unpruned, Integer useLaplace) {
         String parameters = "";
         String[] options;
-        if (binarySplits != null && binarySplits == 1) {
+        if (params.get("binarySplits") != null && params.get("binarySplits").toString().equals("1")) {
             parameters += " -B ";
         }
 
-        parameters += getParamString(minNumObj, "M", 2);
+        parameters += getParamString(params.get("minNumObj"), "M", 2);
 
-        if (reducedErrorPruning != null && reducedErrorPruning == 1) {
-            if (numFolds != null) {
-                parameters += " -R -N " + numFolds;
+        if (params.get("reducedErrorPruning") != null && params.get("reducedErrorPruning").toString().equals("1")) {
+            if (params.get("numFolds") != null) {
+                parameters += " -R -N " + params.get("numFolds");
             } else {
                 parameters += " -R -N 3 ";
             }
         }
 
-        parameters += getParamString(seed, "Q", 2);
+        parameters += getParamString(params.get("seed"), "Q", 2);
 
-        if (unpruned != null && unpruned == 1) {
+        if (params.get("unpruned") != null && params.get("unpruned").toString().equals("1")) {
             parameters += " -U ";
         } else {
-            if (subtreeRaising != null && subtreeRaising == 0) {
+            if (params.get("subtreeRaising") != null && params.get("subtreeRaising").toString().equals("0")) {
                 parameters += " -S ";
             }
-            if (confidenceFactor != null) {
-                parameters += " -C " + confidenceFactor;
+            if (params.get("confidenceFactor") != null) {
+                parameters += " -C " + params.get("confidenceFactor");
             } else {
                 parameters += " -C 0.25 ";
             }
         }
 
-        if (useLaplace != null && useLaplace == 1) {
+        if (params.get("useLaplace") != null && params.get("useLaplace").toString().equals("1")) {
             parameters += " -A ";
         }
 
@@ -101,31 +135,32 @@ public class WekaOptionHelper {
      * Generate option string for BayesNet
      * @return options array
      */
-    public static String[] getBayesNetOptions(String estimator, BigDecimal estimatorParams, Integer useADTree, String searchAlgorithm,
-                                              String searchParams){
+    public static String[] getBayesNetOptions(HashMap params){
+        //String estimator, BigDecimal estimatorParams, Integer useADTree, String searchAlgorithm, String searchParams
+
         String parameters = "";
         String[] options;
-        if (useADTree != null && useADTree != 1) { parameters += " -D ";}
+        if (params.get("useADTree") != null && !params.get("useADTree").toString().equals("0")) { parameters += " -D ";}
 
         // Set the parameter for the searchAlgo
         parameters += " -Q ";
-        parameters += "weka.classifiers.bayes.net.search." + searchAlgorithm;
-        System.out.println("searchAlgorithm is: " + searchAlgorithm);
+        parameters += "weka.classifiers.bayes.net.search." + params.get("searchAlgorithm");
+        System.out.println("searchAlgorithm is: " + params.get("searchAlgorithm"));
         // Set the search parameters
-        if (searchParams != null) {
+        if (params.get("searchParams") != null) {
             parameters += " -- ";
-            parameters += searchParams;
+            parameters += params.get("searchParams");
         }
         // Set estimator
-        if (estimator != null) {
+        if (params.get("estimator") != null) {
             parameters += " -E ";
-            parameters += "weka.classifiers.bayes.net.estimate." + estimator;
+            parameters += "weka.classifiers.bayes.net.estimate." + params.get("estimator");
         }
         // Set the parameters for the estimator
-        if (estimatorParams != null) {
+        if (params.get("estimatorParams") != null) {
             parameters += " -- ";
             parameters += " -A ";
-            parameters += estimatorParams;
+            parameters += params.get("estimatorParams");
         }
         System.out.println("parameterstring for weka: " + parameters);
 
@@ -210,15 +245,17 @@ public class WekaOptionHelper {
      * Generate option string for Adaboost M1
      * @return options array
      */
-    public static String[] getAdaOptions(Integer batchSize, Integer numIterations,
-                                         Integer useResampling, Integer weightThreshold){
+    public static String[] getAdaBoostOptions(HashMap params) {
+
+        //Integer batchSize, Integer numIterations, Integer useResampling, Integer weightThreshold){
         String parameters = "";
         String[] options;
 
-        parameters += WekaOptionHelper.getParamString(weightThreshold, "P", "100");
-        if (useResampling != null && useResampling == 1) { parameters += " -Q ";}
-        parameters += WekaOptionHelper.getParamString(numIterations,"I", 10);
-        parameters += WekaOptionHelper.getParamString(batchSize ,"batch-size", 100);
+        parameters += WekaOptionHelper.getParamString(params.get("weightThreshold"), "P", "100");
+        if (params.get("useResampling") != null && params.get("useResampling").toString().equals("1")) { parameters += " -Q ";}
+
+        parameters += WekaOptionHelper.getParamString(params.get("numIterations"),"I", 10);
+        parameters += WekaOptionHelper.getParamString(params.get("batchSize") ,"batch-size", 100);
         try {
             options = weka.core.Utils.splitOptions(parameters);
         } catch (Exception e) {
@@ -232,13 +269,14 @@ public class WekaOptionHelper {
      * Generate option string for Bagging
      * @return options array
      */
-    public static String[] getBaggingOptions(Integer bagSizePercent, Integer batchSize, Integer numIterations){
+    public static String[] getBaggingOptions(HashMap params){
+        //Integer bagSizePercent, Integer batchSize, Integer numIterations
         String parameters = "";
         String[] options;
 
-        parameters += WekaOptionHelper.getParamString(batchSize ,"batch-size", 100);
-        parameters += WekaOptionHelper.getParamString(bagSizePercent ,"P", 100);
-        parameters += WekaOptionHelper.getParamString(numIterations,"I", 10);
+        parameters += WekaOptionHelper.getParamString(params.get("batchSize") ,"batch-size", 100);
+        parameters += WekaOptionHelper.getParamString(params.get("bagSizePercent") ,"P", 100);
+        parameters += WekaOptionHelper.getParamString(params.get("numIterations"),"I", 10);
         try {
             options = weka.core.Utils.splitOptions(parameters);
         } catch (Exception e) {

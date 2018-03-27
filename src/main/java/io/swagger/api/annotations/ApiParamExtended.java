@@ -24,7 +24,7 @@ public @interface ApiParamExtended {
 
                 private final String name;
 
-                private ParamType(final String name) {
+                ParamType(final String name) {
                         this.name = name;
                 }
 
@@ -50,7 +50,7 @@ public @interface ApiParamExtended {
 
                 private final String name;
 
-                private DataType(final String name) {
+                DataType(final String name) {
                         this.name = name;
                 }
 
