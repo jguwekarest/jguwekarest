@@ -17,11 +17,12 @@ import java.math.BigDecimal;
 import java.util.HashMap;
 
 import static io.swagger.api.Constants.SAVE_MODEL_NOTE;
+import static io.swagger.api.Constants.TEXT_URILIST;
 
 
 @Path("/algorithm")
 
-@Api(description = "the trees algorithm API")
+@Api(description = "Trees algorithm API")
 
 public class Trees  {
     private final AlgorithmService delegate;
@@ -51,7 +52,7 @@ public class Trees  {
     @POST
     @Path("/J48")
     @Consumes({ "multipart/form-data" })
-    @Produces({ "text/x-arff", "text/uri-list" })
+    @Produces({ TEXT_URILIST, MediaType.APPLICATION_JSON})
     @ApiOperation(value = "REST interface to the WEKA J48 classifier.",
         notes = "REST interface to the WEKA J48 classifier. " + SAVE_MODEL_NOTE,
         tags={ "algorithm" },
@@ -88,7 +89,6 @@ public class Trees  {
         throws NotFoundException, IOException {
 
         HashMap<String, Object> params = new HashMap<>();
-        HashMap<String, Object> metaParams = new HashMap<>();
         params.put("datasetUri", datasetUri);
         params.put("binarySplits", binarySplits);
         params.put("confidenceFactor", confidenceFactor);
@@ -101,14 +101,14 @@ public class Trees  {
         params.put("useLaplace", useLaplace);
 
         return delegate.algorithmPost(fileInputStream, fileDetail, datasetUri,"J48", params,
-            null, metaParams, headers, ui, securityContext);
+                                      headers, ui, securityContext);
     }
 
 
     @POST
     @Path("/J48/adaboost")
     @Consumes({ "multipart/form-data" })
-    @Produces({ "text/x-arff", "text/uri-list" })
+    @Produces({ TEXT_URILIST, MediaType.APPLICATION_JSON})
     @ApiOperation(value = "REST interface to the WEKA Adaboost M1 meta classifier.",
         notes = "REST interface to the WEKA Adaboost M1 meta classifier. " + SAVE_MODEL_NOTE,
         tags = {"algorithm","meta algorithm"} ,
@@ -178,7 +178,7 @@ public class Trees  {
     @POST
     @Path("/J48/bagging")
     @Consumes({ "multipart/form-data" })
-    @Produces({ "text/x-arff", "text/uri-list" })
+    @Produces({ TEXT_URILIST, MediaType.APPLICATION_JSON})
     @ApiOperation(value = "REST interface to the WEKA Bagging meta classifier.", notes = "REST interface to the WEKA Bagging meta classifier. " + SAVE_MODEL_NOTE, tags = {"algorithm","meta algorithm"},
         extensions = {
         @Extension(properties = {@ExtensionProperty(name = "orn-@id",  value = "/algorithm/J48/bagging")}),
@@ -219,6 +219,9 @@ public class Trees  {
 
         HashMap<String, Object> params = new HashMap<>();
         HashMap<String, Object> metaParams = new HashMap<>();
+        metaParams.put("bagSizePercent", bagSizePercent);
+        metaParams.put("batchSize", batchSize);
+        metaParams.put("numIterations", numIterations);
         params.put("datasetUri", datasetUri);
         params.put("binarySplits", binarySplits);
         params.put("confidenceFactor", confidenceFactor);
@@ -229,9 +232,6 @@ public class Trees  {
         params.put("subtreeRaising", subtreeRaising);
         params.put("unpruned", unpruned);
         params.put("useLaplace", useLaplace);
-        metaParams.put("bagSizePercent", bagSizePercent);
-        metaParams.put("batchSize", batchSize);
-        metaParams.put("numIterations", numIterations);
 
         return delegate.algorithmPost(fileInputStream, fileDetail, datasetUri,"J48", params,
             "Bagging", metaParams, headers, ui, securityContext);

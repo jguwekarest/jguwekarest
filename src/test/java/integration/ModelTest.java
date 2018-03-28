@@ -180,6 +180,84 @@ public class ModelTest {
     }
 
 
+
+    @Test(description = "Post an arff file to NaiveBayes algorithm and get a text representation.")
+    @Parameters({"host"})
+    public void algorithmNaiveBayesPost( @Optional  String host ) throws Exception {
+
+        String uri = host + "/algorithm/NaiveBayes";
+
+        final Client client = ClientBuilder.newBuilder().register(MultiPartFeature.class).build();
+
+        final FileDataBodyPart filePart = new FileDataBodyPart("file", new File( getClass().getClassLoader().getResource("weather.numeric.arff").getFile()));
+        FormDataMultiPart formDataMultiPart = new FormDataMultiPart();
+        formDataMultiPart.field("batchSize", "100")
+            .field("useKernelEstimator", "0")
+            .field("useSupervisedDiscretization", "0");
+
+        final FormDataMultiPart multipart = (FormDataMultiPart) formDataMultiPart.field("save", "false").bodyPart(filePart);
+
+        final WebTarget target = client.target(uri);
+        Invocation.Builder request = target.request();
+        request.accept("text/uri-list");
+
+        final Response response = request.post(Entity.entity(multipart, multipart.getMediaType()));
+
+        formDataMultiPart.close();
+        multipart.close();
+
+        Assert.assertTrue(response.getStatus() == 200);
+        Assert.assertTrue(response.getMediaType().toString().equals("text/uri-list"));
+        String task_uri = response.readEntity(String.class);
+        Assert.assertTrue(task_uri.startsWith(host + "/task/"), "Task URI is: " + task_uri + ". It do not start with: " + host + "/task/");
+
+        final WebTarget taskTarget = client.target(task_uri);
+        Invocation.Builder taskRequest = taskTarget.request();
+        taskRequest.accept(MediaType.APPLICATION_JSON);
+
+        Response taskResponse = taskRequest.get();
+        Assert.assertTrue(taskResponse.getStatus() == 202, "Task at host: " + task_uri + " has wrong http code. Code is: " + taskResponse.getStatus());
+        Assert.assertTrue(taskResponse.getMediaType().toString().equals(MediaType.APPLICATION_JSON), "Task at host: " + task_uri + " not available in mime-type application/json. Is: " + taskResponse.getMediaType().toString());
+        //Assert.assertEquals(taskResponse.readEntity(String.class).replaceAll("(?m) +$",""), savedModelString.replaceAll("(?m) +$",""));
+        int i = 0;
+        while(taskResponse.getStatus() != 200){
+            i += 1;
+            TimeUnit.SECONDS.sleep(1);
+            taskResponse = taskRequest.get();
+            if (i>20) break;
+        }
+        Assert.assertTrue(taskResponse.getStatus() == 200, "Task at host: " + task_uri + " has wrong http code. Code is: " + taskResponse.getStatus());
+
+        Gson gson = new Gson();
+        String jsonString = taskResponse.readEntity(String.class);
+        Task taskRemote = gson.fromJson(jsonString, Task.class);
+
+        Assert.assertEquals(taskRemote.getStatus(), Task.Status.COMPLETED);
+        Assert.assertEquals(taskRemote.getStep(), Task.Step.SAVED);
+        Assert.assertEquals(taskRemote.getPercentageCompleted(), 100f);
+
+        String model_uri = taskRemote.getResultURI();
+        final WebTarget modelTarget = client.target(model_uri);
+        Invocation.Builder modelRequest = modelTarget.request();
+        modelRequest.accept("text/plain");
+
+        Response modelResponse = modelRequest.get();
+        Assert.assertTrue(modelResponse.getStatus() == 200, "Model at host: " + model_uri + " has wrong http code. Code is: " + modelResponse.getStatus());
+
+        // check new model String
+        String savedModelString = TestHelper.getArff("NaiveBayes.model.txt");
+        Assert.assertEquals(modelResponse.readEntity(String.class).replaceAll("(?m) +$",""), savedModelString.replaceAll("(?m) +$",""));
+
+        String id = model_uri.substring(model_uri.length() - 24);
+        Boolean resultDelete = ModelService.deleteModel(id);
+        Assert.assertTrue(resultDelete);
+        Boolean taskdelete= TaskService.delete(taskRemote);
+        Assert.assertTrue(taskdelete);
+
+    }
+
+
+
     @Test(description = "Post an arff file to J48 algorithm, save the model and do a prediction.")
     @Parameters({"host"})
     public void algorithmJ48( @Optional  String host) throws Exception {
@@ -250,7 +328,7 @@ public class ModelTest {
         Assert.assertTrue(model_uri.matches(host + "/model/[a-fA-F\\d]{24}$"));
 
 
-       // check new model String
+        // check new model String
         String savedModelString = TestHelper.getArff("J48.model.txt");
 
         final WebTarget modelTarget = client.target(model_uri);
@@ -475,7 +553,7 @@ public class ModelTest {
         formDataMultiPart.close();
         multipart.close();
 
-        Assert.assertTrue(response.getStatus() == 200);
+        Assert.assertTrue(response.getStatus() == 200, "Task status should be 200 but is: " + response.getStatus());
         Assert.assertTrue(response.getMediaType().toString().equals("text/uri-list"));
 
         String task_uri = response.readEntity(String.class);

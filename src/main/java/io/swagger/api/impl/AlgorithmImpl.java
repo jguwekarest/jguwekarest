@@ -12,6 +12,7 @@ import org.json.JSONObject;
 import weka.classifiers.AbstractClassifier;
 import weka.classifiers.SingleClassifierEnhancer;
 import weka.classifiers.bayes.BayesNet;
+import weka.classifiers.bayes.NaiveBayes;
 import weka.classifiers.functions.LibSVM;
 import weka.classifiers.functions.LinearRegression;
 import weka.classifiers.lazy.IBk;
@@ -35,6 +36,7 @@ import java.util.Iterator;
 import java.util.Vector;
 import java.util.concurrent.TimeUnit;
 
+import static io.swagger.api.Constants.TEXT_URILIST;
 import static io.swagger.api.WekaOptionHelper.getClassifierOptions;
 
 public class AlgorithmImpl extends AlgorithmService {
@@ -98,6 +100,26 @@ public class AlgorithmImpl extends AlgorithmService {
 
 
     /**
+     * Method overload to: Train a classifier or meta classifier - without metaClassifierName and metaParams for meta classifier
+     * @param fileInputStream dataset file handle
+     * @param fileDetail dataset file details
+     * @param datasetUri dataset URI
+     * @param classifierName String classifier name
+     * @param params HashMap hashed params for classifier
+     * @param headers HTTP REST call headers
+     * @param ui UriInfo
+     * @param securityContext security context
+     * @return Task URI
+     * @throws NotFoundException file not found
+     * @throws IOException io exception
+     */
+    @Produces("text/plain")
+    public Response algorithmPost(InputStream fileInputStream, FormDataContentDisposition fileDetail, String datasetUri,
+                                  String classifierName, HashMap params, HttpHeaders headers, UriInfo ui, SecurityContext securityContext)throws NotFoundException, IOException {
+        return algorithmPost(fileInputStream, fileDetail, datasetUri, classifierName, params, null, null, headers, ui, securityContext);
+    }
+
+    /**
      * Train a classifier or meta classifier
      * @param fileInputStream dataset file handle
      * @param fileDetail dataset file details
@@ -113,7 +135,7 @@ public class AlgorithmImpl extends AlgorithmService {
      * @throws NotFoundException file not found
      * @throws IOException io exception
      */
-    @Produces("text/plain")
+    @Produces({ TEXT_URILIST, MediaType.APPLICATION_JSON})
     public Response algorithmPost(InputStream fileInputStream, FormDataContentDisposition fileDetail, String datasetUri,
                                   String classifierName, HashMap params, String metaClassifierName, HashMap metaParams,
                                   HttpHeaders headers, UriInfo ui, SecurityContext securityContext)
@@ -122,6 +144,7 @@ public class AlgorithmImpl extends AlgorithmService {
         String subjectid = headers.getRequestHeaders().getFirst("subjectid");
         String txtStr = DatasetService.getArff(fileInputStream, fileDetail, datasetUri, subjectid);
         String baseuri = ui.getBaseUri().toString();
+        String accept = headers.getRequestHeaders().getFirst("accept");
 
         TaskHandler task = new TaskHandler(classifierName, classifierName + " algorithm", "Training data on "+ classifierName + " algorithm.", baseuri) {
             AbstractClassifier classifier;
@@ -140,6 +163,9 @@ public class AlgorithmImpl extends AlgorithmService {
                             case "BayesNet":
                                 classifier = new BayesNet();
                                 break;
+                            case "NaiveBayes":
+                                classifier = new NaiveBayes();
+                                break;
                             case "LinearRegression":
                                 classifier = new LinearRegression();
                                 break;
@@ -149,7 +175,7 @@ public class AlgorithmImpl extends AlgorithmService {
                             case "J48":
                                 classifier = new J48();
                                 break;
-                            case "IBk":
+                            case "KNN":
                                 classifier = new IBk();
                                 break;
                             case "ZeroR":
@@ -200,9 +226,6 @@ public class AlgorithmImpl extends AlgorithmService {
                     String baseuri = ui.getBaseUri().toString();
                     setResultURI(baseuri + "model/" + id);
                     finish();
-                } catch (IOException e) {
-                    setErrorReport(e,500, "algorithmPost: " +  classifierName);
-                    e.printStackTrace();
                 } catch (Exception e) {
                     setErrorReport(e,500, "algorithmPost: " +  classifierName);
                     e.printStackTrace();
@@ -210,7 +233,12 @@ public class AlgorithmImpl extends AlgorithmService {
             }
         };
         task.start();
-        return Response.ok(task.getURI()).build();
+        if (accept.equals(TEXT_URILIST)) {
+            return Response.ok(task.getURI()).build();
+        } else {
+            return Response.ok(task).build();
+        }
+
     }
 
 }

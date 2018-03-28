@@ -11,6 +11,7 @@ import org.bson.types.ObjectId;
 
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriInfo;
 import java.io.IOException;
 import java.io.InputStream;
@@ -20,6 +21,8 @@ import java.util.Objects;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import static io.swagger.api.Constants.TEXT_URILIST;
 
 /**
  * <h3>Data Access Object library</h3>
@@ -75,7 +78,7 @@ public class Dao {
      * @param accept requested mime-type
      * @return list of models or datasets
      */
-    @Produces({"text/uri-list", "application/json"})
+    @Produces({ TEXT_URILIST, MediaType.APPLICATION_JSON})
     public Object listData(String collection, UriInfo ui, String accept) {
         StringBuilder result = new StringBuilder();
         mongoCollection = mongoDB.getCollection(collection);
@@ -224,7 +227,7 @@ public class Dao {
      * @return Boolean
      */
     Boolean updateData(String collection, Document document, String id) {
-        if (id == "") LOG.log(Level.WARNING,"Cannot update document without id: " + document.toJson());
+        if (id.equals("")) LOG.log(Level.WARNING,"Cannot update document without id: " + document.toJson());
         try {
             mongoCollection = mongoDB.getCollection(collection);
             String strictJSON = document.toJson();

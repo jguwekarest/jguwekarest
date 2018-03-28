@@ -44,8 +44,9 @@ public class WekaUtilsTest {
 
     @Test(description = "Test WekaOptionHelper for WEKA params")
     public void getOptions() throws Exception {
-        HashMap<String, Object> params = new HashMap<>();
 
+        HashMap<String, Object> params = new HashMap<>();
+        // J48
         params.put("binarySplits", "0");
         params.put("confidenceFactor", "0.25");
         params.put("minNumObj", "2");
@@ -59,9 +60,31 @@ public class WekaUtilsTest {
         String[] options = WekaOptionHelper.getJ48Options(params);
         Assert.assertEquals("-M 2 -R -N 5 -Q 1 -U", StringUtil.join(options," "), "get J48 options");
 
-        options = WekaOptionHelper.getKNNOptions(0, 1, 0, "0",0, "LinearNNSearch");
+        // KNN
+        params = new HashMap<>();
+        params.put("windowSize", 0);
+        params.put("KNN", 1);
+        params.put("crossValidate", 0);
+        params.put("distanceWeighting", 0);
+        params.put("meanSquared",  0);
+        params.put("nearestNeighbourSearchAlgorithm", "LinearNNSearch");
+        //Integer windowSize, Integer KNN, Integer crossValidate, String distanceWeighting, Integer meanSquared,
+        // String nearestNeighbourSearchAlgorithm
+        // 0, 1, 0, "0",0, "LinearNNSearch"
+        options = WekaOptionHelper.getKNNOptions(params);
         Assert.assertEquals("-W 0 -K 1 -A weka.core.neighboursearch.LinearNNSearch -A \"weka.core.EuclideanDistance -R first-last\"",StringUtil.join(options," "), "get KNN options");
 
+
+        // Linear Regression
+        params = new HashMap<>();
+        params.put("attributeSelectionMethod", 0);
+        params.put("eliminateColinearAttributes",1);
+        params.put("ridge", 1.0E-8);
+
+        options = WekaOptionHelper.getLROptions(params);
+        Assert.assertEquals("-S 0 -R 1.0E-8 -num-decimal-places 4",StringUtil.join(options," "), "get Bagging options");
+
+        // BayesNet
         params = new HashMap<>();
         params.put("estimator", "SimpleEstimator");
         params.put("estimatorParams", new BigDecimal(0.5));
@@ -69,17 +92,58 @@ public class WekaUtilsTest {
         params.put("searchAlgorithm",  "local.K2");
         params.put("searchParams", "-P 1 -S BAYES");
 
-        //options = WekaOptionHelper.getBayesNetOptions("SimpleEstimator", new BigDecimal(0.5), 0, "local.K2","-P 1 -S BAYES");
         options = WekaOptionHelper.getBayesNetOptions(params);
         Assert.assertEquals("-D -Q weka.classifiers.bayes.net.search.local.K2 -- -P 1 -S BAYES -E weka.classifiers.bayes.net.estimate.SimpleEstimator -- -A 0.5",StringUtil.join(options," "), "get BayesNet options");
 
-        options = WekaOptionHelper.getLibSVMOptions(0, 0.0F, 1F, 3,new BigDecimal("0.001"), new BigDecimal(0),
-                2,new BigDecimal("0.1"),false,new BigDecimal("0.5") , false, true,"1");
-        Assert.assertEquals("-S 0 -R 0.0 -C 1.0 -D 3 -E 0.001 -G 0 -K 2 -P 0.1 -N 0.5 -W 1",StringUtil.join(options," "), "get Lib SVM options");
+        // NaiveBayes
+        params = new HashMap<>();
+        params.put("batchSize", 101);
+        params.put("useKernelEstimator", 1);
+        params.put("useSupervisedDiscretization", 0);
 
-        options = WekaOptionHelper.getM5RuleOptions(1, 1, 4.0, 1);
+        options = WekaOptionHelper.getNaiveBayesOptions(params);
+        Assert.assertEquals("-batch-size 101 -K",StringUtil.join(options," "), "get BayesNet options");
+
+        params = new HashMap<>();
+        params.put("batchSize", 102);
+        params.put("useKernelEstimator", 0);
+        params.put("useSupervisedDiscretization", 1);
+
+        options = WekaOptionHelper.getNaiveBayesOptions(params);
+        Assert.assertEquals("-batch-size 102 -D",StringUtil.join(options," "), "get BayesNet options");
+
+
+
+        // LibSVM
+        params = new HashMap<>();
+        params.put("svmType", 0);
+        params.put("coef0", 0.0f);
+        params.put("cost", 1f);
+        params.put("degree", 3);
+        params.put("eps", 0.001d);
+        params.put("gamma", 0.1d);
+        params.put("kernelType", 2);
+        params.put("loss", 0.1d);
+        params.put("normalize", false);
+        params.put("nu", 0.5d);
+        params.put("probabilityEstimates", false);
+        params.put("shrinking", true);
+        params.put("weights", "1");
+
+        options = WekaOptionHelper.getLibSVMOptions(params);
+        Assert.assertEquals("-S 0 -R 0.0 -C 1.0 -D 3 -E 0.001 -G 0.1 -K 2 -P 0.1 -N 0.5 -W 1",StringUtil.join(options," "), "get Lib SVM options");
+
+        // M5Rules
+        params = new HashMap<>();
+        params.put("unpruned", 1);
+        params.put("useUnsmoothed", 1);
+        params.put("minNumInstances", 4.0d);
+        params.put("buildRegressionTree",  1);
+        //Integer unpruned, Integer useUnsmoothed, Double minNumInstances, Integer buildRegressionTree
+        options = WekaOptionHelper.getM5RuleOptions(params);
         Assert.assertEquals("-N -U -M 4.0 -R",StringUtil.join(options," "), "get M5Rule options");
 
+        // AdaBoost M1
         params = new HashMap<>();
         params.put("batchSize", 102);
         params.put("numIterations", 10);
@@ -88,6 +152,7 @@ public class WekaUtilsTest {
         options = WekaOptionHelper.getAdaBoostOptions(params);
         Assert.assertEquals("-P 101 -I 10 -batch-size 102",StringUtil.join(options," "), "get Ada Boost options");
 
+        // Bagging
         params = new HashMap<>();
         params.put("batchSize", 100);
         params.put("bagSizePercent",75);

@@ -2,8 +2,9 @@ package io.swagger.api.algorithm;
 
 
 import io.swagger.annotations.*;
+import io.swagger.api.AlgorithmService;
 import io.swagger.api.NotFoundException;
-import io.swagger.api.factories.FunctionsFactory;
+import io.swagger.api.factories.AlgorithmFactory;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 
@@ -13,24 +14,26 @@ import javax.ws.rs.core.*;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
+import java.util.HashMap;
 
 import static io.swagger.api.Constants.SAVE_MODEL_NOTE;
+import static io.swagger.api.Constants.TEXT_URILIST;
 
 @Path("/algorithm")
 @Api(description = "the functions algorithm API")
 
 public class Functions {
 
-    private final FunctionsService delegate;
+    private final AlgorithmService delegate;
 
     public Functions(@Context ServletConfig servletContext) {
-        FunctionsService delegate = null;
+        AlgorithmService delegate = null;
 
         if (servletContext != null) {
-            String implClass = servletContext.getInitParameter("Functions.implementation");
+            String implClass = servletContext.getInitParameter("Algorithm.implementation");
             if (implClass != null && !"".equals(implClass.trim())) {
                 try {
-                    delegate = (FunctionsService) Class.forName(implClass).newInstance();
+                    delegate = (AlgorithmService) Class.forName(implClass).newInstance();
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
@@ -38,7 +41,7 @@ public class Functions {
         }
 
         if (delegate == null) {
-            delegate = FunctionsFactory.getFunctions();
+            delegate = AlgorithmFactory.getAlgorithm();
         }
         this.delegate = delegate;
     }
@@ -47,7 +50,7 @@ public class Functions {
     @POST
     @Path("/linearRegression")
     @Consumes({"multipart/form-data"})
-    @Produces({"text/x-arff", "text/uri-list"})
+    @Produces({ TEXT_URILIST, MediaType.APPLICATION_JSON})
     @ApiOperation(value = "REST interface to the WEKA linear regression classifier.",
         notes = "REST interface to the WEKA linear regression classifier. " + SAVE_MODEL_NOTE,
         tags = {"algorithm"},
@@ -76,15 +79,22 @@ public class Functions {
         @ApiParam(value = "authorization token") @HeaderParam("subjectid") String subjectid,
         @Context UriInfo ui, @Context HttpHeaders headers, @Context SecurityContext securityContext)
         throws NotFoundException, IOException {
-            return delegate.linearRegressionPost(fileInputStream, fileDetail, datasetUri, attributeSelectionMethod, eliminateColinearAttributes, ridge,
-                subjectid, headers, ui, securityContext);
+
+            HashMap<String, Object> params = new HashMap<>();
+            params.put("datasetUri", datasetUri);
+            params.put("attributeSelectionMethod", attributeSelectionMethod);
+            params.put("eliminateColinearAttributes", eliminateColinearAttributes);
+            params.put("ridge", ridge);
+    //attributeSelectionMethod, eliminateColinearAttributes, ridge
+            return delegate.algorithmPost(fileInputStream, fileDetail, datasetUri, "LinearRegression", params,
+                                          headers, ui, securityContext);
     }
 
 
     @POST
     @Path("/libsvm")
     @Consumes({"multipart/form-data"})
-    @Produces({"text/x-arff", "text/uri-list"})
+    @Produces({ TEXT_URILIST, MediaType.APPLICATION_JSON})
     @ApiOperation(value = "REST interface to the WEKA support vector machine wrapper library classifier.",
         notes = "REST interface to the WEKA support vector machine wrapper library classifier." + SAVE_MODEL_NOTE,
         tags = {"algorithm"},
@@ -123,7 +133,24 @@ public class Functions {
         @ApiParam(value = "authorization token") @HeaderParam("subjectid") String subjectid,
         @Context UriInfo ui, @Context HttpHeaders headers, @Context SecurityContext securityContext)
         throws NotFoundException, IOException {
-            return delegate.libSVMPost(fileInputStream, fileDetail, datasetUri, svmType, coef0, cost, degree, eps, gamma, kernelType, loss,
-                normalize, nu, probabilityEstimates, shrinking, weights, subjectid, headers, ui, securityContext);
+
+            HashMap<String, Object> params = new HashMap<>();
+            params.put("datasetUri", datasetUri);
+            params.put("svmType", svmType);
+            params.put("coef0", coef0);
+            params.put("cost", cost);
+            params.put("degree", degree);
+            params.put("eps", eps);
+            params.put("gamma", gamma);
+            params.put("kernelType", kernelType);
+            params.put("loss", loss);
+            params.put("normalize", normalize);
+            params.put("nu", nu);
+            params.put("probabilityEstimates", probabilityEstimates);
+            params.put("shrinking", shrinking);
+            params.put("weights", weights);
+            //svmType, coef0, cost, degree, eps, gamma, kernelType, loss, normalize, nu, probabilityEstimates, shrinking, weights
+            return delegate.algorithmPost(fileInputStream, fileDetail, datasetUri, "LibSVM", params,
+                                          headers, ui, securityContext);
     }
 }

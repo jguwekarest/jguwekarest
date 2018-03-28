@@ -1,8 +1,9 @@
 package io.swagger.api.algorithm;
 
 import io.swagger.annotations.*;
+import io.swagger.api.AlgorithmService;
 import io.swagger.api.NotFoundException;
-import io.swagger.api.factories.RulesFactory;
+import io.swagger.api.factories.AlgorithmFactory;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 
@@ -11,24 +12,26 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
 
 import static io.swagger.api.Constants.SAVE_MODEL_NOTE;
+import static io.swagger.api.Constants.TEXT_URILIST;
 
 @Path("/algorithm")
-@Api(description = "the rules algorithm API")
+@Api(description = "Rules algorithm API")
 
 public class Rules {
 
-    private final RulesService delegate;
+    private final AlgorithmService delegate;
 
     public Rules(@Context ServletConfig servletContext) {
-        RulesService delegate = null;
+        AlgorithmService delegate = null;
 
         if (servletContext != null) {
-            String implClass = servletContext.getInitParameter("Rules.implementation");
+            String implClass = servletContext.getInitParameter("Algorithm.implementation");
             if (implClass != null && !"".equals(implClass.trim())) {
                 try {
-                    delegate = (RulesService) Class.forName(implClass).newInstance();
+                    delegate = (AlgorithmService) Class.forName(implClass).newInstance();
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
@@ -36,7 +39,7 @@ public class Rules {
         }
 
         if (delegate == null) {
-            delegate = RulesFactory.getRules();
+            delegate = AlgorithmFactory.getAlgorithm();
         }
         this.delegate = delegate;
     }
@@ -45,7 +48,7 @@ public class Rules {
     @POST
     @Path("/ZeroR")
     @Consumes({ "multipart/form-data" })
-    @Produces({ "text/x-arff", "text/uri-list"})
+    @Produces({ TEXT_URILIST, MediaType.APPLICATION_JSON})
     @ApiOperation(value = "REST interface to the WEKA ZeroR classifier.",
         notes = "REST interface to the WEKA ZeroR classifier. " + SAVE_MODEL_NOTE,
         tags={ "algorithm" },
@@ -71,14 +74,17 @@ public class Rules {
         @ApiParam(value = "authorization token") @HeaderParam("subjectid") String subjectid,
         @Context UriInfo uriInfo, @Context HttpHeaders headers, @Context SecurityContext securityContext)
         throws NotFoundException, IOException {
-            return delegate.algorithmZeroRPost(fileInputStream,fileDetail,datasetUri,subjectid,headers,uriInfo);
+            HashMap<String, Object> params = new HashMap<>();
+
+            return delegate.algorithmPost(fileInputStream,fileDetail,datasetUri,"ZeroR", params,
+                                          headers, uriInfo, securityContext);
     }
 
 
     @POST
     @Path("/M5Rules")
     @Consumes({ "multipart/form-data" })
-    @Produces({ "text/x-arff", "text/uri-list"})
+    @Produces({ TEXT_URILIST, MediaType.APPLICATION_JSON})
     @ApiOperation(value = "REST interface to the WEKA M5Rules classifier.",
         notes = "REST interface to the WEKA M5Rules classifier. " + SAVE_MODEL_NOTE,
         tags={ "algorithm" },
@@ -106,8 +112,15 @@ public class Rules {
         @ApiParam(value = "authorization token") @HeaderParam("subjectid") String subjectid,
         @Context UriInfo uriInfo, @Context HttpHeaders headers, @Context SecurityContext securityContext)
         throws Exception {
-            return delegate.algorithmM5RulesPost(fileInputStream,fileDetail,datasetUri,unpruned,useUnsmoothed,minNumInstances,
-                buildRegressionTree,subjectid,headers,uriInfo);
+            HashMap<String, Object> params = new HashMap<>();
+            params.put("datasetUri", datasetUri);
+            params.put("unpruned", unpruned);
+            params.put("useUnsmoothed", useUnsmoothed);
+            params.put("minNumInstances", minNumInstances);
+            params.put("buildRegressionTree", buildRegressionTree);
+
+            return delegate.algorithmPost(fileInputStream, fileDetail, datasetUri, "M5Rules", params,
+                                          headers, uriInfo, securityContext);
     }
 
 }

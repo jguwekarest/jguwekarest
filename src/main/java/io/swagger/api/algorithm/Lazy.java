@@ -1,8 +1,9 @@
 package io.swagger.api.algorithm;
 
 import io.swagger.annotations.*;
+import io.swagger.api.AlgorithmService;
 import io.swagger.api.NotFoundException;
-import io.swagger.api.factories.LazyFactory;
+import io.swagger.api.factories.AlgorithmFactory;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 
@@ -11,24 +12,26 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
 
 import static io.swagger.api.Constants.SAVE_MODEL_NOTE;
+import static io.swagger.api.Constants.TEXT_URILIST;
 
 @Path("/algorithm")
-@Api(description = "the lazy algorithm API")
+@Api(description = "Lazy algorithm API")
 
 public class Lazy {
 
-    private final LazyService delegate;
+    private final AlgorithmService delegate;
 
-    public Lazy(@Context ServletConfig servletContext) {
-        LazyService delegate = null;
+    public Lazy(@Context ServletConfig servletContext)  {
+        AlgorithmService delegate = null;
 
         if (servletContext != null) {
-            String implClass = servletContext.getInitParameter("Lazy.implementation");
+            String implClass = servletContext.getInitParameter("Algorithm.implementation");
             if (implClass != null && !"".equals(implClass.trim())) {
                 try {
-                    delegate = (LazyService) Class.forName(implClass).newInstance();
+                    delegate = (AlgorithmService) Class.forName(implClass).newInstance();
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
@@ -36,7 +39,7 @@ public class Lazy {
         }
 
         if (delegate == null) {
-            delegate = LazyFactory.getLazy();
+            delegate = AlgorithmFactory.getAlgorithm();
         }
         this.delegate = delegate;
     }
@@ -44,7 +47,7 @@ public class Lazy {
     @POST
     @Path("/kNNclassification")
     @Consumes({ "multipart/form-data" })
-    @Produces({ "text/x-arff", "text/uri-list"})
+    @Produces({ TEXT_URILIST, MediaType.APPLICATION_JSON})
     @ApiOperation(
         value = "REST interface to the WEKA K-nearest neighbours classifier.",
         notes = "REST interface to the WEKA K-nearest neighbours classifier. " + SAVE_MODEL_NOTE,
@@ -75,10 +78,21 @@ public class Lazy {
         @ApiParam(value = "Whether the mean squared error is used rather than mean absolute error when doing cross-validation for regression problems. Must be 0 or 1 (Default: 0).", defaultValue="0")@FormDataParam("meanSquared")  Integer meanSquared,
         @ApiParam(value = "The nearest neighbour search algorithm to use (Default: weka.core.neighboursearch.LinearNNSearch). Fixed.", defaultValue="LinearNNSearch")@FormDataParam("nearestNeighbourSearchAlgorithm")  String nearestNeighbourSearchAlgorithm,
         @ApiParam(value = "Authorization token" ) @HeaderParam("subjectid") String subjectid,
-        @Context UriInfo ui, @Context HttpHeaders headers)
+        @Context UriInfo uriInfo, @Context HttpHeaders headers, @Context SecurityContext securityContext)
         throws NotFoundException, IOException {
-        return delegate.algorithmKNNclassificationPost(fileInputStream,fileDetail,datasetUri,windowSize,KNN,crossValidate,distanceWeighting,meanSquared,
-            nearestNeighbourSearchAlgorithm,subjectid,headers,ui);
+
+        HashMap<String, Object> params = new HashMap<>();
+        HashMap<String, Object> metaParams = new HashMap<>();
+        params.put("datasetUri", datasetUri);
+        params.put("windowSize", windowSize);
+        params.put("KNN", KNN);
+        params.put("crossValidate", crossValidate);
+        params.put("distanceWeighting", distanceWeighting);
+        params.put("meanSquared", meanSquared);
+        params.put("nearestNeighbourSearchAlgorithm", nearestNeighbourSearchAlgorithm);
+
+        return delegate.algorithmPost(fileInputStream, fileDetail, datasetUri, "KNN", params,
+                                      headers, uriInfo, securityContext);
     }
 
 }

@@ -21,6 +21,7 @@ public class JacksonJsonProvider extends JacksonJaxbJsonProvider {
         ObjectMapper objectMapper = new ObjectMapper()
             .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
             .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
+            .enable(SerializationFeature.INDENT_OUTPUT)
             .registerModule(new JodaModule())
             .setDateFormat(new RFC3339DateFormat());
 
