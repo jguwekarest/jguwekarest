@@ -82,7 +82,6 @@ public class Lazy {
         throws NotFoundException, IOException {
 
         HashMap<String, Object> params = new HashMap<>();
-        HashMap<String, Object> metaParams = new HashMap<>();
         params.put("datasetUri", datasetUri);
         params.put("windowSize", windowSize);
         params.put("KNN", KNN);

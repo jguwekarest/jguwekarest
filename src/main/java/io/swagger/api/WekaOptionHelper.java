@@ -54,7 +54,6 @@ public class WekaOptionHelper {
      */
     public static String[] getJ48Options(HashMap params) {
         String parameters = "";
-        String[] options;
         if (params.get("binarySplits") != null && params.get("binarySplits").toString().equals("1")) {
             parameters += " -B ";
         }
@@ -89,15 +88,8 @@ public class WekaOptionHelper {
         }
 
         LOG.log(Level.INFO,"parameterstring for weka: weka.classifiers.trees.J48 " + parameters);
-
-        try {
-            options = weka.core.Utils.splitOptions(parameters);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-
-        return options;
+        
+        return splitOptions(parameters);
     }
 
     /**
@@ -107,7 +99,6 @@ public class WekaOptionHelper {
      */
     public static String[] getKNNOptions(HashMap params) {
         String parameters = "";
-        String[] options;
         parameters += getParamString(params.get("windowSize"), "W", 0);
         parameters += getParamString(params.get("KNN"), "K", 1);
         parameters += ((params.get("crossValidate") != null && !params.get("crossValidate").toString().equals("0")) ? " -X " : "");
@@ -129,14 +120,7 @@ public class WekaOptionHelper {
 
         LOG.log(Level.INFO,"parameterstring for weka: IBk " + parameters.replaceAll("( )+", " "));
 
-        try {
-            options = weka.core.Utils.splitOptions(parameters);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-
-        return options;
+        return splitOptions(parameters);
     }
 
     /**
@@ -146,7 +130,6 @@ public class WekaOptionHelper {
      */
     public static String[] getBayesNetOptions(HashMap params){
         String parameters = "";
-        String[] options;
         if (params.get("useADTree") != null && !params.get("useADTree").toString().equals("0")) { parameters += " -D ";}
 
         // Set the parameter for the searchAlgo
@@ -171,18 +154,11 @@ public class WekaOptionHelper {
         }
         LOG.log(Level.INFO,"parameterstring for weka: " + parameters);
 
-        try {
-            options = weka.core.Utils.splitOptions(parameters);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-        return options;
+        return splitOptions(parameters);
     }
 
     public static String[] getNaiveBayesOptions(HashMap params){
         String parameters = "";
-        String[] options;
 
         parameters += WekaOptionHelper.getParamString(params.get("batchSize") ,"batch-size", 100);
 
@@ -192,13 +168,7 @@ public class WekaOptionHelper {
             parameters += " -D ";
         }
 
-        try {
-            options = weka.core.Utils.splitOptions(parameters);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-        return options;
+        return splitOptions(parameters);
     }
 
 
@@ -209,7 +179,6 @@ public class WekaOptionHelper {
      */
     public static String[] getLibSVMOptions(HashMap params){
         String parameters = "";
-        String[] options;
         parameters += getParamString(params.get("svmType"), "S", 0);
         parameters += getParamString(params.get("coef0"), "R", 0);
         parameters += getParamString(params.get("cost"), "C", "1.0");
@@ -231,13 +200,7 @@ public class WekaOptionHelper {
 
         LOG.log(Level.INFO,"parameterstring for weka: weka.classifiers.function.LibSVM " + parameters);
 
-        try {
-            options = weka.core.Utils.splitOptions(parameters);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-        return options;
+        return splitOptions(parameters);
     }
 
     /**
@@ -247,7 +210,6 @@ public class WekaOptionHelper {
      */
     public static String[] getLROptions(HashMap params) {
         String parameters = "";
-        String[] options;
 
         parameters += ((params.get("attributeSelectionMethod") != null) ? (" -S " + params.get("attributeSelectionMethod") + " ") : (" -S 1 ") );
         if (params.get("eliminateColinearAttributes") != null && params.get("eliminateColinearAttributes").toString().equals("0")) parameters += " -C ";
@@ -256,15 +218,8 @@ public class WekaOptionHelper {
 
         LOG.log(Level.INFO,"parameterstring for weka: weka.classifiers.functions.LinearRegression " + parameters);
 
-        try {
-            options = weka.core.Utils.splitOptions(parameters);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-        return options;
+        return splitOptions(parameters);
     }
-
 
     /**
      * Generate option string for M5Rule
@@ -273,7 +228,6 @@ public class WekaOptionHelper {
      */
     public static String[] getM5RuleOptions(HashMap params) {
         String parameters = "";
-        String[] options;
         // set unpruned
         if (params.get("unpruned") != null && params.get("unpruned").toString().equals("1")) { parameters += " -N ";}
         // set use unsmoothed
@@ -285,13 +239,7 @@ public class WekaOptionHelper {
 
         LOG.log(Level.INFO,"parameterstring for weka: M5Rules " + parameters);
 
-        try {
-            options = weka.core.Utils.splitOptions(parameters);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-        return options;
+        return splitOptions(parameters);
     }
 
     /**
@@ -301,21 +249,14 @@ public class WekaOptionHelper {
      */
     public static String[] getAdaBoostOptions(HashMap params) {
         String parameters = "";
-        String[] options;
-
         parameters += WekaOptionHelper.getParamString(params.get("weightThreshold"), "P", "100");
         if (params.get("useResampling") != null && params.get("useResampling").toString().equals("1")) { parameters += " -Q ";}
 
         parameters += WekaOptionHelper.getParamString(params.get("numIterations"),"I", 10);
         parameters += WekaOptionHelper.getParamString(params.get("batchSize") ,"batch-size", 100);
         LOG.log(Level.INFO,"parameterstring for weka: weka.classifiers.meta.AdaBoostM1 " + parameters);
-        try {
-            options = weka.core.Utils.splitOptions(parameters);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-        return options;
+
+        return splitOptions(parameters);
     }
 
     /**
@@ -325,19 +266,12 @@ public class WekaOptionHelper {
      */
     public static String[] getBaggingOptions(HashMap params){
         String parameters = "";
-        String[] options;
 
         parameters += WekaOptionHelper.getParamString(params.get("batchSize") ,"batch-size", 100);
         parameters += WekaOptionHelper.getParamString(params.get("bagSizePercent") ,"P", 100);
         parameters += WekaOptionHelper.getParamString(params.get("numIterations"),"I", 10);
         LOG.log(Level.INFO,"parameterstring for weka: weka.classifiers.meta.Bagging " + parameters);
-        try {
-            options = weka.core.Utils.splitOptions(parameters);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-        return options;
+        return splitOptions(parameters);
     }
 
     /**
@@ -364,4 +298,22 @@ public class WekaOptionHelper {
              return ((value != null) ? (" -" + option + " " + value + " ") : (" -" + option + " " + defaultValue + " ") );
          }
      }
+
+
+    /**
+     * Split parameter string with weka.core.Utils.splitOptions method
+     * @param parameters parameter string to split to String[]
+     * @return String[] options for weka library
+     */
+    public static String[] splitOptions(String parameters) {
+        String[] options;
+        try {
+            options = weka.core.Utils.splitOptions(parameters);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+        return options;
+    }
+
 }

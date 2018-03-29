@@ -8,9 +8,7 @@ import org.glassfish.jersey.media.multipart.FormDataParam;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
 import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.SecurityContext;
+import javax.ws.rs.core.*;
 import java.io.InputStream;
 
 @Path("/cluster")
@@ -76,7 +74,8 @@ public class Cluster {
         @ApiParam(value = "Maximum number of clusters to consider during cross-validation to select the best number of clusters (default = -1).", defaultValue = "-1")@FormDataParam("maximumNumberOfClusters") Integer maximumNumberOfClusters,
         @ApiParam(value = "The number of clusters. -1 to select number of clusters automatically by cross validation (default = -1).", defaultValue="-1") @FormDataParam("numClusters") Integer numClusters,
         @ApiParam(value = "Maximum number of iterations (default = 100).", defaultValue = "100")@FormDataParam("maxIterations") Integer maxIterations,
-        @Context SecurityContext securityContext, @HeaderParam("subjectid") String subjectid)
+        @ApiParam(value = "authorization token") @HeaderParam("subjectid") String subjectid,
+        @Context UriInfo ui, @Context HttpHeaders headers, @Context SecurityContext securityContext)
         throws Exception {
 
             return delegate.clusterEMPost(fileInputStream, fileDetail, datasetUri, numFolds, numKMeansRuns, maximumNumberOfClusters,

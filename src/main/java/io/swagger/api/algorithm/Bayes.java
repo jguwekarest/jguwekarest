@@ -85,7 +85,6 @@ public class Bayes {
         throws io.swagger.api.NotFoundException, IOException {
 
                 HashMap<String, Object> params = new HashMap<>();
-                HashMap<String, Object> metaParams = new HashMap<>();
                 params.put("datasetUri", datasetUri);
                 params.put("estimator", estimator);
                 params.put("estimatorParams", estimatorParams);
@@ -216,7 +215,6 @@ public class Bayes {
         return delegate.algorithmPost(fileInputStream, fileDetail, datasetUri, "BayesNet", params,
                     "Bagging", metaParams, headers, ui, securityContext);
     }
-
 
 
     /**

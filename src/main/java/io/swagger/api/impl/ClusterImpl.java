@@ -18,7 +18,10 @@ import java.io.InputStream;
 public class ClusterImpl extends ClusterService {
     @Override
     @Produces("text/plain")
-    public Response clusterEMPost(InputStream fileInputStream, FormDataContentDisposition fileDetail, String datasetUri, Integer numFolds, Integer numKMeansRuns, Integer maximumNumberOfClusters, Integer numClusters, Integer maxIterations,SecurityContext securityContext, String subjectid) throws Exception {
+    public Response clusterEMPost(InputStream fileInputStream, FormDataContentDisposition fileDetail, String datasetUri,
+                                  Integer numFolds, Integer numKMeansRuns, Integer maximumNumberOfClusters, Integer numClusters,
+                                  Integer maxIterations,SecurityContext securityContext, String subjectid) throws Exception {
+
         String txtStr = DatasetService.getArff(fileInputStream, fileDetail, datasetUri, subjectid);
         Instances instances = WekaUtils.instancesFromString(txtStr, false);
 

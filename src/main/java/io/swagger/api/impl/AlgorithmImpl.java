@@ -33,7 +33,6 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Vector;
 import java.util.concurrent.TimeUnit;
 
 import static io.swagger.api.Constants.TEXT_URILIST;
@@ -156,8 +155,8 @@ public class AlgorithmImpl extends AlgorithmService {
                     setState(Task.Step.PREPARATION, 10f);
                     String[] options = getClassifierOptions(classifierName, params);
                     Instances instances = WekaUtils.instancesFromString(txtStr, true);
-                    String id = "";
-                    Vector<Object> v = new Vector<>();
+                    String id;
+                    //Vector<Object> v = new Vector<>();
                     try {
                         switch (classifierName) {
                             case "BayesNet":
@@ -212,15 +211,15 @@ public class AlgorithmImpl extends AlgorithmService {
                         metaClassifier.buildClassifier(instances);
                         setState(Task.Step.VALIDATION, 70f);
                         String validation = Validation.crossValidation(instances, metaClassifier);
-                        v.add(metaClassifier);
-                        v.add(new Instances(instances, 0));
+                        //v.add(metaClassifier);
+                        //v.add(new Instances(instances, 0));
                         id = ModelService.saveModel(metaClassifier, ArrayUtils.addAll(metaClassifier.getOptions(), classifier.getOptions()), params, validation, subjectid);
                     } else {
                         classifier.buildClassifier(instances);
                         setState(Task.Step.VALIDATION, 70f);
                         String validation = Validation.crossValidation(instances, classifier);
-                        v.add(classifier);
-                        v.add(new Instances(instances, 0));
+                        //v.add(classifier);
+                        //v.add(new Instances(instances, 0));
                         id = ModelService.saveModel(classifier, classifier.getOptions(), params, validation, subjectid);
                     }
                     String baseuri = ui.getBaseUri().toString();
