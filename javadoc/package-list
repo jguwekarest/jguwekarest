@@ -1,5 +1,6 @@
 io.swagger.api
 io.swagger.api.algorithm
+io.swagger.api.annotations
 io.swagger.api.authorization
 io.swagger.api.cluster
 io.swagger.api.data
