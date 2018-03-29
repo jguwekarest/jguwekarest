@@ -38,7 +38,7 @@ public class Bootstrap extends HttpServlet {
               "See [Documentation](https://jguwekarest.github.io/jguwekarest/), [Issue Tracker](https://github.com/jguwekarest/jguwekarest/issues) and [Code](https://github.com/jguwekarest/jguwekarest) at Github.")
       //.termsOfService("")
       .contact(new Contact()
-        .email("rautenberg@uni-mainz.de?subject=JGU WEKA REST Service"))
+        .email("rautenberg@uni-mainz.de?subject=JGU%20WEKA%20REST%20Service"))
       .license(new License()
         .name("GNU General Public License 3")
         .url("https://www.gnu.org/licenses/gpl-3.0.de.html"))
