@@ -1,8 +1,15 @@
 package io.swagger.api.data;
 
 
-import io.swagger.annotations.*;
 import io.swagger.api.ApiException;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.extensions.Extension;
+import io.swagger.v3.oas.annotations.extensions.ExtensionProperty;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 
@@ -12,7 +19,7 @@ import java.io.InputStream;
 import java.util.Map;
 
 @Path("/model")
-@Api(description = "Model API")
+//@Api(description = "Model API")
 
 public class Model {
 
@@ -20,9 +27,9 @@ public class Model {
     @Path("/")
     @Consumes({ "multipart/form-data" })
     @Produces({ "text/uri-list", "application/json" })
-    @ApiOperation(
-        value = "List all Models",
-        notes = "List all Models.",
+    @Operation(
+        description = "List all Models",
+        summary = "List all Models.",
         tags={ "model"},
         extensions = {
             @Extension(properties = {@ExtensionProperty(name = "orn-@id", value = "/model")}),
@@ -31,13 +38,13 @@ public class Model {
             @Extension(name = "orn:returns", properties = {@ExtensionProperty(name = "x-orn-@id", value = "x-orn:Models")})
         })
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "OK"),
-        @ApiResponse(code = 400, message = "Bad Request"),
-        @ApiResponse(code = 401, message = "Unauthorized"),
-        @ApiResponse(code = 403, message = "Forbidden"),
-        @ApiResponse(code = 404, message = "Resource Not Found") })
+        @ApiResponse(responseCode = "200", description = "OK"),
+        @ApiResponse(responseCode = "400", description = "Bad Request"),
+        @ApiResponse(responseCode = "401", description = "Unauthorized"),
+        @ApiResponse(responseCode = "403", description = "Forbidden"),
+        @ApiResponse(responseCode = "404", description = "Resource Not Found") })
     public Response getModelList(
-        @ApiParam(value = "Authorization token" )@HeaderParam("subjectid") String subjectid,
+        @Parameter(description = "Authorization token" )@HeaderParam("subjectid") String subjectid,
         @Context UriInfo ui, @Context HttpHeaders headers) throws ApiException {
 
             String accept = headers.getRequestHeaders().getFirst("accept");
@@ -53,10 +60,10 @@ public class Model {
     @GET
     @Path("/{id}")
     @Consumes({ "multipart/form-data" })
-    @Produces({ "text/plain", "application/json" })
-    @ApiOperation(
-        value = "Get representation of a model.",
-        notes = "Get representation of a model.",
+    @Produces({ "text/plain", "application/json", "application/xml" })
+    @Operation(
+        description = "Get representation of a model.",
+        summary = "Get representation of a model.",
         tags={ "model" },
             extensions = {
                 @Extension(properties = {@ExtensionProperty(name = "orn-@id", value = "/model/{id}")}),
@@ -65,14 +72,16 @@ public class Model {
                 @Extension(name = "orn:returns", properties = {@ExtensionProperty(name = "x-orn-@id", value = "x-orn:Model")})
             })
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "OK"),
-        @ApiResponse(code = 400, message = "Bad Request"),
-        @ApiResponse(code = 401, message = "Unauthorized"),
-        @ApiResponse(code = 403, message = "Forbidden"),
-        @ApiResponse(code = 404, message = "Resource Not Found") })
+        @ApiResponse(responseCode = "200", content = @Content(schema = @Schema(implementation = String.class))),
+        //@ApiResponse( content = @Content(mediaType = "application/json")),
+        @ApiResponse(responseCode = "400", description = "Bad Request"),
+        @ApiResponse(responseCode = "401", description = "Unauthorized"),
+        @ApiResponse(responseCode = "403", description = "Forbidden"),
+        @ApiResponse(responseCode = "404", description = "Resource Not Found") })
+
     public Response getModel(
-        @ApiParam(value = "model ID" )@PathParam("id") String id,
-        @ApiParam(value = "Authorization token" )@HeaderParam("subjectid") String subjectid,
+        @Parameter(description = "model ID" )@PathParam("id") String id,
+        @Parameter(description = "Authorization token" )@HeaderParam("subjectid") String subjectid,
         @Context UriInfo ui,
         @Context HttpHeaders headers) throws ApiException {
 
@@ -89,7 +98,7 @@ public class Model {
     @Path("/{id}")
     @Consumes({ "multipart/form-data" })
     @Produces({ "text/x-arff" })
-    @ApiOperation(value = "Predict testdata with a model.", notes = "Predict testdata with a model.", tags={ "model", },
+    @Operation(description = "Predict testdata with a model.", summary = "Predict testdata with a model.", tags={ "model", },
         extensions = {
             @Extension(properties = {@ExtensionProperty(name = "orn-@id", value = "/model/{id}")}),
             @Extension(properties = {@ExtensionProperty(name = "orn-@type", value = "x-orn:Model")}),
@@ -97,17 +106,17 @@ public class Model {
             @Extension(name = "orn:returns", properties = {@ExtensionProperty(name = "x-orn-@id", value = "x-orn:Prediction")})
         })
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "OK"),
-        @ApiResponse(code = 400, message = "Bad Request"),
-        @ApiResponse(code = 401, message = "Unauthorized"),
-        @ApiResponse(code = 403, message = "Forbidden"),
-        @ApiResponse(code = 404, message = "Resource Not Found") })
+        @ApiResponse(responseCode = "200", description = "OK"),
+        @ApiResponse(responseCode = "400", description = "Bad Request"),
+        @ApiResponse(responseCode = "401", description = "Unauthorized"),
+        @ApiResponse(responseCode = "403", description = "Forbidden"),
+        @ApiResponse(responseCode = "404", description = "Resource Not Found") })
     public Response modelPost(
         @FormDataParam("file") InputStream fileInputStream,
         @FormDataParam("file") FormDataContentDisposition fileDetail,
-        @ApiParam(value = "Dataset ID (to the arff representation of a dataset).")@FormDataParam("datasetID")  String datasetID,
-        @ApiParam(value = "model ID" )@PathParam("id") String id,
-        @ApiParam(value = "authorization token") @HeaderParam("subjectid") String subjectid,
+        @Parameter(description = "Dataset ID (to the arff representation of a dataset).")@FormDataParam("datasetID")  String datasetID,
+        @Parameter(description = "model ID" )@PathParam("id") String id,
+        @Parameter(description = "authorization token") @HeaderParam("subjectid") String subjectid,
         @Context UriInfo ui, @Context HttpHeaders headers, @Context SecurityContext securityContext)
         throws Exception {
             return Response

@@ -2,9 +2,14 @@ package io.swagger.api.data;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.annotations.VisibleForTesting;
-import io.swagger.annotations.*;
 import io.swagger.api.ApiException;
 import io.swagger.api.ErrorReport;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.extensions.Extension;
+import io.swagger.v3.oas.annotations.extensions.ExtensionProperty;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
@@ -15,7 +20,7 @@ import static io.swagger.api.data.TaskService.getTask;
 import static io.swagger.api.data.TaskService.listTasks;
 
 @Path("/")
-@Api(description = "Task API")
+//@Api(description = "Task API")
 public class Task {
 
     @Context
@@ -24,9 +29,9 @@ public class Task {
     @GET
     @Path("/task")
     @Produces({ TEXT_URILIST, MediaType.APPLICATION_JSON})
-    @ApiOperation(
-        value = "List all tasks.",
-        notes = "List all tasks.",
+    @Operation(
+        description = "List all tasks.",
+        summary = "List all tasks.",
         tags={ "task", },
         extensions = {
             @Extension(properties = {@ExtensionProperty(name = "orn-@id", value = "/task")}),
@@ -35,13 +40,13 @@ public class Task {
             @Extension(name = "orn:returns", properties = {@ExtensionProperty(name = "x-orn-@id", value = "x-orn:URIList")})
         })
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "OK"),
-        @ApiResponse(code = 400, message = "Bad Request"),
-        @ApiResponse(code = 401, message = "Unauthorized"),
-        @ApiResponse(code = 403, message = "Forbidden"),
-        @ApiResponse(code = 404, message = "Resource Not Found") })
+        @ApiResponse(responseCode = "200", description = "OK"),
+        @ApiResponse(responseCode = "400", description = "Bad Request"),
+        @ApiResponse(responseCode = "401", description = "Unauthorized"),
+        @ApiResponse(responseCode = "403", description = "Forbidden"),
+        @ApiResponse(responseCode = "404", description = "Resource Not Found") })
     public Response list(
-        @ApiParam(value = "Authorization token" )@HeaderParam("subjectid") String subjectid,
+        @Parameter(description = "Authorization token" )@HeaderParam("subjectid") String subjectid,
         @Context UriInfo ui, @Context HttpHeaders headers) throws ApiException {
 
         String accept = headers.getRequestHeaders().getFirst("accept");
@@ -57,9 +62,9 @@ public class Task {
     @GET
     @Path("/task/{id}")
     @Produces({ MediaType.APPLICATION_JSON })
-    @ApiOperation(
-        value = "Get json representation of a task.",
-        notes = "Get json representation of a task.",
+    @Operation(
+        description = "Get json representation of a task.",
+        summary = "Get json representation of a task.",
         tags={ "task", },
         extensions = {
             @Extension(properties = {@ExtensionProperty(name = "orn-@id", value = "/task/{id}")}),
@@ -68,15 +73,15 @@ public class Task {
             @Extension(name = "orn:returns", properties = {@ExtensionProperty(name = "x-orn-@id", value = "x-orn:Task")})
         })
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "OK"),
-        @ApiResponse(code = 202, message = "Created"),
-        @ApiResponse(code = 400, message = "Bad Request"),
-        @ApiResponse(code = 401, message = "Unauthorized"),
-        @ApiResponse(code = 403, message = "Forbidden"),
-        @ApiResponse(code = 404, message = "Resource Not Found") })
+        @ApiResponse(responseCode = "200", description = "OK"),
+        @ApiResponse(responseCode = "202", description = "Created"),
+        @ApiResponse(responseCode = "400", description = "Bad Request"),
+        @ApiResponse(responseCode = "401", description = "Unauthorized"),
+        @ApiResponse(responseCode = "403", description = "Forbidden"),
+        @ApiResponse(responseCode = "404", description = "Resource Not Found") })
     public Response get(
-        @ApiParam(value = "Task ID" )@PathParam("id") String id,
-        @ApiParam(value = "Authorization token" )@HeaderParam("subjectid") String subjectid, @Context UriInfo ui)
+        @Parameter(description = "Task ID" )@PathParam("id") String id,
+        @Parameter(description = "Authorization token" )@HeaderParam("subjectid") String subjectid, @Context UriInfo ui)
         throws ApiException, NotFoundException {
 
         Task out = getTask(id, ui, subjectid);

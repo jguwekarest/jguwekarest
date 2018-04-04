@@ -1,9 +1,13 @@
 package io.swagger.api.algorithm;
 
-import io.swagger.annotations.*;
 import io.swagger.api.AlgorithmService;
 import io.swagger.api.annotations.GroupedApiResponsesOk;
 import io.swagger.api.factories.AlgorithmFactory;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.extensions.Extension;
+import io.swagger.v3.oas.annotations.extensions.ExtensionProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 
@@ -21,7 +25,7 @@ import static io.swagger.api.Constants.TEXT_URILIST;
 
 @Path("/algorithm")
 
-@Api(description = "Bayes algorithm API")
+//@Api(description = "Bayes algorithm API")
 
 public class Bayes {
     private final AlgorithmService delegate;
@@ -53,7 +57,7 @@ public class Bayes {
     @Path("/BayesNet")
     @Consumes({ "multipart/form-data" })
     @Produces({ TEXT_URILIST, MediaType.APPLICATION_JSON})
-    @ApiOperation(value = "REST interface to the WEKA BayesNet classifier.", notes = "REST interface to the WEKA BayesNet classifier. " + SAVE_MODEL_NOTE, tags={ "algorithm", }
+    @Operation(description = "REST interface to the WEKA BayesNet classifier.", summary = "REST interface to the WEKA BayesNet classifier. " + SAVE_MODEL_NOTE, tags={ "algorithm", }
         ,extensions = {
         @Extension(properties = {@ExtensionProperty(name = "orn-@id",  value = "/algorithm/BayesNet")}),
         @Extension(properties = {@ExtensionProperty(name = "orn-@type",  value = "x-orn:Algorithm")}),
@@ -74,13 +78,21 @@ public class Bayes {
     public Response algorithmBayesNetPost(
         @FormDataParam("file") InputStream fileInputStream,
         @FormDataParam("file") FormDataContentDisposition fileDetail,
-        @ApiParam(value = "Dataset URI or local dataset ID (to the arff representation of a dataset).")@FormDataParam("datasetURI")  String datasetUri,
-        @ApiParam(value = "The estimator algorithm to be used in the compound. Must be SimpleEstimator,  MultiNomialBMAEstimator, BMAEstimator or BayesNetEstimator (Default: SimpleEstimator).", allowableValues="SimpleEstimator, MultiNomialBMAEstimator, BMAEstimator, BayesNetEstimator", defaultValue="SimpleEstimator")@FormDataParam("estimator")  String estimator,
-        @ApiParam(value = "The parameter for the estimator to be used in the compound.  Must be of type double (Default: 0.5).", defaultValue="0.5")@FormDataParam("estimatorParams") BigDecimal estimatorParams,
-        @ApiParam(value = "Whether to use ADTrees for searching (using will increase the speed of the search, but will also raise the memory use (Default: 0).", allowableValues="0, 1", defaultValue="0")@FormDataParam("useADTree") Integer useADTree,
-        @ApiParam(value = "The algorithmn to be used for searching in the compound. Must be local.K2, local.GeneticSearch, local.HillClimber, local.LAGDHillClimber, local.RepeatedHillClimber, local.SimulatedAnnealing, local.TabuSearch, local.TAN, global.K2, global.GeneticSearch, global.HillClimber, global.RepeatedHillClimber, global.SimulatedAnnealing, global.TabuSearch, global.TAN, ci.CISearchAlgorithm, ci.ICSSearchAlgorithm (Default: local.K2).", allowableValues="local.K2, local.GeneticSearch, local.HillClimber, local.LAGDHillClimber, local.RepeatedHillClimber, local.SimulatedAnnealing, local.TabuSearch, local.TAN, global.K2, global.GeneticSearch, global.HillClimber, global.RepeatedHillClimber, global.SimulatedAnnealing, global.TabuSearch, global.TAN, ci.CISearchAlgorithm, ci.ICSSearchAlgorithm", defaultValue="local.K2")@FormDataParam("searchAlgorithm")  String searchAlgorithm,
-        @ApiParam(value = "The parameter for algorithmn to be used for searching in the compound. Are set automatically (WEKA's standard parameter setting).", defaultValue="-P 1 -S BAYES")@FormDataParam("searchParams")  String searchParams,
-        @ApiParam(value = "authorization token") @HeaderParam("subjectid") String subjectid,
+        @Parameter(description = "Dataset URI or local dataset ID (to the arff representation of a dataset).")@FormDataParam("datasetURI") String datasetUri,
+        @Parameter(description = "The estimator algorithm to be used in the compound. Must be SimpleEstimator,  MultiNomialBMAEstimator, BMAEstimator or BayesNetEstimator (Default: SimpleEstimator).",
+            schema = @Schema(
+                allowableValues="SimpleEstimator, MultiNomialBMAEstimator, BMAEstimator, BayesNetEstimator",
+                defaultValue="SimpleEstimator"))@FormDataParam("estimator")  String estimator,
+        @Parameter(description = "The parameter for the estimator to be used in the compound.  Must be of type double (Default: 0.5).",
+            schema = @Schema(defaultValue="0.5"))@FormDataParam("estimatorParams") BigDecimal estimatorParams,
+        @Parameter(description = "Whether to use ADTrees for searching (using will increase the speed of the search, but will also raise the memory use (Default: 0).",
+            schema = @Schema(allowableValues={"0", "1"}, defaultValue="0"))@FormDataParam("useADTree") Integer useADTree,
+        @Parameter(description = "The algorithmn to be used for searching in the compound. Must be local.K2, local.GeneticSearch, local.HillClimber, local.LAGDHillClimber, local.RepeatedHillClimber, local.SimulatedAnnealing, local.TabuSearch, local.TAN, global.K2, global.GeneticSearch, global.HillClimber, global.RepeatedHillClimber, global.SimulatedAnnealing, global.TabuSearch, global.TAN, ci.CISearchAlgorithm, ci.ICSSearchAlgorithm (Default: local.K2).",
+            schema = @Schema(allowableValues="local.K2, local.GeneticSearch, local.HillClimber, local.LAGDHillClimber, local.RepeatedHillClimber, local.SimulatedAnnealing, local.TabuSearch, local.TAN, global.K2, global.GeneticSearch, global.HillClimber, global.RepeatedHillClimber, global.SimulatedAnnealing, global.TabuSearch, global.TAN, ci.CISearchAlgorithm, ci.ICSSearchAlgorithm",
+            defaultValue="local.K2"))@FormDataParam("searchAlgorithm")  String searchAlgorithm,
+        @Parameter(description = "The parameter for algorithmn to be used for searching in the compound. Are set automatically (WEKA's standard parameter setting).",
+            schema = @Schema(defaultValue="-P 1 -S BAYES"))@FormDataParam("searchParams")  String searchParams,
+        @Parameter(description = "authorization token") @HeaderParam("subjectid") String subjectid,
         @Context UriInfo ui, @Context HttpHeaders headers, @Context SecurityContext securityContext)
         throws io.swagger.api.NotFoundException, IOException {
 
@@ -104,7 +116,7 @@ public class Bayes {
     @Path("/BayesNet/adaboost")
     @Consumes({ "multipart/form-data" })
     @Produces({ TEXT_URILIST, MediaType.APPLICATION_JSON})
-    @ApiOperation(value = "REST interface to the WEKA AdaBoost M1 with BayesNet classifier.", notes = "REST interface to the WEKA AdaBoost M1 with BayesNet classifier. " + SAVE_MODEL_NOTE, tags={ "algorithm","meta algorithm" }
+    @Operation(description = "REST interface to the WEKA AdaBoost M1 with BayesNet classifier.", summary = "REST interface to the WEKA AdaBoost M1 with BayesNet classifier. " + SAVE_MODEL_NOTE, tags={ "algorithm","meta algorithm" }
         ,extensions = {
         @Extension(properties = {@ExtensionProperty(name = "orn-@id",  value = "/algorithm/BayesNet/adaboost")}),
         @Extension(properties = {@ExtensionProperty(name = "orn-@type",  value = "x-orn:Algorithm")}),
@@ -124,19 +136,34 @@ public class Bayes {
     public Response algorithmBayesNetAdaBoostPost(
         @FormDataParam("file") InputStream fileInputStream,
         @FormDataParam("file") FormDataContentDisposition fileDetail,
-        @ApiParam(value = "Dataset URI or local dataset ID (to the arff representation of a dataset).")@FormDataParam("datasetURI")  String datasetUri,
+        @Parameter(description = "Dataset URI or local dataset ID (to the arff representation of a dataset).")@FormDataParam("datasetURI")  String datasetUri,
         //meta params,
-        @ApiParam(value = "Adaboost M1: The preferred number of instances to process if batch prediction is being performed. More or fewer instances may be provided, but this gives implementations a chance to specify a preferred batch size.", defaultValue = "100") @FormDataParam("batchSize") Integer batchSize,
-        @ApiParam(value = "Adaboost M1: The number of iterations to be performed.", defaultValue = "10") @FormDataParam("numIterations") Integer numIterations,
-        @ApiParam(value = "Adaboost M1: Whether resampling is used instead of reweighting.", defaultValue = "0", allowableValues = "0, 1") @FormDataParam("useResampling") Integer useResampling,
-        @ApiParam(value = "Adaboost M1: Weight threshold for weight pruning.", defaultValue = "100") @FormDataParam("weightThreshold") Integer weightThreshold,
+        @Parameter(description = "Adaboost M1: The preferred number of instances to process if batch prediction is being performed. More or fewer instances may be provided, but this gives implementations a chance to specify a preferred batch size.",
+            schema = @Schema(defaultValue = "100")) @FormDataParam("batchSize") Integer batchSize,
+        @Parameter(
+            description = "Adaboost M1: The number of iterations to be performed.",
+            schema = @Schema(defaultValue = "10")) @FormDataParam("numIterations") Integer numIterations,
+        @Parameter(
+            description = "Adaboost M1: Whether resampling is used instead of reweighting.",
+            schema = @Schema(defaultValue = "0", allowableValues = {"0", "1"})) @FormDataParam("useResampling") Integer useResampling,
+        @Parameter(
+            description = "Adaboost M1: Weight threshold for weight pruning.",
+            schema = @Schema(defaultValue = "100")) @FormDataParam("weightThreshold") Integer weightThreshold,
         //BayesNet params
-        @ApiParam(value = "The estimator algorithm to be used in the compound. Must be SimpleEstimator,  MultiNomialBMAEstimator, BMAEstimator or BayesNetEstimator (Default: SimpleEstimator).", allowableValues="SimpleEstimator, MultiNomialBMAEstimator, BMAEstimator, BayesNetEstimator", defaultValue="SimpleEstimator")@FormDataParam("estimator")  String estimator,
-        @ApiParam(value = "The parameter for the estimator to be used in the compound.  Must be of type double (Default: 0.5).", defaultValue="0.5")@FormDataParam("estimatorParams") BigDecimal estimatorParams,
-        @ApiParam(value = "Whether to use ADTrees for searching (using will increase the speed of the search, but will also raise the memory use (Default: 0).", allowableValues="0, 1", defaultValue="0")@FormDataParam("useADTree") Integer useADTree,
-        @ApiParam(value = "The algorithmn to be used for searching in the compound. Must be local.K2, local.GeneticSearch, local.HillClimber, local.LAGDHillClimber, local.RepeatedHillClimber, local.SimulatedAnnealing, local.TabuSearch, local.TAN, global.K2, global.GeneticSearch, global.HillClimber, global.RepeatedHillClimber, global.SimulatedAnnealing, global.TabuSearch, global.TAN, ci.CISearchAlgorithm, ci.ICSSearchAlgorithm (Default: local.K2).", allowableValues="local.K2, local.GeneticSearch, local.HillClimber, local.LAGDHillClimber, local.RepeatedHillClimber, local.SimulatedAnnealing, local.TabuSearch, local.TAN, global.K2, global.GeneticSearch, global.HillClimber, global.RepeatedHillClimber, global.SimulatedAnnealing, global.TabuSearch, global.TAN, ci.CISearchAlgorithm, ci.ICSSearchAlgorithm", defaultValue="local.K2")@FormDataParam("searchAlgorithm")  String searchAlgorithm,
-        @ApiParam(value = "The parameter for algorithmn to be used for searching in the compound. Are set automatically (WEKA's standard parameter setting).", defaultValue="-P 1 -S BAYES")@FormDataParam("searchParams")  String searchParams,
-        @ApiParam(value = "authorization token") @HeaderParam("subjectid") String subjectid,
+        @Parameter(description = "The estimator algorithm to be used in the compound. Must be SimpleEstimator,  MultiNomialBMAEstimator, BMAEstimator or BayesNetEstimator (Default: SimpleEstimator).",
+            schema = @Schema(
+                allowableValues="SimpleEstimator, MultiNomialBMAEstimator, BMAEstimator, BayesNetEstimator",
+                defaultValue="SimpleEstimator"))@FormDataParam("estimator")  String estimator,
+        @Parameter(description = "The parameter for the estimator to be used in the compound.  Must be of type double (Default: 0.5).",
+            schema = @Schema(defaultValue="0.5"))@FormDataParam("estimatorParams") BigDecimal estimatorParams,
+        @Parameter(description = "Whether to use ADTrees for searching (using will increase the speed of the search, but will also raise the memory use (Default: 0).",
+            schema = @Schema(allowableValues={"0", "1"}, defaultValue="0"))@FormDataParam("useADTree") Integer useADTree,
+        @Parameter(description = "The algorithmn to be used for searching in the compound. Must be local.K2, local.GeneticSearch, local.HillClimber, local.LAGDHillClimber, local.RepeatedHillClimber, local.SimulatedAnnealing, local.TabuSearch, local.TAN, global.K2, global.GeneticSearch, global.HillClimber, global.RepeatedHillClimber, global.SimulatedAnnealing, global.TabuSearch, global.TAN, ci.CISearchAlgorithm, ci.ICSSearchAlgorithm (Default: local.K2).",
+            schema = @Schema(allowableValues="local.K2, local.GeneticSearch, local.HillClimber, local.LAGDHillClimber, local.RepeatedHillClimber, local.SimulatedAnnealing, local.TabuSearch, local.TAN, global.K2, global.GeneticSearch, global.HillClimber, global.RepeatedHillClimber, global.SimulatedAnnealing, global.TabuSearch, global.TAN, ci.CISearchAlgorithm, ci.ICSSearchAlgorithm",
+                defaultValue="local.K2"))@FormDataParam("searchAlgorithm")  String searchAlgorithm,
+        @Parameter(description = "The parameter for algorithmn to be used for searching in the compound. Are set automatically (WEKA's standard parameter setting).",
+            schema = @Schema(defaultValue="-P 1 -S BAYES"))@FormDataParam("searchParams")  String searchParams,
+        @Parameter(description = "authorization token") @HeaderParam("subjectid") String subjectid,
         @Context UriInfo ui, @Context HttpHeaders headers, @Context SecurityContext securityContext)
         throws io.swagger.api.NotFoundException, IOException {
 
@@ -165,7 +192,7 @@ public class Bayes {
     @Path("/BayesNet/bagging")
     @Consumes({ "multipart/form-data" })
     @Produces({ TEXT_URILIST, MediaType.APPLICATION_JSON})
-    @ApiOperation(value = "REST interface to the WEKA Bagging with BayesNet classifier.", notes = "REST interface to the WEKA Bagging with BayesNet BayesNet classifier. " + SAVE_MODEL_NOTE, tags={ "algorithm","meta algorithm" }
+    @Operation(description = "REST interface to the WEKA Bagging with BayesNet classifier.", summary = "REST interface to the WEKA Bagging with BayesNet BayesNet classifier. " + SAVE_MODEL_NOTE, tags={ "algorithm","meta algorithm" }
         ,extensions = {
         @Extension(properties = {@ExtensionProperty(name = "orn-@id",  value = "/algorithm/BayesNet/adaboost")}),
         @Extension(properties = {@ExtensionProperty(name = "orn-@type",  value = "x-orn:Algorithm")}),
@@ -185,18 +212,29 @@ public class Bayes {
     public Response algorithmBayesNetBaggingPost(
         @FormDataParam("file") InputStream fileInputStream,
         @FormDataParam("file") FormDataContentDisposition fileDetail,
-        @ApiParam(value = "Dataset URI or local dataset ID (to the arff representation of a dataset).")@FormDataParam("datasetURI")  String datasetUri,
+        @Parameter(description = "Dataset URI or local dataset ID (to the arff representation of a dataset).")@FormDataParam("datasetURI")  String datasetUri,
         //meta params,
-        @ApiParam(value = "Bagging: Size of each bag, as a percentage of the training set size.", defaultValue = "100") @FormDataParam("bagSizePercent") Integer bagSizePercent,
-        @ApiParam(value = "Bagging: The preferred number of instances to process if batch prediction is being performed. More or fewer instances may be provided, but this gives implementations a chance to specify a preferred batch size.", defaultValue = "100") @FormDataParam("batchSize") Integer batchSize,
-        @ApiParam(value = "Bagging: The number of iterations to be performed.", defaultValue = "10") @FormDataParam("numIterations") Integer numIterations,
+        @Parameter(description = "Bagging: Size of each bag, as a percentage of the training set size.",
+            schema = @Schema(defaultValue = "100")) @FormDataParam("bagSizePercent") Integer bagSizePercent,
+        @Parameter(description = "Bagging: The preferred number of instances to process if batch prediction is being performed. More or fewer instances may be provided, but this gives implementations a chance to specify a preferred batch size.",
+            schema = @Schema(defaultValue = "100")) @FormDataParam("batchSize") Integer batchSize,
+        @Parameter(description = "Bagging: The number of iterations to be performed.",
+            schema = @Schema(defaultValue = "10")) @FormDataParam("numIterations") Integer numIterations,
         //BayesNet params
-        @ApiParam(value = "The estimator algorithm to be used in the compound. Must be SimpleEstimator,  MultiNomialBMAEstimator, BMAEstimator or BayesNetEstimator (Default: SimpleEstimator).", allowableValues="SimpleEstimator, MultiNomialBMAEstimator, BMAEstimator, BayesNetEstimator", defaultValue="SimpleEstimator")@FormDataParam("estimator")  String estimator,
-        @ApiParam(value = "The parameter for the estimator to be used in the compound.  Must be of type double (Default: 0.5).", defaultValue="0.5")@FormDataParam("estimatorParams") BigDecimal estimatorParams,
-        @ApiParam(value = "Whether to use ADTrees for searching (using will increase the speed of the search, but will also raise the memory use (Default: 0).", allowableValues="0, 1", defaultValue="0")@FormDataParam("useADTree") Integer useADTree,
-        @ApiParam(value = "The algorithmn to be used for searching in the compound. Must be local.K2, local.GeneticSearch, local.HillClimber, local.LAGDHillClimber, local.RepeatedHillClimber, local.SimulatedAnnealing, local.TabuSearch, local.TAN, global.K2, global.GeneticSearch, global.HillClimber, global.RepeatedHillClimber, global.SimulatedAnnealing, global.TabuSearch, global.TAN, ci.CISearchAlgorithm, ci.ICSSearchAlgorithm (Default: local.K2).", allowableValues="local.K2, local.GeneticSearch, local.HillClimber, local.LAGDHillClimber, local.RepeatedHillClimber, local.SimulatedAnnealing, local.TabuSearch, local.TAN, global.K2, global.GeneticSearch, global.HillClimber, global.RepeatedHillClimber, global.SimulatedAnnealing, global.TabuSearch, global.TAN, ci.CISearchAlgorithm, ci.ICSSearchAlgorithm", defaultValue="local.K2")@FormDataParam("searchAlgorithm")  String searchAlgorithm,
-        @ApiParam(value = "The parameter for algorithmn to be used for searching in the compound. Are set automatically (WEKA's standard parameter setting).", defaultValue="-P 1 -S BAYES")@FormDataParam("searchParams")  String searchParams,
-        @ApiParam(value = "authorization token") @HeaderParam("subjectid") String subjectid,
+        @Parameter(description = "The estimator algorithm to be used in the compound. Must be SimpleEstimator,  MultiNomialBMAEstimator, BMAEstimator or BayesNetEstimator (Default: SimpleEstimator).",
+            schema = @Schema(
+                allowableValues="SimpleEstimator, MultiNomialBMAEstimator, BMAEstimator, BayesNetEstimator",
+                defaultValue="SimpleEstimator"))@FormDataParam("estimator")  String estimator,
+        @Parameter(description = "The parameter for the estimator to be used in the compound.  Must be of type double (Default: 0.5).",
+            schema = @Schema(defaultValue="0.5"))@FormDataParam("estimatorParams") BigDecimal estimatorParams,
+        @Parameter(description = "Whether to use ADTrees for searching (using will increase the speed of the search, but will also raise the memory use (Default: 0).",
+            schema = @Schema(allowableValues={"0", "1"}, defaultValue="0"))@FormDataParam("useADTree") Integer useADTree,
+        @Parameter(description = "The algorithmn to be used for searching in the compound. Must be local.K2, local.GeneticSearch, local.HillClimber, local.LAGDHillClimber, local.RepeatedHillClimber, local.SimulatedAnnealing, local.TabuSearch, local.TAN, global.K2, global.GeneticSearch, global.HillClimber, global.RepeatedHillClimber, global.SimulatedAnnealing, global.TabuSearch, global.TAN, ci.CISearchAlgorithm, ci.ICSSearchAlgorithm (Default: local.K2).",
+            schema = @Schema(allowableValues="local.K2, local.GeneticSearch, local.HillClimber, local.LAGDHillClimber, local.RepeatedHillClimber, local.SimulatedAnnealing, local.TabuSearch, local.TAN, global.K2, global.GeneticSearch, global.HillClimber, global.RepeatedHillClimber, global.SimulatedAnnealing, global.TabuSearch, global.TAN, ci.CISearchAlgorithm, ci.ICSSearchAlgorithm",
+                defaultValue="local.K2"))@FormDataParam("searchAlgorithm")  String searchAlgorithm,
+        @Parameter(description = "The parameter for algorithmn to be used for searching in the compound. Are set automatically (WEKA's standard parameter setting).",
+            schema = @Schema(defaultValue="-P 1 -S BAYES"))@FormDataParam("searchParams")  String searchParams,
+        @Parameter(description = "authorization token") @HeaderParam("subjectid") String subjectid,
         @Context UriInfo ui, @Context HttpHeaders headers, @Context SecurityContext securityContext)
         throws io.swagger.api.NotFoundException, IOException {
 
@@ -224,7 +262,7 @@ public class Bayes {
     @Path("/NaiveBayes")
     @Consumes({ "multipart/form-data" })
     @Produces({ TEXT_URILIST, MediaType.APPLICATION_JSON})
-    @ApiOperation(value = "REST interface to the WEKA BayesNet classifier.", notes = "REST interface to the WEKA BayesNet classifier. " + SAVE_MODEL_NOTE, tags={ "algorithm", }
+    @Operation(description = "REST interface to the WEKA BayesNet classifier.", summary = "REST interface to the WEKA BayesNet classifier. " + SAVE_MODEL_NOTE, tags={ "algorithm", }
         ,extensions = {
         @Extension(properties = {@ExtensionProperty(name = "orn-@id",  value = "/algorithm/BayesNet")}),
         @Extension(properties = {@ExtensionProperty(name = "orn-@type",  value = "x-orn:Algorithm")}),
@@ -245,11 +283,14 @@ public class Bayes {
     public Response algorithmNaiveBayesPost(
         @FormDataParam("file") InputStream fileInputStream,
         @FormDataParam("file") FormDataContentDisposition fileDetail,
-        @ApiParam(value = "Dataset URI or local dataset ID (to the arff representation of a dataset).")@FormDataParam("datasetURI")  String datasetUri,
-        @ApiParam(value = "The preferred number of instances to process if batch prediction is being performed. More or fewer instances may be provided, but this gives implementations a chance to specify a preferred batch size.", defaultValue = "100") @FormDataParam("batchSize") Integer batchSize,
-        @ApiParam(value = "Use a kernel estimator for numeric attributes rather than a normal distribution. (Default: 0).", allowableValues="0,1", defaultValue="0")@FormDataParam("useKernelEstimator")  String useKernelEstimator,
-        @ApiParam(value = "Use supervised discretization to convert numeric attributes to nominal ones. (Default: 0). Works not together with useKernelEstimator=1.", allowableValues="0,1", defaultValue="0")@FormDataParam("useSupervisedDiscretization") BigDecimal useSupervisedDiscretization,
-        @ApiParam(value = "authorization token") @HeaderParam("subjectid") String subjectid,
+        @Parameter(description = "Dataset URI or local dataset ID (to the arff representation of a dataset).")@FormDataParam("datasetURI")  String datasetUri,
+        @Parameter(description = "The preferred number of instances to process if batch prediction is being performed. More or fewer instances may be provided, but this gives implementations a chance to specify a preferred batch size.",
+            schema = @Schema(defaultValue = "100")) @FormDataParam("batchSize") Integer batchSize,
+        @Parameter(description = "Use a kernel estimator for numeric attributes rather than a normal distribution. (Default: 0).",
+            schema = @Schema(allowableValues={"0","1"}, defaultValue="0"))@FormDataParam("useKernelEstimator")  String useKernelEstimator,
+        @Parameter(description = "Use supervised discretization to convert numeric attributes to nominal ones. (Default: 0). Works not together with useKernelEstimator=1.",
+            schema = @Schema(allowableValues={"0","1"}, defaultValue="0"))@FormDataParam("useSupervisedDiscretization") BigDecimal useSupervisedDiscretization,
+        @Parameter(description = "authorization token") @HeaderParam("subjectid") String subjectid,
         @Context UriInfo ui, @Context HttpHeaders headers, @Context SecurityContext securityContext)
         throws io.swagger.api.NotFoundException, IOException {
 

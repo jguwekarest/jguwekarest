@@ -2,11 +2,6 @@ package io.swagger.api;
 
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.LoggerContext;
-import io.swagger.jaxrs.config.SwaggerContextService;
-import io.swagger.models.Contact;
-import io.swagger.models.Info;
-import io.swagger.models.License;
-import io.swagger.models.Swagger;
 import org.slf4j.LoggerFactory;
 
 import javax.servlet.ServletConfig;
@@ -31,6 +26,14 @@ public class Bootstrap extends HttpServlet {
 
     final Map<String, Object> contextmap = new HashMap< >();
     contextmap.put("@vocab", "http://schema.org/");
+/*
+    @OpenAPIDefinition(
+        info = @Info(
+        title = "")
+    )
+
+
+
 
     Info info = new Info()
       .title("JGU WEKA REST Service")
@@ -57,5 +60,6 @@ public class Bootstrap extends HttpServlet {
     //swagger.securityDefinition("subjectid", new ApiKeyAuthDefinition("subjectid", In.HEADER));
 
     new SwaggerContextService().withServletConfig(config).updateSwagger(swagger);
+    */
   }
 }

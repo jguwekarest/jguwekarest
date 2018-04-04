@@ -36,7 +36,7 @@ public class BasicTest {
     public void swaggerJSONGet( @Optional  String host) throws Exception {
 
         Client client = TestHelper.getClient();
-        WebTarget webTarget = client.target(host + "/swagger.json");
+        WebTarget webTarget = client.target(host + "/openapi/openapi.json");
         Invocation.Builder request = webTarget.request(MediaType.APPLICATION_JSON);
         Response response = request.get();
         Assert.assertTrue(response.getStatus() == 200);

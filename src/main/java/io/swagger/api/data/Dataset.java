@@ -1,8 +1,14 @@
 package io.swagger.api.data;
 
 import com.google.gson.internal.LinkedTreeMap;
-import io.swagger.annotations.*;
 import io.swagger.api.ApiException;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.extensions.Extension;
+import io.swagger.v3.oas.annotations.extensions.ExtensionProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 
 import javax.ws.rs.*;
@@ -10,12 +16,10 @@ import javax.ws.rs.core.*;
 import java.util.List;
 import java.util.TreeMap;
 
-import static io.swagger.api.Constants.SAVE_DATASSET_NOTE;
-import static io.swagger.api.Constants.TEXT_ARFF;
-import static io.swagger.api.Constants.TEXT_URILIST;
+import static io.swagger.api.Constants.*;
 
 @Path("/")
-@Api(description = "Dataset API")
+//@Api(description = "Dataset API")
 
 public class Dataset {
 
@@ -23,9 +27,9 @@ public class Dataset {
     @Path("/dataset")
     @Consumes({ "multipart/form-data" })
     @Produces({ TEXT_ARFF, TEXT_URILIST })
-    @ApiOperation(
-        value = "Download dataset and convert into weka arff format.",
-        notes = "Download an external dataset and convert it into weka arff format. " + SAVE_DATASSET_NOTE,
+    @Operation(
+        description = "Download dataset and convert into weka arff format.",
+        summary = "Download an external dataset and convert it into weka arff format. " + SAVE_DATASSET_NOTE,
         tags={ "dataset", },
         extensions = {
             @Extension(properties = {@ExtensionProperty(name = "orn-@id", value = "/dataset")}),
@@ -34,15 +38,15 @@ public class Dataset {
             @Extension(name = "orn:returns", properties = {@ExtensionProperty(name = "x-orn-@id", value = "x-orn:Dataset")})
         })
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "OK"),
-        @ApiResponse(code = 400, message = "Bad Request"),
-        @ApiResponse(code = 401, message = "Unauthorized"),
-        @ApiResponse(code = 403, message = "Forbidden"),
-        @ApiResponse(code = 404, message = "Resource Not Found") })
+        @ApiResponse(responseCode = "200", description = "OK"),
+        @ApiResponse(responseCode = "400", description = "Bad Request"),
+        @ApiResponse(responseCode = "401", description = "Unauthorized"),
+        @ApiResponse(responseCode = "403", description = "Forbidden"),
+        @ApiResponse(responseCode = "404", description = "Resource Not Found") })
     public Response create(
-        @ApiParam(value = "URI of the dataset to be used.", required=true)@FormDataParam("dataset_uri") String dataset_uri,
-        @ApiParam(value = "URI of the feature to define as weka class")@FormDataParam("class_uri") String class_uri,
-        @ApiParam(value = "Authorization token" )@HeaderParam("subjectid") String subjectid,
+        @Parameter(description = "URI of the dataset to be used.", required=true)@FormDataParam("dataset_uri") String dataset_uri,
+        @Parameter(description = "URI of the feature to define as weka class")@FormDataParam("class_uri") String class_uri,
+        @Parameter(description = "Authorization token" )@HeaderParam("subjectid") String subjectid,
         @Context HttpHeaders headers, @Context UriInfo ui) throws ApiException {
 
             Dataset ds = DatasetService.readExternalDataset(dataset_uri, subjectid);
@@ -61,9 +65,9 @@ public class Dataset {
     @GET
     @Path("/dataset")
     @Produces({ TEXT_URILIST, MediaType.APPLICATION_JSON})
-    @ApiOperation(
-        value = "List all converted datasets.",
-        notes = "List all converted datasets.",
+    @Operation(
+        description = "List all converted datasets.",
+        summary = "List all converted datasets.",
         tags={ "dataset", },
         extensions = {
             @Extension(properties = {@ExtensionProperty(name = "orn-@id", value = "/dataset")}),
@@ -72,13 +76,13 @@ public class Dataset {
             @Extension(name = "orn:returns", properties = {@ExtensionProperty(name = "x-orn-@id", value = "x-orn:URIList")})
         })
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "OK"),
-        @ApiResponse(code = 400, message = "Bad Request"),
-        @ApiResponse(code = 401, message = "Unauthorized"),
-        @ApiResponse(code = 403, message = "Forbidden"),
-        @ApiResponse(code = 404, message = "Resource Not Found") })
+        @ApiResponse(responseCode = "200", description = "OK"),
+        @ApiResponse(responseCode = "400", description = "Bad Request"),
+        @ApiResponse(responseCode = "401", description = "Unauthorized"),
+        @ApiResponse(responseCode = "403", description = "Forbidden"),
+        @ApiResponse(responseCode = "404", description = "Resource Not Found") })
     public Response list(
-        @ApiParam(value = "Authorization token" )@HeaderParam("subjectid") String subjectid,
+        @Parameter(description = "Authorization token" )@HeaderParam("subjectid") String subjectid,
         @Context UriInfo ui, @Context HttpHeaders headers) throws ApiException {
 
             String accept = headers.getRequestHeaders().getFirst("accept");
@@ -94,9 +98,9 @@ public class Dataset {
     @GET
     @Path("/dataset/{id}")
     @Produces({ TEXT_ARFF })
-    @ApiOperation(
-        value = "Get arff representation of a dataset.",
-        notes = "Get arff representation of a dataset.",
+    @Operation(
+        description = "Get arff representation of a dataset.",
+        summary = "Get arff representation of a dataset.",
         tags={ "dataset", },
         extensions = {
             @Extension(properties = {@ExtensionProperty(name = "orn-@id", value = "/dataset/{id}")}),
@@ -105,14 +109,13 @@ public class Dataset {
             @Extension(name = "orn:returns", properties = {@ExtensionProperty(name = "x-orn-@id", value = "x-orn:Arff")})
         })
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "OK"),
-        @ApiResponse(code = 400, message = "Bad Request"),
-        @ApiResponse(code = 401, message = "Unauthorized"),
-        @ApiResponse(code = 403, message = "Forbidden"),
-        @ApiResponse(code = 404, message = "Resource Not Found") })
+        @ApiResponse(responseCode = "200", description = "Bad Request"),
+        @ApiResponse(responseCode = "401", description = "Unauthorized"),
+        @ApiResponse(responseCode = "403", description = "Forbidden"),
+        @ApiResponse(responseCode = "404", description = "Resource Not Found") })
     public Response getDatasetArff(
-        @ApiParam(value = "Dataset ID" )@PathParam("id") String id,
-        @ApiParam(value = "Authorization token" )@HeaderParam("subjectid") String subjectid, @Context UriInfo ui)
+        @Parameter(description = "Dataset ID" )@PathParam("id") String id,
+        @Parameter(description = "Authorization token" )@HeaderParam("subjectid") String subjectid, @Context UriInfo ui)
         throws ApiException, NotFoundException {
 
             String out = DatasetService.getDatasetArff(id, subjectid);
@@ -128,9 +131,9 @@ public class Dataset {
     @Path("/dataset/{id}")
     @Consumes({ "multipart/form-data" })
     @Produces({TEXT_ARFF, TEXT_URILIST})
-    @ApiOperation(
-        value = "Filter an internal dataset with weka filter.",
-        notes = "Filter an internal dataset with weka filter. Remove attributes and normalize or standardize all numeric attributes of a dataset." + SAVE_DATASSET_NOTE,
+    @Operation(
+        description = "Filter an internal dataset with weka filter.",
+        summary = "Filter an internal dataset with weka filter. Remove attributes and normalize or standardize all numeric attributes of a dataset." + SAVE_DATASSET_NOTE,
         tags={ "dataset" },
         extensions = {
             @Extension(properties = {@ExtensionProperty(name = "orn-@id", value = "/dataset/{id}")}),
@@ -139,20 +142,21 @@ public class Dataset {
             @Extension(name = "orn:returns", properties = {@ExtensionProperty(name = "x-orn-@id", value = "x-orn:Dataset")})
         })
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "OK"),
-        @ApiResponse(code = 400, message = "Bad Request"),
-        @ApiResponse(code = 401, message = "Unauthorized"),
-        @ApiResponse(code = 403, message = "Forbidden"),
-        @ApiResponse(code = 404, message = "Resource Not Found") })
+        @ApiResponse(responseCode = "200", description = "OK"),
+        @ApiResponse(responseCode = "400", description = "Bad Request"),
+        @ApiResponse(responseCode = "401", description = "Unauthorized"),
+        @ApiResponse(responseCode = "403", description = "Forbidden"),
+        @ApiResponse(responseCode = "404", description = "Resource Not Found") })
     public Response filter(
-        @ApiParam(value = "Dataset ID" )@PathParam("id") String id,
-        @ApiParam(value = "Feature(s) to remove. ID or comma separated IDs of the attribute(s)(column(s)) to remove. (0 = no attribute will be deleted)",defaultValue = "0")@FormDataParam("idx_remove") String idx_remove,
-        @ApiParam(value = "Normalize all numeric values - scale: - The factor for scaling the output range (default: 1).")@FormDataParam("scale") String scale,
-        @ApiParam(value = "Normalize all numeric values - translation: The translation of the output range (default: 0).")@FormDataParam("translation") String translation,
-        @ApiParam(value = "Standardize all numeric attributes in the given dataset to have zero mean and unit variance (apart from the class attribute, if set).")@FormDataParam("standardize") Boolean standardize,
-        @ApiParam(value = "Ignore class (ignore class attribute for Normalization or Standization).")@FormDataParam("ignore") Boolean ignore,
-        @ApiParam(value = "String to Nominal: Sets which attributes to process. This attributes must be string attributes (\"first\" and \"last\" are valid values as well as ranges and lists. Empty value do not process the filter).")@FormDataParam("attributeRange") String attributeRange,
-        @ApiParam(value = "Authorization token" )@HeaderParam("subjectid") String subjectid,
+        @Parameter(description = "Dataset ID" )@PathParam("id") String id,
+        @Parameter(description = "Feature(s) to remove. ID or comma separated IDs of the attribute(s)(column(s)) to remove. (0 = no attribute will be deleted)",
+            schema = @Schema(defaultValue = "0"))@FormDataParam("idx_remove") String idx_remove,
+        @Parameter(description = "Normalize all numeric values - scale: - The factor for scaling the output range (default: 1).")@FormDataParam("scale") String scale,
+        @Parameter(description = "Normalize all numeric values - translation: The translation of the output range (default: 0).")@FormDataParam("translation") String translation,
+        @Parameter(description = "Standardize all numeric attributes in the given dataset to have zero mean and unit variance (apart from the class attribute, if set).")@FormDataParam("standardize") Boolean standardize,
+        @Parameter(description = "Ignore class (ignore class attribute for Normalization or Standization).")@FormDataParam("ignore") Boolean ignore,
+        @Parameter(description = "String to Nominal: Sets which attributes to process. This attributes must be string attributes (\"first\" and \"last\" are valid values as well as ranges and lists. Empty value do not process the filter).")@FormDataParam("attributeRange") String attributeRange,
+        @Parameter(description = "Authorization token" )@HeaderParam("subjectid") String subjectid,
         @Context HttpHeaders headers, @Context UriInfo ui ) throws Exception{
 
         String accept = headers.getRequestHeaders().getFirst("accept");

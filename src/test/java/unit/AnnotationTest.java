@@ -1,8 +1,6 @@
 package unit;
 
 
-import io.swagger.annotations.Info;
-import io.swagger.annotations.SwaggerDefinition;
 import io.swagger.api.Api;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 
@@ -10,8 +8,12 @@ import java.lang.annotation.Annotation;
 
 import static org.testng.Assert.assertEquals;
 
+//import org.glassfish.jersey.media.multipart.FormDataParam;
+
 public class AnnotationTest {
 
+
+    /*
     //@Test
     public void checkSwaggerInfo() throws Exception{
 
@@ -26,7 +28,7 @@ System.out.println("1: " + annotation.toString());
             System.out.println("Did not find annotation");
         }
     }
-
+*/
 
    // @Test
     public void checkLibSVMAnnotation() throws Exception{

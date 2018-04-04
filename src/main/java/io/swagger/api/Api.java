@@ -1,9 +1,9 @@
 package io.swagger.api;
 
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
 import io.swagger.api.factories.ApiFactory;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
 import javax.servlet.ServletConfig;
 import javax.ws.rs.GET;
@@ -17,7 +17,7 @@ import java.io.IOException;
 
 @Path("/api")
 
-@io.swagger.annotations.Api(description = "the api API")
+//@io.swagger.annotations.Api(description = "the api API")
 public class Api {
     private final ApiService delegate;
 
@@ -46,11 +46,11 @@ public class Api {
     @Path("/api.json")
 
     @Produces({"application/json", "application/ld+json"})
-    @ApiOperation(value = "", notes = "Get swagger api in JSON", response = void.class, tags = {"api",})
+    @Operation(description = "", summary = "Get swagger api in JSON", tags = {"api",})
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "OK"),
-        @ApiResponse(code = 400, message = "Bad Request"),
-        @ApiResponse(code = 500, message = "Server Error")
+        @ApiResponse(responseCode = "200", description = "OK"),
+        @ApiResponse(responseCode = "400", description = "Bad Request"),
+        @ApiResponse(responseCode = "500", description = "Server Error")
     })
     public Response apiApiJsonGet(@Context SecurityContext securityContext, @Context UriInfo ui)
         throws NotFoundException, IOException {
