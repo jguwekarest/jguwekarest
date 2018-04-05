@@ -2,6 +2,13 @@ package io.swagger.api;
 
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.LoggerContext;
+import io.swagger.v3.jaxrs2.integration.JaxrsOpenApiContextBuilder;
+import io.swagger.v3.oas.integration.OpenApiConfigurationException;
+import io.swagger.v3.oas.integration.SwaggerConfiguration;
+import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.info.Contact;
+import io.swagger.v3.oas.models.info.Info;
+import io.swagger.v3.oas.models.info.License;
 import org.slf4j.LoggerFactory;
 
 import javax.servlet.ServletConfig;
@@ -9,6 +16,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Class to init the servlet and set Swagger/OpenAPI Infos
@@ -26,7 +35,39 @@ public class Bootstrap extends HttpServlet {
 
     final Map<String, Object> contextmap = new HashMap< >();
     contextmap.put("@vocab", "http://schema.org/");
-/*
+
+
+    OpenAPI oas = new OpenAPI();
+    Info info = new Info()
+        .title("Swagger Sample App - independent config exposed by dedicated servlet")
+        .description("This is a sample server Petstore server.  You can find out more about Swagger " +
+            "at [http://swagger.io](http://swagger.io) or on [irc.freenode.net, #swagger](http://swagger.io/irc/).  For this sample, " +
+            "you can use the api key `special-key` to test the authorization filters.")
+        .termsOfService("http://swagger.io/terms/")
+        .contact(new Contact()
+            .email("apiteam@swagger.io"))
+        .license(new License()
+            .name("Apache 2.0")
+            .url("http://www.apache.org/licenses/LICENSE-2.0.html"));
+
+    oas.info(info);
+    SwaggerConfiguration oasConfig = new SwaggerConfiguration()
+        .openAPI(oas)
+        .resourcePackages(Stream.of("io.swagger.api.resource").collect(Collectors.toSet()));
+
+    try {
+      new JaxrsOpenApiContextBuilder()
+          .servletConfig(config)
+          .openApiConfiguration(oasConfig)
+          .buildContext(true);
+    } catch (OpenApiConfigurationException e) {
+      throw new ServletException(e.getMessage(), e);
+    }
+
+
+
+
+    /*
     @OpenAPIDefinition(
         info = @Info(
         title = "")

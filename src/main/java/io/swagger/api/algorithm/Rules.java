@@ -55,8 +55,8 @@ public class Rules {
     @Path("/ZeroR")
     @Consumes({ "multipart/form-data" })
     @Produces({ TEXT_URILIST, MediaType.APPLICATION_JSON})
-    @Operation(description = "REST interface to the WEKA ZeroR classifier.",
-        summary = "REST interface to the WEKA ZeroR classifier. " + SAVE_MODEL_NOTE,
+    @Operation(summary = "REST interface to the WEKA ZeroR classifier.",
+        description = "REST interface to the WEKA ZeroR classifier. " + SAVE_MODEL_NOTE,
         tags={ "algorithm" },
         extensions = {
             @Extension(properties = {@ExtensionProperty(name = "orn-@id",  value = "/algorithm/ZeroR")}),
@@ -91,8 +91,8 @@ public class Rules {
     @Path("/M5Rules")
     @Consumes({ "multipart/form-data" })
     @Produces({ TEXT_URILIST, MediaType.APPLICATION_JSON})
-    @Operation(description = "REST interface to the WEKA M5Rules classifier.",
-        summary = "REST interface to the WEKA M5Rules classifier. " + SAVE_MODEL_NOTE,
+    @Operation(summary = "REST interface to the WEKA M5Rules classifier.",
+        description = "REST interface to the WEKA M5Rules classifier. " + SAVE_MODEL_NOTE,
         tags={ "algorithm" },
         extensions = {
             @Extension(properties = {@ExtensionProperty(name = "orn-@id",  value = "/algorithm/M5Rules")}),

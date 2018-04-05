@@ -28,8 +28,8 @@ public class Model {
     @Consumes({ "multipart/form-data" })
     @Produces({ "text/uri-list", "application/json" })
     @Operation(
-        description = "List all Models",
-        summary = "List all Models.",
+        summary = "List all Models",
+        description = "List all Models.",
         tags={ "model"},
         extensions = {
             @Extension(properties = {@ExtensionProperty(name = "orn-@id", value = "/model")}),
@@ -62,8 +62,8 @@ public class Model {
     @Consumes({ "multipart/form-data" })
     @Produces({ "text/plain", "application/json", "application/xml" })
     @Operation(
-        description = "Get representation of a model.",
         summary = "Get representation of a model.",
+        description = "Get representation of a model.",
         tags={ "model" },
             extensions = {
                 @Extension(properties = {@ExtensionProperty(name = "orn-@id", value = "/model/{id}")}),
@@ -98,7 +98,9 @@ public class Model {
     @Path("/{id}")
     @Consumes({ "multipart/form-data" })
     @Produces({ "text/x-arff" })
-    @Operation(description = "Predict testdata with a model.", summary = "Predict testdata with a model.", tags={ "model", },
+    @Operation(
+        summary = "Predict testdata with a model.",
+        description = "Predict testdata with a model.", tags={ "model", },
         extensions = {
             @Extension(properties = {@ExtensionProperty(name = "orn-@id", value = "/model/{id}")}),
             @Extension(properties = {@ExtensionProperty(name = "orn-@type", value = "x-orn:Model")}),

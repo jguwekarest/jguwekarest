@@ -30,8 +30,8 @@ public class Task {
     @Path("/task")
     @Produces({ TEXT_URILIST, MediaType.APPLICATION_JSON})
     @Operation(
-        description = "List all tasks.",
         summary = "List all tasks.",
+        description = "List all tasks.",
         tags={ "task", },
         extensions = {
             @Extension(properties = {@ExtensionProperty(name = "orn-@id", value = "/task")}),
@@ -63,8 +63,8 @@ public class Task {
     @Path("/task/{id}")
     @Produces({ MediaType.APPLICATION_JSON })
     @Operation(
-        description = "Get json representation of a task.",
         summary = "Get json representation of a task.",
+        description = "Get json representation of a task.",
         tags={ "task", },
         extensions = {
             @Extension(properties = {@ExtensionProperty(name = "orn-@id", value = "/task/{id}")}),

@@ -57,8 +57,8 @@ public class Functions {
     @Path("/linearRegression")
     @Consumes({"multipart/form-data"})
     @Produces({ TEXT_URILIST, MediaType.APPLICATION_JSON})
-    @Operation(description = "REST interface to the WEKA linear regression classifier.",
-        summary = "REST interface to the WEKA linear regression classifier. " + SAVE_MODEL_NOTE,
+    @Operation(summary = "REST interface to the WEKA linear regression classifier.",
+        description = "REST interface to the WEKA linear regression classifier. " + SAVE_MODEL_NOTE,
         tags = {"algorithm"},
         extensions = {
             @Extension(properties = {@ExtensionProperty(name = "orn-@id",  value = "/algorithm/linearRegression")}),
@@ -104,8 +104,8 @@ public class Functions {
     @Path("/libsvm")
     @Consumes({"multipart/form-data"})
     @Produces({ TEXT_URILIST, MediaType.APPLICATION_JSON})
-    @Operation(description = "REST interface to the WEKA support vector machine wrapper library classifier.",
-        summary = "REST interface to the WEKA support vector machine wrapper library classifier." + SAVE_MODEL_NOTE,
+    @Operation(summary = "REST interface to the WEKA support vector machine wrapper library classifier.",
+        description = "REST interface to the WEKA support vector machine wrapper library classifier." + SAVE_MODEL_NOTE,
         tags = {"algorithm"},
         extensions = {
             @Extension(properties = {@ExtensionProperty(name = "orn-@id",  value = "/algorithm/libsvm")}),

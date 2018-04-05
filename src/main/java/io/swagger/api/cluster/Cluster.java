@@ -52,8 +52,8 @@ public class Cluster {
     @Path("/EM")
     @Consumes({ MediaType.MULTIPART_FORM_DATA })
     @Produces({ "text/x-arff" })
-    @Operation(description = "REST interface to the WEKA EM clusterer.",
-        summary = "REST interface to the WEKA EM (expectation maximisation) clusterer.",
+    @Operation(summary = "REST interface to the WEKA EM clusterer.",
+        description =  "REST interface to the WEKA EM (expectation maximisation) clusterer.",
         tags={ "cluster" },
         extensions = {
             @Extension(properties = {@ExtensionProperty(name = "orn-@id",  value = "/cluster/EM")}),
@@ -74,7 +74,7 @@ public class Cluster {
     public Response clusterEMPost(
         @FormDataParam("file") InputStream fileInputStream,
         @FormDataParam("file") FormDataContentDisposition fileDetail,
-        
+
         @Parameter(description = "Dataset URI or local dataset ID (to the arff representation of a dataset).",
             name = "datasetUri", extensions = @Extension(properties = {@ExtensionProperty(name = "orn-@test",  value = "testvalue")}))@QueryParam("datasetURI")  String datasetUri,
         @Parameter(description = "Number of folds to use when cross-validating to find the best number of clusters (default = 10)",

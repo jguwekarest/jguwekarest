@@ -83,8 +83,8 @@ public class Algorithm {
     */
     @GET
     @Produces({TEXT_URILIST, MediaType.APPLICATION_JSON})
-    @Operation(description = "Get a list of all available algorithms.",
-        summary = "Get a list of all algorithms.",
+    @Operation(summary = "Get a list of algorithms.",
+        description = "Get a list of all available algorithms.",
         tags = {"algorithm"}
     )
     @ApiResponses(value = {

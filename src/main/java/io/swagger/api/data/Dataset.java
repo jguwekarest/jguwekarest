@@ -28,8 +28,8 @@ public class Dataset {
     @Consumes({ "multipart/form-data" })
     @Produces({ TEXT_ARFF, TEXT_URILIST })
     @Operation(
-        description = "Download dataset and convert into weka arff format.",
-        summary = "Download an external dataset and convert it into weka arff format. " + SAVE_DATASSET_NOTE,
+        summary = "Download dataset and convert into weka arff format.",
+        description = "Download an external dataset and convert it into weka arff format. " + SAVE_DATASSET_NOTE,
         tags={ "dataset", },
         extensions = {
             @Extension(properties = {@ExtensionProperty(name = "orn-@id", value = "/dataset")}),
@@ -66,8 +66,8 @@ public class Dataset {
     @Path("/dataset")
     @Produces({ TEXT_URILIST, MediaType.APPLICATION_JSON})
     @Operation(
-        description = "List all converted datasets.",
         summary = "List all converted datasets.",
+        description = "List all converted datasets.",
         tags={ "dataset", },
         extensions = {
             @Extension(properties = {@ExtensionProperty(name = "orn-@id", value = "/dataset")}),
@@ -99,8 +99,8 @@ public class Dataset {
     @Path("/dataset/{id}")
     @Produces({ TEXT_ARFF })
     @Operation(
-        description = "Get arff representation of a dataset.",
         summary = "Get arff representation of a dataset.",
+        description = "Get arff representation of a dataset.",
         tags={ "dataset", },
         extensions = {
             @Extension(properties = {@ExtensionProperty(name = "orn-@id", value = "/dataset/{id}")}),
@@ -132,8 +132,8 @@ public class Dataset {
     @Consumes({ "multipart/form-data" })
     @Produces({TEXT_ARFF, TEXT_URILIST})
     @Operation(
-        description = "Filter an internal dataset with weka filter.",
-        summary = "Filter an internal dataset with weka filter. Remove attributes and normalize or standardize all numeric attributes of a dataset." + SAVE_DATASSET_NOTE,
+        summary = "Filter an internal dataset with weka filter.",
+        description = "Filter an internal dataset with weka filter. Remove attributes and normalize or standardize all numeric attributes of a dataset." + SAVE_DATASSET_NOTE,
         tags={ "dataset" },
         extensions = {
             @Extension(properties = {@ExtensionProperty(name = "orn-@id", value = "/dataset/{id}")}),

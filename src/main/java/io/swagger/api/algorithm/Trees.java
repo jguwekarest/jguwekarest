@@ -59,8 +59,8 @@ public class Trees  {
     @Path("/J48")
     @Consumes({ "multipart/form-data" })
     @Produces({ TEXT_URILIST, MediaType.APPLICATION_JSON})
-    @Operation(description = "REST interface to the WEKA J48 classifier.",
-        summary = "REST interface to the WEKA J48 classifier. " + SAVE_MODEL_NOTE,
+    @Operation(summary = "REST interface to the WEKA J48 classifier.",
+        description = "REST interface to the WEKA J48 classifier. " + SAVE_MODEL_NOTE,
         tags={ "algorithm" },
         extensions = {
             @Extension(properties = {@ExtensionProperty(name = "orn-@id",  value = "/algorithm/J48")}),
@@ -125,8 +125,8 @@ public class Trees  {
     @Path("/J48/adaboost")
     @Consumes({ "multipart/form-data" })
     @Produces({ TEXT_URILIST, MediaType.APPLICATION_JSON})
-    @Operation(description = "REST interface to the WEKA Adaboost M1 meta classifier.",
-        summary = "REST interface to the WEKA Adaboost M1 meta classifier. " + SAVE_MODEL_NOTE,
+    @Operation(summary = "REST interface to the WEKA Adaboost M1 meta classifier.",
+        description = "REST interface to the WEKA Adaboost M1 meta classifier. " + SAVE_MODEL_NOTE,
         tags = {"algorithm","meta algorithm"} ,
         extensions = {
             @Extension(properties = {@ExtensionProperty(name = "orn-@id",  value = "/algorithm/J48/adaboost")}),
@@ -211,7 +211,8 @@ public class Trees  {
     @Path("/J48/bagging")
     @Consumes({ "multipart/form-data" })
     @Produces({ TEXT_URILIST, MediaType.APPLICATION_JSON})
-    @Operation(description = "REST interface to the WEKA Bagging meta classifier.", summary = "REST interface to the WEKA Bagging meta classifier. " + SAVE_MODEL_NOTE, tags = {"algorithm","meta algorithm"},
+    @Operation(summary = "REST interface to the WEKA Bagging meta classifier.",
+        description = "REST interface to the WEKA Bagging meta classifier. " + SAVE_MODEL_NOTE, tags = {"algorithm","meta algorithm"},
         extensions = {
         @Extension(properties = {@ExtensionProperty(name = "orn-@id",  value = "/algorithm/J48/bagging")}),
         @Extension(properties = {@ExtensionProperty(name = "orn-@type",  value = "x-orn:Algorithm")}),

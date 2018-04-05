@@ -55,8 +55,8 @@ public class Lazy {
     @Consumes({ "multipart/form-data" })
     @Produces({ TEXT_URILIST, MediaType.APPLICATION_JSON})
     @Operation(
-        description = "REST interface to the WEKA K-nearest neighbours classifier.",
-        summary = "REST interface to the WEKA K-nearest neighbours classifier. " + SAVE_MODEL_NOTE,
+        summary = "REST interface to the WEKA K-nearest neighbours classifier.",
+        description = "REST interface to the WEKA K-nearest neighbours classifier. " + SAVE_MODEL_NOTE,
         tags={ "algorithm", },
         extensions = {
             @Extension(properties = {@ExtensionProperty(name = "orn-@id",  value = "/algorithm/kNNclassification")}),

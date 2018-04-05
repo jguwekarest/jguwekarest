@@ -5,6 +5,7 @@ import io.swagger.api.annotations.GroupedApiResponsesOk;
 import io.swagger.api.factories.AlgorithmFactory;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterStyle;
 import io.swagger.v3.oas.annotations.extensions.Extension;
 import io.swagger.v3.oas.annotations.extensions.ExtensionProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -57,7 +58,12 @@ public class Bayes {
     @Path("/BayesNet")
     @Consumes({ "multipart/form-data" })
     @Produces({ TEXT_URILIST, MediaType.APPLICATION_JSON})
-    @Operation(description = "REST interface to the WEKA BayesNet classifier.", summary = "REST interface to the WEKA BayesNet classifier. " + SAVE_MODEL_NOTE, tags={ "algorithm", }
+    @Operation(summary = "REST interface to the WEKA BayesNet classifier.", description = "REST interface to the WEKA BayesNet classifier. " + SAVE_MODEL_NOTE, tags={ "algorithm", }
+        , parameters = {@Parameter(description = "Dataset URI or local dataset ID (to the arff representation of a dataset).",
+                        style = ParameterStyle.FORM,
+                        //in = ParameterIn.QUERY,
+                        name = "datasetUri",
+                        schema = @Schema(type = "string"))}
         ,extensions = {
         @Extension(properties = {@ExtensionProperty(name = "orn-@id",  value = "/algorithm/BayesNet")}),
         @Extension(properties = {@ExtensionProperty(name = "orn-@type",  value = "x-orn:Algorithm")}),
@@ -78,7 +84,7 @@ public class Bayes {
     public Response algorithmBayesNetPost(
         @FormDataParam("file") InputStream fileInputStream,
         @FormDataParam("file") FormDataContentDisposition fileDetail,
-        @Parameter(description = "Dataset URI or local dataset ID (to the arff representation of a dataset).")@FormDataParam("datasetURI") String datasetUri,
+        @FormDataParam("datasetUri") String datasetUri,
         @Parameter(description = "The estimator algorithm to be used in the compound. Must be SimpleEstimator,  MultiNomialBMAEstimator, BMAEstimator or BayesNetEstimator (Default: SimpleEstimator).",
             schema = @Schema(
                 allowableValues="SimpleEstimator, MultiNomialBMAEstimator, BMAEstimator, BayesNetEstimator",
@@ -116,7 +122,7 @@ public class Bayes {
     @Path("/BayesNet/adaboost")
     @Consumes({ "multipart/form-data" })
     @Produces({ TEXT_URILIST, MediaType.APPLICATION_JSON})
-    @Operation(description = "REST interface to the WEKA AdaBoost M1 with BayesNet classifier.", summary = "REST interface to the WEKA AdaBoost M1 with BayesNet classifier. " + SAVE_MODEL_NOTE, tags={ "algorithm","meta algorithm" }
+    @Operation(summary = "REST interface to the WEKA AdaBoost M1 with BayesNet classifier.", description = "REST interface to the WEKA AdaBoost M1 with BayesNet classifier. " + SAVE_MODEL_NOTE, tags={ "algorithm","meta algorithm" }
         ,extensions = {
         @Extension(properties = {@ExtensionProperty(name = "orn-@id",  value = "/algorithm/BayesNet/adaboost")}),
         @Extension(properties = {@ExtensionProperty(name = "orn-@type",  value = "x-orn:Algorithm")}),
@@ -192,7 +198,7 @@ public class Bayes {
     @Path("/BayesNet/bagging")
     @Consumes({ "multipart/form-data" })
     @Produces({ TEXT_URILIST, MediaType.APPLICATION_JSON})
-    @Operation(description = "REST interface to the WEKA Bagging with BayesNet classifier.", summary = "REST interface to the WEKA Bagging with BayesNet BayesNet classifier. " + SAVE_MODEL_NOTE, tags={ "algorithm","meta algorithm" }
+    @Operation(summary = "REST interface to the WEKA Bagging with BayesNet classifier.", description = "REST interface to the WEKA Bagging with BayesNet BayesNet classifier. " + SAVE_MODEL_NOTE, tags={ "algorithm","meta algorithm" }
         ,extensions = {
         @Extension(properties = {@ExtensionProperty(name = "orn-@id",  value = "/algorithm/BayesNet/adaboost")}),
         @Extension(properties = {@ExtensionProperty(name = "orn-@type",  value = "x-orn:Algorithm")}),
@@ -262,7 +268,7 @@ public class Bayes {
     @Path("/NaiveBayes")
     @Consumes({ "multipart/form-data" })
     @Produces({ TEXT_URILIST, MediaType.APPLICATION_JSON})
-    @Operation(description = "REST interface to the WEKA BayesNet classifier.", summary = "REST interface to the WEKA BayesNet classifier. " + SAVE_MODEL_NOTE, tags={ "algorithm", }
+    @Operation(summary = "REST interface to the WEKA BayesNet classifier.", description = "REST interface to the WEKA BayesNet classifier. " + SAVE_MODEL_NOTE, tags={ "algorithm", }
         ,extensions = {
         @Extension(properties = {@ExtensionProperty(name = "orn-@id",  value = "/algorithm/BayesNet")}),
         @Extension(properties = {@ExtensionProperty(name = "orn-@type",  value = "x-orn:Algorithm")}),
