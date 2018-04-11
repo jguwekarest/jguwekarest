@@ -17,7 +17,6 @@ import java.io.IOException;
 import static io.swagger.api.Constants.TEXT_URILIST;
 
 @Path("/algorithm")
-
 //@io.swagger.annotations.Api(description = "the algorithm API")
 public class Algorithm {
     private final AlgorithmService delegate;

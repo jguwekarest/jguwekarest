@@ -5,9 +5,11 @@ import io.swagger.api.annotations.GroupedApiResponsesOk;
 import io.swagger.api.factories.AlgorithmFactory;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.enums.ParameterStyle;
 import io.swagger.v3.oas.annotations.extensions.Extension;
 import io.swagger.v3.oas.annotations.extensions.ExtensionProperty;
+import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
@@ -59,11 +61,6 @@ public class Bayes {
     @Consumes({ "multipart/form-data" })
     @Produces({ TEXT_URILIST, MediaType.APPLICATION_JSON})
     @Operation(summary = "REST interface to the WEKA BayesNet classifier.", description = "REST interface to the WEKA BayesNet classifier. " + SAVE_MODEL_NOTE, tags={ "algorithm", }
-        , parameters = {@Parameter(description = "Dataset URI or local dataset ID (to the arff representation of a dataset).",
-                        style = ParameterStyle.FORM,
-                        //in = ParameterIn.QUERY,
-                        name = "datasetUri",
-                        schema = @Schema(type = "string"))}
         ,extensions = {
         @Extension(properties = {@ExtensionProperty(name = "orn-@id",  value = "/algorithm/BayesNet")}),
         @Extension(properties = {@ExtensionProperty(name = "orn-@type",  value = "x-orn:Algorithm")}),
@@ -82,22 +79,27 @@ public class Bayes {
     @GroupedApiResponsesOk
 
     public Response algorithmBayesNetPost(
-        @FormDataParam("file") InputStream fileInputStream,
-        @FormDataParam("file") FormDataContentDisposition fileDetail,
-        @FormDataParam("datasetUri") String datasetUri,
-        @Parameter(description = "The estimator algorithm to be used in the compound. Must be SimpleEstimator,  MultiNomialBMAEstimator, BMAEstimator or BayesNetEstimator (Default: SimpleEstimator).",
-            schema = @Schema(
-                allowableValues="SimpleEstimator, MultiNomialBMAEstimator, BMAEstimator, BayesNetEstimator",
-                defaultValue="SimpleEstimator"))@FormDataParam("estimator")  String estimator,
+
+
+        @FormDataParam("file") @QueryParam("file") InputStream fileInputStream,
+        @FormDataParam("file") @QueryParam("file") FormDataContentDisposition fileDetail,
+        @Parameter(description = "Dataset URI or local dataset ID (to the arff representation of a dataset).",
+            style = ParameterStyle.FORM,
+            in = ParameterIn.DEFAULT,
+            name = "datasetUri",
+            schema = @Schema(type = "string")) @FormDataParam("datasetUri")@QueryParam("datasetUri") String datasetUri,
+        @Parameter(description = "The estimator algorithm to be used in the compound. Must be SimpleEstimator,  MultiNomialBMAEstimator, BMAEstimator or BayesNetEstimator (Default: SimpleEstimator)."
+            ,style = ParameterStyle.FORM)@FormDataParam("estimator") @QueryParam("estimator") String estimator,
+        //schema = @Schema(  allowableValues="SimpleEstimator, MultiNomialBMAEstimator, BMAEstimator, BayesNetEstimator", defaultValue="SimpleEstimator", type = "string", name = "estimator")
         @Parameter(description = "The parameter for the estimator to be used in the compound.  Must be of type double (Default: 0.5).",
-            schema = @Schema(defaultValue="0.5"))@FormDataParam("estimatorParams") BigDecimal estimatorParams,
+            schema = @Schema(defaultValue="0.5"))@FormDataParam("estimatorParams") @QueryParam("estimatorParams") BigDecimal estimatorParams,
         @Parameter(description = "Whether to use ADTrees for searching (using will increase the speed of the search, but will also raise the memory use (Default: 0).",
-            schema = @Schema(allowableValues={"0", "1"}, defaultValue="0"))@FormDataParam("useADTree") Integer useADTree,
+            content = @Content(schema = @Schema(allowableValues={"0", "1"}, defaultValue="0")))@DefaultValue("0") @FormDataParam("useADTree") @QueryParam("useADTree") Integer useADTree,
         @Parameter(description = "The algorithmn to be used for searching in the compound. Must be local.K2, local.GeneticSearch, local.HillClimber, local.LAGDHillClimber, local.RepeatedHillClimber, local.SimulatedAnnealing, local.TabuSearch, local.TAN, global.K2, global.GeneticSearch, global.HillClimber, global.RepeatedHillClimber, global.SimulatedAnnealing, global.TabuSearch, global.TAN, ci.CISearchAlgorithm, ci.ICSSearchAlgorithm (Default: local.K2).",
-            schema = @Schema(allowableValues="local.K2, local.GeneticSearch, local.HillClimber, local.LAGDHillClimber, local.RepeatedHillClimber, local.SimulatedAnnealing, local.TabuSearch, local.TAN, global.K2, global.GeneticSearch, global.HillClimber, global.RepeatedHillClimber, global.SimulatedAnnealing, global.TabuSearch, global.TAN, ci.CISearchAlgorithm, ci.ICSSearchAlgorithm",
-            defaultValue="local.K2"))@FormDataParam("searchAlgorithm")  String searchAlgorithm,
+            schema = @Schema(allowableValues={"local.K2", "local.GeneticSearch", "local.HillClimber", "local.LAGDHillClimber", "local.RepeatedHillClimber", "local.SimulatedAnnealing", "local.TabuSearch", "local.TAN", "global.K2", "global.GeneticSearch", "global.HillClimber", "global.RepeatedHillClimber", "global.SimulatedAnnealing", "global.TabuSearch", "global.TAN", "ci.CISearchAlgorithm", "ci.ICSSearchAlgorithm"},
+            defaultValue="local.K2"))@FormDataParam("searchAlgorithm") @QueryParam("searchAlgorithm")  @DefaultValue("local.K2")  String searchAlgorithm,
         @Parameter(description = "The parameter for algorithmn to be used for searching in the compound. Are set automatically (WEKA's standard parameter setting).",
-            schema = @Schema(defaultValue="-P 1 -S BAYES"))@FormDataParam("searchParams")  String searchParams,
+            schema = @Schema(defaultValue="-P 1 -S BAYES"))@FormDataParam("searchParams") @QueryParam("searchParams")  String searchParams,
         @Parameter(description = "authorization token") @HeaderParam("subjectid") String subjectid,
         @Context UriInfo ui, @Context HttpHeaders headers, @Context SecurityContext securityContext)
         throws io.swagger.api.NotFoundException, IOException {

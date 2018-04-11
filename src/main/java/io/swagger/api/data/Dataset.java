@@ -80,12 +80,14 @@ public class Dataset {
         @ApiResponse(responseCode = "400", description = "Bad Request"),
         @ApiResponse(responseCode = "401", description = "Unauthorized"),
         @ApiResponse(responseCode = "403", description = "Forbidden"),
-        @ApiResponse(responseCode = "404", description = "Resource Not Found") })
+        @ApiResponse(responseCode = "404", description = "Resource Not Found"),
+        @ApiResponse(responseCode = "500", description = "Server Error")})
     public Response list(
         @Parameter(description = "Authorization token" )@HeaderParam("subjectid") String subjectid,
         @Context UriInfo ui, @Context HttpHeaders headers) throws ApiException {
 
             String accept = headers.getRequestHeaders().getFirst("accept");
+            System.out.println("accept is: " + accept);
             Object datasetList = DatasetService.listDatasets(ui, accept, subjectid);
 
             return Response

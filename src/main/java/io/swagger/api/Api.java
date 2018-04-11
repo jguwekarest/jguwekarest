@@ -16,8 +16,7 @@ import javax.ws.rs.core.UriInfo;
 import java.io.IOException;
 
 @Path("/api")
-
-//@io.swagger.annotations.Api(description = "the api API")
+//Api(description = "the api API")
 public class Api {
     private final ApiService delegate;
 
@@ -42,9 +41,9 @@ public class Api {
         this.delegate = delegate;
     }
 
+
     @GET
     @Path("/api.json")
-
     @Produces({"application/json", "application/ld+json"})
     @Operation(description = "", summary = "Get swagger api in JSON", tags = {"api",})
     @ApiResponses(value = {

@@ -94,7 +94,7 @@ public class Functions {
             params.put("attributeSelectionMethod", attributeSelectionMethod);
             params.put("eliminateColinearAttributes", eliminateColinearAttributes);
             params.put("ridge", ridge);
-    //attributeSelectionMethod, eliminateColinearAttributes, ridge
+
             return delegate.algorithmPost(fileInputStream, fileDetail, datasetUri, "LinearRegression", params,
                                           headers, ui, securityContext);
     }

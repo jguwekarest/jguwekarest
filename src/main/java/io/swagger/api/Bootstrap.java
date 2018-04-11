@@ -1,15 +1,13 @@
 package io.swagger.api;
 
-import ch.qos.logback.classic.Level;
-import ch.qos.logback.classic.LoggerContext;
 import io.swagger.v3.jaxrs2.integration.JaxrsOpenApiContextBuilder;
+import io.swagger.v3.jaxrs2.integration.ServletOpenApiContextBuilder;
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.annotations.info.Contact;
+import io.swagger.v3.oas.annotations.info.License;
 import io.swagger.v3.oas.integration.OpenApiConfigurationException;
 import io.swagger.v3.oas.integration.SwaggerConfiguration;
 import io.swagger.v3.oas.models.OpenAPI;
-import io.swagger.v3.oas.models.info.Contact;
-import io.swagger.v3.oas.models.info.Info;
-import io.swagger.v3.oas.models.info.License;
-import org.slf4j.LoggerFactory;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -19,15 +17,31 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+
+@OpenAPIDefinition(
+    info = @io.swagger.v3.oas.annotations.info.Info(
+        title = "JGU WEKA REST Service Metadata",
+        version = "0.2.0",
+        description = "RESTful API Webservice to WEKA Machine Learning Algorithms.\n" +
+            "  This webservice provides an [OpenRiskNet](https://openrisknet.org/) compliant REST interface to machine learning algorithms from the WEKA Java Library.\n" +
+            "  This application is developed by the [Institute of Computer Science](http://www.datamining.informatik.uni-mainz.de) at the Johannes Gutenberg University Mainz.\n\n" +
+            "  OpenRiskNet is funded by the European Commission GA 731075. WEKA is developed by the [Machine Learning Group](https://www.cs.waikato.ac.nz/ml/index.html) at the University of Waikato.\n\n" +
+            "  See [Documentation](https://jguwekarest.github.io/jguwekarest/), [Issue Tracker](https://github.com/jguwekarest/jguwekarest/issues) and [Code](https://github.com/jguwekarest/jguwekarest) at Github.",
+        license = @License(name = "GNU General Public License 3", url = "https://www.gnu.org/licenses/gpl-3.0.de.html"),
+        contact = @Contact(url = "http://www.datamining.informatik.uni-mainz.de", name = "Data Mining Group JGU Mainz", email = "rautenberg@uni-mainz.de")
+    )
+)
+
 /**
- * Class to init the servlet and set Swagger/OpenAPI Infos
+ * Class to init the servlet and set Swagger/OpenAPI Info
  */
 public class Bootstrap extends HttpServlet {
   @Override
   public void init(ServletConfig config) throws ServletException {
 
-    ((LoggerContext) LoggerFactory.getILoggerFactory()).getLogger("org.mongodb.driver").setLevel(Level.ERROR);
-    ((LoggerContext) LoggerFactory.getILoggerFactory()).getLogger("org.mongodb.driver.cluster").setLevel(Level.ERROR);
+
+    //((LoggerContext) LoggerFactory.getILoggerFactory()).getLogger("org.mongodb.driver").setLevel(Level.ERROR);
+    //((LoggerContext) LoggerFactory.getILoggerFactory()).getLogger("org.mongodb.driver.cluster").setLevel(Level.ERROR);
     final Map<String, Object> map = new HashMap< >();
     map.put("type", "H2020");
     map.put("name", "OpenRiskNet");
@@ -36,38 +50,45 @@ public class Bootstrap extends HttpServlet {
     final Map<String, Object> contextmap = new HashMap< >();
     contextmap.put("@vocab", "http://schema.org/");
 
+    System.out.println("=============================\n Bootstrap loader 1 \n=============================");
+
 
     OpenAPI oas = new OpenAPI();
-    Info info = new Info()
-        .title("Swagger Sample App - independent config exposed by dedicated servlet")
-        .description("This is a sample server Petstore server.  You can find out more about Swagger " +
-            "at [http://swagger.io](http://swagger.io) or on [irc.freenode.net, #swagger](http://swagger.io/irc/).  For this sample, " +
-            "you can use the api key `special-key` to test the authorization filters.")
-        .termsOfService("http://swagger.io/terms/")
-        .contact(new Contact()
-            .email("apiteam@swagger.io"))
-        .license(new License()
-            .name("Apache 2.0")
-            .url("http://www.apache.org/licenses/LICENSE-2.0.html"));
-
-    oas.info(info);
     SwaggerConfiguration oasConfig = new SwaggerConfiguration()
         .openAPI(oas)
-        .resourcePackages(Stream.of("io.swagger.api.resource").collect(Collectors.toSet()));
+        .prettyPrint(true)
+        .resourcePackages(Stream.of("io.swagger.api").collect(Collectors.toSet()));
+
+    System.out.println("=============================\n Bootstrap loader 2 \n=============================");
 
     try {
       new JaxrsOpenApiContextBuilder()
           .servletConfig(config)
           .openApiConfiguration(oasConfig)
           .buildContext(true);
+        System.out.println("=============================\n Bootstrap loader 3 \n=============================");
     } catch (OpenApiConfigurationException e) {
-      throw new ServletException(e.getMessage(), e);
+      throw new ServletException("Bootstrap Error XXXXXXXXXXXX: " + e.getMessage(), e);
+    } catch (Exception e){
+      e.printStackTrace();
     }
 
 
+    try {
+      OpenAPI openAPI = new ServletOpenApiContextBuilder()
+          .servletConfig(config)
+          .buildContext(true)
+          .read();
+      System.out.println("=============================\n Bootstrap loader 4 \n=============================");
+    } catch (OpenApiConfigurationException e) {
+      throw new RuntimeException(e.getMessage(), e);
+    }
+
+      System.out.println("=============================\n Bootstrap loader 5 \n=============================");
+ /*
 
 
-    /*
+
     @OpenAPIDefinition(
         info = @Info(
         title = "")

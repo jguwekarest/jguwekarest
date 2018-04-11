@@ -5,6 +5,7 @@ import io.swagger.api.Exeption;
 import io.swagger.api.annotations.GroupedApiResponsesOk;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.json.JSONObject;
 
 import javax.ws.rs.*;
@@ -28,8 +29,8 @@ public class Authorization {
             tags={ "authorization", })
     @GroupedApiResponsesOk
     public Response login(
-            @Parameter(description = "Username", name = "username") @QueryParam("username") String username,
-            @Parameter(description = "Password", name = "password") @QueryParam("password") String password,
+            @Parameter(description = "Username", name = "username") @FormDataParam("username") String username,
+            @Parameter(description = "Password", name = "password") @FormDataParam("password") String password,
             @Context HttpHeaders headers) throws Exeption.AAException {
 
         String token = AuthorizationService.login(username, password);

@@ -8,7 +8,7 @@ import io.swagger.v3.oas.annotations.info.License;
 
 @OpenAPIDefinition(
     info = @Info(
-        title = "JGU WEKA REST Service",
+        title = "JGU WEKA REST Service Metadata",
         version = "0.2.0",
         description = "RESTful API Webservice to WEKA Machine Learning Algorithms.\n" +
             "  This webservice provides an [OpenRiskNet](https://openrisknet.org/) compliant REST interface to machine learning algorithms from the WEKA Java Library.\n" +
@@ -20,5 +20,9 @@ import io.swagger.v3.oas.annotations.info.License;
     )
 )
 
+
+
 public class Metadata {
+
 }
+

@@ -1,14 +1,15 @@
 package io.swagger.api;
 
-import java.io.IOException;
-
 import javax.servlet.*;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2017-09-11T12:03:46.572Z")
+
 public class ApiOriginFilter implements javax.servlet.Filter {
+
+    @Override
     public void doFilter(ServletRequest request, ServletResponse response,
-            FilterChain chain) throws IOException, ServletException {
+                         FilterChain chain) throws IOException, ServletException {
         HttpServletResponse res = (HttpServletResponse) response;
         res.addHeader("Access-Control-Allow-Origin", "*");
         res.addHeader("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT");
@@ -16,7 +17,11 @@ public class ApiOriginFilter implements javax.servlet.Filter {
         chain.doFilter(request, response);
     }
 
-    public void destroy() {}
+    @Override
+    public void destroy() {
+    }
 
-    public void init(FilterConfig filterConfig) throws ServletException {}
+    @Override
+    public void init(FilterConfig filterConfig) throws ServletException {
+    }
 }

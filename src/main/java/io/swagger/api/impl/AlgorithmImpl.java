@@ -13,14 +13,15 @@ import weka.classifiers.AbstractClassifier;
 import weka.classifiers.SingleClassifierEnhancer;
 import weka.classifiers.bayes.BayesNet;
 import weka.classifiers.bayes.NaiveBayes;
-import weka.classifiers.functions.LibSVM;
-import weka.classifiers.functions.LinearRegression;
+import weka.classifiers.functions.*;
 import weka.classifiers.lazy.IBk;
 import weka.classifiers.meta.AdaBoostM1;
 import weka.classifiers.meta.Bagging;
 import weka.classifiers.rules.M5Rules;
 import weka.classifiers.rules.ZeroR;
 import weka.classifiers.trees.J48;
+import weka.classifiers.trees.M5P;
+import weka.classifiers.trees.RandomForest;
 import weka.core.Instances;
 
 import javax.servlet.ServletContext;
@@ -162,26 +163,47 @@ public class AlgorithmImpl extends AlgorithmService {
                             case "BayesNet":
                                 classifier = new BayesNet();
                                 break;
-                            case "NaiveBayes":
-                                classifier = new NaiveBayes();
-                                break;
-                            case "LinearRegression":
-                                classifier = new LinearRegression();
-                                break;
-                            case "LibSVM":
-                                classifier = new LibSVM();
+                            case "GaussianProcesses":
+                                classifier = new GaussianProcesses();
                                 break;
                             case "J48":
                                 classifier = new J48();
                                 break;
-                            case "KNN":
+                            case "IBk":
                                 classifier = new IBk();
                                 break;
-                            case "ZeroR":
-                                classifier = new ZeroR();
+                            case "LibSVM":
+                                classifier = new LibSVM();
+                                break;
+                            case "LinearRegression":
+                                classifier = new LinearRegression();
+                                break;
+                            case "Logistic":
+                                classifier = new Logistic();
+                                break;
+                            case "M5P":
+                                classifier = new M5P();
                                 break;
                             case "M5Rules":
                                 classifier = new M5Rules();
+                                break;
+                            case "MultilayerPerceptron":
+                                classifier = new MultilayerPerceptron();
+                                break;
+                            case "NaiveBayes":
+                                classifier = new NaiveBayes();
+                                break;
+                            case "RandomForest":
+                                classifier = new RandomForest();
+                                break;
+                            case "SMO":
+                                classifier = new SMO();
+                                break;
+                            case "SMOreg":
+                                classifier= new SMOreg();
+                                break;
+                            case "ZeroR":
+                                classifier = new ZeroR();
                                 break;
                         }
                     } catch (Exception e) {
