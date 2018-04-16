@@ -9,10 +9,7 @@ import org.bson.Document;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import weka.core.Instances;
 import weka.filters.Filter;
-import weka.filters.unsupervised.attribute.Normalize;
-import weka.filters.unsupervised.attribute.Remove;
-import weka.filters.unsupervised.attribute.Standardize;
-import weka.filters.unsupervised.attribute.StringToNominal;
+import weka.filters.unsupervised.attribute.*;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -249,13 +246,19 @@ public class DatasetService {
      * @param standardize null/true Standardizes all numeric attributes in the given dataset to have zero mean and unit variance
      * @param ignore ignore the class attribute for standardize
      * @param attributeRange range (comma separated list) of string attributes to convert to nominal
+     * @param attributeIndicies comma separated list of attribute indices e.G."first,2,8" (discretize)
+     * @param bins Number of bins (discretize)
+     * @param useEqualFrequency if true equal-frequency binning is used. Default is equal-width binning. (discretize)
      * @param accept requested mime-type
      * @param uri URI of the dataset
      * @return filtered arff string
      * @throws Exception exceptions
      */
-    public static String filter(Dataset dataset, String idx_remove, String scale, String translation, Boolean standardize, Boolean ignore, String attributeRange, String accept, String uri) throws Exception {
+    public static String filter(Dataset dataset, String idx_remove, String scale, String translation, Boolean standardize,
+                                Boolean ignore, String attributeRange, String attributeIndicies, Integer bins, Boolean useEqualFrequency,
+                                String accept, String uri) throws Exception {
         String out = dataset.arff;
+        // Remove Idx
         if(idx_remove != null && !idx_remove.equals("0")){
             LOG.log(Level.INFO, "Remove filter: attributes: {0}", idx_remove);
             Remove rm = new Remove();
@@ -267,6 +270,7 @@ public class DatasetService {
             out = newData.toString();
         }
         if (ignore == null) ignore = false;
+        // Normalization or Standardization
         if(scale != null && translation != null){
             LOG.log(Level.INFO, "Normalize filter: scale: {0}, translation: {1}, ignore class: {2}", new Object[]{scale,translation, ignore});
             Normalize norm = new Normalize();
@@ -295,6 +299,18 @@ public class DatasetService {
             Instances newData = new Instances(StringToNominal.useFilter(instances, s2n));
             out = newData.toString();
         }
+        // Discretization
+        if(attributeIndicies != null) {
+            Discretize discretize = new Discretize();
+            discretize.setAttributeIndices(attributeIndicies);
+            if (bins != null) discretize.setBins(bins); else discretize.setBins(10);
+            if (useEqualFrequency != null) discretize.setUseEqualFrequency(useEqualFrequency);
+            Instances instances = WekaUtils.instancesFromString(out, true);
+            discretize.setInputFormat(instances);
+            Instances newData = new Instances(Discretize.useFilter(instances, discretize));
+            out = newData.toString();
+        }
+
         if (accept.equals("text/uri-list")){
             Dataset newDataset;
             newDataset = dataset;

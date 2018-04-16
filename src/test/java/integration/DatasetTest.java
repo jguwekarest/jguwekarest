@@ -115,11 +115,11 @@ public class DatasetTest {
         }
 
         try {
-            String newArff = DatasetService.filter(dataset, null, null, null, true, null, null, "text/arff", uri);
+            String newArff = DatasetService.filter(dataset, null, null, null, true, null, null,null,null,null, "text/arff", uri);
             String filteredArff = TestHelper.getArff("weather.numeric.standardized.arff");
             Assert.assertEquals(newArff, filteredArff);
 
-            newArff = DatasetService.filter(dataset, "1,2", null, null, null, null, null, "text/arff", uri);
+            newArff = DatasetService.filter(dataset, "1,2", null, null, null, null, null, null,null,null,"text/arff", uri);
             filteredArff = TestHelper.getArff("weather.numeric.removed.arff");
             Assert.assertEquals(newArff, filteredArff);
 
@@ -147,7 +147,6 @@ public class DatasetTest {
             newArff = response.readEntity(String.class);
             Assert.assertTrue(response.getStatus() == 200);
             Assert.assertTrue(response.getMediaType().toString().equals(TEXT_ARFF));
-            System.out.println("New Arff of filtered dataset is: " + newArff);
             filteredArff = TestHelper.getArff("weather.numeric.standardized.arff");
             Assert.assertEquals(newArff, filteredArff);
 
@@ -155,7 +154,64 @@ public class DatasetTest {
             Boolean resultDelete = DatasetService.deleteDataset(id);
             Assert.assertTrue(resultDelete);
         }
+    }
 
+    @Parameters({"host"})
+    @Test(description = "Filter dataset.")
+    public void filterDatasetDiscretize( @Optional  String host ) throws Exception {
+        String uri = host + "/dataset/";
+        String id = "";
+        Dataset dataset = new Dataset();
+        Dao datasetDao = new Dao();
+
+        String arff = TestHelper.getArff("weather.numeric.arff");
+        try {
+            dataset.arff = arff;
+            dataset.comment = "integration test dataset";
+            Gson gson = new Gson();
+            Document document = Document.parse(gson.toJson(dataset));
+            id = datasetDao.saveData("dataset", document);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            datasetDao.close();
+        }
+        try {
+            String newArff = DatasetService.filter(dataset, null, null, null, null, null, null,"2",2,true, "text/arff", uri);
+            String filteredArff = TestHelper.getArff("weather.numeric.discretized.arff");
+            Assert.assertEquals(newArff + "\n", filteredArff);
+
+            final Client client = ClientBuilder.newBuilder().register(MultiPartFeature.class).build();
+
+            //String token = AuthorizationService.login("guest","guest");
+
+            FormDataMultiPart formDataMultiPart = new FormDataMultiPart();
+            formDataMultiPart.field("id", id)
+                .field("attributeIndicies", "2")
+                .field("bins", "2")
+                .field("useEqualFrequency", "true");
+
+            final FormDataMultiPart multipart = (FormDataMultiPart) formDataMultiPart;
+
+            final WebTarget target = client.target(uri + id);
+            Invocation.Builder request = target.request();
+            request.accept(TEXT_ARFF);
+
+            final Response response = request.post(Entity.entity(multipart, multipart.getMediaType()));
+
+            formDataMultiPart.close();
+            multipart.close();
+
+            newArff = response.readEntity(String.class);
+            Assert.assertTrue(response.getStatus() == 200);
+            Assert.assertTrue(response.getMediaType().toString().equals(TEXT_ARFF));
+            filteredArff = TestHelper.getArff("weather.numeric.discretized.arff");
+            Assert.assertEquals(newArff + "\n", filteredArff);
+
+        } finally {
+            Boolean resultDelete = DatasetService.deleteDataset(id);
+            Assert.assertTrue(resultDelete);
+        }
     }
 
     @Test(description = "Try to delete with a none existing model id")

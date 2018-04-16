@@ -130,7 +130,8 @@ public class Dataset {
     @Produces({TEXT_ARFF, TEXT_URILIST})
     @ApiOperation(
         value = "Filter an internal dataset with weka filter.",
-        notes = "Filter an internal dataset with weka filter. Remove attributes and normalize or standardize all numeric attributes of a dataset." + SAVE_DATASSET_NOTE,
+        notes = "Filter an internal dataset with weka filter. Remove attributes and normalize or standardize all numeric attributes " +
+            "of a dataset. Change String to Nominal. Or Discretize attributes. " + SAVE_DATASSET_NOTE,
         tags={ "dataset" },
         extensions = {
             @Extension(properties = {@ExtensionProperty(name = "orn-@id", value = "/dataset/{id}")}),
@@ -152,6 +153,9 @@ public class Dataset {
         @ApiParam(value = "Standardize all numeric attributes in the given dataset to have zero mean and unit variance (apart from the class attribute, if set).")@FormDataParam("standardize") Boolean standardize,
         @ApiParam(value = "Ignore class (ignore class attribute for Normalization or Standization).")@FormDataParam("ignore") Boolean ignore,
         @ApiParam(value = "String to Nominal: Sets which attributes to process. This attributes must be string attributes (\"first\" and \"last\" are valid values as well as ranges and lists. Empty value do not process the filter).")@FormDataParam("attributeRange") String attributeRange,
+        @ApiParam(value = "Discretize: Specify range of attributes to act on. This is a comma separated list of attribute indices, with \"first\" and \"last\" valid values. Specify an inclusive range with \"-\". E.g: \"first-3,5,6-10,last\". Empty value do not process the filter).")@FormDataParam("attributeIndicies") String attributeIndicies,
+        @ApiParam(value = "Discretize: Number of bins (default: 10).")@FormDataParam("bins") Integer bins,
+        @ApiParam(value = "Discretize: useEqualFrequency - if set to true, equal-frequency binning will be used instead of equal-width binning.")@FormDataParam("useEqualFrequency") Boolean useEqualFrequency,
         @ApiParam(value = "Authorization token" )@HeaderParam("subjectid") String subjectid,
         @Context HttpHeaders headers, @Context UriInfo ui ) throws Exception{
 
@@ -159,7 +163,7 @@ public class Dataset {
         Dataset ds = DatasetService.getDataset(id, subjectid);
         String uri = ui.getBaseUri().toString();
 
-        String output = DatasetService.filter(ds, idx_remove, scale, translation, standardize, ignore, attributeRange, accept, uri);
+        String output = DatasetService.filter(ds, idx_remove, scale, translation, standardize, ignore, attributeRange, attributeIndicies, bins, useEqualFrequency, accept, uri);
 
         return Response
                 .ok(output)
