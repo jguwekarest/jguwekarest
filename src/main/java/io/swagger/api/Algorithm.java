@@ -3,6 +3,7 @@ package io.swagger.api;
 import io.swagger.api.factories.AlgorithmFactory;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
@@ -87,7 +88,7 @@ public class Algorithm {
         tags = {"algorithm"}
     )
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "OK"),
+        @ApiResponse(responseCode = "200", description = "OK",content = {@Content(mediaType = "text/uri-list"), @Content(mediaType = "application/json")}),
         @ApiResponse(responseCode = "400", description = "Bad Request"),
         @ApiResponse(responseCode = "401", description = "Unauthorized"),
         @ApiResponse(responseCode = "404", description = "Resource Not Found"),

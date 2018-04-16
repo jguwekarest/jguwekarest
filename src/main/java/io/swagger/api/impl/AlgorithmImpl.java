@@ -63,7 +63,7 @@ public class AlgorithmImpl extends AlgorithmService {
     @Override
     public Response algorithmGet(String accept, String subjectid, SecurityContext securityContext, UriInfo ui) throws NotFoundException, IOException {
         String baseuri = ui.getBaseUri().toString();
-        InputStream in = new URL( ui.getBaseUri() + "swagger.json" ).openStream();
+        InputStream in = new URL( ui.getBaseUri() + "openapi/openapi.json" ).openStream();
         String jsonContent;
         try {
             jsonContent = IOUtils.toString(in, "UTF-8");
