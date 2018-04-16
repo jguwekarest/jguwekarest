@@ -15,8 +15,8 @@ public class WekaOptionHelper {
             case "J48":
                 options = getJ48Options(params);
                 break;
-            case "KNN":
-                options = getKNNOptions(params);
+            case "IBk":
+                options = getIBkOptions(params);
                 break;
             case "BayesNet":
                 options = getBayesNetOptions(params);
@@ -93,11 +93,11 @@ public class WekaOptionHelper {
     }
 
     /**
-     * Generate option string for KNN
-     * @param params HashMap: windowSize, KNN, crossValidate, distanceWeighting, meanSquared, nearestNeighbourSearchAlgorithm
+     * Generate option string for IBk
+     * @param params HashMap: windowSize, IBk, crossValidate, distanceWeighting, meanSquared, nearestNeighbourSearchAlgorithm
      * @return options array
      */
-    public static String[] getKNNOptions(HashMap params) {
+    public static String[] getIBkOptions(HashMap params) {
         String parameters = "";
         parameters += getParamString(params.get("windowSize"), "W", 0);
         parameters += getParamString(params.get("KNN"), "K", 1);

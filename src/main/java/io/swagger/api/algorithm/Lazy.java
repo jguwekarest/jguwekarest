@@ -45,7 +45,7 @@ public class Lazy {
     }
 
     @POST
-    @Path("/kNNclassification")
+    @Path("/IBk")
     @Consumes({ "multipart/form-data" })
     @Produces({ TEXT_URILIST, MediaType.APPLICATION_JSON})
     @ApiOperation(
@@ -53,7 +53,7 @@ public class Lazy {
         notes = "REST interface to the WEKA K-nearest neighbours classifier. " + SAVE_MODEL_NOTE,
         tags={ "algorithm", },
         extensions = {
-            @Extension(properties = {@ExtensionProperty(name = "orn-@id",  value = "/algorithm/kNNclassification")}),
+            @Extension(properties = {@ExtensionProperty(name = "orn-@id",  value = "/algorithm/IBk")}),
             @Extension(properties = {@ExtensionProperty(name = "orn-@type",  value = "x-orn:Algorithm")}),
             @Extension(name = "orn:expects", properties = {@ExtensionProperty(name = "x-orn-@id",  value = "x-orn:Dataset")}),
             @Extension(name = "orn:returns", properties = {@ExtensionProperty(name = "x-orn-@id",  value = "x-orn:Model")}),
@@ -67,7 +67,7 @@ public class Lazy {
         @ApiResponse(code = 401, message = "Unauthorized"),
         @ApiResponse(code = 403, message = "Forbidden"),
         @ApiResponse(code = 404, message = "Resource Not Found") })
-    public Response algorithmKNNclassificationPost(
+    public Response algorithmIBkPost(
         @FormDataParam("file") InputStream fileInputStream,
         @FormDataParam("file") FormDataContentDisposition fileDetail,
         @ApiParam(value = "Dataset URI or local dataset ID (to the arff representation of a dataset).")@FormDataParam("datasetURI")  String datasetUri,
@@ -90,7 +90,7 @@ public class Lazy {
         params.put("meanSquared", meanSquared);
         params.put("nearestNeighbourSearchAlgorithm", nearestNeighbourSearchAlgorithm);
 
-        return delegate.algorithmPost(fileInputStream, fileDetail, datasetUri, "KNN", params,
+        return delegate.algorithmPost(fileInputStream, fileDetail, datasetUri, "IBk", params,
                                       headers, uriInfo, securityContext);
     }
 

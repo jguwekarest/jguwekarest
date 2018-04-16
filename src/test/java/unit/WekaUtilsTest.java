@@ -71,7 +71,7 @@ public class WekaUtilsTest {
         //Integer windowSize, Integer KNN, Integer crossValidate, String distanceWeighting, Integer meanSquared,
         // String nearestNeighbourSearchAlgorithm
         // 0, 1, 0, "0",0, "LinearNNSearch"
-        options = WekaOptionHelper.getKNNOptions(params);
+        options = WekaOptionHelper.getIBkOptions(params);
         Assert.assertEquals("-W 0 -K 1 -A weka.core.neighboursearch.LinearNNSearch -A \"weka.core.EuclideanDistance -R first-last\"",StringUtil.join(options," "), "get KNN options");
 
 

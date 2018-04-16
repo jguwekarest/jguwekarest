@@ -218,13 +218,13 @@ public class Bayes {
 
 
     /**
-     * REST interface to BayesNet algorithm
+     * REST interface to NaiveBayes algorithm
      */
     @POST
     @Path("/NaiveBayes")
     @Consumes({ "multipart/form-data" })
     @Produces({ TEXT_URILIST, MediaType.APPLICATION_JSON})
-    @ApiOperation(value = "REST interface to the WEKA BayesNet classifier.", notes = "REST interface to the WEKA BayesNet classifier. " + SAVE_MODEL_NOTE, tags={ "algorithm", }
+    @ApiOperation(value = "REST interface to the WEKA NaiveBayes classifier.", notes = "REST interface to the WEKA NaiveBayes classifier. " + SAVE_MODEL_NOTE, tags={ "algorithm", }
         ,extensions = {
         @Extension(properties = {@ExtensionProperty(name = "orn-@id",  value = "/algorithm/BayesNet")}),
         @Extension(properties = {@ExtensionProperty(name = "orn-@type",  value = "x-orn:Algorithm")}),
@@ -264,5 +264,119 @@ public class Bayes {
     }
 
 
+
+    /**
+     * REST interface to NaiveBayes algorithm
+     */
+    @POST
+    @Path("/NaiveBayes/adaboost")
+    @Consumes({ "multipart/form-data" })
+    @Produces({ TEXT_URILIST, MediaType.APPLICATION_JSON})
+    @ApiOperation(value = "REST interface to the WEKA  AdaBoost M1 with NaiveBayes classifier.", notes = "REST interface to the WEKA  AdaBoost M1 with NaiveBayes classifier. " + SAVE_MODEL_NOTE, tags={ "algorithm", }
+        ,extensions = {
+        @Extension(properties = {@ExtensionProperty(name = "orn-@id",  value = "/algorithm/BayesNet")}),
+        @Extension(properties = {@ExtensionProperty(name = "orn-@type",  value = "x-orn:Algorithm")}),
+        @Extension(name = "orn:expects", properties = { @ExtensionProperty(name = "x-orn-@id",  value = "x-orn:Dataset")}),
+        @Extension(name = "orn:returns", properties = { @ExtensionProperty(name = "x-orn-@id",  value = "x-orn:Model")}),
+
+        @Extension(name = "algorithm", properties = {
+            @ExtensionProperty(name = "http://purl.obolibrary.org/obo/IAO_0000064",  value = "http://purl.enanomapper.org/onto/ENM_8000001"),
+            @ExtensionProperty(name = "http://purl.enanomapper.org/onto/ENM_8000001",value = "http://purl.enanomapper.org/onto/ENM_8000002"),
+            @ExtensionProperty(name = "http://purl.enanomapper.org/onto/ENM_8000002",value = "http://purl.enanomapper.org/onto/ENM_8000005"),
+            @ExtensionProperty(name = "http://purl.enanomapper.org/onto/ENM_8000005",value = "http://purl.enanomapper.org/onto/ENM_8000014"),
+            @ExtensionProperty(name = "http://purl.enanomapper.org/onto/ENM_8000014",value = "https://en.wikipedia.org/wiki/Bayesian_network"),
+            @ExtensionProperty(name = "BayesNet", value = "https://en.wikipedia.org/wiki/Bayesian_network"),
+        })}
+    )
+    @GroupedApiResponsesOk
+
+    public Response algorithmNaiveBayesAdaBoostPost(
+        @FormDataParam("file") InputStream fileInputStream,
+        @FormDataParam("file") FormDataContentDisposition fileDetail,
+        @ApiParam(value = "Dataset URI or local dataset ID (to the arff representation of a dataset).")@FormDataParam("datasetURI")  String datasetUri,
+        //meta params
+        @ApiParam(value = "Adaboost M1: The preferred number of instances to process if batch prediction is being performed. More or fewer instances may be provided, but this gives implementations a chance to specify a preferred batch size.", defaultValue = "100") @FormDataParam("batchSize") Integer batchSizeAda,
+        @ApiParam(value = "Adaboost M1: The number of iterations to be performed.", defaultValue = "10") @FormDataParam("numIterations") Integer numIterations,
+        @ApiParam(value = "Adaboost M1: Whether resampling is used instead of reweighting.", defaultValue = "0", allowableValues = "0, 1") @FormDataParam("useResampling") Integer useResampling,
+        @ApiParam(value = "Adaboost M1: Weight threshold for weight pruning.", defaultValue = "100") @FormDataParam("weightThreshold") Integer weightThreshold,
+        //NaiveBayes params
+        @ApiParam(value = "The preferred number of instances to process if batch prediction is being performed. More or fewer instances may be provided, but this gives implementations a chance to specify a preferred batch size.", defaultValue = "100") @FormDataParam("batchSize") Integer batchSize,
+        @ApiParam(value = "Use a kernel estimator for numeric attributes rather than a normal distribution. (Default: 0).", allowableValues="0,1", defaultValue="0")@FormDataParam("useKernelEstimator")  String useKernelEstimator,
+        @ApiParam(value = "Use supervised discretization to convert numeric attributes to nominal ones. (Default: 0). Works not together with useKernelEstimator=1.", allowableValues="0,1", defaultValue="0")@FormDataParam("useSupervisedDiscretization") BigDecimal useSupervisedDiscretization,
+        @ApiParam(value = "authorization token") @HeaderParam("subjectid") String subjectid,
+        @Context UriInfo ui, @Context HttpHeaders headers, @Context SecurityContext securityContext)
+        throws io.swagger.api.NotFoundException, IOException {
+
+        HashMap<String, Object> params = new HashMap<>();
+        HashMap<String, Object> metaParams = new HashMap<>();
+        params.put("datasetUri", datasetUri);
+        params.put("batchSize", batchSize);
+        params.put("useKernelEstimator", useKernelEstimator);
+        params.put("useSupervisedDiscretization", useSupervisedDiscretization);
+        metaParams.put("batchSize", batchSizeAda);
+        metaParams.put("numIterations", numIterations);
+        metaParams.put("useResampling", useResampling);
+        metaParams.put("weightThreshold", weightThreshold);
+
+        return delegate.algorithmPost(fileInputStream, fileDetail, datasetUri, "NaiveBayes", params,
+            "AdaBoost", metaParams, headers, ui, securityContext);
+    }
+
+
+
+    /**
+     * REST interface to NaiveBayes algorithm
+     */
+    @POST
+    @Path("/NaiveBayes/bagging")
+    @Consumes({ "multipart/form-data" })
+    @Produces({ TEXT_URILIST, MediaType.APPLICATION_JSON})
+    @ApiOperation(value = "REST interface to the WEKA Bagging with NaiveBayes classifier.", notes = "REST interface to the WEKA Bagging with NaiveBayes classifier. " + SAVE_MODEL_NOTE, tags={ "algorithm", }
+        ,extensions = {
+        @Extension(properties = {@ExtensionProperty(name = "orn-@id",  value = "/algorithm/BayesNet")}),
+        @Extension(properties = {@ExtensionProperty(name = "orn-@type",  value = "x-orn:Algorithm")}),
+        @Extension(name = "orn:expects", properties = { @ExtensionProperty(name = "x-orn-@id",  value = "x-orn:Dataset")}),
+        @Extension(name = "orn:returns", properties = { @ExtensionProperty(name = "x-orn-@id",  value = "x-orn:Model")}),
+
+        @Extension(name = "algorithm", properties = {
+            @ExtensionProperty(name = "http://purl.obolibrary.org/obo/IAO_0000064",  value = "http://purl.enanomapper.org/onto/ENM_8000001"),
+            @ExtensionProperty(name = "http://purl.enanomapper.org/onto/ENM_8000001",value = "http://purl.enanomapper.org/onto/ENM_8000002"),
+            @ExtensionProperty(name = "http://purl.enanomapper.org/onto/ENM_8000002",value = "http://purl.enanomapper.org/onto/ENM_8000005"),
+            @ExtensionProperty(name = "http://purl.enanomapper.org/onto/ENM_8000005",value = "http://purl.enanomapper.org/onto/ENM_8000014"),
+            @ExtensionProperty(name = "http://purl.enanomapper.org/onto/ENM_8000014",value = "https://en.wikipedia.org/wiki/Bayesian_network"),
+            @ExtensionProperty(name = "BayesNet", value = "https://en.wikipedia.org/wiki/Bayesian_network"),
+        })}
+    )
+    @GroupedApiResponsesOk
+
+    public Response algorithmNaiveBayesBaggingPost(
+        @FormDataParam("file") InputStream fileInputStream,
+        @FormDataParam("file") FormDataContentDisposition fileDetail,
+        @ApiParam(value = "Dataset URI or local dataset ID (to the arff representation of a dataset).")@FormDataParam("datasetURI")  String datasetUri,
+        //meta params
+        @ApiParam(value = "Bagging: Size of each bag, as a percentage of the training set size.", defaultValue = "100") @FormDataParam("bagSizePercent") Integer bagSizePercent,
+        @ApiParam(value = "Bagging: The preferred number of instances to process if batch prediction is being performed. More or fewer instances may be provided, but this gives implementations a chance to specify a preferred batch size.", defaultValue = "100") @FormDataParam("batchSize") Integer batchSizeBagging,
+        @ApiParam(value = "Bagging: The number of iterations to be performed.", defaultValue = "10") @FormDataParam("numIterations") Integer numIterations,
+        //NaiveBayes params
+        @ApiParam(value = "The preferred number of instances to process if batch prediction is being performed. More or fewer instances may be provided, but this gives implementations a chance to specify a preferred batch size.", defaultValue = "100") @FormDataParam("batchSize") Integer batchSize,
+        @ApiParam(value = "Use a kernel estimator for numeric attributes rather than a normal distribution. (Default: 0).", allowableValues="0,1", defaultValue="0")@FormDataParam("useKernelEstimator")  String useKernelEstimator,
+        @ApiParam(value = "Use supervised discretization to convert numeric attributes to nominal ones. (Default: 0). Works not together with useKernelEstimator=1.", allowableValues="0,1", defaultValue="0")@FormDataParam("useSupervisedDiscretization") BigDecimal useSupervisedDiscretization,
+        @ApiParam(value = "authorization token") @HeaderParam("subjectid") String subjectid,
+        @Context UriInfo ui, @Context HttpHeaders headers, @Context SecurityContext securityContext)
+        throws io.swagger.api.NotFoundException, IOException {
+
+        HashMap<String, Object> params = new HashMap<>();
+        HashMap<String, Object> metaParams = new HashMap<>();
+        params.put("datasetUri", datasetUri);
+        params.put("batchSize", batchSize);
+        params.put("useKernelEstimator", useKernelEstimator);
+        params.put("useSupervisedDiscretization", useSupervisedDiscretization);
+        metaParams.put("bagSizePercent", bagSizePercent);
+        metaParams.put("batchSize", batchSizeBagging);
+        metaParams.put("numIterations", numIterations);
+
+        return delegate.algorithmPost(fileInputStream, fileDetail, datasetUri, "NaiveBayes", params,
+            "Bagging", metaParams, headers, ui, securityContext);
+    }
 }
 
