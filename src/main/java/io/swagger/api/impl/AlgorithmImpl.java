@@ -19,6 +19,7 @@ import weka.classifiers.meta.AdaBoostM1;
 import weka.classifiers.meta.Bagging;
 import weka.classifiers.rules.M5Rules;
 import weka.classifiers.rules.ZeroR;
+import weka.classifiers.trees.DecisionStump;
 import weka.classifiers.trees.J48;
 import weka.classifiers.trees.M5P;
 import weka.classifiers.trees.RandomForest;
@@ -163,6 +164,9 @@ public class AlgorithmImpl extends AlgorithmService {
                             case "BayesNet":
                                 classifier = new BayesNet();
                                 break;
+                            case "DecisionStump":
+                                classifier = new DecisionStump();
+                                break;
                             case "GaussianProcesses":
                                 classifier = new GaussianProcesses();
                                 break;
@@ -240,6 +244,7 @@ public class AlgorithmImpl extends AlgorithmService {
                         classifier.buildClassifier(instances);
                         setState(Task.Step.VALIDATION, 70f);
                         String validation = Validation.crossValidation(instances, classifier);
+
                         //v.add(classifier);
                         //v.add(new Instances(instances, 0));
                         id = ModelService.saveModel(classifier, classifier.getOptions(), params, validation, subjectid);

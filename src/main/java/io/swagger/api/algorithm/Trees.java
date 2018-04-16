@@ -237,4 +237,68 @@ public class Trees  {
             "Bagging", metaParams, headers, ui, securityContext);
     }
 
+    @POST
+    @Path("/M5P")
+    @Consumes({ "multipart/form-data" })
+    @Produces({ TEXT_URILIST, MediaType.APPLICATION_JSON})
+    @ApiOperation(value = "REST interface to the WEKA M5P classifier.",
+        notes = "REST interface to the WEKA M5P classifier. " + SAVE_MODEL_NOTE, tags = {"algorithm","meta algorithm"} )
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "OK"),
+        @ApiResponse(code = 400, message = "Bad Request"),
+        @ApiResponse(code = 401, message = "Unauthorized"),
+        @ApiResponse(code = 403, message = "Forbidden"),
+        @ApiResponse(code = 404, message = "Resource Not Found")})
+    public Response algorithmM5PPost(
+        //data params
+        @FormDataParam("file") InputStream fileInputStream,
+        @FormDataParam("file") FormDataContentDisposition fileDetail,
+        @ApiParam(value = "Dataset URI or local dataset ID (to the arff representation of a dataset).") @FormDataParam("datasetURI") String datasetUri,
+        // M5P
+        @ApiParam(value = "Whether unpruned tree to be generated.", example = "0", defaultValue = "0", allowableValues="0,1")@FormDataParam("unpruned") Integer unpruned,
+        @ApiParam(value = "Whether to use unsmoothed predictions.", defaultValue = "0", allowableValues="0,1")@FormDataParam("useUnsmoothed") Integer useUnsmoothed,
+        @ApiParam(value = "The minimum number of instances to allow at a leaf node.", defaultValue = "4")@FormDataParam("minNumInstances") Double minNumInstances,
+        @ApiParam(value = "Whether to generate a regression tree/rule instead of a model tree/rule.", defaultValue = "0", allowableValues="0,1")@FormDataParam("buildRegressionTree") Integer buildRegressionTree,
+        @ApiParam(value = "Authorization token" )@HeaderParam("subjectid") String subjectid,
+        @Context UriInfo ui, @Context HttpHeaders headers, @Context SecurityContext securityContext)
+        throws NotFoundException, IOException {
+
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("datasetUri", datasetUri);
+        params.put("minNumInstances", minNumInstances);
+        params.put("unpruned", unpruned);
+        params.put("useUnsmoothed", useUnsmoothed);
+        params.put("buildRegressionTree", buildRegressionTree);
+        return delegate.algorithmPost(fileInputStream, fileDetail, datasetUri, "M5P", params,
+            headers, ui, securityContext);
+    }
+
+
+    @POST
+    @Path("/DecisionStump")
+    @Consumes({ "multipart/form-data" })
+    @Produces({ TEXT_URILIST, MediaType.APPLICATION_JSON})
+    @ApiOperation(value = "REST interface to the WEKA M5P classifier.",
+        notes = "REST interface to the WEKA M5P classifier. " + SAVE_MODEL_NOTE, tags = {"algorithm","meta algorithm"} )
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "OK"),
+        @ApiResponse(code = 400, message = "Bad Request"),
+        @ApiResponse(code = 401, message = "Unauthorized"),
+        @ApiResponse(code = 403, message = "Forbidden"),
+        @ApiResponse(code = 404, message = "Resource Not Found")})
+    public Response algorithmDecisionStumpPost(
+        //data params
+        @FormDataParam("file") InputStream fileInputStream,
+        @FormDataParam("file") FormDataContentDisposition fileDetail,
+        @ApiParam(value = "Dataset URI or local dataset ID (to the arff representation of a dataset).") @FormDataParam("datasetURI") String datasetUri,
+        // DecisionStump
+        @ApiParam(value = "Authorization token" )@HeaderParam("subjectid") String subjectid,
+        @Context UriInfo ui, @Context HttpHeaders headers, @Context SecurityContext securityContext)
+        throws NotFoundException, IOException {
+
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("datasetUri", datasetUri);
+        return delegate.algorithmPost(fileInputStream, fileDetail, datasetUri, "DecisionStump", params,
+            headers, ui, securityContext);
+    }
 }
