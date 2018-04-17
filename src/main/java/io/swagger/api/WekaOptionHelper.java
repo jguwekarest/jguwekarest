@@ -37,6 +37,9 @@ public class WekaOptionHelper {
             case "LibSVM":
                 options = getLibSVMOptions(params);
                 break;
+            case "Logistic":
+                options = getLogisticOptions(params);
+                break;
             case "M5P":
                 options = getM5POptions(params);
                 break;
@@ -218,6 +221,17 @@ public class WekaOptionHelper {
 
         return splitOptions(parameters);
     }
+
+    public static String[] getLogisticOptions(HashMap params){
+        String parameters = "";
+        if (params.get("useConjugateGradientDescent") != null && (params.get("useConjugateGradientDescent").toString().equals("1")||params.get("useConjugateGradientDescent").toString().equals("true"))) { parameters += " -C ";}
+        if (params.get("ridge") != null ) parameters += " -R " + params.get("ridge") + " "; //1.0E-8
+        parameters += WekaOptionHelper.getParamString(params.get("maxIts"), "M", "-1");
+        parameters += " -num-decimal-places 4 "; //set default of 4
+        LOG.log(Level.INFO,"parameterstring for weka: weka.classifiers.functions.Logistic " + parameters);
+        return splitOptions(parameters);
+    }
+
 
     /**
      * Generate option string for Linear Regression

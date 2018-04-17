@@ -109,8 +109,8 @@ public class Trees  {
     @Path("/J48/adaboost")
     @Consumes({ "multipart/form-data" })
     @Produces({ TEXT_URILIST, MediaType.APPLICATION_JSON})
-    @ApiOperation(value = "REST interface to the WEKA Adaboost M1 meta classifier.",
-        notes = "REST interface to the WEKA Adaboost M1 meta classifier. " + SAVE_MODEL_NOTE,
+    @ApiOperation(value = "REST interface to the WEKA Adaboost M1 with J48 classifier.",
+        notes = "REST interface to the WEKA Adaboost M1 with J48 classifier. " + SAVE_MODEL_NOTE,
         tags = {"algorithm","meta algorithm"} ,
         extensions = {
             @Extension(properties = {@ExtensionProperty(name = "orn-@id",  value = "/algorithm/J48/adaboost")}),
@@ -153,6 +153,10 @@ public class Trees  {
 
         HashMap<String, Object> params = new HashMap<>();
         HashMap<String, Object> metaParams = new HashMap<>();
+        metaParams.put("batchSize", batchSize);
+        metaParams.put("numIterations", numIterations);
+        metaParams.put("useResampling", useResampling);
+        metaParams.put("weightThreshold", weightThreshold);
         params.put("datasetUri", datasetUri);
         params.put("binarySplits", binarySplits);
         params.put("confidenceFactor", confidenceFactor);
@@ -163,11 +167,6 @@ public class Trees  {
         params.put("subtreeRaising", subtreeRaising);
         params.put("unpruned", unpruned);
         params.put("useLaplace", useLaplace);
-        metaParams.put("batchSize", batchSize);
-        metaParams.put("numIterations", numIterations);
-        metaParams.put("useResampling", useResampling);
-        metaParams.put("weightThreshold", weightThreshold);
-
 
         return delegate.algorithmPost(fileInputStream, fileDetail, datasetUri,"J48", params,
             "AdaBoost", metaParams, headers, ui, securityContext);
@@ -179,7 +178,9 @@ public class Trees  {
     @Path("/J48/bagging")
     @Consumes({ "multipart/form-data" })
     @Produces({ TEXT_URILIST, MediaType.APPLICATION_JSON})
-    @ApiOperation(value = "REST interface to the WEKA Bagging meta classifier.", notes = "REST interface to the WEKA Bagging meta classifier. " + SAVE_MODEL_NOTE, tags = {"algorithm","meta algorithm"},
+    @ApiOperation(value = "REST interface to the WEKA Bagging with J48 classifier.",
+        notes = "REST interface to the WEKA Bagging with J48 classifier. " + SAVE_MODEL_NOTE,
+        tags = {"algorithm","meta algorithm"},
         extensions = {
         @Extension(properties = {@ExtensionProperty(name = "orn-@id",  value = "/algorithm/J48/bagging")}),
         @Extension(properties = {@ExtensionProperty(name = "orn-@type",  value = "x-orn:Algorithm")}),
@@ -242,7 +243,8 @@ public class Trees  {
     @Consumes({ "multipart/form-data" })
     @Produces({ TEXT_URILIST, MediaType.APPLICATION_JSON})
     @ApiOperation(value = "REST interface to the WEKA M5P classifier.",
-        notes = "REST interface to the WEKA M5P classifier. " + SAVE_MODEL_NOTE, tags = {"algorithm","meta algorithm"} )
+        notes = "REST interface to the WEKA M5P classifier. " + SAVE_MODEL_NOTE,
+        tags = {"algorithm","meta algorithm"} )
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "OK"),
         @ApiResponse(code = 400, message = "Bad Request"),
@@ -273,13 +275,105 @@ public class Trees  {
             headers, ui, securityContext);
     }
 
+    @POST
+    @Path("/M5P/adaboost")
+    @Consumes({ "multipart/form-data" })
+    @Produces({ TEXT_URILIST, MediaType.APPLICATION_JSON})
+    @ApiOperation(value = "REST interface to the WEKA AdaBoost M1 with M5P classifier.",
+        notes = "REST interface to the WEKA AdaBoost M1 with M5P classifier. " + SAVE_MODEL_NOTE,
+        tags = {"algorithm","meta algorithm"} )
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "OK"),
+        @ApiResponse(code = 400, message = "Bad Request"),
+        @ApiResponse(code = 401, message = "Unauthorized"),
+        @ApiResponse(code = 403, message = "Forbidden"),
+        @ApiResponse(code = 404, message = "Resource Not Found")})
+    public Response algorithmM5PAdaBoostPost(
+        //data params
+        @FormDataParam("file") InputStream fileInputStream,
+        @FormDataParam("file") FormDataContentDisposition fileDetail,
+        @ApiParam(value = "Dataset URI or local dataset ID (to the arff representation of a dataset).") @FormDataParam("datasetURI") String datasetUri,
+        //meta params,
+        @ApiParam(value = "Adaboost M1: The preferred number of instances to process if batch prediction is being performed. More or fewer instances may be provided, but this gives implementations a chance to specify a preferred batch size.", defaultValue = "100") @FormDataParam("batchSize") Integer batchSize,
+        @ApiParam(value = "Adaboost M1: The number of iterations to be performed.", defaultValue = "10") @FormDataParam("numIterations") Integer numIterations,
+        @ApiParam(value = "Adaboost M1: Whether resampling is used instead of reweighting.", defaultValue = "0", allowableValues = "0, 1") @FormDataParam("useResampling") Integer useResampling,
+        @ApiParam(value = "Adaboost M1: Weight threshold for weight pruning.", defaultValue = "100") @FormDataParam("weightThreshold") Integer weightThreshold,
+        // M5P
+        @ApiParam(value = "Whether unpruned tree to be generated.", example = "0", defaultValue = "0", allowableValues="0,1")@FormDataParam("unpruned") Integer unpruned,
+        @ApiParam(value = "Whether to use unsmoothed predictions.", defaultValue = "0", allowableValues="0,1")@FormDataParam("useUnsmoothed") Integer useUnsmoothed,
+        @ApiParam(value = "The minimum number of instances to allow at a leaf node.", defaultValue = "4")@FormDataParam("minNumInstances") Double minNumInstances,
+        @ApiParam(value = "Whether to generate a regression tree/rule instead of a model tree/rule.", defaultValue = "0", allowableValues="0,1")@FormDataParam("buildRegressionTree") Integer buildRegressionTree,
+        @ApiParam(value = "Authorization token" )@HeaderParam("subjectid") String subjectid,
+        @Context UriInfo ui, @Context HttpHeaders headers, @Context SecurityContext securityContext)
+        throws NotFoundException, IOException {
+
+        HashMap<String, Object> params = new HashMap<>();
+        HashMap<String, Object> metaParams = new HashMap<>();
+        metaParams.put("batchSize", batchSize);
+        metaParams.put("numIterations", numIterations);
+        metaParams.put("useResampling", useResampling);
+        metaParams.put("weightThreshold", weightThreshold);
+        params.put("datasetUri", datasetUri);
+        params.put("minNumInstances", minNumInstances);
+        params.put("unpruned", unpruned);
+        params.put("useUnsmoothed", useUnsmoothed);
+        params.put("buildRegressionTree", buildRegressionTree);
+        return delegate.algorithmPost(fileInputStream, fileDetail, datasetUri, "M5P", params,
+            "AdaBoost", metaParams, headers, ui, securityContext);
+    }
+
+    @POST
+    @Path("/M5P/bagging")
+    @Consumes({ "multipart/form-data" })
+    @Produces({ TEXT_URILIST, MediaType.APPLICATION_JSON})
+    @ApiOperation(value = "REST interface to the WEKA Bagging with M5P classifier.",
+        notes = "REST interface to the WEKA Bagging with M5P classifier. " + SAVE_MODEL_NOTE,
+        tags = {"algorithm","meta algorithm"} )
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "OK"),
+        @ApiResponse(code = 400, message = "Bad Request"),
+        @ApiResponse(code = 401, message = "Unauthorized"),
+        @ApiResponse(code = 403, message = "Forbidden"),
+        @ApiResponse(code = 404, message = "Resource Not Found")})
+    public Response algorithmM5PBaggingPost(
+        //data params
+        @FormDataParam("file") InputStream fileInputStream,
+        @FormDataParam("file") FormDataContentDisposition fileDetail,
+        @ApiParam(value = "Dataset URI or local dataset ID (to the arff representation of a dataset).") @FormDataParam("datasetURI") String datasetUri,
+        //meta params,
+        @ApiParam(value = "Bagging: Size of each bag, as a percentage of the training set size.", defaultValue = "100") @FormDataParam("bagSizePercent") Integer bagSizePercent,
+        @ApiParam(value = "Bagging: The preferred number of instances to process if batch prediction is being performed. More or fewer instances may be provided, but this gives implementations a chance to specify a preferred batch size.", defaultValue = "100") @FormDataParam("batchSize") Integer batchSize,
+        @ApiParam(value = "Bagging: The number of iterations to be performed.", defaultValue = "10") @FormDataParam("numIterations") Integer numIterations,
+        // M5P
+        @ApiParam(value = "Whether unpruned tree to be generated.", example = "0", defaultValue = "0", allowableValues="0,1")@FormDataParam("unpruned") Integer unpruned,
+        @ApiParam(value = "Whether to use unsmoothed predictions.", defaultValue = "0", allowableValues="0,1")@FormDataParam("useUnsmoothed") Integer useUnsmoothed,
+        @ApiParam(value = "The minimum number of instances to allow at a leaf node.", defaultValue = "4")@FormDataParam("minNumInstances") Double minNumInstances,
+        @ApiParam(value = "Whether to generate a regression tree/rule instead of a model tree/rule.", defaultValue = "0", allowableValues="0,1")@FormDataParam("buildRegressionTree") Integer buildRegressionTree,
+        @ApiParam(value = "Authorization token" )@HeaderParam("subjectid") String subjectid,
+        @Context UriInfo ui, @Context HttpHeaders headers, @Context SecurityContext securityContext)
+        throws NotFoundException, IOException {
+
+        HashMap<String, Object> params = new HashMap<>();
+        HashMap<String, Object> metaParams = new HashMap<>();
+        metaParams.put("bagSizePercent", bagSizePercent);
+        metaParams.put("batchSize", batchSize);
+        metaParams.put("numIterations", numIterations);
+        params.put("datasetUri", datasetUri);
+        params.put("minNumInstances", minNumInstances);
+        params.put("unpruned", unpruned);
+        params.put("useUnsmoothed", useUnsmoothed);
+        params.put("buildRegressionTree", buildRegressionTree);
+        return delegate.algorithmPost(fileInputStream, fileDetail, datasetUri, "M5P", params,
+            "Bagging", metaParams, headers, ui, securityContext);
+    }
+
 
     @POST
     @Path("/DecisionStump")
     @Consumes({ "multipart/form-data" })
     @Produces({ TEXT_URILIST, MediaType.APPLICATION_JSON})
-    @ApiOperation(value = "REST interface to the WEKA M5P classifier.",
-        notes = "REST interface to the WEKA M5P classifier. " + SAVE_MODEL_NOTE, tags = {"algorithm","meta algorithm"} )
+    @ApiOperation(value = "REST interface to the WEKA DecisionStump classifier.",
+        notes = "REST interface to the DecisionStump M5P classifier. " + SAVE_MODEL_NOTE, tags = {"algorithm","meta algorithm"} )
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "OK"),
         @ApiResponse(code = 400, message = "Bad Request"),
@@ -300,5 +394,82 @@ public class Trees  {
         params.put("datasetUri", datasetUri);
         return delegate.algorithmPost(fileInputStream, fileDetail, datasetUri, "DecisionStump", params,
             headers, ui, securityContext);
+    }
+
+
+    @POST
+    @Path("/DecisionStump/adaboost")
+    @Consumes({ "multipart/form-data" })
+    @Produces({ TEXT_URILIST, MediaType.APPLICATION_JSON})
+    @ApiOperation(value = "REST interface to the WEKA AdaBoost M1 with DecisionStump classifier.",
+        notes = "REST interface to the WEKA AdaBoost M1 with DecisionStump classifier. " + SAVE_MODEL_NOTE, tags = {"algorithm","meta algorithm"} )
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "OK"),
+        @ApiResponse(code = 400, message = "Bad Request"),
+        @ApiResponse(code = 401, message = "Unauthorized"),
+        @ApiResponse(code = 403, message = "Forbidden"),
+        @ApiResponse(code = 404, message = "Resource Not Found")})
+    public Response algorithmDecisionStumpAdaBoostPost(
+        //data params
+        @FormDataParam("file") InputStream fileInputStream,
+        @FormDataParam("file") FormDataContentDisposition fileDetail,
+        @ApiParam(value = "Dataset URI or local dataset ID (to the arff representation of a dataset).") @FormDataParam("datasetURI") String datasetUri,
+        //meta params,
+        @ApiParam(value = "Adaboost M1: The preferred number of instances to process if batch prediction is being performed. More or fewer instances may be provided, but this gives implementations a chance to specify a preferred batch size.", defaultValue = "100") @FormDataParam("batchSize") Integer batchSize,
+        @ApiParam(value = "Adaboost M1: The number of iterations to be performed.", defaultValue = "10") @FormDataParam("numIterations") Integer numIterations,
+        @ApiParam(value = "Adaboost M1: Whether resampling is used instead of reweighting.", defaultValue = "0", allowableValues = "0, 1") @FormDataParam("useResampling") Integer useResampling,
+        @ApiParam(value = "Adaboost M1: Weight threshold for weight pruning.", defaultValue = "100") @FormDataParam("weightThreshold") Integer weightThreshold,
+        // DecisionStump
+        @ApiParam(value = "Authorization token" )@HeaderParam("subjectid") String subjectid,
+        @Context UriInfo ui, @Context HttpHeaders headers, @Context SecurityContext securityContext)
+        throws NotFoundException, IOException {
+
+        HashMap<String, Object> params = new HashMap<>();
+        HashMap<String, Object> metaParams = new HashMap<>();
+        params.put("datasetUri", datasetUri);
+        metaParams.put("batchSize", batchSize);
+        metaParams.put("numIterations", numIterations);
+        metaParams.put("useResampling", useResampling);
+        metaParams.put("weightThreshold", weightThreshold);
+        return delegate.algorithmPost(fileInputStream, fileDetail, datasetUri, "DecisionStump", params,
+            "AdaBoost", metaParams, headers, ui, securityContext);
+    }
+
+
+    @POST
+    @Path("/DecisionStump/bagging")
+    @Consumes({ "multipart/form-data" })
+    @Produces({ TEXT_URILIST, MediaType.APPLICATION_JSON})
+    @ApiOperation(value = "REST interface to the WEKA Bagging with DecisionStump classifier.",
+        notes = "REST interface to the DecisionStump Bagging with M5P classifier. " + SAVE_MODEL_NOTE, tags = {"algorithm","meta algorithm"} )
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "OK"),
+        @ApiResponse(code = 400, message = "Bad Request"),
+        @ApiResponse(code = 401, message = "Unauthorized"),
+        @ApiResponse(code = 403, message = "Forbidden"),
+        @ApiResponse(code = 404, message = "Resource Not Found")})
+    public Response algorithmDecisionStumpBaggingPost(
+        //data params
+        @FormDataParam("file") InputStream fileInputStream,
+        @FormDataParam("file") FormDataContentDisposition fileDetail,
+        @ApiParam(value = "Dataset URI or local dataset ID (to the arff representation of a dataset).") @FormDataParam("datasetURI") String datasetUri,
+        //meta params,
+        @ApiParam(value = "Bagging: Size of each bag, as a percentage of the training set size.", defaultValue = "100") @FormDataParam("bagSizePercent") Integer bagSizePercent,
+        @ApiParam(value = "Bagging: The preferred number of instances to process if batch prediction is being performed. More or fewer instances may be provided, but this gives implementations a chance to specify a preferred batch size.", defaultValue = "100") @FormDataParam("batchSize") Integer batchSize,
+        @ApiParam(value = "Bagging: The number of iterations to be performed.", defaultValue = "10") @FormDataParam("numIterations") Integer numIterations,
+        // DecisionStump
+        @ApiParam(value = "Authorization token" )@HeaderParam("subjectid") String subjectid,
+        @Context UriInfo ui, @Context HttpHeaders headers, @Context SecurityContext securityContext)
+        throws NotFoundException, IOException {
+
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("datasetUri", datasetUri);
+        HashMap<String, Object> metaParams = new HashMap<>();
+        metaParams.put("bagSizePercent", bagSizePercent);
+        metaParams.put("batchSize", batchSize);
+        metaParams.put("numIterations", numIterations);
+
+        return delegate.algorithmPost(fileInputStream, fileDetail, datasetUri, "DecisionStump", params,
+            "Bagging", metaParams, headers, ui, securityContext);
     }
 }

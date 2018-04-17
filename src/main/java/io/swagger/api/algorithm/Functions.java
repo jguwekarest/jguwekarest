@@ -85,7 +85,7 @@ public class Functions {
             params.put("attributeSelectionMethod", attributeSelectionMethod);
             params.put("eliminateColinearAttributes", eliminateColinearAttributes);
             params.put("ridge", ridge);
-    //attributeSelectionMethod, eliminateColinearAttributes, ridge
+            //attributeSelectionMethod, eliminateColinearAttributes, ridge
             return delegate.algorithmPost(fileInputStream, fileDetail, datasetUri, "LinearRegression", params,
                                           headers, ui, securityContext);
     }
@@ -152,5 +152,50 @@ public class Functions {
             //svmType, coef0, cost, degree, eps, gamma, kernelType, loss, normalize, nu, probabilityEstimates, shrinking, weights
             return delegate.algorithmPost(fileInputStream, fileDetail, datasetUri, "LibSVM", params,
                                           headers, ui, securityContext);
+    }
+
+    @POST
+    @Path("/logistic")
+    @Consumes({"multipart/form-data"})
+    @Produces({ TEXT_URILIST, MediaType.APPLICATION_JSON})
+    @ApiOperation(value = "REST interface to the WEKA logistic classifier.",
+        notes = "REST interface to the WEKA logistic classifier. Logistic class for building and using a multinomial logistic regression model with a ridge estimator. " + SAVE_MODEL_NOTE,
+        tags = {"algorithm"},
+        extensions = {
+            @Extension(properties = {@ExtensionProperty(name = "orn-@id",  value = "/algorithm/logistic")}),
+            @Extension(properties = {@ExtensionProperty(name = "orn-@type",  value = "x-orn:Algorithm")}),
+            @Extension(name = "orn:expects", properties = { @ExtensionProperty(name = "x-orn-@id",  value = "x-orn:Dataset")}),
+            @Extension(name = "orn:returns", properties = { @ExtensionProperty(name = "x-orn-@id",  value = "x-orn:Model")}),
+            @Extension(name = "algorithm", properties = {
+                @ExtensionProperty(name = "support vector machine", value = "https://en.wikipedia.org/wiki/Multinomial_logistic_regression")
+            })
+        })
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "OK"),
+        @ApiResponse(code = 400, message = "Bad Request"),
+        @ApiResponse(code = 401, message = "Unauthorized"),
+        @ApiResponse(code = 403, message = "Forbidden"),
+        @ApiResponse(code = 404, message = "Resource Not Found")})
+    public Response algorithmLogisticPost(
+        @FormDataParam("file") InputStream fileInputStream,
+        @FormDataParam("file") FormDataContentDisposition fileDetail,
+        @ApiParam(value = "Dataset URI or local dataset ID (to the arff representation of a dataset).")@FormDataParam("datasetURI")  String datasetUri,
+        // logistic params
+        @ApiParam(value = "Set the Ridge value in the log-likelihood.") @FormDataParam("ridge") BigDecimal ridge,
+        @ApiParam(value = "Use conjugate gradient descent rather than BFGS updates; faster for problems with many parameters.") @FormDataParam("useConjugateGradientDescent") Boolean useConjugateGradientDescent,
+        @ApiParam(value = "Maximum number of iterations to perform.") @FormDataParam("maxIts") Integer maxIts,
+        // headers
+        @ApiParam(value = "authorization token") @HeaderParam("subjectid") String subjectid,
+        @Context UriInfo ui, @Context HttpHeaders headers, @Context SecurityContext securityContext)
+        throws NotFoundException, IOException {
+
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("datasetUri", datasetUri);
+        params.put("ridge", ridge);
+        params.put("useConjugateGradientDescent", useConjugateGradientDescent);
+        params.put("maxIts", maxIts);
+
+        return delegate.algorithmPost(fileInputStream, fileDetail, datasetUri, "Logistic", params,
+            headers, ui, securityContext);
     }
 }

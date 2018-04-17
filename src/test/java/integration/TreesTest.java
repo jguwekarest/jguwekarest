@@ -472,8 +472,6 @@ public class TreesTest {
 
         Assert.assertTrue(modelResponse.getMediaType().toString().equals("text/plain"));
 
-        System.out.println("Model Text is:\n" + model_text + "\n==============================");
-
         Assert.assertTrue(model_text.contains("M5 pruned regression tree:\n" +
             "\n" +
             "age <= 5.15 : LM1 (9/85.03%)\n" +
