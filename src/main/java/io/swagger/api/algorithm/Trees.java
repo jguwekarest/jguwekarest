@@ -53,8 +53,8 @@ public class Trees  {
     @Path("/J48")
     @Consumes({ "multipart/form-data" })
     @Produces({ TEXT_URILIST, MediaType.APPLICATION_JSON})
-    @ApiOperation(value = "REST interface to the WEKA J48 classifier.",
-        notes = "REST interface to the WEKA J48 classifier. " + SAVE_MODEL_NOTE,
+    @ApiOperation(value = "REST interface to WEKA J48 classifier.",
+        notes = "REST interface to WEKA J48 classifier. " + SAVE_MODEL_NOTE,
         tags={ "algorithm" },
         extensions = {
             @Extension(properties = {@ExtensionProperty(name = "orn-@id",  value = "/algorithm/J48")}),
@@ -109,8 +109,8 @@ public class Trees  {
     @Path("/J48/adaboost")
     @Consumes({ "multipart/form-data" })
     @Produces({ TEXT_URILIST, MediaType.APPLICATION_JSON})
-    @ApiOperation(value = "REST interface to the WEKA Adaboost M1 with J48 classifier.",
-        notes = "REST interface to the WEKA Adaboost M1 with J48 classifier. " + SAVE_MODEL_NOTE,
+    @ApiOperation(value = "REST interface to WEKA Adaboost M1 with J48 classifier.",
+        notes = "REST interface to WEKA Adaboost M1 with J48 classifier. " + SAVE_MODEL_NOTE,
         tags = {"algorithm","meta algorithm"} ,
         extensions = {
             @Extension(properties = {@ExtensionProperty(name = "orn-@id",  value = "/algorithm/J48/adaboost")}),
@@ -178,8 +178,8 @@ public class Trees  {
     @Path("/J48/bagging")
     @Consumes({ "multipart/form-data" })
     @Produces({ TEXT_URILIST, MediaType.APPLICATION_JSON})
-    @ApiOperation(value = "REST interface to the WEKA Bagging with J48 classifier.",
-        notes = "REST interface to the WEKA Bagging with J48 classifier. " + SAVE_MODEL_NOTE,
+    @ApiOperation(value = "REST interface to WEKA Bagging with J48 classifier.",
+        notes = "REST interface to WEKA Bagging with J48 classifier. " + SAVE_MODEL_NOTE,
         tags = {"algorithm","meta algorithm"},
         extensions = {
         @Extension(properties = {@ExtensionProperty(name = "orn-@id",  value = "/algorithm/J48/bagging")}),
@@ -242,9 +242,9 @@ public class Trees  {
     @Path("/M5P")
     @Consumes({ "multipart/form-data" })
     @Produces({ TEXT_URILIST, MediaType.APPLICATION_JSON})
-    @ApiOperation(value = "REST interface to the WEKA M5P classifier.",
-        notes = "REST interface to the WEKA M5P classifier. " + SAVE_MODEL_NOTE,
-        tags = {"algorithm","meta algorithm"} )
+    @ApiOperation(value = "REST interface to WEKA M5P classifier.",
+        notes = "REST interface to WEKA M5P classifier. " + SAVE_MODEL_NOTE,
+        tags = {"algorithm"} )
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "OK"),
         @ApiResponse(code = 400, message = "Bad Request"),
@@ -279,8 +279,8 @@ public class Trees  {
     @Path("/M5P/adaboost")
     @Consumes({ "multipart/form-data" })
     @Produces({ TEXT_URILIST, MediaType.APPLICATION_JSON})
-    @ApiOperation(value = "REST interface to the WEKA AdaBoost M1 with M5P classifier.",
-        notes = "REST interface to the WEKA AdaBoost M1 with M5P classifier. " + SAVE_MODEL_NOTE,
+    @ApiOperation(value = "REST interface to WEKA AdaBoost M1 with M5P classifier.",
+        notes = "REST interface to WEKA AdaBoost M1 with M5P classifier. " + SAVE_MODEL_NOTE,
         tags = {"algorithm","meta algorithm"} )
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "OK"),
@@ -326,8 +326,8 @@ public class Trees  {
     @Path("/M5P/bagging")
     @Consumes({ "multipart/form-data" })
     @Produces({ TEXT_URILIST, MediaType.APPLICATION_JSON})
-    @ApiOperation(value = "REST interface to the WEKA Bagging with M5P classifier.",
-        notes = "REST interface to the WEKA Bagging with M5P classifier. " + SAVE_MODEL_NOTE,
+    @ApiOperation(value = "REST interface to WEKA Bagging with M5P classifier.",
+        notes = "REST interface to WEKA Bagging with M5P classifier. " + SAVE_MODEL_NOTE,
         tags = {"algorithm","meta algorithm"} )
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "OK"),
@@ -373,7 +373,7 @@ public class Trees  {
     @Consumes({ "multipart/form-data" })
     @Produces({ TEXT_URILIST, MediaType.APPLICATION_JSON})
     @ApiOperation(value = "REST interface to the WEKA DecisionStump classifier.",
-        notes = "REST interface to the DecisionStump M5P classifier. " + SAVE_MODEL_NOTE, tags = {"algorithm","meta algorithm"} )
+        notes = "REST interface to the DecisionStump classifier. " + SAVE_MODEL_NOTE, tags = {"algorithm"} )
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "OK"),
         @ApiResponse(code = 400, message = "Bad Request"),
@@ -441,7 +441,7 @@ public class Trees  {
     @Consumes({ "multipart/form-data" })
     @Produces({ TEXT_URILIST, MediaType.APPLICATION_JSON})
     @ApiOperation(value = "REST interface to the WEKA Bagging with DecisionStump classifier.",
-        notes = "REST interface to the DecisionStump Bagging with M5P classifier. " + SAVE_MODEL_NOTE, tags = {"algorithm","meta algorithm"} )
+        notes = "REST interface to the WEKA Bagging with DecisionStump classifier. " + SAVE_MODEL_NOTE, tags = {"algorithm","meta algorithm"} )
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "OK"),
         @ApiResponse(code = 400, message = "Bad Request"),

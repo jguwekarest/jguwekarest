@@ -27,7 +27,6 @@ public class WekaOptionHelper {
             case "J48":
                 options = getJ48Options(params);
                 break;
-
             case "NaiveBayes":
                 options = getNaiveBayesOptions(params);
                 break;

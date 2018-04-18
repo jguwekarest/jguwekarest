@@ -232,7 +232,7 @@ public class TreesTest {
         final Response modelResponse = modelRequest.get();
         Assert.assertTrue(modelResponse.getStatus() == 200, "Model at host: " + model_uri + " not available.");
         Assert.assertTrue(modelResponse.getMediaType().toString().equals("text/plain"), "Model at host: " + model_uri + " not available in mime-type text/plain. Is: " + modelResponse.getMediaType().toString());
-        Assert.assertEquals(modelResponse.readEntity(String.class).replaceAll("(?m) +$",""), savedModelString.replaceAll("(?m) +$",""));
+        Assert.assertEquals(savedModelString.replaceAll("(?m) +$","").trim(),modelResponse.readEntity(String.class).replaceAll("(?m) +$","").trim());
 
         // Prediction part
 
