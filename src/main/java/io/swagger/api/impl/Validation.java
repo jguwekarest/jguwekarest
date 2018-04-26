@@ -11,6 +11,11 @@ public class Validation {
         return crossValidation(instances, algorithm,10);
     }
 
+    public static String leaveOneOutValidation(Instances instances, Classifier algorithm) {
+        Integer folds = instances.numInstances();
+        return crossValidation(instances, algorithm, folds);
+    }
+
     public static String crossValidation(Instances instances, Classifier algorithm, Integer folds) {
         String eval_out = "";
         try {

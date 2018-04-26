@@ -361,4 +361,33 @@ public class WekaOptionHelper {
         return options;
     }
 
+    public static String[] getClustererOptions(String clusterer, HashMap params){
+        String[] options = null;
+        switch (clusterer) {
+            case "EM":
+                options = getEMOptions(params);
+                break;
+        }
+
+        return options;
+    }
+
+
+    public static String[] getEMOptions(HashMap params){
+        String parameters = "";
+        // numFolds
+        parameters += WekaOptionHelper.getParamString(params.get("numFolds"), "X", 10);
+        // numKMeansRuns
+        parameters += WekaOptionHelper.getParamString(params.get("numKMeansRuns"), "K", 10);
+        // maximumNumberOfClusters
+        parameters += WekaOptionHelper.getParamString(params.get("maximumNumberOfClusters"),"max", -1);
+        // numClusters
+        parameters += WekaOptionHelper.getParamString(params.get("numClusters"),"N", -1);
+        // maxIterations
+        parameters += WekaOptionHelper.getParamString(params.get("maxIterations"),"I", 100);
+
+        return splitOptions(parameters);
+
+    }
+
 }

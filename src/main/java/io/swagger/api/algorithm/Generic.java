@@ -67,6 +67,8 @@ public class Generic {
         @ApiParam(value = "Dataset URI or local dataset ID (to the arff representation of a dataset).")@FormDataParam("datasetURI")  String datasetUri,
         @ApiParam(value = "Classifier to use.", allowableValues = "BayesNet,DecisionStump,GaussianProcesses,J48,IBk,LibSVM,LinearRegression,Logistic,M5P,M5Rules,MultilayerPerceptron,NaiveBayes,RandomForest,SMO,SMOreg,ZeroR,AdaBoost,Bagging") @FormDataParam("classifierString") String classifierString,
         @ApiParam(value = "Parameter String. As shown as in WEKA Explorer classifierer line", example = "for SMO: -C 1.0 -L 0.001 -P 1.0E-12 -N 0 -V -1 -W 1 -K \"weka.classifiers.functions.supportVector.PolyKernel -E 1.0 -C 250007\" -calibrator \"weka.classifiers.functions.Logistic -R 1.0E-8 -M -1 -num-decimal-places 4\"")@FormDataParam("paramString") String paramString,
+        @ApiParam(value = "Validation to use.", allowableValues = "CrossValidation,Hold-Out") @FormDataParam("validation") String validation,
+        @ApiParam(value = "Num of Crossvalidations or Percentage Split %.", allowableValues = "CrossValidation,Hold-Out") @FormDataParam("validation") Double validationNum,
         @ApiParam(value = "authorization token") @HeaderParam("subjectid") String subjectid,
         @Context UriInfo ui, @Context HttpHeaders headers, @Context SecurityContext securityContext)
         throws io.swagger.api.NotFoundException, IOException {

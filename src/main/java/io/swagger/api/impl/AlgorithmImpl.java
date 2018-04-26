@@ -13,6 +13,7 @@ import weka.classifiers.AbstractClassifier;
 import weka.classifiers.SingleClassifierEnhancer;
 import weka.classifiers.bayes.BayesNet;
 import weka.classifiers.bayes.NaiveBayes;
+import weka.classifiers.evaluation.Evaluation;
 import weka.classifiers.functions.*;
 import weka.classifiers.lazy.IBk;
 import weka.classifiers.meta.AdaBoostM1;
@@ -35,7 +36,9 @@ import java.io.InputStream;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.concurrent.TimeUnit;
 
 import static io.swagger.api.Constants.TEXT_URILIST;
@@ -87,7 +90,7 @@ public class AlgorithmImpl extends AlgorithmService {
                 Iterator<?> methodKeys = method.keys();
                 while (methodKeys.hasNext()) {
                     String methodVal = (String) methodKeys.next();
-                    System.out.println("methodVal is:" + methodVal);
+                    //System.out.println("methodVal is:" + methodVal);
                     if (!key.contains("{") && key.startsWith("/algorithm/")) {
                         output.append("").append(StringUtil.removeTrailingSlash(baseuri)).append(key).append("\n");
                         if (accept.equals(MediaType.APPLICATION_JSON))
@@ -227,8 +230,12 @@ public class AlgorithmImpl extends AlgorithmService {
 
         TaskHandler task = new TaskHandler(classifierName, metaStr + classifierName + " algorithm", "Training data on " + metaStr + classifierName + " algorithm.", baseuri) {
             AbstractClassifier classifier;
+            Instances trainingset = null;
+            Instances testset = null;
+            String validation = "";
             SingleClassifierEnhancer metaClassifier = null;
             String[] options = null;
+            String validationMethod = "CrossValidation";
 
             @Override
             public void run() {
@@ -242,6 +249,18 @@ public class AlgorithmImpl extends AlgorithmService {
                     }
 
                     Instances instances = WekaUtils.instancesFromString(txtStr, true);
+                    switch (validationMethod) {
+                        case "HoldOut":
+                            instances.randomize(new java.util.Random(0));
+                            int trainSize = (int) Math.round(instances.numInstances() * 0.8);
+                            int testSize = instances.numInstances() - trainSize;
+                            trainingset = new Instances(instances, 0, trainSize);
+                            testset = new Instances(instances, trainSize, testSize);
+                            break;
+                        default:
+                            trainingset = instances;
+                            break;
+                    }
                     String id;
                     //Vector<Object> v = new Vector<>();
                     try {
@@ -270,17 +289,21 @@ public class AlgorithmImpl extends AlgorithmService {
                     setState(Task.Step.TRAINING, 30f);
 
                     if (metaClassifierName != null) {
-                        metaClassifier.buildClassifier(instances);
+                        metaClassifier.buildClassifier(trainingset);
                         setState(Task.Step.VALIDATION, 70f);
-                        String validation = Validation.crossValidation(instances, metaClassifier);
+                        validation = Validation.crossValidation(trainingset, metaClassifier);
                         //v.add(metaClassifier);
                         //v.add(new Instances(instances, 0));
                         id = ModelService.saveModel(metaClassifier, ArrayUtils.addAll(metaClassifier.getOptions(), classifier.getOptions()), params, validation, subjectid);
                     } else {
-                        classifier.buildClassifier(instances);
-                        setState(Task.Step.VALIDATION, 70f);
-                        String validation = Validation.crossValidation(instances, classifier);
-
+                        classifier.buildClassifier(trainingset);
+                        if (validationMethod != "HoldOut") {
+                            setState(Task.Step.VALIDATION, 70f);
+                            validation = Validation.crossValidation(trainingset, classifier);
+                        } else {
+                            Evaluation eval = new Evaluation(trainingset);
+                            eval.evaluateModel(classifier, testset);
+                        }
                         //v.add(classifier);
                         //v.add(new Instances(instances, 0));
                         id = ModelService.saveModel(classifier, classifier.getOptions(), params, validation, subjectid);
