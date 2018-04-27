@@ -112,6 +112,8 @@ public class AlgorithmImpl extends AlgorithmService {
      * @param datasetUri      dataset URI
      * @param classifierName  String classifier name
      * @param paramString     param string for classifier as used in WEKA
+     * @param validation      validation method (CrossValidation, Hold-Out)
+     * @param validationNum   number of CrossValidations or percentage Hold-Out
      * @param headers         HTTP REST call headers
      * @param ui              UriInfo
      * @param securityContext security context
@@ -121,9 +123,10 @@ public class AlgorithmImpl extends AlgorithmService {
      */
     @Produces("text/plain")
     public Response algorithmGenericPost(InputStream fileInputStream, FormDataContentDisposition fileDetail, String datasetUri,
-                                         String classifierName, String paramString, HttpHeaders headers, UriInfo ui, SecurityContext securityContext)
+                                         String classifierName, String paramString, String validation, Double validationNum, HttpHeaders headers, UriInfo ui, SecurityContext securityContext)
         throws NotFoundException, IOException {
-        return algorithmPost(fileInputStream, fileDetail, datasetUri, classifierName, null, null, null, paramString, headers, ui, securityContext);
+        return algorithmPost(fileInputStream, fileDetail, datasetUri, classifierName, null, null, null, paramString,
+                             validation, validationNum, headers, ui, securityContext);
     }
 
 
@@ -169,10 +172,11 @@ public class AlgorithmImpl extends AlgorithmService {
      */
     @Produces("text/plain")
     public Response algorithmPost(InputStream fileInputStream, FormDataContentDisposition fileDetail, String datasetUri,
-                                  String classifierName, HashMap params,
+                                  String classifierName, HashMap params, String validation, Double validationNum,
                                   HttpHeaders headers, UriInfo ui, SecurityContext securityContext)
         throws NotFoundException, IOException {
-        return algorithmPost(fileInputStream, fileDetail, datasetUri, classifierName, params, null, null, null, headers, ui, securityContext);
+        return algorithmPost(fileInputStream, fileDetail, datasetUri, classifierName, params, null, null, null,
+                             validation, validationNum, headers, ui, securityContext);
     }
 
     /**
@@ -193,8 +197,10 @@ public class AlgorithmImpl extends AlgorithmService {
     @Produces("text/plain")
     public Response algorithmPost(InputStream fileInputStream, FormDataContentDisposition fileDetail, String datasetUri,
                                   String classifierName, HashMap params, String metaClassifierName, HashMap metaParams,
+                                  String validation, Double validationNum,
                                   HttpHeaders headers, UriInfo ui, SecurityContext securityContext) throws NotFoundException, IOException {
-        return algorithmPost(fileInputStream, fileDetail, datasetUri, classifierName, params, metaClassifierName, metaParams, null, headers, ui, securityContext);
+        return algorithmPost(fileInputStream, fileDetail, datasetUri, classifierName, params, metaClassifierName, metaParams, null,
+                             validation, validationNum,headers, ui, securityContext);
     }
 
     /**
@@ -218,7 +224,7 @@ public class AlgorithmImpl extends AlgorithmService {
     @Produces({TEXT_URILIST, MediaType.APPLICATION_JSON})
     public Response algorithmPost(InputStream fileInputStream, FormDataContentDisposition fileDetail, String datasetUri,
                                   String classifierName, HashMap params, String metaClassifierName, HashMap metaParams,
-                                  String paramString,
+                                  String paramString, String validation, Double validationNum,
                                   HttpHeaders headers, UriInfo ui, SecurityContext securityContext)
         throws NotFoundException, IOException {
 

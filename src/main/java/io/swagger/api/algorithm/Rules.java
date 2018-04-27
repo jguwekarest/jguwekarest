@@ -71,13 +71,16 @@ public class Rules {
         @FormDataParam("file") InputStream fileInputStream,
         @FormDataParam("file") FormDataContentDisposition fileDetail,
         @ApiParam(value = "Dataset URI or local dataset ID (to the arff representation of a dataset).")@FormDataParam("datasetURI")  String datasetUri,
+        // validation
+        @ApiParam(value = "Validation to use.", allowableValues = "CrossValidation,Hold-Out", defaultValue = "CrossValidation") @FormDataParam("validation") String validation,
+        @ApiParam(value = "Num of Crossvalidations or Percentage Split %.", defaultValue = "10") @FormDataParam("validationNum") Double validationNum,
         @ApiParam(value = "authorization token") @HeaderParam("subjectid") String subjectid,
         @Context UriInfo uriInfo, @Context HttpHeaders headers, @Context SecurityContext securityContext)
         throws NotFoundException, IOException {
             HashMap<String, Object> params = new HashMap<>();
 
             return delegate.algorithmPost(fileInputStream,fileDetail,datasetUri,"ZeroR", params,
-                                          headers, uriInfo, securityContext);
+                                          validation, validationNum, headers, uriInfo, securityContext);
     }
 
 
@@ -109,6 +112,9 @@ public class Rules {
         @ApiParam(value = "Whether to use unsmoothed predictions.", defaultValue = "0", allowableValues="0,1")@FormDataParam("useUnsmoothed") Integer useUnsmoothed,
         @ApiParam(value = "The minimum number of instances to allow at a leaf node.", defaultValue = "4")@FormDataParam("minNumInstances") Double minNumInstances,
         @ApiParam(value = "Whether to generate a regression tree/rule instead of a model tree/rule.", defaultValue = "0", allowableValues="0,1")@FormDataParam("buildRegressionTree") Integer buildRegressionTree,
+        // validation
+        @ApiParam(value = "Validation to use.", allowableValues = "CrossValidation,Hold-Out", defaultValue = "CrossValidation") @FormDataParam("validation") String validation,
+        @ApiParam(value = "Num of Crossvalidations or Percentage Split %.", defaultValue = "10") @FormDataParam("validationNum") Double validationNum,
         @ApiParam(value = "authorization token") @HeaderParam("subjectid") String subjectid,
         @Context UriInfo uriInfo, @Context HttpHeaders headers, @Context SecurityContext securityContext)
         throws Exception {
@@ -120,7 +126,7 @@ public class Rules {
             params.put("buildRegressionTree", buildRegressionTree);
 
             return delegate.algorithmPost(fileInputStream, fileDetail, datasetUri, "M5Rules", params,
-                                          headers, uriInfo, securityContext);
+                                          validation, validationNum, headers, uriInfo, securityContext);
     }
 
 }

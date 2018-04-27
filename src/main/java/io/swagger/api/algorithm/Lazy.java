@@ -77,6 +77,9 @@ public class Lazy {
         @ApiParam(value = "May be 0 for no distance weighting, I for 1/distance or F for 1-distance. Must be 0, I or F (Default: 0).", defaultValue="0")@FormDataParam("distanceWeighting")  String distanceWeighting,
         @ApiParam(value = "Whether the mean squared error is used rather than mean absolute error when doing cross-validation for regression problems. Must be 0 or 1 (Default: 0).", defaultValue="0")@FormDataParam("meanSquared")  Integer meanSquared,
         @ApiParam(value = "The nearest neighbour search algorithm to use (Default: weka.core.neighboursearch.LinearNNSearch). Fixed.", defaultValue="LinearNNSearch")@FormDataParam("nearestNeighbourSearchAlgorithm")  String nearestNeighbourSearchAlgorithm,
+        // validation
+        @ApiParam(value = "Validation to use.", allowableValues = "CrossValidation,Hold-Out", defaultValue = "CrossValidation") @FormDataParam("validation") String validation,
+        @ApiParam(value = "Num of Crossvalidations or Percentage Split %.", defaultValue = "10") @FormDataParam("validationNum") Double validationNum,
         @ApiParam(value = "Authorization token" ) @HeaderParam("subjectid") String subjectid,
         @Context UriInfo uriInfo, @Context HttpHeaders headers, @Context SecurityContext securityContext)
         throws NotFoundException, IOException {
@@ -91,7 +94,7 @@ public class Lazy {
         params.put("nearestNeighbourSearchAlgorithm", nearestNeighbourSearchAlgorithm);
 
         return delegate.algorithmPost(fileInputStream, fileDetail, datasetUri, "IBk", params,
-                                      headers, uriInfo, securityContext);
+                                      validation, validationNum, headers, uriInfo, securityContext);
     }
 
 }

@@ -84,6 +84,8 @@ public class Trees  {
         @ApiParam(value = "Whether to consider the subtree raising operation when pruning.", allowableValues="0, 1", defaultValue = "1")@FormDataParam("subtreeRaising") Integer subtreeRaising,
         @ApiParam(value = "Whether pruning is performed.", defaultValue = "1", allowableValues="0, 1")@FormDataParam("unpruned") Integer unpruned,
         @ApiParam(value = "Whether counts at leaves are smoothed based on Laplace.", defaultValue = "0", allowableValues="0, 1")@FormDataParam("useLaplace") Integer useLaplace,
+        @ApiParam(value = "Validation to use.", allowableValues = "CrossValidation,Hold-Out", defaultValue = "CrossValidation") @FormDataParam("validation") String validation,
+        @ApiParam(value = "Num of Crossvalidations or Percentage Split %.", defaultValue = "10") @FormDataParam("validationNum") Double validationNum,
         @ApiParam(value = "Authorization token" )@HeaderParam("subjectid") String subjectid,
         @Context UriInfo ui, @Context HttpHeaders headers, @Context SecurityContext securityContext)
         throws NotFoundException, IOException {
@@ -101,7 +103,7 @@ public class Trees  {
         params.put("useLaplace", useLaplace);
 
         return delegate.algorithmPost(fileInputStream, fileDetail, datasetUri,"J48", params,
-                                      headers, ui, securityContext);
+                                      validation, validationNum, headers, ui, securityContext);
     }
 
 
@@ -147,6 +149,8 @@ public class Trees  {
         @ApiParam(value = "Whether pruning is performed.", defaultValue = "1", allowableValues = "0, 1") @FormDataParam("unpruned") Integer unpruned,
         @ApiParam(value = "Whether counts at leaves are smoothed based on Laplace.", defaultValue = "0", allowableValues = "0, 1") @FormDataParam("useLaplace") Integer useLaplace,
         //general params,
+        @ApiParam(value = "Validation to use.", allowableValues = "CrossValidation,Hold-Out", defaultValue = "CrossValidation") @FormDataParam("validation") String validation,
+        @ApiParam(value = "Num of Crossvalidations or Percentage Split %.", defaultValue = "10") @FormDataParam("validationNum") Double validationNum,
         @ApiParam(value = "Authorization token") @HeaderParam("subjectid") String subjectid,
         @Context UriInfo ui, @Context HttpHeaders headers, @Context SecurityContext securityContext)
         throws NotFoundException, IOException {
@@ -169,7 +173,7 @@ public class Trees  {
         params.put("useLaplace", useLaplace);
 
         return delegate.algorithmPost(fileInputStream, fileDetail, datasetUri,"J48", params,
-            "AdaBoost", metaParams, headers, ui, securityContext);
+            "AdaBoost", metaParams, validation, validationNum, headers, ui, securityContext);
 
     }
 
@@ -214,6 +218,8 @@ public class Trees  {
         @ApiParam(value = "Whether pruning is performed.", defaultValue = "1", allowableValues = "0, 1") @FormDataParam("unpruned") Integer unpruned,
         @ApiParam(value = "Whether counts at leaves are smoothed based on Laplace.", defaultValue = "0", allowableValues = "0, 1") @FormDataParam("useLaplace") Integer useLaplace,
         //general params,
+        @ApiParam(value = "Validation to use.", allowableValues = "CrossValidation,Hold-Out", defaultValue = "CrossValidation") @FormDataParam("validation") String validation,
+        @ApiParam(value = "Num of Crossvalidations or Percentage Split %.", defaultValue = "10") @FormDataParam("validationNum") Double validationNum,
         @ApiParam(value = "Authorization token") @HeaderParam("subjectid") String subjectid,
         @Context UriInfo ui, @Context HttpHeaders headers, @Context SecurityContext securityContext)
         throws NotFoundException, IOException {
@@ -235,7 +241,7 @@ public class Trees  {
         params.put("useLaplace", useLaplace);
 
         return delegate.algorithmPost(fileInputStream, fileDetail, datasetUri,"J48", params,
-            "Bagging", metaParams, headers, ui, securityContext);
+            "Bagging", metaParams, validation, validationNum, headers, ui, securityContext);
     }
 
     @POST
@@ -261,6 +267,8 @@ public class Trees  {
         @ApiParam(value = "Whether to use unsmoothed predictions.", defaultValue = "0", allowableValues="0,1")@FormDataParam("useUnsmoothed") Integer useUnsmoothed,
         @ApiParam(value = "The minimum number of instances to allow at a leaf node.", defaultValue = "4")@FormDataParam("minNumInstances") Double minNumInstances,
         @ApiParam(value = "Whether to generate a regression tree/rule instead of a model tree/rule.", defaultValue = "0", allowableValues="0,1")@FormDataParam("buildRegressionTree") Integer buildRegressionTree,
+        @ApiParam(value = "Validation to use.", allowableValues = "CrossValidation,Hold-Out", defaultValue = "CrossValidation") @FormDataParam("validation") String validation,
+        @ApiParam(value = "Num of Crossvalidations or Percentage Split %.", defaultValue = "10") @FormDataParam("validationNum") Double validationNum,
         @ApiParam(value = "Authorization token" )@HeaderParam("subjectid") String subjectid,
         @Context UriInfo ui, @Context HttpHeaders headers, @Context SecurityContext securityContext)
         throws NotFoundException, IOException {
@@ -272,7 +280,7 @@ public class Trees  {
         params.put("useUnsmoothed", useUnsmoothed);
         params.put("buildRegressionTree", buildRegressionTree);
         return delegate.algorithmPost(fileInputStream, fileDetail, datasetUri, "M5P", params,
-            headers, ui, securityContext);
+            validation, validationNum, headers, ui, securityContext);
     }
 
     @POST
@@ -303,6 +311,8 @@ public class Trees  {
         @ApiParam(value = "Whether to use unsmoothed predictions.", defaultValue = "0", allowableValues="0,1")@FormDataParam("useUnsmoothed") Integer useUnsmoothed,
         @ApiParam(value = "The minimum number of instances to allow at a leaf node.", defaultValue = "4")@FormDataParam("minNumInstances") Double minNumInstances,
         @ApiParam(value = "Whether to generate a regression tree/rule instead of a model tree/rule.", defaultValue = "0", allowableValues="0,1")@FormDataParam("buildRegressionTree") Integer buildRegressionTree,
+        @ApiParam(value = "Validation to use.", allowableValues = "CrossValidation,Hold-Out", defaultValue = "CrossValidation") @FormDataParam("validation") String validation,
+        @ApiParam(value = "Num of Crossvalidations or Percentage Split %.", defaultValue = "10") @FormDataParam("validationNum") Double validationNum,
         @ApiParam(value = "Authorization token" )@HeaderParam("subjectid") String subjectid,
         @Context UriInfo ui, @Context HttpHeaders headers, @Context SecurityContext securityContext)
         throws NotFoundException, IOException {
@@ -319,7 +329,7 @@ public class Trees  {
         params.put("useUnsmoothed", useUnsmoothed);
         params.put("buildRegressionTree", buildRegressionTree);
         return delegate.algorithmPost(fileInputStream, fileDetail, datasetUri, "M5P", params,
-            "AdaBoost", metaParams, headers, ui, securityContext);
+            "AdaBoost", metaParams, validation, validationNum, headers, ui, securityContext);
     }
 
     @POST
@@ -349,6 +359,8 @@ public class Trees  {
         @ApiParam(value = "Whether to use unsmoothed predictions.", defaultValue = "0", allowableValues="0,1")@FormDataParam("useUnsmoothed") Integer useUnsmoothed,
         @ApiParam(value = "The minimum number of instances to allow at a leaf node.", defaultValue = "4")@FormDataParam("minNumInstances") Double minNumInstances,
         @ApiParam(value = "Whether to generate a regression tree/rule instead of a model tree/rule.", defaultValue = "0", allowableValues="0,1")@FormDataParam("buildRegressionTree") Integer buildRegressionTree,
+        @ApiParam(value = "Validation to use.", allowableValues = "CrossValidation,Hold-Out", defaultValue = "CrossValidation") @FormDataParam("validation") String validation,
+        @ApiParam(value = "Num of Crossvalidations or Percentage Split %.", defaultValue = "10") @FormDataParam("validationNum") Double validationNum,
         @ApiParam(value = "Authorization token" )@HeaderParam("subjectid") String subjectid,
         @Context UriInfo ui, @Context HttpHeaders headers, @Context SecurityContext securityContext)
         throws NotFoundException, IOException {
@@ -364,7 +376,7 @@ public class Trees  {
         params.put("useUnsmoothed", useUnsmoothed);
         params.put("buildRegressionTree", buildRegressionTree);
         return delegate.algorithmPost(fileInputStream, fileDetail, datasetUri, "M5P", params,
-            "Bagging", metaParams, headers, ui, securityContext);
+            "Bagging", metaParams, validation, validationNum, headers, ui, securityContext);
     }
 
 
@@ -386,6 +398,8 @@ public class Trees  {
         @FormDataParam("file") FormDataContentDisposition fileDetail,
         @ApiParam(value = "Dataset URI or local dataset ID (to the arff representation of a dataset).") @FormDataParam("datasetURI") String datasetUri,
         // DecisionStump
+        @ApiParam(value = "Validation to use.", allowableValues = "CrossValidation,Hold-Out", defaultValue = "CrossValidation") @FormDataParam("validation") String validation,
+        @ApiParam(value = "Num of Crossvalidations or Percentage Split %.", defaultValue = "10") @FormDataParam("validationNum") Double validationNum,
         @ApiParam(value = "Authorization token" )@HeaderParam("subjectid") String subjectid,
         @Context UriInfo ui, @Context HttpHeaders headers, @Context SecurityContext securityContext)
         throws NotFoundException, IOException {
@@ -393,7 +407,7 @@ public class Trees  {
         HashMap<String, Object> params = new HashMap<>();
         params.put("datasetUri", datasetUri);
         return delegate.algorithmPost(fileInputStream, fileDetail, datasetUri, "DecisionStump", params,
-            headers, ui, securityContext);
+            validation, validationNum, headers, ui, securityContext);
     }
 
 
@@ -420,6 +434,8 @@ public class Trees  {
         @ApiParam(value = "Adaboost M1: Whether resampling is used instead of reweighting.", defaultValue = "0", allowableValues = "0, 1") @FormDataParam("useResampling") Integer useResampling,
         @ApiParam(value = "Adaboost M1: Weight threshold for weight pruning.", defaultValue = "100") @FormDataParam("weightThreshold") Integer weightThreshold,
         // DecisionStump
+        @ApiParam(value = "Validation to use.", allowableValues = "CrossValidation,Hold-Out", defaultValue = "CrossValidation") @FormDataParam("validation") String validation,
+        @ApiParam(value = "Num of Crossvalidations or Percentage Split %.", defaultValue = "10") @FormDataParam("validationNum") Double validationNum,
         @ApiParam(value = "Authorization token" )@HeaderParam("subjectid") String subjectid,
         @Context UriInfo ui, @Context HttpHeaders headers, @Context SecurityContext securityContext)
         throws NotFoundException, IOException {
@@ -432,7 +448,7 @@ public class Trees  {
         metaParams.put("useResampling", useResampling);
         metaParams.put("weightThreshold", weightThreshold);
         return delegate.algorithmPost(fileInputStream, fileDetail, datasetUri, "DecisionStump", params,
-            "AdaBoost", metaParams, headers, ui, securityContext);
+            "AdaBoost", metaParams, validation, validationNum, headers, ui, securityContext);
     }
 
 
@@ -458,6 +474,8 @@ public class Trees  {
         @ApiParam(value = "Bagging: The preferred number of instances to process if batch prediction is being performed. More or fewer instances may be provided, but this gives implementations a chance to specify a preferred batch size.", defaultValue = "100") @FormDataParam("batchSize") Integer batchSize,
         @ApiParam(value = "Bagging: The number of iterations to be performed.", defaultValue = "10") @FormDataParam("numIterations") Integer numIterations,
         // DecisionStump
+        @ApiParam(value = "Validation to use.", allowableValues = "CrossValidation,Hold-Out", defaultValue = "CrossValidation") @FormDataParam("validation") String validation,
+        @ApiParam(value = "Num of Crossvalidations or Percentage Split %.", defaultValue = "10") @FormDataParam("validationNum") Double validationNum,
         @ApiParam(value = "Authorization token" )@HeaderParam("subjectid") String subjectid,
         @Context UriInfo ui, @Context HttpHeaders headers, @Context SecurityContext securityContext)
         throws NotFoundException, IOException {
@@ -470,6 +488,6 @@ public class Trees  {
         metaParams.put("numIterations", numIterations);
 
         return delegate.algorithmPost(fileInputStream, fileDetail, datasetUri, "DecisionStump", params,
-            "Bagging", metaParams, headers, ui, securityContext);
+            "Bagging", metaParams, validation, validationNum, headers, ui, securityContext);
     }
 }

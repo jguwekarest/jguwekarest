@@ -80,6 +80,8 @@ public class Bayes {
         @ApiParam(value = "Whether to use ADTrees for searching (using will increase the speed of the search, but will also raise the memory use (Default: 0).", allowableValues="0, 1", defaultValue="0")@FormDataParam("useADTree") Integer useADTree,
         @ApiParam(value = "The algorithmn to be used for searching in the compound. Must be local.K2, local.GeneticSearch, local.HillClimber, local.LAGDHillClimber, local.RepeatedHillClimber, local.SimulatedAnnealing, local.TabuSearch, local.TAN, global.K2, global.GeneticSearch, global.HillClimber, global.RepeatedHillClimber, global.SimulatedAnnealing, global.TabuSearch, global.TAN, ci.CISearchAlgorithm, ci.ICSSearchAlgorithm (Default: local.K2).", allowableValues="local.K2, local.GeneticSearch, local.HillClimber, local.LAGDHillClimber, local.RepeatedHillClimber, local.SimulatedAnnealing, local.TabuSearch, local.TAN, global.K2, global.GeneticSearch, global.HillClimber, global.RepeatedHillClimber, global.SimulatedAnnealing, global.TabuSearch, global.TAN, ci.CISearchAlgorithm, ci.ICSSearchAlgorithm", defaultValue="local.K2")@FormDataParam("searchAlgorithm")  String searchAlgorithm,
         @ApiParam(value = "The parameter for algorithmn to be used for searching in the compound. Are set automatically (WEKA's standard parameter setting).", defaultValue="-P 1 -S BAYES")@FormDataParam("searchParams")  String searchParams,
+        @ApiParam(value = "Validation to use.", allowableValues = "CrossValidation,Hold-Out", defaultValue = "CrossValidation") @FormDataParam("validation") String validation,
+        @ApiParam(value = "Num of Crossvalidations or Percentage Split %.", defaultValue = "10") @FormDataParam("validationNum") Double validationNum,
         @ApiParam(value = "authorization token") @HeaderParam("subjectid") String subjectid,
         @Context UriInfo ui, @Context HttpHeaders headers, @Context SecurityContext securityContext)
         throws io.swagger.api.NotFoundException, IOException {
@@ -92,7 +94,7 @@ public class Bayes {
                 params.put("searchAlgorithm", searchAlgorithm);
                 params.put("searchParams", searchParams);
 
-                return delegate.algorithmPost(fileInputStream, fileDetail, datasetUri, "BayesNet", params,
+                return delegate.algorithmPost(fileInputStream, fileDetail, datasetUri, "BayesNet", params, validation, validationNum,
                                               headers, ui, securityContext);
     }
 
@@ -136,6 +138,9 @@ public class Bayes {
         @ApiParam(value = "Whether to use ADTrees for searching (using will increase the speed of the search, but will also raise the memory use (Default: 0).", allowableValues="0, 1", defaultValue="0")@FormDataParam("useADTree") Integer useADTree,
         @ApiParam(value = "The algorithmn to be used for searching in the compound. Must be local.K2, local.GeneticSearch, local.HillClimber, local.LAGDHillClimber, local.RepeatedHillClimber, local.SimulatedAnnealing, local.TabuSearch, local.TAN, global.K2, global.GeneticSearch, global.HillClimber, global.RepeatedHillClimber, global.SimulatedAnnealing, global.TabuSearch, global.TAN, ci.CISearchAlgorithm, ci.ICSSearchAlgorithm (Default: local.K2).", allowableValues="local.K2, local.GeneticSearch, local.HillClimber, local.LAGDHillClimber, local.RepeatedHillClimber, local.SimulatedAnnealing, local.TabuSearch, local.TAN, global.K2, global.GeneticSearch, global.HillClimber, global.RepeatedHillClimber, global.SimulatedAnnealing, global.TabuSearch, global.TAN, ci.CISearchAlgorithm, ci.ICSSearchAlgorithm", defaultValue="local.K2")@FormDataParam("searchAlgorithm")  String searchAlgorithm,
         @ApiParam(value = "The parameter for algorithmn to be used for searching in the compound. Are set automatically (WEKA's standard parameter setting).", defaultValue="-P 1 -S BAYES")@FormDataParam("searchParams")  String searchParams,
+        // validation
+        @ApiParam(value = "Validation to use.", allowableValues = "CrossValidation,Hold-Out", defaultValue = "CrossValidation") @FormDataParam("validation") String validation,
+        @ApiParam(value = "Num of Crossvalidations or Percentage Split %.", defaultValue = "10") @FormDataParam("validationNum") Double validationNum,
         @ApiParam(value = "authorization token") @HeaderParam("subjectid") String subjectid,
         @Context UriInfo ui, @Context HttpHeaders headers, @Context SecurityContext securityContext)
         throws io.swagger.api.NotFoundException, IOException {
@@ -154,7 +159,7 @@ public class Bayes {
         metaParams.put("weightThreshold", weightThreshold);
 
         return delegate.algorithmPost(fileInputStream, fileDetail, datasetUri, "BayesNet", params,
-                    "AdaBoost", metaParams, headers, ui, securityContext);
+                    "AdaBoost", metaParams, validation, validationNum, headers, ui, securityContext);
     }
 
 
@@ -196,6 +201,9 @@ public class Bayes {
         @ApiParam(value = "Whether to use ADTrees for searching (using will increase the speed of the search, but will also raise the memory use (Default: 0).", allowableValues="0, 1", defaultValue="0")@FormDataParam("useADTree") Integer useADTree,
         @ApiParam(value = "The algorithmn to be used for searching in the compound. Must be local.K2, local.GeneticSearch, local.HillClimber, local.LAGDHillClimber, local.RepeatedHillClimber, local.SimulatedAnnealing, local.TabuSearch, local.TAN, global.K2, global.GeneticSearch, global.HillClimber, global.RepeatedHillClimber, global.SimulatedAnnealing, global.TabuSearch, global.TAN, ci.CISearchAlgorithm, ci.ICSSearchAlgorithm (Default: local.K2).", allowableValues="local.K2, local.GeneticSearch, local.HillClimber, local.LAGDHillClimber, local.RepeatedHillClimber, local.SimulatedAnnealing, local.TabuSearch, local.TAN, global.K2, global.GeneticSearch, global.HillClimber, global.RepeatedHillClimber, global.SimulatedAnnealing, global.TabuSearch, global.TAN, ci.CISearchAlgorithm, ci.ICSSearchAlgorithm", defaultValue="local.K2")@FormDataParam("searchAlgorithm")  String searchAlgorithm,
         @ApiParam(value = "The parameter for algorithmn to be used for searching in the compound. Are set automatically (WEKA's standard parameter setting).", defaultValue="-P 1 -S BAYES")@FormDataParam("searchParams")  String searchParams,
+        // validation
+        @ApiParam(value = "Validation to use.", allowableValues = "CrossValidation,Hold-Out", defaultValue = "CrossValidation") @FormDataParam("validation") String validation,
+        @ApiParam(value = "Num of Crossvalidations or Percentage Split %.", defaultValue = "10") @FormDataParam("validationNum") Double validationNum,
         @ApiParam(value = "authorization token") @HeaderParam("subjectid") String subjectid,
         @Context UriInfo ui, @Context HttpHeaders headers, @Context SecurityContext securityContext)
         throws io.swagger.api.NotFoundException, IOException {
@@ -213,7 +221,7 @@ public class Bayes {
         params.put("searchParams", searchParams);
 
         return delegate.algorithmPost(fileInputStream, fileDetail, datasetUri, "BayesNet", params,
-                    "Bagging", metaParams, headers, ui, securityContext);
+                    "Bagging", metaParams, validation, validationNum, headers, ui, securityContext);
     }
 
 
@@ -249,6 +257,9 @@ public class Bayes {
         @ApiParam(value = "The preferred number of instances to process if batch prediction is being performed. More or fewer instances may be provided, but this gives implementations a chance to specify a preferred batch size.", defaultValue = "100") @FormDataParam("batchSize") Integer batchSize,
         @ApiParam(value = "Use a kernel estimator for numeric attributes rather than a normal distribution. (Default: 0).", allowableValues="0,1", defaultValue="0")@FormDataParam("useKernelEstimator")  String useKernelEstimator,
         @ApiParam(value = "Use supervised discretization to convert numeric attributes to nominal ones. (Default: 0). Works not together with useKernelEstimator=1.", allowableValues="0,1", defaultValue="0")@FormDataParam("useSupervisedDiscretization") BigDecimal useSupervisedDiscretization,
+        // validation
+        @ApiParam(value = "Validation to use.", allowableValues = "CrossValidation,Hold-Out", defaultValue = "CrossValidation") @FormDataParam("validation") String validation,
+        @ApiParam(value = "Num of Crossvalidations or Percentage Split %.", defaultValue = "10") @FormDataParam("validationNum") Double validationNum,
         @ApiParam(value = "authorization token") @HeaderParam("subjectid") String subjectid,
         @Context UriInfo ui, @Context HttpHeaders headers, @Context SecurityContext securityContext)
         throws io.swagger.api.NotFoundException, IOException {
@@ -260,7 +271,7 @@ public class Bayes {
         params.put("useSupervisedDiscretization", useSupervisedDiscretization);
 
         return delegate.algorithmPost(fileInputStream, fileDetail, datasetUri, "NaiveBayes", params,
-                                      headers, ui, securityContext);
+                                      validation, validationNum, headers, ui, securityContext);
     }
 
 
@@ -303,6 +314,9 @@ public class Bayes {
         @ApiParam(value = "The preferred number of instances to process if batch prediction is being performed. More or fewer instances may be provided, but this gives implementations a chance to specify a preferred batch size.", defaultValue = "100") @FormDataParam("batchSize") Integer batchSize,
         @ApiParam(value = "Use a kernel estimator for numeric attributes rather than a normal distribution. (Default: 0).", allowableValues="0,1", defaultValue="0")@FormDataParam("useKernelEstimator")  String useKernelEstimator,
         @ApiParam(value = "Use supervised discretization to convert numeric attributes to nominal ones. (Default: 0). Works not together with useKernelEstimator=1.", allowableValues="0,1", defaultValue="0")@FormDataParam("useSupervisedDiscretization") BigDecimal useSupervisedDiscretization,
+        // validation
+        @ApiParam(value = "Validation to use.", allowableValues = "CrossValidation,Hold-Out", defaultValue = "CrossValidation") @FormDataParam("validation") String validation,
+        @ApiParam(value = "Num of Crossvalidations or Percentage Split %.", defaultValue = "10") @FormDataParam("validationNum") Double validationNum,
         @ApiParam(value = "authorization token") @HeaderParam("subjectid") String subjectid,
         @Context UriInfo ui, @Context HttpHeaders headers, @Context SecurityContext securityContext)
         throws io.swagger.api.NotFoundException, IOException {
@@ -319,7 +333,7 @@ public class Bayes {
         metaParams.put("weightThreshold", weightThreshold);
 
         return delegate.algorithmPost(fileInputStream, fileDetail, datasetUri, "NaiveBayes", params,
-            "AdaBoost", metaParams, headers, ui, securityContext);
+            "AdaBoost", metaParams, validation, validationNum, headers, ui, securityContext);
     }
 
 
@@ -361,6 +375,9 @@ public class Bayes {
         @ApiParam(value = "The preferred number of instances to process if batch prediction is being performed. More or fewer instances may be provided, but this gives implementations a chance to specify a preferred batch size.", defaultValue = "100") @FormDataParam("batchSize") Integer batchSize,
         @ApiParam(value = "Use a kernel estimator for numeric attributes rather than a normal distribution. (Default: 0).", allowableValues="0,1", defaultValue="0")@FormDataParam("useKernelEstimator")  String useKernelEstimator,
         @ApiParam(value = "Use supervised discretization to convert numeric attributes to nominal ones. (Default: 0). Works not together with useKernelEstimator=1.", allowableValues="0,1", defaultValue="0")@FormDataParam("useSupervisedDiscretization") BigDecimal useSupervisedDiscretization,
+        // validation
+        @ApiParam(value = "Validation to use.", allowableValues = "CrossValidation,Hold-Out", defaultValue = "CrossValidation") @FormDataParam("validation") String validation,
+        @ApiParam(value = "Num of Crossvalidations or Percentage Split %.", defaultValue = "10") @FormDataParam("validationNum") Double validationNum,
         @ApiParam(value = "authorization token") @HeaderParam("subjectid") String subjectid,
         @Context UriInfo ui, @Context HttpHeaders headers, @Context SecurityContext securityContext)
         throws io.swagger.api.NotFoundException, IOException {
@@ -376,7 +393,7 @@ public class Bayes {
         metaParams.put("numIterations", numIterations);
 
         return delegate.algorithmPost(fileInputStream, fileDetail, datasetUri, "NaiveBayes", params,
-            "Bagging", metaParams, headers, ui, securityContext);
+            "Bagging", metaParams, validation, validationNum, headers, ui, securityContext);
     }
 }
 

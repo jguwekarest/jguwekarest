@@ -16,18 +16,21 @@ public abstract class AlgorithmService {
     public abstract Response algorithmAlgorithmnamePost(String identifier,String algorithmname,String subjectid,SecurityContext securityContext) throws NotFoundException;
 
     public abstract Response algorithmGenericPost(InputStream fileInputStream, FormDataContentDisposition fileDetail, String datasetURI,
-                                           String classifierName, String paramString,
+                                           String classifierName, String paramString, String validation, Double validationNum,
                                            HttpHeaders headers, UriInfo ui, SecurityContext securityContext) throws NotFoundException, IOException;
 
     public abstract Response algorithmGenericGet(String classifierName, HttpHeaders headers, UriInfo ui, SecurityContext securityContext) throws NotFoundException;
 
     public abstract Response algorithmPost(InputStream fileInputStream, FormDataContentDisposition fileDetail, String datasetURI,
-                                           String classifierName, HashMap params, HttpHeaders headers, UriInfo ui, SecurityContext securityContext) throws NotFoundException, IOException;
+                                           String classifierName, HashMap params, String validation, Double validationNum,
+                                           HttpHeaders headers, UriInfo ui, SecurityContext securityContext) throws NotFoundException, IOException;
     public abstract Response algorithmPost(InputStream fileInputStream, FormDataContentDisposition fileDetail, String datasetURI,
                                            String classifierName, HashMap params, String metaClassifierName, HashMap metaParams,
+                                           String validation, Double validationNum,
                                            HttpHeaders headers, UriInfo ui, SecurityContext securityContext) throws NotFoundException, IOException;
     public abstract Response algorithmPost(InputStream fileInputStream, FormDataContentDisposition fileDetail, String datasetURI,
                                            String classifierName, HashMap params, String metaClassifierName, HashMap metaParams, String paramString,
+                                           String validation, Double validationNum,
                                            HttpHeaders headers, UriInfo ui, SecurityContext securityContext) throws NotFoundException, IOException;
     public abstract Response algorithmGet(String accept, String subjectid, SecurityContext securityContext, UriInfo uriInfo) throws NotFoundException,IOException;
 }
