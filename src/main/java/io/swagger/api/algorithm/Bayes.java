@@ -9,8 +9,8 @@ import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.enums.ParameterStyle;
 import io.swagger.v3.oas.annotations.extensions.Extension;
 import io.swagger.v3.oas.annotations.extensions.ExtensionProperty;
-import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
+import org.apache.cxf.jaxrs.ext.multipart.Multipart;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 
@@ -53,11 +53,26 @@ public class Bayes {
         this.delegate = delegate;
     }
 
+    @POST
+    @Path("/test")
+    public Response algorithmTestPost(
+        @FormDataParam("file") InputStream fileInputStream,
+        @FormDataParam("file") FormDataContentDisposition fileDetail,
+        @Parameter(description = "Test Parameter",
+        schema = @Schema(defaultValue="test1"))@FormDataParam("testParam") String testParam
+    ) {
+
+        return Response.ok("OK Msg: " + testParam).build();
+    }
+
+
+
+
     /**
      * REST interface to BayesNet algorithm
      */
-    @POST
-    @Path("/BayesNet")
+
+    @POST @Path("/BayesNet")
     @Consumes({ "multipart/form-data" })
     @Produces({ TEXT_URILIST, MediaType.APPLICATION_JSON})
     @Operation(summary = "REST interface to the WEKA BayesNet classifier.", description = "REST interface to the WEKA BayesNet classifier. " + SAVE_MODEL_NOTE, tags={ "algorithm", }
@@ -79,31 +94,31 @@ public class Bayes {
     @GroupedApiResponsesOk
 
     public Response algorithmBayesNetPost(
-
-
-        @FormDataParam("file") @QueryParam("file") InputStream fileInputStream,
-        @FormDataParam("file") @QueryParam("file") FormDataContentDisposition fileDetail,
+        //@FormDataParam("file") InputStream fileInputStream,
+        //@FormDataParam("file") FormDataContentDisposition fileDetail,
+        @Multipart(value = "file", required = false) @FormDataParam("file") InputStream fileInputStream,
+        @Multipart(value = "file" , required = false)  @FormDataParam("file") FormDataContentDisposition fileDetail,
         @Parameter(description = "Dataset URI or local dataset ID (to the arff representation of a dataset).",
             style = ParameterStyle.FORM,
             in = ParameterIn.DEFAULT,
             name = "datasetUri",
-            schema = @Schema(type = "string")) @FormDataParam("datasetUri")@QueryParam("datasetUri") String datasetUri,
-        @Parameter(description = "The estimator algorithm to be used in the compound. Must be SimpleEstimator,  MultiNomialBMAEstimator, BMAEstimator or BayesNetEstimator (Default: SimpleEstimator)."
-            ,style = ParameterStyle.FORM)@FormDataParam("estimator") @QueryParam("estimator") String estimator,
+            schema = @Schema(type = "string")) @FormDataParam("datasetUri") String datasetUri,
+        @Parameter(description = "The estimator algorithm to be used in the compound. Must be SimpleEstimator,  MultiNomialBMAEstimator, BMAEstimator or BayesNetEstimator (Default: SimpleEstimator).",
+            schema = @Schema(allowableValues={"SimpleEstimator", "MultiNomialBMAEstimator", "BMAEstimator", "BayesNetEstimator"}, defaultValue="SimpleEstimator"), style = ParameterStyle.FORM)@FormDataParam("estimator") @QueryParam("estimator") String estimator,
         //schema = @Schema(  allowableValues="SimpleEstimator, MultiNomialBMAEstimator, BMAEstimator, BayesNetEstimator", defaultValue="SimpleEstimator", type = "string", name = "estimator")
         @Parameter(description = "The parameter for the estimator to be used in the compound.  Must be of type double (Default: 0.5).",
             schema = @Schema(defaultValue="0.5"))@FormDataParam("estimatorParams") @QueryParam("estimatorParams") BigDecimal estimatorParams,
         @Parameter(description = "Whether to use ADTrees for searching (using will increase the speed of the search, but will also raise the memory use (Default: 0).",
-            content = @Content(schema = @Schema(allowableValues={"0", "1"}, defaultValue="0")))@DefaultValue("0") @FormDataParam("useADTree") @QueryParam("useADTree") Integer useADTree,
+            schema = @Schema(defaultValue="0", allowableValues = {"0", "1"}))@DefaultValue("0") @FormDataParam("useADTree") @QueryParam("useADTree") Integer useADTree,
         @Parameter(description = "The algorithmn to be used for searching in the compound. Must be local.K2, local.GeneticSearch, local.HillClimber, local.LAGDHillClimber, local.RepeatedHillClimber, local.SimulatedAnnealing, local.TabuSearch, local.TAN, global.K2, global.GeneticSearch, global.HillClimber, global.RepeatedHillClimber, global.SimulatedAnnealing, global.TabuSearch, global.TAN, ci.CISearchAlgorithm, ci.ICSSearchAlgorithm (Default: local.K2).",
             schema = @Schema(allowableValues={"local.K2", "local.GeneticSearch", "local.HillClimber", "local.LAGDHillClimber", "local.RepeatedHillClimber", "local.SimulatedAnnealing", "local.TabuSearch", "local.TAN", "global.K2", "global.GeneticSearch", "global.HillClimber", "global.RepeatedHillClimber", "global.SimulatedAnnealing", "global.TabuSearch", "global.TAN", "ci.CISearchAlgorithm", "ci.ICSSearchAlgorithm"},
             defaultValue="local.K2"))@FormDataParam("searchAlgorithm") @QueryParam("searchAlgorithm")  @DefaultValue("local.K2")  String searchAlgorithm,
-        @Parameter(description = "The parameter for algorithmn to be used for searching in the compound. Are set automatically (WEKA's standard parameter setting).",
+        @Parameter(description = "The parameter for algorithmn to be used for searching in the compound. Are set automatically (WEKA's standard parameter setting) (Default '-P 1 -S BAYES' for local.K2).",
             schema = @Schema(defaultValue="-P 1 -S BAYES"))@FormDataParam("searchParams") @QueryParam("searchParams")  String searchParams,
         @Parameter(description = "authorization token") @HeaderParam("subjectid") String subjectid,
         @Context UriInfo ui, @Context HttpHeaders headers, @Context SecurityContext securityContext)
         throws io.swagger.api.NotFoundException, IOException {
-
+System.out.println("Inside BayesNet Route.");
                 HashMap<String, Object> params = new HashMap<>();
                 params.put("datasetUri", datasetUri);
                 params.put("estimator", estimator);
@@ -115,6 +130,7 @@ public class Bayes {
                 return delegate.algorithmPost(fileInputStream, fileDetail, datasetUri, "BayesNet", params,
                                               headers, ui, securityContext);
     }
+
 
 
     /**
@@ -291,7 +307,7 @@ public class Bayes {
     public Response algorithmNaiveBayesPost(
         @FormDataParam("file") InputStream fileInputStream,
         @FormDataParam("file") FormDataContentDisposition fileDetail,
-        @Parameter(description = "Dataset URI or local dataset ID (to the arff representation of a dataset).")@FormDataParam("datasetURI")  String datasetUri,
+        @Parameter(description = "Dataset URI or local dataset ID (to the arff representation of a dataset).")@FormDataParam("datasetUri")  String datasetUri,
         @Parameter(description = "The preferred number of instances to process if batch prediction is being performed. More or fewer instances may be provided, but this gives implementations a chance to specify a preferred batch size.",
             schema = @Schema(defaultValue = "100")) @FormDataParam("batchSize") Integer batchSize,
         @Parameter(description = "Use a kernel estimator for numeric attributes rather than a normal distribution. (Default: 0).",

@@ -7,6 +7,7 @@ import io.swagger.api.data.Task;
 import io.swagger.api.data.TaskHandler;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.cxf.jaxrs.ext.multipart.Attachment;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.json.JSONObject;
 import weka.classifiers.AbstractClassifier;
@@ -117,6 +118,29 @@ public class AlgorithmImpl extends AlgorithmService {
     public Response algorithmPost(InputStream fileInputStream, FormDataContentDisposition fileDetail, String datasetUri,
                                   String classifierName, HashMap params, HttpHeaders headers, UriInfo ui, SecurityContext securityContext)throws NotFoundException, IOException {
         return algorithmPost(fileInputStream, fileDetail, datasetUri, classifierName, params, null, null, headers, ui, securityContext);
+    }
+
+
+
+    /**
+     * Method overload to: Train a classifier or meta classifier - without metaClassifierName and metaParams for meta classifier
+     * @param fileInputStream dataset file handle
+     * @param fileDetail dataset file details
+     * @param datasetUri dataset URI
+     * @param classifierName String classifier name
+     * @param params HashMap hashed params for classifier
+     * @param headers HTTP REST call headers
+     * @param ui UriInfo
+     * @param securityContext security context
+     * @return Task URI
+     * @throws NotFoundException file not found
+     * @throws IOException io exception
+     */
+    @Produces("text/plain")
+    public Response algorithmPostNew(InputStream fileInputStream, Attachment fileDetail, String datasetUri,
+                                     String classifierName, HashMap params, HttpHeaders headers, UriInfo ui, SecurityContext securityContext)throws NotFoundException, IOException {
+        //return algorithmPost(fileInputStream, fileDetail, datasetUri, classifierName, params, null, null, headers, ui, securityContext);
+        return Response.ok("yes").build();
     }
 
     /**

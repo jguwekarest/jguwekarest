@@ -76,7 +76,8 @@
                 io.swagger.api.authorization,
                 io.swagger.api.data,
                 io.swagger.api.cluster,
-                //io.swagger.api.algorithm
+                io.swagger.api.task,
+                io.swagger.api.algorithm,
             </param-value>
         </init-param>
         <init-param>
