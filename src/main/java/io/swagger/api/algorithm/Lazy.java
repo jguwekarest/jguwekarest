@@ -122,6 +122,10 @@ public class Lazy {
                 allowableValues = {"LinearNNSearch"},
                 defaultValue = "LinearNNSearch"
             ))@FormDataParam("nearestNeighbourSearchAlgorithm")  String nearestNeighbourSearchAlgorithm,
+        // validation
+        @Parameter(description = "Validation to use.", schema = @Schema(defaultValue="CrossValidation", allowableValues = {"CrossValidation", "Hold-Out"})) @FormDataParam("validation") String validation ,
+        @Parameter(description  = "Num of Crossvalidations or Percentage Split %.", schema = @Schema(defaultValue="10")) @FormDataParam("validationNum") Double validationNum,
+        // authorization
         @Parameter(description = "Authorization token" ) @HeaderParam("subjectid") String subjectid,
         @Context UriInfo uriInfo, @Context HttpHeaders headers, @Context SecurityContext securityContext)
         throws NotFoundException, IOException {
@@ -136,7 +140,7 @@ public class Lazy {
         params.put("nearestNeighbourSearchAlgorithm", nearestNeighbourSearchAlgorithm);
 
         return delegate.algorithmPost(fileInputStream, fileDetail, datasetUri, "IBk", params,
-                                      headers, uriInfo, securityContext);
+                                      validation, validationNum, headers, uriInfo, securityContext);
     }
 
 }

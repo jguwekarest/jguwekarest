@@ -1,0 +1,23 @@
+@relation weather-weka.filters.unsupervised.attribute.Discretize-F-B2-M-1.0-R2-precision6
+
+@attribute outlook {sunny,overcast,rainy}
+@attribute temperature {'\'(-inf-73.5]\'','\'(73.5-inf)\''}
+@attribute humidity numeric
+@attribute windy {TRUE,FALSE}
+@attribute play {yes,no}
+
+@data
+sunny,'\'(73.5-inf)\'',85,FALSE,no
+sunny,'\'(73.5-inf)\'',90,TRUE,no
+overcast,'\'(73.5-inf)\'',86,FALSE,yes
+rainy,'\'(-inf-73.5]\'',96,FALSE,yes
+rainy,'\'(-inf-73.5]\'',80,FALSE,yes
+rainy,'\'(-inf-73.5]\'',70,TRUE,no
+overcast,'\'(-inf-73.5]\'',65,TRUE,yes
+sunny,'\'(-inf-73.5]\'',95,FALSE,no
+sunny,'\'(-inf-73.5]\'',70,FALSE,yes
+rainy,'\'(73.5-inf)\'',80,FALSE,yes
+sunny,'\'(73.5-inf)\'',70,TRUE,yes
+overcast,'\'(-inf-73.5]\'',90,TRUE,yes
+overcast,'\'(73.5-inf)\'',75,FALSE,yes
+rainy,'\'(-inf-73.5]\'',91,TRUE,no

@@ -77,13 +77,17 @@ public class Rules {
         @FormDataParam("file") InputStream fileInputStream,
         @FormDataParam("file") FormDataContentDisposition fileDetail,
         @Parameter(description = "Dataset URI or local dataset ID (to the arff representation of a dataset).")@FormDataParam("datasetURI")  String datasetUri,
+        // validation
+        @Parameter(description = "Validation to use.", schema = @Schema(defaultValue="CrossValidation", allowableValues = {"CrossValidation", "Hold-Out"})) @FormDataParam("validation") String validation ,
+        @Parameter(description  = "Num of Crossvalidations or Percentage Split %.", schema = @Schema(defaultValue="10")) @FormDataParam("validationNum") Double validationNum,
+        // authorization
         @Parameter(description = "authorization token") @HeaderParam("subjectid") String subjectid,
         @Context UriInfo uriInfo, @Context HttpHeaders headers, @Context SecurityContext securityContext)
         throws NotFoundException, IOException {
             HashMap<String, Object> params = new HashMap<>();
 
             return delegate.algorithmPost(fileInputStream,fileDetail,datasetUri,"ZeroR", params,
-                                          headers, uriInfo, securityContext);
+                                          validation, validationNum, headers, uriInfo, securityContext);
     }
 
 
@@ -123,6 +127,10 @@ public class Rules {
         @Parameter(
             description = "Whether to generate a regression tree/rule instead of a model tree/rule.",
             schema = @Schema(defaultValue = "0", allowableValues="0,1"))@FormDataParam("buildRegressionTree") Integer buildRegressionTree,
+        // validation
+        @Parameter(description = "Validation to use.", schema = @Schema(defaultValue="CrossValidation", allowableValues = {"CrossValidation", "Hold-Out"})) @FormDataParam("validation") String validation ,
+        @Parameter(description  = "Num of Crossvalidations or Percentage Split %.", schema = @Schema(defaultValue="10")) @FormDataParam("validationNum") Double validationNum,
+        // authorization
         @Parameter(description = "authorization token") @HeaderParam("subjectid") String subjectid,
         @Context UriInfo uriInfo, @Context HttpHeaders headers, @Context SecurityContext securityContext)
         throws Exception {
@@ -134,7 +142,7 @@ public class Rules {
             params.put("buildRegressionTree", buildRegressionTree);
 
             return delegate.algorithmPost(fileInputStream, fileDetail, datasetUri, "M5Rules", params,
-                                          headers, uriInfo, securityContext);
+                                          validation, validationNum, headers, uriInfo, securityContext);
     }
 
 }

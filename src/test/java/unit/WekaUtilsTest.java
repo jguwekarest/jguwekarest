@@ -60,7 +60,7 @@ public class WekaUtilsTest {
         String[] options = WekaOptionHelper.getJ48Options(params);
         Assert.assertEquals("-M 2 -R -N 5 -Q 1 -U", StringUtil.join(options," "), "get J48 options");
 
-        // IBk
+        // KNN
         params = new HashMap<>();
         params.put("windowSize", 0);
         params.put("KNN", 1);
@@ -72,7 +72,7 @@ public class WekaUtilsTest {
         // String nearestNeighbourSearchAlgorithm
         // 0, 1, 0, "0",0, "LinearNNSearch"
         options = WekaOptionHelper.getIBkOptions(params);
-        Assert.assertEquals("-W 0 -K 1 -A weka.core.neighboursearch.LinearNNSearch -A \"weka.core.EuclideanDistance -R first-last\"",StringUtil.join(options," "), "get IBk options");
+        Assert.assertEquals("-W 0 -K 1 -A weka.core.neighboursearch.LinearNNSearch -A \"weka.core.EuclideanDistance -R first-last\"",StringUtil.join(options," "), "get KNN options");
 
 
         // Linear Regression

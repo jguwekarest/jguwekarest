@@ -1,0 +1,23 @@
+@relation weather-weka.filters.unsupervised.attribute.Standardize
+
+@attribute outlook {sunny,overcast,rainy}
+@attribute temperature numeric
+@attribute humidity numeric
+@attribute windy {TRUE,FALSE}
+@attribute play {yes,no}
+
+@data
+sunny,1.739067,0.326405,FALSE,no
+sunny,0.978225,0.812539,TRUE,no
+overcast,1.43473,0.423632,FALSE,yes
+rainy,-0.543459,1.395901,FALSE,yes
+rainy,-0.847795,-0.15973,FALSE,yes
+rainy,-1.3043,-1.131999,TRUE,no
+overcast,-1.456469,-1.618134,TRUE,yes
+sunny,-0.239122,1.298674,FALSE,no
+sunny,-0.695627,-1.131999,FALSE,yes
+rainy,0.217383,-0.15973,FALSE,yes
+sunny,0.217383,-1.131999,TRUE,yes
+overcast,-0.239122,0.812539,TRUE,yes
+overcast,1.130394,-0.645864,FALSE,yes
+rainy,-0.39129,0.909766,TRUE,no

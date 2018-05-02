@@ -100,6 +100,10 @@ public class Trees  {
             schema = @Schema(defaultValue = "1", allowableValues = {"0", "1"})) @FormDataParam("unpruned") Integer unpruned,
         @Parameter(description = "Whether counts at leaves are smoothed based on Laplace.",
             schema = @Schema(defaultValue = "0", allowableValues = {"0", "1"})) @FormDataParam("useLaplace") Integer useLaplace,
+        // validation
+        @Parameter(description = "Validation to use.", schema = @Schema(defaultValue="CrossValidation", allowableValues = {"CrossValidation", "Hold-Out"})) @FormDataParam("validation") String validation ,
+        @Parameter(description  = "Num of Crossvalidations or Percentage Split %.", schema = @Schema(defaultValue="10")) @FormDataParam("validationNum") Double validationNum,
+        // authorization
         @Parameter(description = "Authorization token" )@HeaderParam("subjectid") String subjectid,
         @Context UriInfo ui, @Context HttpHeaders headers, @Context SecurityContext securityContext)
         throws NotFoundException, IOException {
@@ -117,7 +121,7 @@ public class Trees  {
         params.put("useLaplace", useLaplace);
 
         return delegate.algorithmPost(fileInputStream, fileDetail, datasetUri,"J48", params,
-                                      headers, ui, securityContext);
+                                      validation, validationNum, headers, ui, securityContext);
     }
 
 
@@ -146,7 +150,8 @@ public class Trees  {
     public Response algorithmJ48AdaBoostPost(
         //data params
         @FormDataParam("file") InputStream fileInputStream,
-        @FormDataParam("file") FormDataContentDisposition fileDetail,@Parameter(description = "Dataset URI or local dataset ID (to the arff representation of a dataset).") @FormDataParam("datasetURI") String datasetUri,
+        @FormDataParam("file") FormDataContentDisposition fileDetail,
+        @Parameter(description = "Dataset URI or local dataset ID (to the arff representation of a dataset).") @FormDataParam("datasetURI") String datasetUri,
         //meta params,
         @Parameter(description = "Adaboost M1: The preferred number of instances to process if batch prediction is being performed. More or fewer instances may be provided, but this gives implementations a chance to specify a preferred batch size.",
             schema = @Schema(defaultValue = "100")) @FormDataParam("batchSize") Integer batchSize,
@@ -178,7 +183,10 @@ public class Trees  {
             schema = @Schema(defaultValue = "1", allowableValues = {"0", "1"})) @FormDataParam("unpruned") Integer unpruned,
         @Parameter(description = "Whether counts at leaves are smoothed based on Laplace.",
             schema = @Schema(defaultValue = "0", allowableValues = {"0", "1"})) @FormDataParam("useLaplace") Integer useLaplace,
-        //general params,
+        // validation
+        @Parameter(description = "Validation to use.", schema = @Schema(defaultValue="CrossValidation", allowableValues = {"CrossValidation", "Hold-Out"})) @FormDataParam("validation") String validation ,
+        @Parameter(description  = "Num of Crossvalidations or Percentage Split %.", schema = @Schema(defaultValue="10")) @FormDataParam("validationNum") Double validationNum,
+        // authorization
         @Parameter(description = "Authorization token") @HeaderParam("subjectid") String subjectid,
         @Context UriInfo ui, @Context HttpHeaders headers, @Context SecurityContext securityContext)
         throws NotFoundException, IOException {
@@ -202,7 +210,7 @@ public class Trees  {
 
 
         return delegate.algorithmPost(fileInputStream, fileDetail, datasetUri,"J48", params,
-            "AdaBoost", metaParams, headers, ui, securityContext);
+            "AdaBoost", metaParams, validation, validationNum, headers, ui, securityContext);
 
     }
 
@@ -257,7 +265,10 @@ public class Trees  {
             schema = @Schema(defaultValue = "1", allowableValues = {"0", "1"})) @FormDataParam("unpruned") Integer unpruned,
         @Parameter(description = "Whether counts at leaves are smoothed based on Laplace.",
             schema = @Schema(defaultValue = "0", allowableValues = {"0", "1"})) @FormDataParam("useLaplace") Integer useLaplace,
-        //general params,
+        // validation
+        @Parameter(description = "Validation to use.", schema = @Schema(defaultValue="CrossValidation", allowableValues = {"CrossValidation", "Hold-Out"})) @FormDataParam("validation") String validation ,
+        @Parameter(description  = "Num of Crossvalidations or Percentage Split %.", schema = @Schema(defaultValue="10")) @FormDataParam("validationNum") Double validationNum,
+        // authorization
         @Parameter(description = "Authorization token") @HeaderParam("subjectid") String subjectid,
         @Context UriInfo ui, @Context HttpHeaders headers, @Context SecurityContext securityContext)
         throws NotFoundException, IOException {
@@ -279,7 +290,7 @@ public class Trees  {
         params.put("useLaplace", useLaplace);
 
         return delegate.algorithmPost(fileInputStream, fileDetail, datasetUri,"J48", params,
-            "Bagging", metaParams, headers, ui, securityContext);
+            "Bagging", metaParams, validation, validationNum, headers, ui, securityContext);
     }
 
 }

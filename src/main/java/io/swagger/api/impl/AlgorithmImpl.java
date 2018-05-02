@@ -7,23 +7,25 @@ import io.swagger.api.data.Task;
 import io.swagger.api.data.TaskHandler;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.ArrayUtils;
-import org.apache.cxf.jaxrs.ext.multipart.Attachment;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.json.JSONObject;
 import weka.classifiers.AbstractClassifier;
 import weka.classifiers.SingleClassifierEnhancer;
 import weka.classifiers.bayes.BayesNet;
 import weka.classifiers.bayes.NaiveBayes;
+import weka.classifiers.evaluation.Evaluation;
 import weka.classifiers.functions.*;
 import weka.classifiers.lazy.IBk;
 import weka.classifiers.meta.AdaBoostM1;
 import weka.classifiers.meta.Bagging;
 import weka.classifiers.rules.M5Rules;
 import weka.classifiers.rules.ZeroR;
+import weka.classifiers.trees.DecisionStump;
 import weka.classifiers.trees.J48;
 import weka.classifiers.trees.M5P;
 import weka.classifiers.trees.RandomForest;
 import weka.core.Instances;
+import weka.core.Option;
 
 import javax.servlet.ServletContext;
 import javax.ws.rs.Produces;
@@ -33,8 +35,10 @@ import java.io.InputStream;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 import static io.swagger.api.Constants.TEXT_URILIST;
@@ -72,24 +76,25 @@ public class AlgorithmImpl extends AlgorithmService {
             IOUtils.closeQuietly(in);
         }
 
-        JSONObject apiObject  = new JSONObject(jsonContent);
+        JSONObject apiObject = new JSONObject(jsonContent);
         //sort the JSONObject somehow
         StringBuilder output = new StringBuilder();
         JSONObject paths = apiObject.getJSONObject("paths");
         JSONObject jsonout = new JSONObject();
 
         Iterator<?> keys = paths.keys();
-        while( keys.hasNext() ) {
-            String key = (String)keys.next();
-            if ( paths.get(key) instanceof JSONObject ) {
+        while (keys.hasNext()) {
+            String key = (String) keys.next();
+            if (paths.get(key) instanceof JSONObject) {
                 JSONObject method = (JSONObject) paths.get(key);
-                Iterator<?> methodKeys =  method.keys();
-                while( methodKeys.hasNext() ) {
-                    String methodVal = (String)methodKeys.next();
-                    System.out.println("methodVal is:" + methodVal);
+                Iterator<?> methodKeys = method.keys();
+                while (methodKeys.hasNext()) {
+                    String methodVal = (String) methodKeys.next();
+                    //System.out.println("methodVal is:" + methodVal);
                     if (!key.contains("{") && key.startsWith("/algorithm/")) {
                         output.append("").append(StringUtil.removeTrailingSlash(baseuri)).append(key).append("\n");
-                        if (accept.equals(MediaType.APPLICATION_JSON)) jsonout.put( StringUtil.removeTrailingSlash(baseuri) + key, paths.getJSONObject(key));
+                        if (accept.equals(MediaType.APPLICATION_JSON))
+                            jsonout.put(StringUtil.removeTrailingSlash(baseuri) + key, paths.getJSONObject(key));
                     }
                 }
             }
@@ -99,69 +104,129 @@ public class AlgorithmImpl extends AlgorithmService {
         return Response.ok(output.toString()).build();
     }
 
-
     /**
-     * Method overload to: Train a classifier or meta classifier - without metaClassifierName and metaParams for meta classifier
+     * Method overload to: Train a classifier or meta classifier - with parameters already as string
+     *
      * @param fileInputStream dataset file handle
-     * @param fileDetail dataset file details
-     * @param datasetUri dataset URI
-     * @param classifierName String classifier name
-     * @param params HashMap hashed params for classifier
-     * @param headers HTTP REST call headers
-     * @param ui UriInfo
+     * @param fileDetail      dataset file details
+     * @param datasetUri      dataset URI
+     * @param classifierName  String classifier name
+     * @param paramString     param string for classifier as used in WEKA
+     * @param validation      validation method (CrossValidation, Hold-Out)
+     * @param validationNum   number of CrossValidations or percentage Hold-Out
+     * @param headers         HTTP REST call headers
+     * @param ui              UriInfo
      * @param securityContext security context
      * @return Task URI
      * @throws NotFoundException file not found
-     * @throws IOException io exception
+     * @throws IOException       io exception
+     */
+    @Produces("text/plain")
+    public Response algorithmGenericPost(InputStream fileInputStream, FormDataContentDisposition fileDetail, String datasetUri,
+                                         String classifierName, String paramString, String validation, Double validationNum, HttpHeaders headers, UriInfo ui, SecurityContext securityContext)
+        throws NotFoundException, IOException {
+        return algorithmPost(fileInputStream, fileDetail, datasetUri, classifierName, null, null, null, paramString,
+                             validation, validationNum, headers, ui, securityContext);
+    }
+
+
+    /**
+     * Train a classifier or meta classifier
+     *
+     * @param classifierName  String classifier name
+     * @param headers         HTTP REST call headers
+     * @param ui              UriInfo
+     * @param securityContext security context
+     * @return Parameter description
+     * @throws NotFoundException URI not found
+     */
+    @Produces({MediaType.TEXT_PLAIN})
+    public Response algorithmGenericGet(String classifierName, HttpHeaders headers, UriInfo ui, SecurityContext securityContext) throws NotFoundException {
+        AbstractClassifier classifier;
+        classifier = getClassifier(classifierName);
+        StringBuilder output = new StringBuilder();
+        Enumeration<Option> enu = classifier.listOptions();
+        while (enu.hasMoreElements()) {
+            Option option = enu.nextElement();
+            output.append(option.synopsis()).append("\n").append(option.description()).append("\n");
+        }
+        output.append("\n");
+        return Response.ok(output.toString()).build();
+    }
+
+
+    /**
+     * Method overload to: Train a classifier or meta classifier - without metaClassifierName and metaParams for meta classifier
+     *
+     * @param fileInputStream dataset file handle
+     * @param fileDetail      dataset file details
+     * @param datasetUri      dataset URI
+     * @param classifierName  String classifier name
+     * @param params          HashMap hashed params for classifier
+     * @param headers         HTTP REST call headers
+     * @param ui              UriInfo
+     * @param securityContext security context
+     * @return Task URI
+     * @throws NotFoundException file not found
+     * @throws IOException       io exception
      */
     @Produces("text/plain")
     public Response algorithmPost(InputStream fileInputStream, FormDataContentDisposition fileDetail, String datasetUri,
-                                  String classifierName, HashMap params, HttpHeaders headers, UriInfo ui, SecurityContext securityContext)throws NotFoundException, IOException {
-        return algorithmPost(fileInputStream, fileDetail, datasetUri, classifierName, params, null, null, headers, ui, securityContext);
+                                  String classifierName, HashMap params, String validation, Double validationNum,
+                                  HttpHeaders headers, UriInfo ui, SecurityContext securityContext)
+        throws NotFoundException, IOException {
+        return algorithmPost(fileInputStream, fileDetail, datasetUri, classifierName, params, null, null, null,
+                             validation, validationNum, headers, ui, securityContext);
     }
 
 
 
     /**
      * Method overload to: Train a classifier or meta classifier - without metaClassifierName and metaParams for meta classifier
+     *
      * @param fileInputStream dataset file handle
-     * @param fileDetail dataset file details
-     * @param datasetUri dataset URI
-     * @param classifierName String classifier name
-     * @param params HashMap hashed params for classifier
-     * @param headers HTTP REST call headers
-     * @param ui UriInfo
+     * @param fileDetail      dataset file details
+     * @param datasetUri      dataset URI
+     * @param classifierName  String classifier name
+     * @param params          HashMap hashed params for classifier
+     * @param headers         HTTP REST call headers
+     * @param ui              UriInfo
      * @param securityContext security context
      * @return Task URI
      * @throws NotFoundException file not found
-     * @throws IOException io exception
+     * @throws IOException       io exception
      */
     @Produces("text/plain")
-    public Response algorithmPostNew(InputStream fileInputStream, Attachment fileDetail, String datasetUri,
-                                     String classifierName, HashMap params, HttpHeaders headers, UriInfo ui, SecurityContext securityContext)throws NotFoundException, IOException {
-        //return algorithmPost(fileInputStream, fileDetail, datasetUri, classifierName, params, null, null, headers, ui, securityContext);
-        return Response.ok("yes").build();
+    public Response algorithmPost(InputStream fileInputStream, FormDataContentDisposition fileDetail, String datasetUri,
+                                  String classifierName, HashMap params, String metaClassifierName, HashMap metaParams,
+                                  String validation, Double validationNum,
+                                  HttpHeaders headers, UriInfo ui, SecurityContext securityContext) throws NotFoundException, IOException {
+        return algorithmPost(fileInputStream, fileDetail, datasetUri, classifierName, params, metaClassifierName, metaParams, null,
+                             validation, validationNum,headers, ui, securityContext);
     }
 
     /**
      * Train a classifier or meta classifier
-     * @param fileInputStream dataset file handle
-     * @param fileDetail dataset file details
-     * @param datasetUri dataset URI
-     * @param classifierName String classifier name
-     * @param params HashMap hashed params for classifier
+     *
+     * @param fileInputStream    dataset file handle
+     * @param fileDetail         dataset file details
+     * @param datasetUri         dataset URI
+     * @param classifierName     String classifier name
+     * @param params             HashMap hashed params for classifier
      * @param metaClassifierName Sting optional meta classifier name
-     * @param metaParams HashMap optional hashed params for meta classifier
-     * @param headers HTTP REST call headers
-     * @param ui UriInfo
-     * @param securityContext security context
+     * @param metaParams         HashMap optional hashed params for meta classifier
+     * @param paramString        option-string as used in WEKA for generic endpoint
+     * @param headers            HTTP REST call headers
+     * @param ui                 UriInfo
+     * @param securityContext    security context
      * @return Task URI
      * @throws NotFoundException file not found
-     * @throws IOException io exception
+     * @throws IOException       io exception
      */
-    @Produces({ TEXT_URILIST, MediaType.APPLICATION_JSON})
+    @Produces({TEXT_URILIST, MediaType.APPLICATION_JSON})
     public Response algorithmPost(InputStream fileInputStream, FormDataContentDisposition fileDetail, String datasetUri,
                                   String classifierName, HashMap params, String metaClassifierName, HashMap metaParams,
+                                  String paramString, String validation, Double validationNum,
                                   HttpHeaders headers, UriInfo ui, SecurityContext securityContext)
         throws NotFoundException, IOException {
 
@@ -169,77 +234,55 @@ public class AlgorithmImpl extends AlgorithmService {
         String txtStr = DatasetService.getArff(fileInputStream, fileDetail, datasetUri, subjectid);
         String baseuri = ui.getBaseUri().toString();
         String accept = headers.getRequestHeaders().getFirst("accept");
+        String metaStr = (metaClassifierName != null ? metaClassifierName + " with " : "");
 
-        TaskHandler task = new TaskHandler(classifierName, classifierName + " algorithm", "Training data on "+ classifierName + " algorithm.", baseuri) {
+        TaskHandler task = new TaskHandler(classifierName, metaStr + classifierName + " algorithm", "Training data on " + metaStr + classifierName + " algorithm.", baseuri) {
             AbstractClassifier classifier;
+            Instances trainingset = null;
+            Instances testset = null;
+            String validation = "";
             SingleClassifierEnhancer metaClassifier = null;
+            String[] options = null;
+            String validationMethod = "CrossValidation";
+
             @Override
             public void run() {
                 try {
                     TimeUnit.SECONDS.sleep(1);  //wait until task is saved in mongoDB
                     setState(Task.Step.PREPARATION, 10f);
-                    String[] options = getClassifierOptions(classifierName, params);
+                    if (params != null) {
+                        options = getClassifierOptions(classifierName, params);
+                    } else {
+                        options = WekaOptionHelper.splitOptions(paramString);
+                    }
+
                     Instances instances = WekaUtils.instancesFromString(txtStr, true);
+                    switch (validationMethod) {
+                        case "HoldOut":
+                            instances.randomize(new java.util.Random(0));
+                            int trainSize = (int) Math.round(instances.numInstances() * 0.8);
+                            int testSize = instances.numInstances() - trainSize;
+                            trainingset = new Instances(instances, 0, trainSize);
+                            testset = new Instances(instances, trainSize, testSize);
+                            break;
+                        default:
+                            trainingset = instances;
+                            break;
+                    }
                     String id;
                     //Vector<Object> v = new Vector<>();
                     try {
-                        switch (classifierName) {
-                            case "BayesNet":
-                                classifier = new BayesNet();
-                                break;
-                            case "GaussianProcesses":
-                                classifier = new GaussianProcesses();
-                                break;
-                            case "J48":
-                                classifier = new J48();
-                                break;
-                            case "IBk":
-                                classifier = new IBk();
-                                break;
-                            case "LibSVM":
-                                classifier = new LibSVM();
-                                break;
-                            case "LinearRegression":
-                                classifier = new LinearRegression();
-                                break;
-                            case "Logistic":
-                                classifier = new Logistic();
-                                break;
-                            case "M5P":
-                                classifier = new M5P();
-                                break;
-                            case "M5Rules":
-                                classifier = new M5Rules();
-                                break;
-                            case "MultilayerPerceptron":
-                                classifier = new MultilayerPerceptron();
-                                break;
-                            case "NaiveBayes":
-                                classifier = new NaiveBayes();
-                                break;
-                            case "RandomForest":
-                                classifier = new RandomForest();
-                                break;
-                            case "SMO":
-                                classifier = new SMO();
-                                break;
-                            case "SMOreg":
-                                classifier= new SMOreg();
-                                break;
-                            case "ZeroR":
-                                classifier = new ZeroR();
-                                break;
-                        }
+                        classifier = getClassifier(classifierName);
                     } catch (Exception e) {
-                        setErrorReport(e,500, "algorithmPost: " +  classifierName);
+                        setErrorReport(e, 500, "algorithmPost: " + classifierName);
                         e.printStackTrace();
                     }
 
                     classifier.setOptions(options);
 
-                    if(metaClassifierName != null) {
+                    if (metaClassifierName != null) {
                         String[] metaOptions = getClassifierOptions(metaClassifierName, metaParams);
-                        switch(metaClassifierName) {
+                        switch (metaClassifierName) {
                             case "AdaBoost":
                                 metaClassifier = new AdaBoostM1();
                                 break;
@@ -253,17 +296,22 @@ public class AlgorithmImpl extends AlgorithmService {
 
                     setState(Task.Step.TRAINING, 30f);
 
-                    if(metaClassifierName != null) {
-                        metaClassifier.buildClassifier(instances);
+                    if (metaClassifierName != null) {
+                        metaClassifier.buildClassifier(trainingset);
                         setState(Task.Step.VALIDATION, 70f);
-                        String validation = Validation.crossValidation(instances, metaClassifier);
+                        validation = Validation.crossValidation(trainingset, metaClassifier);
                         //v.add(metaClassifier);
                         //v.add(new Instances(instances, 0));
                         id = ModelService.saveModel(metaClassifier, ArrayUtils.addAll(metaClassifier.getOptions(), classifier.getOptions()), params, validation, subjectid);
                     } else {
-                        classifier.buildClassifier(instances);
-                        setState(Task.Step.VALIDATION, 70f);
-                        String validation = Validation.crossValidation(instances, classifier);
+                        classifier.buildClassifier(trainingset);
+                        if (!Objects.equals(validationMethod, "HoldOut")) {
+                            setState(Task.Step.VALIDATION, 70f);
+                            validation = Validation.crossValidation(trainingset, classifier);
+                        } else {
+                            Evaluation eval = new Evaluation(trainingset);
+                            eval.evaluateModel(classifier, testset);
+                        }
                         //v.add(classifier);
                         //v.add(new Instances(instances, 0));
                         id = ModelService.saveModel(classifier, classifier.getOptions(), params, validation, subjectid);
@@ -272,7 +320,7 @@ public class AlgorithmImpl extends AlgorithmService {
                     setResultURI(baseuri + "model/" + id);
                     finish();
                 } catch (Exception e) {
-                    setErrorReport(e,500, "algorithmPost: " +  classifierName);
+                    setErrorReport(e, 500, "algorithmPost: " + classifierName);
                     e.printStackTrace();
                 }
             }
@@ -284,6 +332,75 @@ public class AlgorithmImpl extends AlgorithmService {
             return Response.ok(task).build();
         }
 
+    }
+
+    AbstractClassifier getClassifier(String classifierName) {
+        AbstractClassifier classifier = null;
+        try {
+            switch (classifierName) {
+                case "BayesNet":
+                    classifier = new BayesNet();
+                    break;
+                case "DecisionStump":
+                    classifier = new DecisionStump();
+                    break;
+                case "GaussianProcesses":
+                    classifier = new GaussianProcesses();
+                    break;
+                case "J48":
+                    classifier = new J48();
+                    break;
+                case "IBk":
+                    classifier = new IBk();
+                    break;
+                case "LibSVM":
+                    classifier = new LibSVM();
+                    break;
+                case "LinearRegression":
+                    classifier = new LinearRegression();
+                    break;
+                case "Logistic":
+                    classifier = new Logistic();
+                    break;
+                case "M5P":
+                    classifier = new M5P();
+                    break;
+                case "M5Rules":
+                    classifier = new M5Rules();
+                    break;
+                case "MultilayerPerceptron":
+                    classifier = new MultilayerPerceptron();
+                    break;
+                case "NaiveBayes":
+                    classifier = new NaiveBayes();
+                    break;
+                case "RandomForest":
+                    classifier = new RandomForest();
+                    break;
+                case "SMO":
+                    classifier = new SMO();
+                    break;
+                case "SMOreg":
+                    classifier = new SMOreg();
+                    break;
+                case "ZeroR":
+                    classifier = new ZeroR();
+                    break;
+                // for generic interface
+                case "AdaBoost":
+                    classifier = new AdaBoostM1();
+                    break;
+                case "Bagging":
+                    classifier = new Bagging();
+                    break;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw e;
+            //setErrorReport(e,500, "algorithmPost: " +  classifierName);
+
+        }
+        return classifier;
     }
 
 }

@@ -85,6 +85,10 @@ public class Functions {
             schema = @Schema(defaultValue = "1", allowableValues = {"0", "1"})) @FormDataParam("eliminateColinearAttributes") Integer eliminateColinearAttributes,
         @Parameter(description = "The ridge parameter (Default: 1.0E-8).",
             schema = @Schema(defaultValue = "1.0E-8")) @FormDataParam("ridge") BigDecimal ridge,
+        // validation
+        @Parameter(description = "Validation to use.", schema = @Schema(defaultValue="CrossValidation", allowableValues = {"CrossValidation", "Hold-Out"})) @FormDataParam("validation") String validation ,
+        @Parameter(description  = "Num of Crossvalidations or Percentage Split %.", schema = @Schema(defaultValue="10")) @FormDataParam("validationNum") Double validationNum,
+        // authorization
         @Parameter(description = "authorization token") @HeaderParam("subjectid") String subjectid,
         @Context UriInfo ui, @Context HttpHeaders headers, @Context SecurityContext securityContext)
         throws NotFoundException, IOException {
@@ -96,7 +100,7 @@ public class Functions {
             params.put("ridge", ridge);
 
             return delegate.algorithmPost(fileInputStream, fileDetail, datasetUri, "LinearRegression", params,
-                                          headers, ui, securityContext);
+                                          validation, validationNum, headers, ui, securityContext);
     }
 
 
@@ -151,6 +155,10 @@ public class Functions {
         @Parameter(description = "shrinking -- Whether to use the shrinking heuristic.",
             schema = @Schema(defaultValue = "true")) @FormDataParam("shrinking") Boolean shrinking,
         @Parameter(description = "weights -- The weights to use for the classes (blank-separated list, eg, \"1 1 1\" for a 3-class problem), if empty 1 is used by default.") @FormDataParam("weights") String weights,
+        // validation
+        @Parameter(description = "Validation to use.", schema = @Schema(defaultValue="CrossValidation", allowableValues = {"CrossValidation", "Hold-Out"})) @FormDataParam("validation") String validation ,
+        @Parameter(description  = "Num of Crossvalidations or Percentage Split %.", schema = @Schema(defaultValue="10")) @FormDataParam("validationNum") Double validationNum,
+        // authorization
         @Parameter(description = "authorization token") @HeaderParam("subjectid") String subjectid,
         @Context UriInfo ui, @Context HttpHeaders headers, @Context SecurityContext securityContext)
         throws NotFoundException, IOException {
@@ -172,6 +180,6 @@ public class Functions {
             params.put("weights", weights);
             //svmType, coef0, cost, degree, eps, gamma, kernelType, loss, normalize, nu, probabilityEstimates, shrinking, weights
             return delegate.algorithmPost(fileInputStream, fileDetail, datasetUri, "LibSVM", params,
-                                          headers, ui, securityContext);
+                                          validation, validationNum, headers, ui, securityContext);
     }
 }

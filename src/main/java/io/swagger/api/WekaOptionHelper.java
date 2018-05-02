@@ -12,14 +12,20 @@ public class WekaOptionHelper {
     public static String[] getClassifierOptions(String classifier, HashMap params){
         String[] options = null;
         switch (classifier) {
-            case "J48":
-                options = getJ48Options(params);
+            case "BayesNet":
+                options = getBayesNetOptions(params);
+                break;
+            case "DecisionStump":
+                // has no options
+                break;
+            case "GaussianProcesses":
+                options = getGaussianProcessesOptions(params);
                 break;
             case "IBk":
                 options = getIBkOptions(params);
                 break;
-            case "BayesNet":
-                options = getBayesNetOptions(params);
+            case "J48":
+                options = getJ48Options(params);
                 break;
             case "NaiveBayes":
                 options = getNaiveBayesOptions(params);
@@ -29,6 +35,12 @@ public class WekaOptionHelper {
                 break;
             case "LibSVM":
                 options = getLibSVMOptions(params);
+                break;
+            case "Logistic":
+                options = getLogisticOptions(params);
+                break;
+            case "M5P":
+                options = getM5POptions(params);
                 break;
             case "M5Rule":
                 options = getM5RuleOptions(params);
@@ -43,7 +55,6 @@ public class WekaOptionHelper {
                 options = getBaggingOptions(params);
                 break;
         }
-
         return options;
     }
 
@@ -172,6 +183,13 @@ public class WekaOptionHelper {
     }
 
 
+
+    public static String[] getGaussianProcessesOptions(HashMap params){
+        String parameters = "";
+
+        return splitOptions(parameters);
+    }
+
     /**
      * Generate option string for LibSVM
      * @param params HashMap: svmType, coef0, cost, degree, eps, gamma, kernelType, loss, normalize, nu, probabilityEstimates, shrinking, weights
@@ -203,6 +221,17 @@ public class WekaOptionHelper {
         return splitOptions(parameters);
     }
 
+    public static String[] getLogisticOptions(HashMap params){
+        String parameters = "";
+        if (params.get("useConjugateGradientDescent") != null && (params.get("useConjugateGradientDescent").toString().equals("1")||params.get("useConjugateGradientDescent").toString().equals("true"))) { parameters += " -C ";}
+        if (params.get("ridge") != null ) parameters += " -R " + params.get("ridge") + " "; //1.0E-8
+        parameters += WekaOptionHelper.getParamString(params.get("maxIts"), "M", "-1");
+        parameters += " -num-decimal-places 4 "; //set default of 4
+        LOG.log(Level.INFO,"parameterstring for weka: weka.classifiers.functions.Logistic " + parameters);
+        return splitOptions(parameters);
+    }
+
+
     /**
      * Generate option string for Linear Regression
      * @param params HashMap: attributeSelectionMethod, eliminateColinearAttributes, ridge
@@ -217,6 +246,22 @@ public class WekaOptionHelper {
         parameters += " -num-decimal-places 4 "; //set default of 4
 
         LOG.log(Level.INFO,"parameterstring for weka: weka.classifiers.functions.LinearRegression " + parameters);
+
+        return splitOptions(parameters);
+    }
+
+
+    public static String[] getM5POptions(HashMap params) {
+        String parameters = "";
+        if (params.get("unpruned") != null && params.get("unpruned").toString().equals("1")) { parameters += " -N ";}
+
+        if (params.get("useUnsmoothed") != null && params.get("useUnsmoothed").toString().equals("1")) { parameters += " -U ";}
+        // Set minNumInstances
+        parameters += WekaOptionHelper.getParamString(params.get("minNumInstances"), "M", "4.0");
+        // set buildRegressionTree
+        if (params.get("buildRegressionTree") != null && params.get("buildRegressionTree").toString().equals("1")) { parameters += " -R ";}
+
+        LOG.log(Level.INFO,"parameterstring for weka: M5Rules " + parameters);
 
         return splitOptions(parameters);
     }
@@ -314,6 +359,35 @@ public class WekaOptionHelper {
             return null;
         }
         return options;
+    }
+
+    public static String[] getClustererOptions(String clusterer, HashMap params){
+        String[] options = null;
+        switch (clusterer) {
+            case "EM":
+                options = getEMOptions(params);
+                break;
+        }
+
+        return options;
+    }
+
+
+    public static String[] getEMOptions(HashMap params){
+        String parameters = "";
+        // numFolds
+        parameters += WekaOptionHelper.getParamString(params.get("numFolds"), "X", 10);
+        // numKMeansRuns
+        parameters += WekaOptionHelper.getParamString(params.get("numKMeansRuns"), "K", 10);
+        // maximumNumberOfClusters
+        parameters += WekaOptionHelper.getParamString(params.get("maximumNumberOfClusters"),"max", -1);
+        // numClusters
+        parameters += WekaOptionHelper.getParamString(params.get("numClusters"),"N", -1);
+        // maxIterations
+        parameters += WekaOptionHelper.getParamString(params.get("maxIterations"),"I", 100);
+
+        return splitOptions(parameters);
+
     }
 
 }

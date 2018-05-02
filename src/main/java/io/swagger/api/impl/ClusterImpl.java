@@ -5,48 +5,38 @@ import io.swagger.api.WekaUtils;
 import io.swagger.api.cluster.ClusterService;
 import io.swagger.api.data.DatasetService;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
-import weka.clusterers.ClusterEvaluation;
-import weka.clusterers.EM;
+import weka.clusterers.*;
 import weka.core.Instances;
 import weka.filters.unsupervised.attribute.StringToNominal;
 
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
+import javax.ws.rs.core.UriInfo;
 import java.io.InputStream;
+import java.util.HashMap;
 
 public class ClusterImpl extends ClusterService {
     @Override
     @Produces("text/plain")
-    public Response clusterEMPost(InputStream fileInputStream, FormDataContentDisposition fileDetail, String datasetUri,
-                                  Integer numFolds, Integer numKMeansRuns, Integer maximumNumberOfClusters, Integer numClusters,
-                                  Integer maxIterations,SecurityContext securityContext, String subjectid) throws Exception {
+    public Response clustererPost(InputStream fileInputStream, FormDataContentDisposition fileDetail, String datasetUri, String clustererName, HashMap params,
+                                  HttpHeaders headers, UriInfo ui, SecurityContext securityContext) throws Exception {
 
+        String subjectid = headers.getRequestHeaders().getFirst("subjectid");
         String txtStr = DatasetService.getArff(fileInputStream, fileDetail, datasetUri, subjectid);
+        String baseuri = ui.getBaseUri().toString();
+        String accept = headers.getRequestHeaders().getFirst("accept");
         Instances instances = WekaUtils.instancesFromString(txtStr, false);
-
-
-        String parameters = "";
-        // set parameters
-        // numFolds
-        parameters += WekaOptionHelper.getParamString(numFolds, "X", 10);
-        // numKMeansRuns
-        parameters += WekaOptionHelper.getParamString(numKMeansRuns, "K", 10);
-        // maximumNumberOfClusters
-        parameters += WekaOptionHelper.getParamString(maximumNumberOfClusters,"max", -1);
-        // numClusters
-        parameters += WekaOptionHelper.getParamString(numClusters,"N", -1);
-        // maxIterations
-        parameters += WekaOptionHelper.getParamString(maxIterations,"I", 100);
-
 
         String[] options;
         try {
-            options = weka.core.Utils.splitOptions(parameters);
+            options = WekaOptionHelper.getClassifierOptions(clustererName, params);
         } catch (Exception e) {
             return Response.serverError().entity(e.getMessage()).build();
         }
-        EM clusterer = new EM();
+        AbstractClusterer clusterer;
+        clusterer = getClusterer(clustererName);
         clusterer.setOptions(options);
 
         StringToNominal s2n = new StringToNominal();
@@ -64,4 +54,26 @@ public class ClusterImpl extends ClusterService {
 
         return Response.ok(eval.clusterResultsToString()).build();
     }
+
+    AbstractClusterer getClusterer(String clustererName){
+        AbstractClusterer clusterer = null;
+        try {
+            switch (clustererName) {
+                case "EM":
+                    clusterer = new EM();
+                    break;
+                case "HierarchicalClusterer":
+                    clusterer = new HierarchicalClusterer();
+                    break;
+                case "SimpleKMeans":
+                    clusterer = new SimpleKMeans();
+                    break;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw e;
+        }
+        return clusterer;
+    }
+
 }

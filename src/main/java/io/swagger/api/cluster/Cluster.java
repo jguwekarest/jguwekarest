@@ -15,6 +15,7 @@ import javax.servlet.ServletContext;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.io.InputStream;
+import java.util.HashMap;
 
 
 //@Api(description = "The WEKA Clusterer API")
@@ -92,13 +93,91 @@ public class Cluster {
         @Parameter(description = "authorization token") @HeaderParam("subjectid") String subjectid,
         @Context UriInfo ui, @Context HttpHeaders headers, @Context SecurityContext securityContext)
         throws Exception {
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("datasetUri", datasetUri);
+        params.put("numFolds", numFolds);
+        params.put("numKMeansRuns", numKMeansRuns);
+        params.put("maximumNumberOfClusters", maximumNumberOfClusters);
+        params.put("numClusters",numClusters);
+        params.put("maxIterations",maxIterations);
 
-            System.out.println("===================\n inside clusterEMPost");
-        //return Response.ok("").build();
-            return delegate.clusterEMPost(fileInputStream, fileDetail, datasetUri, numFolds, numKMeansRuns, maximumNumberOfClusters,
-                numClusters, maxIterations, securityContext, subjectid);
+        return delegate.clustererPost(fileInputStream, fileDetail, datasetUri, "EM", params, headers, ui, securityContext);
 
     }
+
+    @POST
+    @Path("/SimpleKMeans")
+    @Consumes({ "multipart/form-data" })
+    @Produces({ "text/x-arff" })
+
+    @Operation(summary = "REST interface to the WEKA SimpleKMeans clusterer.",
+        description = "REST interface to the WEKA SimpleKMeans clusterer.",
+        tags={ "cluster" },
+        extensions = {
+            @Extension(properties = {@ExtensionProperty(name = "orn-@id",  value = "/cluster/EM")}),
+            @Extension(properties = {@ExtensionProperty(name = "orn-@type",  value = "x-orn:Algorithm")}),
+            @Extension(name = "orn:expects", properties = { @ExtensionProperty(name = "x-orn-@id",  value = "x-orn:Dataset")}),
+            @Extension(name = "orn:returns", properties = { @ExtensionProperty(name = "x-orn-@id",  value = "x-orn:Cluster")}),
+            @Extension(name = "algorithm", properties = {
+                @ExtensionProperty(name = "SimpleKMeans", value = "http://weka.sourceforge.net/doc.dev/weka/clusterers/SimpleKMeans.html")
+            })
+        },
+        responses = {
+            @ApiResponse(responseCode = "200", description = "OK"),
+            @ApiResponse(responseCode = "400", description = "Bad Request"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized"),
+            @ApiResponse(responseCode = "403", description = "Forbidden"),
+            @ApiResponse(responseCode = "404", description = "Resource Not Found")
+        })
+    public Response clusterSimpleKMeansPost(
+        @FormDataParam("file") InputStream fileInputStream,
+        @FormDataParam("file") FormDataContentDisposition fileDetail,
+        @Parameter(description = "Dataset URI or local dataset ID (to the arff representation of a dataset).")@FormDataParam("datasetURI")  String datasetUri,
+        @Parameter(description = "If using canopy clustering for initialization and/or speedup this is the maximum number of candidate canopies to retain in main memory during training of the canopy clusterer. T2 distance and data characteristics determine how many candidate canopies are formed before periodic and final pruning are performed. There may not be enough memory available if T2 is set too low.") @FormDataParam("canopyMaxNumCanopiesToHoldInMemory") Integer canopyMaxNumCanopiesToHoldInMemory,
+        @Parameter(description = "If using canopy clustering for initialization and/or speedup this is the minimum T2-based density below which a canopy will be pruned during periodic pruning")@FormDataParam("canopyMinimumCanopyDensity") Double canopyMinimumCanopyDensity,
+        @Parameter(description = "If using canopy clustering for initialization and/or speedup this is how often to prune low density canopies during training")@FormDataParam("canopyPeriodicPruningRate") Double canopyPeriodicPruningRate,
+        @Parameter(description = "The T1 distance to use when using canopy clustering. Values < 0 are taken as a positive multiplier for the T2 distance")@FormDataParam("canopyT1") Double canopyT1,
+        @Parameter(description = "The T2 distance to use when using canopy clustering. Values < 0 indicate that this should be set using a heuristic based on attribute standard deviation")@FormDataParam("canopyT2") Double canopyT2,
+        @Parameter(description = "Display std deviations of numeric attributes and counts of nominal attributes.")@FormDataParam("displayStdDevs") Boolean displayStdDevs,
+        @Parameter(description = "The distance function to use for instances comparison (default: weka.core.EuclideanDistance).")@FormDataParam("distanceFunction") String distanceFunction,
+        @Parameter(description = "If set, clusterer capabilities are not checked before clusterer is built (Use with caution to reduce runtime).")@FormDataParam("doNotCheckCapabilities") Boolean doNotCheckCapabilities,
+        @Parameter(description = "Replace missing values globally with mean/mode.")@FormDataParam("dontReplaceMissingValues") Boolean dontReplaceMissingValues,
+        @Parameter(description = "Uses cut-off values for speeding up distance calculation, but suppresses also the calculation and output of the within cluster sum of squared errors/sum of distances.")@FormDataParam("fastDistanceCalc") Boolean fastDistanceCalc,
+        @Parameter(description = "The initialization method to use. Random, k-means++, Canopy or farthest first.")@FormDataParam("initializationMethod") String initializationMethod,
+        @Parameter(description = "Set maximum number of iterations.")@FormDataParam("maxIterations") Integer maxIterations,
+        @Parameter(description = "Set number of clusters.")@FormDataParam("numClusters") Integer numClusters,
+        @Parameter(description = "The number of execution slots (threads) to use. Set equal to the number of available cpu/cores.")@FormDataParam("numExecutionSlots") Integer numExecutionSlots,
+        @Parameter(description = "Preserve order of instances.")@FormDataParam("preserveInstancesOrder") Boolean preserveInstancesOrder,
+        @Parameter(description = "Use canopy clustering to reduce the number of distance calculations performed by k-means")@FormDataParam("reduceNumberOfDistanceCalcsViaCanopies") Boolean reduceNumberOfDistanceCalcsViaCanopies,
+        @Parameter(description = "The random number seed to be used.")@FormDataParam("seed") Integer seed,
+        @Parameter(description = "authorization token") @HeaderParam("subjectid") String subjectid,
+        @Context UriInfo ui, @Context HttpHeaders headers, @Context SecurityContext securityContext)
+        throws Exception {
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("datasetUri", datasetUri);
+        params.put("canopyMaxNumCanopiesToHoldInMemory",canopyMaxNumCanopiesToHoldInMemory);
+        params.put("canopyMinimumCanopyDensity", canopyMinimumCanopyDensity);
+        params.put("canopyPeriodicPruningRate", canopyPeriodicPruningRate);
+        params.put("canopyT1", canopyT1);
+        params.put("canopyT2", canopyT2);
+        params.put("displayStdDevs", displayStdDevs);
+        params.put("distanceFunction", distanceFunction);
+        params.put("doNotCheckCapabilities",doNotCheckCapabilities);
+        params.put("dontReplaceMissingValues", dontReplaceMissingValues);
+        params.put("fastDistanceCalc", fastDistanceCalc);
+        params.put("initializationMethod", initializationMethod);
+        params.put("maxIterations", maxIterations);
+        params.put("numClusters", numClusters);
+        params.put("numExecutionSlots", numExecutionSlots);
+        params.put("preserveInstancesOrder", preserveInstancesOrder);
+        params.put("reduceNumberOfDistanceCalcsViaCanopies", reduceNumberOfDistanceCalcsViaCanopies);
+        params.put("seed",seed);
+        return delegate.clustererPost(fileInputStream, fileDetail, datasetUri, "SimpleKMeans", params, headers, ui, securityContext);
+
+    }
+
+
+
 /*
     @POST
     @Path("/upload")
