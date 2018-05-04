@@ -1,12 +1,12 @@
 package io.swagger.api.cluster;
 
+import io.swagger.api.annotations.GroupedApiResponsesOk;
 import io.swagger.api.factories.ClusterFactory;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.extensions.Extension;
 import io.swagger.v3.oas.annotations.extensions.ExtensionProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 
@@ -61,14 +61,8 @@ public class Cluster {
             @Extension(name = "algorithm", properties = {
                 @ExtensionProperty(name = "EM", value = "https://en.wikipedia.org/wiki/Expectation%E2%80%93maximization_algorithm")
             })
-        },
-        responses = {
-            @ApiResponse(responseCode = "200", description = "OK"),
-            @ApiResponse(responseCode = "400", description = "Bad Request"),
-            @ApiResponse(responseCode = "401", description = "Unauthorized"),
-            @ApiResponse(responseCode = "403", description = "Forbidden"),
-            @ApiResponse(responseCode = "404", description = "Resource Not Found")
-    })
+        })
+    @GroupedApiResponsesOk
     public Response clusterEMPost(
         @Parameter(name = "file"
         //    schema = @Schema(type = "file", format = "binary"))
@@ -79,17 +73,17 @@ public class Cluster {
         //@RequestBody(content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(type = "file",format = "file")))@FormDataParam("file2")  @QueryParam("file2") File file,
         @Parameter(description = "Dataset URI or local dataset ID (to the arff representation of a dataset).",
         name = "datasetUri", extensions = @Extension(properties = {@ExtensionProperty(name = "orn-@test",  value = "testvalue")}))
-        @FormDataParam("datasetURI")@QueryParam("datasetURI")  String datasetUri,
+        @FormDataParam("datasetUri") String datasetUri,
         @Parameter(description = "Number of folds to use when cross-validating to find the best number of clusters (default = 10)",
-            schema = @Schema(defaultValue="10"))@FormDataParam("numFolds") @QueryParam("numFolds") Integer numFolds,
+            schema = @Schema(defaultValue="10"))@FormDataParam("numFolds") Integer numFolds,
         @Parameter(description = "Number of runs of k-means to perform (default = 10)",
-            schema = @Schema(defaultValue="10")) @FormDataParam("numKMeansRuns") @QueryParam("numKMeansRuns") Integer numKMeansRuns,
+            schema = @Schema(defaultValue="10")) @FormDataParam("numKMeansRuns") Integer numKMeansRuns,
         @Parameter(description = "Maximum number of clusters to consider during cross-validation to select the best number of clusters (default = -1).",
-            schema = @Schema(defaultValue = "-1"))@FormDataParam("maximumNumberOfClusters") @QueryParam("maximumNumberOfClusters") Integer maximumNumberOfClusters,
+            schema = @Schema(defaultValue = "-1"))@FormDataParam("maximumNumberOfClusters") Integer maximumNumberOfClusters,
         @Parameter(description = "The number of clusters. -1 to select number of clusters automatically by cross validation (default = -1).",
-            schema = @Schema(defaultValue="-1")) @FormDataParam("numClusters") @QueryParam("numClusters") Integer numClusters,
+            schema = @Schema(defaultValue="-1")) @FormDataParam("numClusters") Integer numClusters,
         @Parameter(description = "Maximum number of iterations (default = 100).",
-            schema = @Schema(defaultValue = "100"))@FormDataParam("maxIterations") @QueryParam("maxIterations") Integer maxIterations,
+            schema = @Schema(defaultValue = "100"))@FormDataParam("maxIterations") Integer maxIterations,
         @Parameter(description = "authorization token") @HeaderParam("subjectid") String subjectid,
         @Context UriInfo ui, @Context HttpHeaders headers, @Context SecurityContext securityContext)
         throws Exception {
@@ -121,18 +115,12 @@ public class Cluster {
             @Extension(name = "algorithm", properties = {
                 @ExtensionProperty(name = "SimpleKMeans", value = "http://weka.sourceforge.net/doc.dev/weka/clusterers/SimpleKMeans.html")
             })
-        },
-        responses = {
-            @ApiResponse(responseCode = "200", description = "OK"),
-            @ApiResponse(responseCode = "400", description = "Bad Request"),
-            @ApiResponse(responseCode = "401", description = "Unauthorized"),
-            @ApiResponse(responseCode = "403", description = "Forbidden"),
-            @ApiResponse(responseCode = "404", description = "Resource Not Found")
         })
+    @GroupedApiResponsesOk
     public Response clusterSimpleKMeansPost(
         @FormDataParam("file") InputStream fileInputStream,
         @FormDataParam("file") FormDataContentDisposition fileDetail,
-        @Parameter(description = "Dataset URI or local dataset ID (to the arff representation of a dataset).")@FormDataParam("datasetURI")  String datasetUri,
+        @Parameter(description = "Dataset URI or local dataset ID (to the arff representation of a dataset).", schema = @Schema(defaultValue = ""))@FormDataParam("datasetUri") String datasetUri,
         @Parameter(description = "If using canopy clustering for initialization and/or speedup this is the maximum number of candidate canopies to retain in main memory during training of the canopy clusterer. T2 distance and data characteristics determine how many candidate canopies are formed before periodic and final pruning are performed. There may not be enough memory available if T2 is set too low.") @FormDataParam("canopyMaxNumCanopiesToHoldInMemory") Integer canopyMaxNumCanopiesToHoldInMemory,
         @Parameter(description = "If using canopy clustering for initialization and/or speedup this is the minimum T2-based density below which a canopy will be pruned during periodic pruning")@FormDataParam("canopyMinimumCanopyDensity") Double canopyMinimumCanopyDensity,
         @Parameter(description = "If using canopy clustering for initialization and/or speedup this is how often to prune low density canopies during training")@FormDataParam("canopyPeriodicPruningRate") Double canopyPeriodicPruningRate,
@@ -179,31 +167,43 @@ public class Cluster {
 
 
 /*
-    @POST
-    @Path("/upload")
-    @Operation(description = "TEST interface",
-        summary = "Test.",
-        tags={ "cluster" })
-    @Tag(name="a1")
-    @Produces(MediaType.APPLICATION_JSON)
-    @Consumes(MediaType.MULTIPART_FORM_DATA)
-    public Response uploadFile(
-                               @Parameter(name = "file",
-                                   content = @Content(schema = @Schema(
-                                   type = "object",
-                                   format = "binary")
-                                   )) @FormDataParam("file") @QueryParam("file") InputStream uploadedInputStream,
-                               @Parameter(name = "file",
-                                   description = "file bla", content = @Content(schema = @Schema(
-                                   type = "object",
-                                   format = "binary",
-                                   description = "a file"))
-                                   ) @FormDataParam("file") FormDataContentDisposition fileDetail
-                                   //@FormDataParam("file1") FormDataBodyPart body
+   NAME
+weka.clusterers.HierarchicalClusterer
 
+SYNOPSIS
+Hierarchical clustering class.
+Implements a number of classic agglomerative (i.e., bottom up) hierarchical clustering methods.
 
-    ) {
-        return Response.status(200).entity("File  " + fileDetail.getName() + " has been uploaded").build();
-    }
+OPTIONS
+printNewick -- Flag to indicate whether the cluster should be print in Newick format. This can be useful for display in other programs. However, for large datasets a lot of text may be produced, which may not be a nuisance when the Newick format is not required
+
+debug -- If set to true, clusterer may output additional info to the console.
+
+numClusters -- Sets the number of clusters. If a single hierarchy is desired, set this to 1.
+
+doNotCheckCapabilities -- If set, clusterer capabilities are not checked before clusterer is built (Use with caution to reduce runtime).
+
+linkType -- Sets the method used to measure the distance between two clusters.
+SINGLE:
+ find single link distance aka minimum link, which is the closest distance between any item in cluster1 and any item in cluster2
+COMPLETE:
+ find complete link distance aka maximum link, which is the largest distance between any item in cluster1 and any item in cluster2
+ADJCOMPLETE:
+ as COMPLETE, but with adjustment, which is the largest within cluster distance
+AVERAGE:
+ finds average distance between the elements of the two clusters
+MEAN:
+ calculates the mean distance of a merged cluster (akak Group-average agglomerative clustering)
+CENTROID:
+ finds the distance of the centroids of the clusters
+WARD:
+ finds the distance of the change in caused by merging the cluster. The information of a cluster is calculated as the error sum of squares of the centroids of the cluster and its members.
+NEIGHBOR_JOINING
+ use neighbor joining algorithm.
+
+distanceIsBranchLength -- If set to false, the distance between clusters is interpreted as the height of the node linking the clusters. This is appropriate for example for single link clustering. However, for neighbor joining, the distance is better interpreted as branch length. Set this flag to get the latter interpretation.
+
+distanceFunction -- Sets the distance function, which measures the distance between two individual. instances (or possibly the distance between an instance and the centroid of a clusterdepending on the Link type).
+
 */
 }

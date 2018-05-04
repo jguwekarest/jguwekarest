@@ -143,6 +143,7 @@ public class AlgorithmImpl extends AlgorithmService {
     @Produces({MediaType.TEXT_PLAIN})
     public Response algorithmGenericGet(String classifierName, HttpHeaders headers, UriInfo ui, SecurityContext securityContext) throws NotFoundException {
         AbstractClassifier classifier;
+        System.out.println("********************************************\nclassifiername is: " + classifierName + "\n*************************************");
         classifier = getClassifier(classifierName);
         StringBuilder output = new StringBuilder();
         Enumeration<Option> enu = classifier.listOptions();

@@ -79,18 +79,18 @@ public class DatasetService {
      * Get arff representation from dataset in mongoDB or from a posted file.
      * @param fileInputStream sended file
      * @param fileDetail details of sended file
-     * @param datasetURI dataset/mongodb id
+     * @param datasetUri dataset/mongodb id
      * @param subjectid security token
      * @return arff string
      * @throws IOException IOException description
      */
-    public static String getArff(InputStream fileInputStream, FormDataContentDisposition fileDetail, String datasetURI, String subjectid) throws IOException {
+    public static String getArff(InputStream fileInputStream, FormDataContentDisposition fileDetail, String datasetUri, String subjectid) throws IOException {
         StringBuilder txtStr = new StringBuilder();
-        if (datasetURI != null && !Objects.equals(datasetURI, "")) {
-            if(StringUtil.isUri(datasetURI)) {
-                System.out.println("isUri true: " + datasetURI);
+        if (datasetUri != null && !Objects.equals(datasetUri, "")) {
+            if(StringUtil.isUri(datasetUri)) {
+                System.out.println("isUri true: " + datasetUri);
             } else {
-                txtStr.append(DatasetService.getDatasetArff(datasetURI, subjectid));
+                txtStr.append(DatasetService.getDatasetArff(datasetUri, subjectid));
             }
         } else {
             int c;
@@ -139,8 +139,8 @@ public class DatasetService {
         StringBuilder arff = new StringBuilder();
         StringBuilder comment = new StringBuilder();
 
-        //add comments datasetURI and dataset metadata
-        comment.append("% JGU weka service converted dataset from :").append(dataset.datasetURI).append("\n%\n");
+        //add comments datasetUri and dataset metadata
+        comment.append("% JGU weka service converted dataset from :").append(dataset.datasetUri).append("\n%\n");
         comment.append("% Using ").append(class_uri != null ? ("feature " + class_uri) : "no feature").append(" for the weka class.\n%\n");
         if (dataset.meta != null) {
             Set metaEntries = dataset.meta.entrySet();
@@ -162,7 +162,7 @@ public class DatasetService {
         //add current date
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
         comment.append("% created: ").append(sdf.format(new Date())).append("\n\n");
-        arff.append("@relation ").append(dataset.datasetURI).append("\n");
+        arff.append("@relation ").append(dataset.datasetUri).append("\n");
 
         StringBuilder dataStr = new StringBuilder("\n@data\n");
 

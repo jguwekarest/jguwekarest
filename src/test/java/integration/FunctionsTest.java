@@ -89,16 +89,16 @@ public class FunctionsTest {
 
         Assert.assertTrue(model_text.contains("Logistic Regression with ridge parameter of 1.0E-8\n" +
             "Coefficients...\n" +
-            "                        Class\n" +
-            "Variable                  yes\n" +
-            "=============================\n" +
-            "outlook=sunny         -4.7538\n" +
-            "outlook=overcast       9.8305\n" +
-            "outlook=rainy         -3.9845\n" +
-            "temperature           -0.0776\n" +
-            "humidity              -0.1556\n" +
-            "windy=FALSE            3.7315\n" +
-            "Intercept             20.5622"));
+            "                         Class\n" +
+            "Variable                   yes\n" +
+            "==============================\n" +
+            "outlook=sunny          -4.7538\n" +
+            "outlook=overcast        9.8306\n" +
+            "outlook=rainy          -3.9845\n" +
+            "temperature            -0.0776\n" +
+            "humidity               -0.1556\n" +
+            "windy=FALSE             3.7315\n" +
+            "Intercept              20.5622"));
 
         String id = model_uri.substring(model_uri.length() - 24);
         Boolean resultDelete = ModelService.deleteModel(id);

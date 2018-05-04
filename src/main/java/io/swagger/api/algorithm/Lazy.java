@@ -2,14 +2,13 @@ package io.swagger.api.algorithm;
 
 import io.swagger.api.AlgorithmService;
 import io.swagger.api.NotFoundException;
+import io.swagger.api.annotations.GroupedApiResponsesOk;
 import io.swagger.api.factories.AlgorithmFactory;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.extensions.Extension;
 import io.swagger.v3.oas.annotations.extensions.ExtensionProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 
@@ -62,21 +61,16 @@ public class Lazy {
             @Extension(properties = {@ExtensionProperty(name = "orn-@id",  value = "/algorithm/IBkclassification")}),
             @Extension(properties = {@ExtensionProperty(name = "orn-@type",  value = "x-orn:Algorithm")}),
             @Extension(name = "orn:expects", properties = {@ExtensionProperty(name = "x-orn-@id",  value = "x-orn:Dataset")}),
-            @Extension(name = "orn:returns", properties = {@ExtensionProperty(name = "x-orn-@id",  value = "x-orn:Model")}),
+            @Extension(name = "orn:returns", properties = {@ExtensionProperty(name = "x-orn-@id",  value = "x-orn:Task")}),
             @Extension(name = "algorithm", properties = {
                 @ExtensionProperty(name = "k-nearest neighbors algorithm", value = "https://en.wikipedia.org/wiki/K-nearest_neighbors_algorithm")
             })
         })
-    @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "OK"),
-        @ApiResponse(responseCode = "400", description = "Bad Request"),
-        @ApiResponse(responseCode = "401", description = "Unauthorized"),
-        @ApiResponse(responseCode = "403", description = "Forbidden"),
-        @ApiResponse(responseCode = "404", description = "Resource Not Found") })
+    @GroupedApiResponsesOk
     public Response algorithmIBkPost(
         @FormDataParam("file") InputStream fileInputStream,
         @FormDataParam("file") FormDataContentDisposition fileDetail,
-        @Parameter(description = "Dataset URI or local dataset ID (to the arff representation of a dataset).")@FormDataParam("datasetURI")  String datasetUri,
+        @Parameter(description = "Dataset URI or local dataset ID (to the arff representation of a dataset).")@FormDataParam("datasetUri")  String datasetUri,
         @Parameter(
             description = "Gets the maximum number of instances allowed in the training pool. The addition of new instances above this value will result in old instances being removed. A value of 0 signifies no limit to the number of training instances. Must be 0 or 1 (Default: 0).",
             schema = @Schema(

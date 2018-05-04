@@ -1,11 +1,11 @@
 package io.swagger.api;
 
+import io.swagger.api.annotations.GroupedApiResponsesOk;
 import io.swagger.api.factories.AlgorithmFactory;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.extensions.Extension;
+import io.swagger.v3.oas.annotations.extensions.ExtensionProperty;
 
 import javax.servlet.ServletConfig;
 import javax.ws.rs.GET;
@@ -84,15 +84,13 @@ public class Algorithm {
     @GET
     @Produces({TEXT_URILIST, MediaType.APPLICATION_JSON})
     @Operation(summary = "Get a list of algorithms.",
-        description = "Get a list of all available algorithms.",
-        tags = {"algorithm"}
+        description = "Get a list of all available algorithms.", tags = {"algorithm"}
+        ,extensions = {
+        @Extension(properties = {@ExtensionProperty(name = "orn-@id",  value = "/algorithm/generic")}),
+        @Extension(properties = {@ExtensionProperty(name = "orn-@type",  value = "x-orn:Algorithm")}),
+        @Extension(name = "orn:returns", properties = { @ExtensionProperty(name = "x-orn-@id",  value = "x-orn:AlgorithmList")}),}
     )
-    @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "OK",content = {@Content(mediaType = "text/uri-list"), @Content(mediaType = "application/json")}),
-        @ApiResponse(responseCode = "400", description = "Bad Request"),
-        @ApiResponse(responseCode = "401", description = "Unauthorized"),
-        @ApiResponse(responseCode = "404", description = "Resource Not Found"),
-        @ApiResponse(responseCode = "500", description = "Server Error")})
+    @GroupedApiResponsesOk
     public Response algorithmGet(
         @Parameter(description = "authorization token") @HeaderParam("subjectid") String subjectid,
         @Context SecurityContext securityContext,

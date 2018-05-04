@@ -2,14 +2,11 @@ package io.swagger.api.data;
 
 
 import io.swagger.api.ApiException;
+import io.swagger.api.annotations.GroupedApiResponsesOk;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.extensions.Extension;
 import io.swagger.v3.oas.annotations.extensions.ExtensionProperty;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 
@@ -35,14 +32,9 @@ public class Model {
             @Extension(properties = {@ExtensionProperty(name = "orn-@id", value = "/model")}),
             @Extension(properties = {@ExtensionProperty(name = "orn-@type", value = "x-orn:Model")}),
             @Extension(name = "orn:expects", properties = {@ExtensionProperty(name = "x-orn-@id", value = "x-orn:void")}),
-            @Extension(name = "orn:returns", properties = {@ExtensionProperty(name = "x-orn-@id", value = "x-orn:Models")})
+            @Extension(name = "orn:returns", properties = {@ExtensionProperty(name = "x-orn-@id", value = "x-orn:ModelList")})
         })
-    @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "OK"),
-        @ApiResponse(responseCode = "400", description = "Bad Request"),
-        @ApiResponse(responseCode = "401", description = "Unauthorized"),
-        @ApiResponse(responseCode = "403", description = "Forbidden"),
-        @ApiResponse(responseCode = "404", description = "Resource Not Found") })
+    @GroupedApiResponsesOk
     public Response getModelList(
         @Parameter(description = "Authorization token" )@HeaderParam("subjectid") String subjectid,
         @Context UriInfo ui, @Context HttpHeaders headers) throws ApiException {
@@ -68,17 +60,10 @@ public class Model {
             extensions = {
                 @Extension(properties = {@ExtensionProperty(name = "orn-@id", value = "/model/{id}")}),
                 @Extension(properties = {@ExtensionProperty(name = "orn-@type", value = "x-orn:Model")}),
-                @Extension(name = "orn:expects", properties = {@ExtensionProperty(name = "x-orn-@id", value = "x-orn:ID")}),
+                @Extension(name = "orn:expects", properties = {@ExtensionProperty(name = "x-orn-@id", value = "x-orn:ModelId")}),
                 @Extension(name = "orn:returns", properties = {@ExtensionProperty(name = "x-orn-@id", value = "x-orn:Model")})
             })
-    @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", content = @Content(schema = @Schema(implementation = String.class))),
-        //@ApiResponse( content = @Content(mediaType = "application/json")),
-        @ApiResponse(responseCode = "400", description = "Bad Request"),
-        @ApiResponse(responseCode = "401", description = "Unauthorized"),
-        @ApiResponse(responseCode = "403", description = "Forbidden"),
-        @ApiResponse(responseCode = "404", description = "Resource Not Found") })
-
+    @GroupedApiResponsesOk
     public Response getModel(
         @Parameter(description = "model ID" )@PathParam("id") String id,
         @Parameter(description = "Authorization token" )@HeaderParam("subjectid") String subjectid,
@@ -104,15 +89,11 @@ public class Model {
         extensions = {
             @Extension(properties = {@ExtensionProperty(name = "orn-@id", value = "/model/{id}")}),
             @Extension(properties = {@ExtensionProperty(name = "orn-@type", value = "x-orn:Model")}),
-            @Extension(name = "orn:expects", properties = {@ExtensionProperty(name = "x-orn-@id", value = "x-orn:ID")}),
+            @Extension(name = "orn:expects", properties = {@ExtensionProperty(name = "x-orn-@id", value = "x-orn:ModelId")}),
+            @Extension(name = "orn:expects", properties = {@ExtensionProperty(name = "x-orn-@id", value = "x-orn:Dataset")}),
             @Extension(name = "orn:returns", properties = {@ExtensionProperty(name = "x-orn-@id", value = "x-orn:Prediction")})
         })
-    @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "OK"),
-        @ApiResponse(responseCode = "400", description = "Bad Request"),
-        @ApiResponse(responseCode = "401", description = "Unauthorized"),
-        @ApiResponse(responseCode = "403", description = "Forbidden"),
-        @ApiResponse(responseCode = "404", description = "Resource Not Found") })
+    @GroupedApiResponsesOk
     public Response modelPost(
         @FormDataParam("file") InputStream fileInputStream,
         @FormDataParam("file") FormDataContentDisposition fileDetail,

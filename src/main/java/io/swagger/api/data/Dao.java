@@ -90,7 +90,7 @@ public class Dao {
                 document.put("URI", ui.getBaseUri() + collection + "/" + document.get("_id").toString());
                 results.add(document);
             };
-            mongoCollection.find().projection(new Document("datasetURI", 1)
+            mongoCollection.find().projection(new Document("datasetUri", 1)
                     .append("meta", 1)
                     .append("_id", 1))
                     .forEach(printBlock);

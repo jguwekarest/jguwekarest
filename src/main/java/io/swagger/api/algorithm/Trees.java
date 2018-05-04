@@ -2,14 +2,13 @@ package io.swagger.api.algorithm;
 
 import io.swagger.api.AlgorithmService;
 import io.swagger.api.NotFoundException;
+import io.swagger.api.annotations.GroupedApiResponsesOk;
 import io.swagger.api.factories.AlgorithmFactory;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.extensions.Extension;
 import io.swagger.v3.oas.annotations.extensions.ExtensionProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 
@@ -66,21 +65,16 @@ public class Trees  {
             @Extension(properties = {@ExtensionProperty(name = "orn-@id",  value = "/algorithm/J48")}),
             @Extension(properties = {@ExtensionProperty(name = "orn-@type",  value = "x-orn:Algorithm")}),
             @Extension(name = "orn:expects", properties = { @ExtensionProperty(name = "x-orn-@id",  value = "x-orn:Dataset") }),
-            @Extension(name = "orn:returns", properties = { @ExtensionProperty(name = "x-orn-@id",  value = "x-orn:Model") }),
+            @Extension(name = "orn:returns", properties = { @ExtensionProperty(name = "x-orn-@id",  value = "x-orn:Task") }),
             @Extension(name = "algorithm", properties = {
                 @ExtensionProperty(name = "J48", value = "https://en.wikipedia.org/wiki/C4.5_algorithm#Implementations")
             })
         })
-    @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "OK"),
-        @ApiResponse(responseCode = "400", description = "Bad Request"),
-        @ApiResponse(responseCode = "401", description = "Unauthorized"),
-        @ApiResponse(responseCode = "403", description = "Forbidden"),
-        @ApiResponse(responseCode = "404", description = "Resource Not Found") })
+    @GroupedApiResponsesOk
     public Response algorithmJ48Post(
         @FormDataParam("file") InputStream fileInputStream,
         @FormDataParam("file") FormDataContentDisposition fileDetail,
-        @Parameter(description = "Dataset URI or local dataset ID (to the arff representation of a dataset).")@FormDataParam("datasetURI")  String datasetUri,
+        @Parameter(description = "Dataset URI or local dataset ID (to the arff representation of a dataset).")@FormDataParam("datasetUri")  String datasetUri,
 //J48,
         @Parameter(description = "Whether to use binary splits on nominal attributes when building the trees.",
             schema = @Schema(allowableValues = {"0", "1"}, defaultValue = "0")) @FormDataParam("binarySplits") Integer binarySplits,
@@ -136,22 +130,17 @@ public class Trees  {
             @Extension(properties = {@ExtensionProperty(name = "orn-@id",  value = "/algorithm/J48/adaboost")}),
             @Extension(properties = {@ExtensionProperty(name = "orn-@type",  value = "x-orn:Algorithm")}),
             @Extension(name = "orn:expects", properties = { @ExtensionProperty(name = "x-orn-@id",  value = "x-orn:Dataset")}),
-            @Extension(name = "orn:returns", properties = { @ExtensionProperty(name = "x-orn-@id",  value = "x-orn:Model")}),
+            @Extension(name = "orn:returns", properties = { @ExtensionProperty(name = "x-orn-@id",  value = "x-orn:Task")}),
             @Extension(name = "algorithm", properties = {
                 @ExtensionProperty(name = "Adaboost M1 meta algorithm", value = "https://en.wikipedia.org/wiki/AdaBoost")
             })
         })
-    @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "OK"),
-        @ApiResponse(responseCode = "400", description = "Bad Request"),
-        @ApiResponse(responseCode = "401", description = "Unauthorized"),
-        @ApiResponse(responseCode = "403", description = "Forbidden"),
-        @ApiResponse(responseCode = "404", description = "Resource Not Found")})
+    @GroupedApiResponsesOk
     public Response algorithmJ48AdaBoostPost(
         //data params
         @FormDataParam("file") InputStream fileInputStream,
         @FormDataParam("file") FormDataContentDisposition fileDetail,
-        @Parameter(description = "Dataset URI or local dataset ID (to the arff representation of a dataset).") @FormDataParam("datasetURI") String datasetUri,
+        @Parameter(description = "Dataset URI or local dataset ID (to the arff representation of a dataset).") @FormDataParam("datasetUri") String datasetUri,
         //meta params,
         @Parameter(description = "Adaboost M1: The preferred number of instances to process if batch prediction is being performed. More or fewer instances may be provided, but this gives implementations a chance to specify a preferred batch size.",
             schema = @Schema(defaultValue = "100")) @FormDataParam("batchSize") Integer batchSize,
@@ -225,20 +214,15 @@ public class Trees  {
         @Extension(properties = {@ExtensionProperty(name = "orn-@id",  value = "/algorithm/J48/bagging")}),
         @Extension(properties = {@ExtensionProperty(name = "orn-@type",  value = "x-orn:Algorithm")}),
         @Extension(name = "orn:expects", properties = { @ExtensionProperty(name = "x-orn-@id",  value = "x-orn:Dataset")}),
-        @Extension(name = "orn:returns", properties = { @ExtensionProperty(name = "x-orn-@id",  value = "x-orn:Model")}),
+        @Extension(name = "orn:returns", properties = { @ExtensionProperty(name = "x-orn-@id",  value = "x-orn:Task")}),
         @Extension(name = "algorithm", properties = {@ExtensionProperty(name = "Bagging meta algorithm", value = "https://en.wikipedia.org/wiki/Bootstrap_aggregating")})
     })
-    @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "OK"),
-        @ApiResponse(responseCode = "400", description = "Bad Request"),
-        @ApiResponse(responseCode = "401", description = "Unauthorized"),
-        @ApiResponse(responseCode = "403", description = "Forbidden"),
-        @ApiResponse(responseCode = "404", description = "Resource Not Found")})
+    @GroupedApiResponsesOk
     public Response algorithmJ48BaggingPost(
         //data params
         @FormDataParam("file") InputStream fileInputStream,
         @FormDataParam("file") FormDataContentDisposition fileDetail,
-        @Parameter(description = "Dataset URI or local dataset ID (to the arff representation of a dataset).") @FormDataParam("datasetURI") String datasetUri,
+        @Parameter(description = "Dataset URI or local dataset ID (to the arff representation of a dataset).") @FormDataParam("datasetUri") String datasetUri,
         //meta params,
         @Parameter(description = "Bagging: Size of each bag, as a percentage of the training set size.",
             schema = @Schema(defaultValue = "100")) @FormDataParam("bagSizePercent") Integer bagSizePercent,
@@ -293,4 +277,264 @@ public class Trees  {
             "Bagging", metaParams, validation, validationNum, headers, ui, securityContext);
     }
 
+    @POST
+    @Path("/M5P")
+    @Consumes({ "multipart/form-data" })
+    @Produces({ TEXT_URILIST, MediaType.APPLICATION_JSON})
+    @Operation(summary = "REST interface to WEKA M5P classifier.",
+        description = "REST interface to WEKA M5P classifier. " + SAVE_MODEL_NOTE,
+        tags = {"algorithm"} )
+    @GroupedApiResponsesOk
+    public Response algorithmM5PPost(
+        //data params
+        @FormDataParam("file") InputStream fileInputStream,
+        @FormDataParam("file") FormDataContentDisposition fileDetail,
+        @Parameter(description = "Dataset URI or local dataset ID (to the arff representation of a dataset).") @FormDataParam("datasetUri") String datasetUri,
+        // M5P
+        @Parameter(description = "Whether unpruned tree to be generated.", example = "0",
+            schema = @Schema(defaultValue = "0", allowableValues = {"0", "1"}))@FormDataParam("unpruned") Integer unpruned,
+        @Parameter(description = "Whether to use unsmoothed predictions.",
+            schema = @Schema(defaultValue = "0", allowableValues={"0", "1"}))@FormDataParam("useUnsmoothed") Integer useUnsmoothed,
+        @Parameter(description = "The minimum number of instances to allow at a leaf node.",
+            schema = @Schema(defaultValue = "4"))@FormDataParam("minNumInstances") Double minNumInstances,
+        @Parameter(description = "Whether to generate a regression tree/rule instead of a model tree/rule.",
+            schema = @Schema(defaultValue = "0", allowableValues={"0", "1"}))@FormDataParam("buildRegressionTree") Integer buildRegressionTree,
+        // validation
+        @Parameter(description = "Validation to use.",
+            schema = @Schema(allowableValues = {"CrossValidation","Hold-Out"}, defaultValue = "CrossValidation")) @FormDataParam("validation") String validation,
+        @Parameter(description = "Num of Crossvalidations or Percentage Split %.", schema = @Schema(defaultValue = "10")) @FormDataParam("validationNum") Double validationNum,
+        // authorization
+        @Parameter(description = "Authorization token" )@HeaderParam("subjectid") String subjectid,
+        @Context UriInfo ui, @Context HttpHeaders headers, @Context SecurityContext securityContext)
+        throws NotFoundException, IOException {
+
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("datasetUri", datasetUri);
+        params.put("minNumInstances", minNumInstances);
+        params.put("unpruned", unpruned);
+        params.put("useUnsmoothed", useUnsmoothed);
+        params.put("buildRegressionTree", buildRegressionTree);
+        return delegate.algorithmPost(fileInputStream, fileDetail, datasetUri, "M5P", params,
+            validation, validationNum, headers, ui, securityContext);
+    }
+
+    @POST
+    @Path("/M5P/adaboost")
+    @Consumes({ "multipart/form-data" })
+    @Produces({ TEXT_URILIST, MediaType.APPLICATION_JSON})
+    @Operation(summary = "REST interface to WEKA AdaBoost M1 with M5P classifier.",
+        description = "REST interface to WEKA AdaBoost M1 with M5P classifier. " + SAVE_MODEL_NOTE,
+        tags = {"algorithm","meta algorithm"} )
+    @GroupedApiResponsesOk
+    public Response algorithmM5PAdaBoostPost(
+        //data params
+        @FormDataParam("file") InputStream fileInputStream,
+        @FormDataParam("file") FormDataContentDisposition fileDetail,
+        @Parameter(description = "Dataset URI or local dataset ID (to the arff representation of a dataset).") @FormDataParam("datasetUri") String datasetUri,
+        //meta params,
+        @Parameter(description = "Adaboost M1: The preferred number of instances to process if batch prediction is being performed. More or fewer instances may be provided, but this gives implementations a chance to specify a preferred batch size.",
+            schema = @Schema(defaultValue = "100")) @FormDataParam("batchSize") Integer batchSize,
+        @Parameter(description = "Adaboost M1: The number of iterations to be performed.",
+            schema = @Schema(defaultValue = "10")) @FormDataParam("numIterations") Integer numIterations,
+        @Parameter(description = "Adaboost M1: Whether resampling is used instead of reweighting.",
+            schema = @Schema(defaultValue = "0", allowableValues = {"0", "1"})) @FormDataParam("useResampling") Integer useResampling,
+        @Parameter(description = "Adaboost M1: Weight threshold for weight pruning.",
+            schema = @Schema(defaultValue = "100"))@FormDataParam("weightThreshold") Integer weightThreshold,
+        // M5P
+        @Parameter(description = "Whether unpruned tree to be generated.", example = "0",
+            schema = @Schema(defaultValue = "0", allowableValues = {"0", "1"}))@FormDataParam("unpruned") Integer unpruned,
+        @Parameter(description = "Whether to use unsmoothed predictions.",
+            schema = @Schema(defaultValue = "0", allowableValues = {"0", "1"}))@FormDataParam("useUnsmoothed") Integer useUnsmoothed,
+        @Parameter(description = "The minimum number of instances to allow at a leaf node.",
+            schema = @Schema(defaultValue = "4"))@FormDataParam("minNumInstances") Double minNumInstances,
+        @Parameter(description = "Whether to generate a regression tree/rule instead of a model tree/rule.",
+            schema = @Schema(defaultValue = "0", allowableValues = {"0", "1"}))@FormDataParam("buildRegressionTree") Integer buildRegressionTree,
+        // validation
+        @Parameter(description = "Validation to use.",
+            schema = @Schema(allowableValues = {"CrossValidation","Hold-Out"}, defaultValue = "CrossValidation")) @FormDataParam("validation") String validation,
+        @Parameter(description = "Num of Crossvalidations or Percentage Split %.", schema = @Schema(defaultValue = "10")) @FormDataParam("validationNum") Double validationNum,
+        // authorization
+        @Parameter(description = "Authorization token" )@HeaderParam("subjectid") String subjectid,
+        @Context UriInfo ui, @Context HttpHeaders headers, @Context SecurityContext securityContext)
+        throws NotFoundException, IOException {
+
+        HashMap<String, Object> params = new HashMap<>();
+        HashMap<String, Object> metaParams = new HashMap<>();
+        metaParams.put("batchSize", batchSize);
+        metaParams.put("numIterations", numIterations);
+        metaParams.put("useResampling", useResampling);
+        metaParams.put("weightThreshold", weightThreshold);
+        params.put("datasetUri", datasetUri);
+        params.put("minNumInstances", minNumInstances);
+        params.put("unpruned", unpruned);
+        params.put("useUnsmoothed", useUnsmoothed);
+        params.put("buildRegressionTree", buildRegressionTree);
+        return delegate.algorithmPost(fileInputStream, fileDetail, datasetUri, "M5P", params,
+            "AdaBoost", metaParams, validation, validationNum, headers, ui, securityContext);
+    }
+
+    @POST
+    @Path("/M5P/bagging")
+    @Consumes({ "multipart/form-data" })
+    @Produces({ TEXT_URILIST, MediaType.APPLICATION_JSON})
+    @Operation(summary = "REST interface to WEKA Bagging with M5P classifier.",
+        description = "REST interface to WEKA Bagging with M5P classifier. " + SAVE_MODEL_NOTE,
+        tags = {"algorithm","meta algorithm"} )
+    @GroupedApiResponsesOk
+    public Response algorithmM5PBaggingPost(
+        //data params
+        @FormDataParam("file") InputStream fileInputStream,
+        @FormDataParam("file") FormDataContentDisposition fileDetail,
+        @Parameter(description = "Dataset URI or local dataset ID (to the arff representation of a dataset).") @FormDataParam("datasetUri") String datasetUri,
+        //meta params,
+        @Parameter(description = "Bagging: Size of each bag, as a percentage of the training set size.",
+            schema = @Schema(defaultValue = "100")) @FormDataParam("bagSizePercent") Integer bagSizePercent,
+        @Parameter(description = "Bagging: The preferred number of instances to process if batch prediction is being performed. More or fewer instances may be provided, but this gives implementations a chance to specify a preferred batch size.",
+            schema = @Schema(defaultValue = "100")) @FormDataParam("batchSize") Integer batchSize,
+        @Parameter(description = "Bagging: The number of iterations to be performed.",
+            schema = @Schema(defaultValue = "10")) @FormDataParam("numIterations") Integer numIterations,
+        // M5P
+        @Parameter(description = "Whether unpruned tree to be generated.", example = "0",
+            schema = @Schema(defaultValue = "0", allowableValues = {"0", "1"}))@FormDataParam("unpruned") Integer unpruned,
+        @Parameter(description = "Whether to use unsmoothed predictions.",
+            schema = @Schema(defaultValue = "0", allowableValues = {"0", "1"}))@FormDataParam("useUnsmoothed") Integer useUnsmoothed,
+        @Parameter(description = "The minimum number of instances to allow at a leaf node.",
+            schema = @Schema(defaultValue = "4"))@FormDataParam("minNumInstances") Double minNumInstances,
+        @Parameter(description = "Whether to generate a regression tree/rule instead of a model tree/rule.",
+            schema = @Schema(defaultValue = "0", allowableValues = {"0", "1"}))@FormDataParam("buildRegressionTree") Integer buildRegressionTree,
+        // validation
+        @Parameter(description = "Validation to use.",
+            schema = @Schema(allowableValues = {"CrossValidation","Hold-Out"}, defaultValue = "CrossValidation")) @FormDataParam("validation") String validation,
+        @Parameter(description = "Num of Crossvalidations or Percentage Split %.", schema = @Schema(defaultValue = "10")) @FormDataParam("validationNum") Double validationNum,
+        // authorization
+        @Parameter(description = "Authorization token" )@HeaderParam("subjectid") String subjectid,
+        @Context UriInfo ui, @Context HttpHeaders headers, @Context SecurityContext securityContext)
+        throws NotFoundException, IOException {
+
+        HashMap<String, Object> params = new HashMap<>();
+        HashMap<String, Object> metaParams = new HashMap<>();
+        metaParams.put("bagSizePercent", bagSizePercent);
+        metaParams.put("batchSize", batchSize);
+        metaParams.put("numIterations", numIterations);
+        params.put("datasetUri", datasetUri);
+        params.put("minNumInstances", minNumInstances);
+        params.put("unpruned", unpruned);
+        params.put("useUnsmoothed", useUnsmoothed);
+        params.put("buildRegressionTree", buildRegressionTree);
+        return delegate.algorithmPost(fileInputStream, fileDetail, datasetUri, "M5P", params,
+            "Bagging", metaParams, validation, validationNum, headers, ui, securityContext);
+    }
+
+
+    @POST
+    @Path("/DecisionStump")
+    @Consumes({ "multipart/form-data" })
+    @Produces({ TEXT_URILIST, MediaType.APPLICATION_JSON})
+    @Operation(summary = "REST interface to the WEKA DecisionStump classifier.",
+        description = "REST interface to the DecisionStump classifier. " + SAVE_MODEL_NOTE, tags = {"algorithm"} )
+    @GroupedApiResponsesOk
+    public Response algorithmDecisionStumpPost(
+        //data params
+        @FormDataParam("file") InputStream fileInputStream,
+        @FormDataParam("file") FormDataContentDisposition fileDetail,
+        @Parameter(description = "Dataset URI or local dataset ID (to the arff representation of a dataset).") @FormDataParam("datasetUri") String datasetUri,
+        // DecisionStump
+        // validation
+        @Parameter(description = "Validation to use.",
+            schema = @Schema(allowableValues = {"CrossValidation","Hold-Out"}, defaultValue = "CrossValidation")) @FormDataParam("validation") String validation,
+        @Parameter(description = "Num of Crossvalidations or Percentage Split %.", schema = @Schema(defaultValue = "10")) @FormDataParam("validationNum") Double validationNum,
+        // authorization
+        @Parameter(description = "Authorization token" )@HeaderParam("subjectid") String subjectid,
+        @Context UriInfo ui, @Context HttpHeaders headers, @Context SecurityContext securityContext)
+        throws NotFoundException, IOException {
+
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("datasetUri", datasetUri);
+        return delegate.algorithmPost(fileInputStream, fileDetail, datasetUri, "DecisionStump", params,
+            validation, validationNum, headers, ui, securityContext);
+    }
+
+
+    @POST
+    @Path("/DecisionStump/adaboost")
+    @Consumes({ "multipart/form-data" })
+    @Produces({ TEXT_URILIST, MediaType.APPLICATION_JSON})
+    @Operation(summary = "REST interface to the WEKA AdaBoost M1 with DecisionStump classifier.",
+        description = "REST interface to the WEKA AdaBoost M1 with DecisionStump classifier. " + SAVE_MODEL_NOTE, tags = {"algorithm","meta algorithm"} )
+    @GroupedApiResponsesOk
+    public Response algorithmDecisionStumpAdaBoostPost(
+        //data params
+        @FormDataParam("file") InputStream fileInputStream,
+        @FormDataParam("file") FormDataContentDisposition fileDetail,
+        @Parameter(description = "Dataset URI or local dataset ID (to the arff representation of a dataset).") @FormDataParam("datasetUri") String datasetUri,
+        //meta params,
+        @Parameter(description = "Adaboost M1: The preferred number of instances to process if batch prediction is being performed. More or fewer instances may be provided, but this gives implementations a chance to specify a preferred batch size.",
+            schema = @Schema(defaultValue = "100")) @FormDataParam("batchSize") Integer batchSize,
+        @Parameter(description = "Adaboost M1: The number of iterations to be performed.",
+            schema = @Schema(defaultValue = "10")) @FormDataParam("numIterations") Integer numIterations,
+        @Parameter(description = "Adaboost M1: Whether resampling is used instead of reweighting.",
+            schema = @Schema(defaultValue = "0", allowableValues = {"0", "1"})) @FormDataParam("useResampling") Integer useResampling,
+        @Parameter(description = "Adaboost M1: Weight threshold for weight pruning.",
+            schema = @Schema(defaultValue = "100")) @FormDataParam("weightThreshold") Integer weightThreshold,
+        // DecisionStump
+            // validation
+            @Parameter(description = "Validation to use.",
+                schema = @Schema(allowableValues = {"CrossValidation","Hold-Out"}, defaultValue = "CrossValidation")) @FormDataParam("validation") String validation,
+            @Parameter(description = "Num of Crossvalidations or Percentage Split %.", schema = @Schema(defaultValue = "10")) @FormDataParam("validationNum") Double validationNum,
+            // authorization
+        @Parameter(description = "Authorization token" )@HeaderParam("subjectid") String subjectid,
+        @Context UriInfo ui, @Context HttpHeaders headers, @Context SecurityContext securityContext)
+        throws NotFoundException, IOException {
+
+        HashMap<String, Object> params = new HashMap<>();
+        HashMap<String, Object> metaParams = new HashMap<>();
+        params.put("datasetUri", datasetUri);
+        metaParams.put("batchSize", batchSize);
+        metaParams.put("numIterations", numIterations);
+        metaParams.put("useResampling", useResampling);
+        metaParams.put("weightThreshold", weightThreshold);
+        return delegate.algorithmPost(fileInputStream, fileDetail, datasetUri, "DecisionStump", params,
+            "AdaBoost", metaParams, validation, validationNum, headers, ui, securityContext);
+    }
+
+
+    @POST
+    @Path("/DecisionStump/bagging")
+    @Consumes({ "multipart/form-data" })
+    @Produces({ TEXT_URILIST, MediaType.APPLICATION_JSON})
+    @Operation(summary = "REST interface to the WEKA Bagging with DecisionStump classifier.",
+        description = "REST interface to the WEKA Bagging with DecisionStump classifier. " + SAVE_MODEL_NOTE, tags = {"algorithm","meta algorithm"} )
+    @GroupedApiResponsesOk
+    public Response algorithmDecisionStumpBaggingPost(
+        //data params
+        @FormDataParam("file") InputStream fileInputStream,
+        @FormDataParam("file") FormDataContentDisposition fileDetail,
+        @Parameter(description = "Dataset URI or local dataset ID (to the arff representation of a dataset).") @FormDataParam("datasetUri") String datasetUri,
+        //meta params,
+        @Parameter(description = "Bagging: Size of each bag, as a percentage of the training set size.",
+            schema = @Schema(defaultValue = "100")) @FormDataParam("bagSizePercent") Integer bagSizePercent,
+        @Parameter(description = "Bagging: The preferred number of instances to process if batch prediction is being performed. More or fewer instances may be provided, but this gives implementations a chance to specify a preferred batch size.",
+            schema = @Schema(defaultValue = "100")) @FormDataParam("batchSize") Integer batchSize,
+        @Parameter(description = "Bagging: The number of iterations to be performed.",
+            schema = @Schema(defaultValue = "10")) @FormDataParam("numIterations") Integer numIterations,
+        // DecisionStump
+        // validation
+        @Parameter(description = "Validation to use.",
+            schema = @Schema(allowableValues = {"CrossValidation", "Hold-Out"}, defaultValue = "CrossValidation")) @FormDataParam("validation") String validation,
+        @Parameter(description = "Num of Crossvalidations or Percentage Split %.", schema = @Schema(defaultValue = "10")) @FormDataParam("validationNum") Double validationNum,
+        // authorization
+        @Parameter(description = "Authorization token" )@HeaderParam("subjectid") String subjectid,
+        @Context UriInfo ui, @Context HttpHeaders headers, @Context SecurityContext securityContext)
+        throws NotFoundException, IOException {
+
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("datasetUri", datasetUri);
+        HashMap<String, Object> metaParams = new HashMap<>();
+        metaParams.put("bagSizePercent", bagSizePercent);
+        metaParams.put("batchSize", batchSize);
+        metaParams.put("numIterations", numIterations);
+
+        return delegate.algorithmPost(fileInputStream, fileDetail, datasetUri, "DecisionStump", params,
+            "Bagging", metaParams, validation, validationNum, headers, ui, securityContext);
+    }
 }

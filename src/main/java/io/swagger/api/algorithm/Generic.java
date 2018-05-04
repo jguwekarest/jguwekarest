@@ -47,8 +47,6 @@ public class Generic {
         this.delegate = delegate;
     }
 
-
-
     /**
      * generic REST interface to WEKA algorithms
      */
@@ -61,14 +59,14 @@ public class Generic {
         @Extension(properties = {@ExtensionProperty(name = "orn-@id",  value = "/algorithm/generic")}),
         @Extension(properties = {@ExtensionProperty(name = "orn-@type",  value = "x-orn:Algorithm")}),
         @Extension(name = "orn:expects", properties = { @ExtensionProperty(name = "x-orn-@id",  value = "x-orn:Dataset")}),
-        @Extension(name = "orn:returns", properties = { @ExtensionProperty(name = "x-orn-@id",  value = "x-orn:Model")}),}
+        @Extension(name = "orn:returns", properties = { @ExtensionProperty(name = "x-orn-@id",  value = "x-orn:Task")}),}
     )
     @GroupedApiResponsesOk
 
     public Response algorithmGenericPost(
         @FormDataParam("file") InputStream fileInputStream,
         @FormDataParam("file") FormDataContentDisposition fileDetail,
-        @Parameter(description = "Dataset URI or local dataset ID (to the arff representation of a dataset).")@FormDataParam("datasetURI")  String datasetUri,
+        @Parameter(description = "Dataset URI or local dataset ID (to the arff representation of a dataset).")@FormDataParam("datasetUri")  String datasetUri,
         @Parameter(description = "Classifier to use.",
             schema = @Schema(
                 allowableValues = { "BayesNet","DecisionStump","GaussianProcesses","J48","IBk","LibSVM","LinearRegression",
@@ -98,8 +96,8 @@ public class Generic {
         ,extensions = {
         @Extension(properties = {@ExtensionProperty(name = "orn-@id",  value = "/algorithm/generic")}),
         @Extension(properties = {@ExtensionProperty(name = "orn-@type",  value = "x-orn:Algorithm")}),
-        @Extension(name = "orn:expects", properties = { @ExtensionProperty(name = "x-orn-@id",  value = "x-orn:Dataset")}),
-        @Extension(name = "orn:returns", properties = { @ExtensionProperty(name = "x-orn-@id",  value = "x-orn:Model")}),}
+        @Extension(name = "orn:expects", properties = { @ExtensionProperty(name = "x-orn-@id",  value = "x-orn:Algorithm")}),
+        @Extension(name = "orn:returns", properties = { @ExtensionProperty(name = "x-orn-@id",  value = "x-orn:Description")}),}
     )
     @GroupedApiResponsesOk
 
@@ -108,12 +106,12 @@ public class Generic {
             schema = @Schema(
                 allowableValues = { "BayesNet","DecisionStump","GaussianProcesses","J48","IBk","LibSVM","LinearRegression",
                     "Logistic","M5P","M5Rules","MultilayerPerceptron","NaiveBayes","RandomForest","SMO","SMOreg","ZeroR",
-                    "AdaBoost","Bagging"})) @QueryParam("classifierString") String classifierString,
+                    "AdaBoost","Bagging"})) @QueryParam("classifierName") String classifierName,
         @Parameter(description = "Authorization token") @HeaderParam("subjectid") String subjectid,
         @Context UriInfo ui, @Context HttpHeaders headers, @Context SecurityContext securityContext)
         throws io.swagger.api.NotFoundException, IOException {
 
-        return delegate.algorithmGenericGet(classifierString, headers, ui, securityContext);
+        return delegate.algorithmGenericGet(classifierName, headers, ui, securityContext);
     }
 
 }

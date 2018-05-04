@@ -151,11 +151,10 @@ public class GenericTest {
         String uri = host + "/algorithm/generic";
 
         Client client = TestHelper.getClient();
-        WebTarget webTarget = client.target(uri);
-        Invocation.Builder request = webTarget.request(MediaType.TEXT_PLAIN);
-        request.header("classifierName","J48");
-        Response response = request.get();
-        Assert.assertTrue(response.getStatus() == 200);
+        Response response = client.target(uri).queryParam("classifierName","J48").request(MediaType.TEXT_PLAIN).get();
+
+        //Response response = request.get();
+        Assert.assertEquals(response.getStatus(), 200);
         Assert.assertTrue(response.getMediaType().toString().equals(MediaType.TEXT_PLAIN));
 
         // check new model String
