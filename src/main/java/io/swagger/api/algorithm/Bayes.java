@@ -52,20 +52,6 @@ public class Bayes {
         this.delegate = delegate;
     }
 
-    @POST
-    @Path("/test")
-    public Response algorithmTestPost(
-        @FormDataParam("file") InputStream fileInputStream,
-        @FormDataParam("file") FormDataContentDisposition fileDetail,
-        @Parameter(description = "Test Parameter",
-        schema = @Schema(defaultValue="test1"))@FormDataParam("testParam") String testParam
-    ) {
-
-        return Response.ok("OK Msg: " + testParam).build();
-    }
-
-
-
 
     /**
      * REST interface to BayesNet algorithm

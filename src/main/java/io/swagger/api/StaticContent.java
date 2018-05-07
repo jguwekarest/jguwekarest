@@ -1,5 +1,7 @@
 package io.swagger.api;
 
+import io.swagger.v3.oas.annotations.Hidden;
+
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.GET;
@@ -24,6 +26,7 @@ public class StaticContent {
 
     // delivers the swagger ui index.html file
     @GET
+    @Hidden
     @Path("/")
     @Produces("text/html")
     public Response startPage() throws IOException {
@@ -33,6 +36,7 @@ public class StaticContent {
 
     // delivers static CSS and JavaScript file
     @GET
+    @Hidden
     @Path("{path : .*\\.css|.*\\.js|.*\\.map}")
     @Produces("text/css;charset=UTF-8")
     public Response staticContent(@PathParam("path") String path) throws IOException {
@@ -43,6 +47,7 @@ public class StaticContent {
 
     // delivers static PNG files
     @GET
+    @Hidden
     @Path("{path : .*\\.png}")
     @Produces("image/png")
     public Response staticPngContent(@PathParam("path") String path) throws IOException {
