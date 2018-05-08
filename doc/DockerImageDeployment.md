@@ -5,10 +5,10 @@ This document describes how to setup and start a docker image and its container 
 
 ## Setup the Dockerfile
 The current docker image is build with a simple Dockerfile that 
-uses a tomcat base-image from [hub.docker.com/_/tomcat](https://hub.docker.com/_/tomcat/), the official Apache Tomcat repository.<br />
-The Dockerfile remove all preinstalled webapps from tomcat and copies the JGU WEKA Rest service war file to */usr/local/tomcat/webapps/ROOT.war*
-as the main application.   <br />
-Then it installs the SSL certificates from the openam.in-silico.ch Authentication & Authorization server.
+uses a tomcat base-image from [hub.docker.com/_/tomcat](https://hub.docker.com/_/tomcat/), the official Apache Tomcat repository.    
+The Dockerfile removes all pre-installed webapps from tomcat and copies the JGU WEKA Rest service war file to */usr/local/tomcat/webapps/ROOT.war*
+as the main application.   
+Then it installs the SSL certificates from the openam.in-silico.ch Authentication & Authorization server to the tomcat keystore.
 Finally port 8080 is exposed. 
 
     
