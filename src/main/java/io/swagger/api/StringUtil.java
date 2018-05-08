@@ -67,8 +67,14 @@ public class StringUtil {
         return str.endsWith("/") ? (str.substring(0, str.length() - 1)) : str;
     }
 
+    /**
+     * Check if a string is not null and a valid number
+     *
+     * @param str String to compare
+     * @return Boolean true or false
+     */
     public static Boolean isNumeric(String str) {
-        return str == null || NumberUtils.isNumber(str);
+        return str == null || NumberUtils.isCreatable(str);
     }
 
     /**

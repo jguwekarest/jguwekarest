@@ -94,12 +94,11 @@ public class Algorithm {
     public Response algorithmGet(
         @Parameter(description = "authorization token") @HeaderParam("subjectid") String subjectid,
         @Context SecurityContext securityContext,
-        @Context UriInfo uriinfo,
+        @Context UriInfo uriInfo,
         @Context HttpHeaders headers)
         throws NotFoundException, IOException {
-
             String accept = headers.getRequestHeaders().getFirst("accept");
-            return delegate.algorithmGet(accept, subjectid, securityContext, uriinfo);
+            return delegate.algorithmGet(accept, subjectid, securityContext, uriInfo);
     }
 
 }

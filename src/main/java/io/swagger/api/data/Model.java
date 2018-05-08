@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.extensions.Extension;
 import io.swagger.v3.oas.annotations.extensions.ExtensionProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 
@@ -17,7 +18,7 @@ import java.util.Map;
 
 @Path("/model")
 //@Api(description = "Model API")
-
+@Schema(name = "model", description = "model")
 public class Model {
 
     @GET
@@ -48,11 +49,10 @@ public class Model {
                 .build();
     }
 
-
     @GET
     @Path("/{id}")
     @Consumes({ "multipart/form-data" })
-    @Produces({ "text/plain", "application/json", "application/xml" })
+    @Produces({ "text/plain", "application/json"})
     @Operation(
         summary = "Get representation of a model.",
         description = "Get representation of a model.",

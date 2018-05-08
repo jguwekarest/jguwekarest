@@ -45,7 +45,7 @@ public class Api {
     @GET
     @Path("/api.json")
     @Produces({"application/json", "application/ld+json"})
-    @Operation(description = "", summary = "Get swagger api in JSON", tags = {"api",})
+    @Operation(description = "Get Open API representation in JSON", summary = "Get Open API representation in JSON", tags = {"api",})
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "OK"),
         @ApiResponse(responseCode = "400", description = "Bad Request"),

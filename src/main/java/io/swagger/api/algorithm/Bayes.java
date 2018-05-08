@@ -93,9 +93,9 @@ public class Bayes {
             schema = @Schema(defaultValue="0", allowableValues = {"0", "1"}))@DefaultValue("0") @FormDataParam("useADTree") Integer useADTree,
         @Parameter(description = "The algorithmn to be used for searching in the compound. Must be local.K2, local.GeneticSearch, local.HillClimber, local.LAGDHillClimber, local.RepeatedHillClimber, local.SimulatedAnnealing, local.TabuSearch, local.TAN, global.K2, global.GeneticSearch, global.HillClimber, global.RepeatedHillClimber, global.SimulatedAnnealing, global.TabuSearch, global.TAN, ci.CISearchAlgorithm, ci.ICSSearchAlgorithm (Default: local.K2).",
             schema = @Schema(allowableValues={"local.K2", "local.GeneticSearch", "local.HillClimber", "local.LAGDHillClimber", "local.RepeatedHillClimber", "local.SimulatedAnnealing", "local.TabuSearch", "local.TAN", "global.K2", "global.GeneticSearch", "global.HillClimber", "global.RepeatedHillClimber", "global.SimulatedAnnealing", "global.TabuSearch", "global.TAN", "ci.CISearchAlgorithm", "ci.ICSSearchAlgorithm"},
-            defaultValue="local.K2"))@FormDataParam("searchAlgorithm") @DefaultValue("local.K2")  String searchAlgorithm,
+            defaultValue="local.K2"),example = "local.K2")@FormDataParam("searchAlgorithm") @DefaultValue("local.K2")  String searchAlgorithm,
         @Parameter(description = "The parameter for algorithmn to be used for searching in the compound. Are set automatically (WEKA's standard parameter setting) (Default '-P 1 -S BAYES' for local.K2).",
-            schema = @Schema(defaultValue="-P 1 -S BAYES"))@FormDataParam("searchParams") String searchParams,
+            schema = @Schema(defaultValue="-P 1 -S BAYES"),example = "-P 1 -S BAYES")@FormDataParam("searchParams") String searchParams,
         // validation
         @Parameter(description = "Validation to use.", schema = @Schema(defaultValue="CrossValidation", allowableValues = {"CrossValidation", "Hold-Out"})) @FormDataParam("validation") String validation ,
         @Parameter(description = "Num of Crossvalidations or Percentage Split %.", schema = @Schema(required=true, defaultValue = "10", minimum = "0")) @FormDataParam("validationNum") Double validationNum,
@@ -116,6 +116,7 @@ public class Bayes {
                 return delegate.algorithmPost(fileInputStream, fileDetail, datasetUri, "BayesNet", params,
                                               validation, validationNum, headers, ui, securityContext);
     }
+
 
 
 
