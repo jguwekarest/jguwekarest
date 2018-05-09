@@ -31,7 +31,7 @@ RUN keytool -keystore /etc/ssl/certs/java/cacerts -keypass changeit -storepass c
 
 EXPOSE 8080
 ```
-Customise the [Dockerfile](../Dockerfile) as needed (e.G.: adjust the war file name and version).  
+Customise the [Dockerfile](../Dockerfile) as needed (e.g.: adjust the war file name and version).  
 
 ## Build the Docker Image
 
@@ -54,6 +54,8 @@ Customise the [Dockerfile](../Dockerfile) as needed (e.G.: adjust the war file n
 `docker run -p 8080:8080 dockerhubuser/jguweka:OAS3`
 * If you run the container locally don't forget to start also a mongodb container as a data base with:   
 `docker pull mongo; docker run -d mongo`
+* Load the Swagger-UI representation in a web-browser   
+e.g.: `firefox http://0.0.0.0:8080`
 
 ## Documentation
 

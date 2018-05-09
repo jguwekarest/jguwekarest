@@ -202,7 +202,7 @@ public class Dao {
 
     /**
      * Saves JSON to mongodb
-     * @param collection to save to (e.G.: model or dataset)
+     * @param collection to save to (e.g.: model or dataset)
      * @param document GSON of a dataset, model ...
      * @return String ID of the saved collection
      */
@@ -223,7 +223,7 @@ public class Dao {
 
     /**
      * Update JSON to mongodb
-     * @param collection to save to (e.G.: model, dataset or task)
+     * @param collection to save to (e.g.: model, dataset or task)
      * @param document GSON of a dataset, model ...
      * @param id String of id
      * @return Boolean
@@ -256,7 +256,7 @@ public class Dao {
 
     /**
      * Delete Document in mongodb
-     * @param collection to delete from (e.G.: model, dataset or task)
+     * @param collection to delete from (e.g.: model, dataset or task)
      * @param id String of id
      * @return Boolean
      */

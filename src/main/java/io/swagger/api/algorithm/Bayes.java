@@ -98,7 +98,7 @@ public class Bayes {
             schema = @Schema(defaultValue="-P 1 -S BAYES"),example = "-P 1 -S BAYES")@FormDataParam("searchParams") String searchParams,
         // validation
         @Parameter(description = "Validation to use.", schema = @Schema(defaultValue="CrossValidation", allowableValues = {"CrossValidation", "Hold-Out"})) @FormDataParam("validation") String validation ,
-        @Parameter(description = "Num of Crossvalidations or Percentage Split %.", schema = @Schema(required=true, defaultValue = "10", minimum = "0")) @FormDataParam("validationNum") Double validationNum,
+        @Parameter(description = "Num of Crossvalidations or Percentage Split %.", schema = @Schema(defaultValue = "10", minimum = "0")) @FormDataParam("validationNum") Double validationNum,
         // authorization
         @Parameter(description = "authorization token") @HeaderParam("subjectid") String subjectid,
         @Context UriInfo ui, @Context HttpHeaders headers, @Context SecurityContext securityContext)
@@ -275,7 +275,7 @@ public class Bayes {
 
 
     /**
-     * REST interface to BayesNet algorithm
+     * REST interface to NaiveBayes algorithm
      */
     @POST
     @Path("/NaiveBayes")

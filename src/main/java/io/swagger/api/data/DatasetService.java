@@ -102,7 +102,7 @@ public class DatasetService {
     }
 
     /**
-     * Download an external dataset in JSON format (e.G.: from JAQPOT service)
+     * Download an external dataset in JSON format (e.g.: from JAQPOT service)
      * @param uri URI of the external dataset
      * @param token authentication token
      * @return representation of the dataset in Dataset class
@@ -246,7 +246,7 @@ public class DatasetService {
      * @param standardize null/true Standardizes all numeric attributes in the given dataset to have zero mean and unit variance
      * @param ignore ignore the class attribute for standardize
      * @param attributeRange range (comma separated list) of string attributes to convert to nominal
-     * @param attributeIndicies comma separated list of attribute indices e.G."first,2,8" (discretize)
+     * @param attributeIndicies comma separated list of attribute indices e.g."first,2,8" (discretize)
      * @param bins Number of bins (discretize)
      * @param useEqualFrequency if true equal-frequency binning is used. Default is equal-width binning. (discretize)
      * @param accept requested mime-type
@@ -270,6 +270,7 @@ public class DatasetService {
             out = newData.toString();
         }
         if (ignore == null) ignore = false;
+        // Normalization or Standardization
         if(scale != null && translation != null){
             LOG.log(Level.INFO, "Normalize filter: scale: {0}, translation: {1}, ignore class: {2}", new Object[]{scale,translation, ignore});
             Normalize norm = new Normalize();

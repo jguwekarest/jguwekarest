@@ -132,7 +132,7 @@ public class Cluster {
             "on attribute standard deviation")@FormDataParam("canopyT2") Double canopyT2,
         @Parameter(description = "Display std deviations of numeric attributes and counts of nominal attributes.")@FormDataParam("displayStdDevs") Boolean displayStdDevs,
         @Parameter(description = "The distance function to use for instances comparison (default: EuclideanDistance) " +
-            "(e.G.: 'EuclideanDistance -R first-last', 'ManhattanDistance -R 1,2,3,4').")@FormDataParam("distanceFunction") String distanceFunction,
+            "(e.g.: 'EuclideanDistance -R first-last', 'ManhattanDistance -R 1,2,3,4').")@FormDataParam("distanceFunction") String distanceFunction,
         @Parameter(description = "Replace missing values globally with mean/mode.")@FormDataParam("dontReplaceMissingValues") Boolean dontReplaceMissingValues,
         @Parameter(description = "Uses cut-off values for speeding up distance calculation, but suppresses also the calculation and output of the within " +
             "cluster sum of squared errors/sum of distances.")@FormDataParam("fastDistanceCalc") Boolean fastDistanceCalc,

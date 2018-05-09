@@ -123,8 +123,8 @@ public class Trees  {
     @Path("/J48/adaboost")
     @Consumes({ "multipart/form-data" })
     @Produces({ TEXT_URILIST, MediaType.APPLICATION_JSON})
-    @Operation(summary = "REST interface to the WEKA Adaboost M1 meta classifier.",
-        description = "REST interface to the WEKA Adaboost M1 meta classifier. " + SAVE_MODEL_NOTE,
+    @Operation(summary = "REST interface to the WEKA Adaboost M1 with J48 classifier.",
+        description = "REST interface to the WEKA Adaboost M1 with J48 classifier. " + SAVE_MODEL_NOTE,
         tags = {"algorithm","meta algorithm"} ,
         extensions = {
             @Extension(properties = {@ExtensionProperty(name = "orn-@id",  value = "/algorithm/J48/adaboost")}),
@@ -192,11 +192,10 @@ public class Trees  {
         params.put("subtreeRaising", subtreeRaising);
         params.put("unpruned", unpruned);
         params.put("useLaplace", useLaplace);
-        metaParams.put("batchSize", batchSize);
+	metaParams.put("batchSize", batchSize);
         metaParams.put("numIterations", numIterations);
         metaParams.put("useResampling", useResampling);
         metaParams.put("weightThreshold", weightThreshold);
-
 
         return delegate.algorithmPost(fileInputStream, fileDetail, datasetUri,"J48", params,
             "AdaBoost", metaParams, validation, validationNum, headers, ui, securityContext);
@@ -283,7 +282,16 @@ public class Trees  {
     @Produces({ TEXT_URILIST, MediaType.APPLICATION_JSON})
     @Operation(summary = "REST interface to WEKA M5P classifier.",
         description = "REST interface to WEKA M5P classifier. " + SAVE_MODEL_NOTE,
-        tags = {"algorithm"} )
+        tags = {"algorithm"} ,
+        extensions = {
+            @Extension(properties = {@ExtensionProperty(name = "orn-@id", value = "/algorithm/M5P")}),
+            @Extension(properties = {@ExtensionProperty(name = "orn-@type", value = "x-orn:Algorithm")}),
+            @Extension(name = "orn:expects", properties = {@ExtensionProperty(name = "x-orn-@id", value = "x-orn:Dataset")}),
+            @Extension(name = "orn:returns", properties = {@ExtensionProperty(name = "x-orn-@id", value = "x-orn:Task")}),
+            @Extension(name = "algorithm", properties = {
+                @ExtensionProperty(name = "M5P", value = "http://weka.sourceforge.net/doc.dev/weka/classifiers/trees/M5P.html")
+            })
+        })
     @GroupedApiResponsesOk
     public Response algorithmM5PPost(
         //data params
@@ -324,7 +332,16 @@ public class Trees  {
     @Produces({ TEXT_URILIST, MediaType.APPLICATION_JSON})
     @Operation(summary = "REST interface to WEKA AdaBoost M1 with M5P classifier.",
         description = "REST interface to WEKA AdaBoost M1 with M5P classifier. " + SAVE_MODEL_NOTE,
-        tags = {"algorithm","meta algorithm"} )
+        tags = {"algorithm","meta algorithm"} ,
+        extensions = {
+            @Extension(properties = {@ExtensionProperty(name = "orn-@id", value = "/algorithm/M5P/adaboost")}),
+            @Extension(properties = {@ExtensionProperty(name = "orn-@type", value = "x-orn:Algorithm")}),
+            @Extension(name = "orn:expects", properties = {@ExtensionProperty(name = "x-orn-@id", value = "x-orn:Dataset")}),
+            @Extension(name = "orn:returns", properties = {@ExtensionProperty(name = "x-orn-@id", value = "x-orn:Task")}),
+            @Extension(name = "algorithm", properties = {
+                @ExtensionProperty(name = "M5P", value = "http://weka.sourceforge.net/doc.dev/weka/classifiers/trees/M5P.html")
+            })
+        })
     @GroupedApiResponsesOk
     public Response algorithmM5PAdaBoostPost(
         //data params
@@ -379,7 +396,16 @@ public class Trees  {
     @Produces({ TEXT_URILIST, MediaType.APPLICATION_JSON})
     @Operation(summary = "REST interface to WEKA Bagging with M5P classifier.",
         description = "REST interface to WEKA Bagging with M5P classifier. " + SAVE_MODEL_NOTE,
-        tags = {"algorithm","meta algorithm"} )
+        tags = {"algorithm","meta algorithm"},
+        extensions = {
+            @Extension(properties = {@ExtensionProperty(name = "orn-@id", value = "/algorithm/M5P/bagging")}),
+            @Extension(properties = {@ExtensionProperty(name = "orn-@type", value = "x-orn:Algorithm")}),
+            @Extension(name = "orn:expects", properties = {@ExtensionProperty(name = "x-orn-@id", value = "x-orn:Dataset")}),
+            @Extension(name = "orn:returns", properties = {@ExtensionProperty(name = "x-orn-@id", value = "x-orn:Task")}),
+            @Extension(name = "algorithm", properties = {
+                @ExtensionProperty(name = "M5P", value = "http://weka.sourceforge.net/doc.dev/weka/classifiers/trees/M5P.html")
+            })
+        })
     @GroupedApiResponsesOk
     public Response algorithmM5PBaggingPost(
         //data params
@@ -431,7 +457,16 @@ public class Trees  {
     @Consumes({ "multipart/form-data" })
     @Produces({ TEXT_URILIST, MediaType.APPLICATION_JSON})
     @Operation(summary = "REST interface to the WEKA DecisionStump classifier.",
-        description = "REST interface to the DecisionStump classifier. " + SAVE_MODEL_NOTE, tags = {"algorithm"} )
+        description = "REST interface to the DecisionStump classifier. " + SAVE_MODEL_NOTE, tags = {"algorithm"},
+        extensions = {
+            @Extension(properties = {@ExtensionProperty(name = "orn-@id", value = "/algorithm/DecisionStump")}),
+            @Extension(properties = {@ExtensionProperty(name = "orn-@type", value = "x-orn:Algorithm")}),
+            @Extension(name = "orn:expects", properties = {@ExtensionProperty(name = "x-orn-@id", value = "x-orn:Dataset")}),
+            @Extension(name = "orn:returns", properties = {@ExtensionProperty(name = "x-orn-@id", value = "x-orn:Task")}),
+            @Extension(name = "algorithm", properties = {
+                @ExtensionProperty(name = "DecisionStump", value = "https://en.wikipedia.org/wiki/Decision_stump")
+            })
+        })
     @GroupedApiResponsesOk
     public Response algorithmDecisionStumpPost(
         //data params
@@ -460,7 +495,17 @@ public class Trees  {
     @Consumes({ "multipart/form-data" })
     @Produces({ TEXT_URILIST, MediaType.APPLICATION_JSON})
     @Operation(summary = "REST interface to the WEKA AdaBoost M1 with DecisionStump classifier.",
-        description = "REST interface to the WEKA AdaBoost M1 with DecisionStump classifier. " + SAVE_MODEL_NOTE, tags = {"algorithm","meta algorithm"} )
+        description = "REST interface to the WEKA AdaBoost M1 with DecisionStump classifier. " + SAVE_MODEL_NOTE, 
+	tags = {"algorithm","meta algorithm"} ,
+        extensions = {
+            @Extension(properties = {@ExtensionProperty(name = "orn-@id", value = "/algorithm/DecisionStump/adaboost")}),
+            @Extension(properties = {@ExtensionProperty(name = "orn-@type", value = "x-orn:Algorithm")}),
+            @Extension(name = "orn:expects", properties = {@ExtensionProperty(name = "x-orn-@id", value = "x-orn:Dataset")}),
+            @Extension(name = "orn:returns", properties = {@ExtensionProperty(name = "x-orn-@id", value = "x-orn:Task")}),
+            @Extension(name = "algorithm", properties = {
+                @ExtensionProperty(name = "DecisionStump", value = "https://en.wikipedia.org/wiki/Decision_stump")
+            })
+        })
     @GroupedApiResponsesOk
     public Response algorithmDecisionStumpAdaBoostPost(
         //data params
@@ -503,7 +548,17 @@ public class Trees  {
     @Consumes({ "multipart/form-data" })
     @Produces({ TEXT_URILIST, MediaType.APPLICATION_JSON})
     @Operation(summary = "REST interface to the WEKA Bagging with DecisionStump classifier.",
-        description = "REST interface to the WEKA Bagging with DecisionStump classifier. " + SAVE_MODEL_NOTE, tags = {"algorithm","meta algorithm"} )
+        description = "REST interface to the WEKA Bagging with DecisionStump classifier. " + SAVE_MODEL_NOTE, 
+	tags = {"algorithm","meta algorithm"},
+        extensions = {
+            @Extension(properties = {@ExtensionProperty(name = "orn-@id", value = "/algorithm/DecisionStump/bagging")}),
+            @Extension(properties = {@ExtensionProperty(name = "orn-@type", value = "x-orn:Algorithm")}),
+            @Extension(name = "orn:expects", properties = {@ExtensionProperty(name = "x-orn-@id", value = "x-orn:Dataset")}),
+            @Extension(name = "orn:returns", properties = {@ExtensionProperty(name = "x-orn-@id", value = "x-orn:Task")}),
+            @Extension(name = "algorithm", properties = {
+                @ExtensionProperty(name = "DecisionStump", value = "https://en.wikipedia.org/wiki/Decision_stump")
+            })
+        })
     @GroupedApiResponsesOk
     public Response algorithmDecisionStumpBaggingPost(
         //data params

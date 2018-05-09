@@ -58,7 +58,7 @@ public class Lazy {
         description = "REST interface to the WEKA K-nearest neighbours classifier. " + SAVE_MODEL_NOTE,
         tags={ "algorithm", },
         extensions = {
-            @Extension(properties = {@ExtensionProperty(name = "orn-@id",  value = "/algorithm/IBkclassification")}),
+            @Extension(properties = {@ExtensionProperty(name = "orn-@id",  value = "/algorithm/IBk")}),
             @Extension(properties = {@ExtensionProperty(name = "orn-@type",  value = "x-orn:Algorithm")}),
             @Extension(name = "orn:expects", properties = {@ExtensionProperty(name = "x-orn-@id",  value = "x-orn:Dataset")}),
             @Extension(name = "orn:returns", properties = {@ExtensionProperty(name = "x-orn-@id",  value = "x-orn:Task")}),

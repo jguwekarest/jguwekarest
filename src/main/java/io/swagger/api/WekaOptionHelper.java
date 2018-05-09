@@ -352,7 +352,7 @@ public class WekaOptionHelper {
      * WekaUtils.getBooleanParam(1, "H", 1) => " -H "
      * WekaUtils.getBooleanParam(1, "X", 0) => ""
      * }</pre>
-     * @param value          value of the boolean option, e.G.: 1, true, -1
+     * @param value          value of the boolean option, e.g.: 1, true, -1
      * @param option         option to set
      * @param trueReference  to be compared with value
      * @return String the resulting string
