@@ -26,7 +26,6 @@ import weka.classifiers.trees.M5P;
 import weka.classifiers.trees.RandomForest;
 import weka.core.Instances;
 import weka.core.Option;
-import weka.core.OptionHandler;
 
 import javax.servlet.ServletContext;
 import javax.ws.rs.Produces;
@@ -39,6 +38,7 @@ import java.nio.file.Paths;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 import static io.swagger.api.Constants.TEXT_URILIST;
@@ -144,14 +144,14 @@ public class AlgorithmImpl extends AlgorithmService {
     public Response algorithmGenericGet(String classifierName, HttpHeaders headers, UriInfo ui, SecurityContext securityContext) throws NotFoundException {
         AbstractClassifier classifier;
         classifier = getClassifier(classifierName);
-        String output = "";
-        Enumeration<Option> enu = ((OptionHandler) classifier).listOptions();
+        StringBuilder output = new StringBuilder();
+        Enumeration<Option> enu = classifier.listOptions();
         while (enu.hasMoreElements()) {
             Option option = enu.nextElement();
-            output += (option.synopsis() + "\n" + option.description() + "\n");
+            output.append(option.synopsis()).append("\n").append(option.description()).append("\n");
         }
-        output += "\n";
-        return Response.ok(output).build();
+        output.append("\n");
+        return Response.ok(output.toString()).build();
     }
 
 
@@ -213,7 +213,7 @@ public class AlgorithmImpl extends AlgorithmService {
      * @param params             HashMap hashed params for classifier
      * @param metaClassifierName Sting optional meta classifier name
      * @param metaParams         HashMap optional hashed params for meta classifier
-     * @param paramString
+     * @param paramString        option-string as used in WEKA for generic endpoint
      * @param headers            HTTP REST call headers
      * @param ui                 UriInfo
      * @param securityContext    security context
@@ -303,7 +303,7 @@ public class AlgorithmImpl extends AlgorithmService {
                         id = ModelService.saveModel(metaClassifier, ArrayUtils.addAll(metaClassifier.getOptions(), classifier.getOptions()), params, validation, subjectid);
                     } else {
                         classifier.buildClassifier(trainingset);
-                        if (validationMethod != "HoldOut") {
+                        if (!Objects.equals(validationMethod, "HoldOut")) {
                             setState(Task.Step.VALIDATION, 70f);
                             validation = Validation.crossValidation(trainingset, classifier);
                         } else {
@@ -393,6 +393,7 @@ public class AlgorithmImpl extends AlgorithmService {
                     break;
             }
         } catch (Exception e) {
+            e.printStackTrace();
             throw e;
             //setErrorReport(e,500, "algorithmPost: " +  classifierName);
             //e.printStackTrace();

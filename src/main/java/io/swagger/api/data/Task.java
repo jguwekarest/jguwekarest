@@ -5,6 +5,7 @@ import com.google.common.annotations.VisibleForTesting;
 import io.swagger.annotations.*;
 import io.swagger.api.ApiException;
 import io.swagger.api.ErrorReport;
+import io.swagger.api.annotations.GroupedApiResponsesOk;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
@@ -34,12 +35,7 @@ public class Task {
             @Extension(name = "orn:expects", properties = {@ExtensionProperty(name = "x-orn-@id", value = "")}),
             @Extension(name = "orn:returns", properties = {@ExtensionProperty(name = "x-orn-@id", value = "x-orn:URIList")})
         })
-    @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "OK"),
-        @ApiResponse(code = 400, message = "Bad Request"),
-        @ApiResponse(code = 401, message = "Unauthorized"),
-        @ApiResponse(code = 403, message = "Forbidden"),
-        @ApiResponse(code = 404, message = "Resource Not Found") })
+    @GroupedApiResponsesOk
     public Response list(
         @ApiParam(value = "Authorization token" )@HeaderParam("subjectid") String subjectid,
         @Context UriInfo ui, @Context HttpHeaders headers) throws ApiException {
@@ -67,13 +63,7 @@ public class Task {
             @Extension(name = "orn:expects", properties = {@ExtensionProperty(name = "x-orn-@id", value = "x-orn:ID")}),
             @Extension(name = "orn:returns", properties = {@ExtensionProperty(name = "x-orn-@id", value = "x-orn:Task")})
         })
-    @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "OK"),
-        @ApiResponse(code = 202, message = "Created"),
-        @ApiResponse(code = 400, message = "Bad Request"),
-        @ApiResponse(code = 401, message = "Unauthorized"),
-        @ApiResponse(code = 403, message = "Forbidden"),
-        @ApiResponse(code = 404, message = "Resource Not Found") })
+    @GroupedApiResponsesOk
     public Response get(
         @ApiParam(value = "Task ID" )@PathParam("id") String id,
         @ApiParam(value = "Authorization token" )@HeaderParam("subjectid") String subjectid, @Context UriInfo ui)

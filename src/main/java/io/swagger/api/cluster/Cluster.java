@@ -1,6 +1,7 @@
 package io.swagger.api.cluster;
 
 import io.swagger.annotations.*;
+import io.swagger.api.annotations.GroupedApiResponsesOk;
 import io.swagger.api.factories.ClusterFactory;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
@@ -58,17 +59,11 @@ public class Cluster {
                 @ExtensionProperty(name = "EM", value = "https://en.wikipedia.org/wiki/Expectation%E2%80%93maximization_algorithm")
             })
         })
-    @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "OK"),
-        @ApiResponse(code = 400, message = "Bad Request"),
-        @ApiResponse(code = 401, message = "Unauthorized"),
-        @ApiResponse(code = 403, message = "Forbidden"),
-        @ApiResponse(code = 404, message = "Resource Not Found")
-    })
+    @GroupedApiResponsesOk
     public Response clusterEMPost(
         @FormDataParam("file") InputStream fileInputStream,
         @FormDataParam("file") FormDataContentDisposition fileDetail,
-        @ApiParam(value = "Dataset URI or local dataset ID (to the arff representation of a dataset).")@FormDataParam("datasetURI")  String datasetUri,
+        @ApiParam(value = "Dataset URI or local dataset ID (to the arff representation of a dataset).")@FormDataParam("datasetUri")  String datasetUri,
         @ApiParam(value = "Number of folds to use when cross-validating to find the best number of clusters (default = 10)", defaultValue="10")@FormDataParam("numFolds") Integer numFolds,
         @ApiParam(value = "Number of runs of k-means to perform (default = 10)", defaultValue="10") @FormDataParam("numKMeansRuns") Integer numKMeansRuns,
         @ApiParam(value = "Maximum number of clusters to consider during cross-validation to select the best number of clusters (default = -1).", defaultValue = "-1")@FormDataParam("maximumNumberOfClusters") Integer maximumNumberOfClusters,
@@ -108,17 +103,11 @@ public class Cluster {
                 @ExtensionProperty(name = "SimpleKMeans", value = "http://weka.sourceforge.net/doc.dev/weka/clusterers/SimpleKMeans.html")
             })
         })
-    @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "OK"),
-        @ApiResponse(code = 400, message = "Bad Request"),
-        @ApiResponse(code = 401, message = "Unauthorized"),
-        @ApiResponse(code = 403, message = "Forbidden"),
-        @ApiResponse(code = 404, message = "Resource Not Found")
-    })
+    @GroupedApiResponsesOk
     public Response clusterSimpleKMeansPost(
         @FormDataParam("file") InputStream fileInputStream,
         @FormDataParam("file") FormDataContentDisposition fileDetail,
-        @ApiParam(value = "Dataset URI or local dataset ID (to the arff representation of a dataset).")@FormDataParam("datasetURI")  String datasetUri,
+        @ApiParam(value = "Dataset URI or local dataset ID (to the arff representation of a dataset).")@FormDataParam("datasetUri")  String datasetUri,
         @ApiParam(value = "If using canopy clustering for initialization and/or speedup this is the maximum number of candidate canopies to retain in main memory during training of the canopy clusterer. T2 distance and data characteristics determine how many candidate canopies are formed before periodic and final pruning are performed. There may not be enough memory available if T2 is set too low.") @FormDataParam("canopyMaxNumCanopiesToHoldInMemory") Integer canopyMaxNumCanopiesToHoldInMemory,
         @ApiParam(value = "If using canopy clustering for initialization and/or speedup this is the minimum T2-based density below which a canopy will be pruned during periodic pruning")@FormDataParam("canopyMinimumCanopyDensity") Double canopyMinimumCanopyDensity,
         @ApiParam(value = "If using canopy clustering for initialization and/or speedup this is how often to prune low density canopies during training")@FormDataParam("canopyPeriodicPruningRate") Double canopyPeriodicPruningRate,
@@ -163,5 +152,54 @@ public class Cluster {
     }
 
 
+    @POST
+    @Path("/Hierarchical")
+    @Consumes({ "multipart/form-data" })
+    @Produces({ "text/x-arff" })
+
+    @ApiOperation(value = "REST interface to the WEKA Hierarchical clusterer.",
+        notes = "REST interface to the WEKA Hierarchical clusterer.",
+        tags={ "cluster" },
+        extensions = {
+            @Extension(properties = {@ExtensionProperty(name = "orn-@id",  value = "/cluster/Hierarchical")}),
+            @Extension(properties = {@ExtensionProperty(name = "orn-@type",  value = "x-orn:Algorithm")}),
+            @Extension(name = "orn:expects", properties = { @ExtensionProperty(name = "x-orn-@id",  value = "x-orn:Dataset")}),
+            @Extension(name = "orn:returns", properties = { @ExtensionProperty(name = "x-orn-@id",  value = "x-orn:Cluster")}),
+            @Extension(name = "algorithm", properties = {
+                @ExtensionProperty(name = "SimpleKMeans", value = "http://weka.sourceforge.net/doc.dev/weka/clusterers/HierarchicalClusterer.html")
+            })
+        })
+    @GroupedApiResponsesOk
+    public Response clusterHierarchicalPost(
+        @FormDataParam("file") InputStream fileInputStream,
+        @FormDataParam("file") FormDataContentDisposition fileDetail,
+        @ApiParam(value = "Dataset URI or local dataset ID (to the arff representation of a dataset).")@FormDataParam("datasetUri") String datasetUri,
+        @ApiParam(value = "Flag to indicate whether the cluster should be print in Newick format. This can be useful for display in other programs. " +
+            "However, for large datasets a lot of text may be produced, which may not be a nuisance when the Newick format is not required")@FormDataParam("printNewick") Boolean printNewick,
+        @ApiParam(value = "Sets the number of clusters. If a single hierarchy is desired, set this to 1.")@FormDataParam("numClusters") Integer numClusters,
+        @ApiParam(value = "Sets the method used to measure the distance between two clusters.",
+            allowableValues = "SINGLE,COMPLETE,ADJCOMPLETE,AVERAGE,MEAN,CENTROID,WARD,NEIGHBOR_JOINING", defaultValue = "SINGLE")
+            @FormDataParam("linkType") String linkType,
+        @ApiParam(value = "If set to false, the distance between clusters is interpreted as the height of the node linking the clusters. " +
+            "This is appropriate for example for single link clustering. However, for neighbor joining, the distance is better interpreted as branch length. " +
+            "Set this flag to get the latter interpretation.")@FormDataParam("distanceIsBranchLength") Boolean distanceIsBranchLength,
+        @ApiParam(value = "Sets the distance function, which measures the distance between two individual. " +
+            "Instances (or possibly the distance between an instance and the centroid of a clusterdepending on the Link type). " +
+            "Examples: 'EuclideanDistance -R first-last', 'weka.core.ChebyshevDistance -R first-last', 'weka.core.ManhattanDistance -R first-last', 'weka.core.MinkowskiDistance -P 2.0 -R first-last' or " +
+            "'weka.core.FilteredDistance -R first-last -F \"weka.filters.unsupervised.attribute.RandomProjection -N 10 -R 42 -D Sparse1\" -D \"weka.core.EuclideanDistance -R first-last\"'."
+           )@FormDataParam("distanceFunction") String distanceFunction,
+        @ApiParam(value = "authorization token") @HeaderParam("subjectid") String subjectid,
+        @Context UriInfo ui, @Context HttpHeaders headers, @Context SecurityContext securityContext)
+        throws Exception {
+            HashMap<String, Object> params = new HashMap<>();
+            params.put("datasetUri", datasetUri);
+            params.put("printNewick", printNewick);
+            params.put("numClusters", numClusters);
+            params.put("linkType", linkType);
+            params.put("distanceIsBranchLength", distanceIsBranchLength);
+            params.put("distanceFunction", distanceFunction);
+
+            return delegate.clustererPost(fileInputStream, fileDetail, datasetUri, "Hierarchical", params, headers, ui, securityContext);
+    }
 
 }

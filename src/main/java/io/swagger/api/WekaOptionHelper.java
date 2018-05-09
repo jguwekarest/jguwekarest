@@ -324,7 +324,7 @@ public class WekaOptionHelper {
      * <ul>
      *     <li>sets a value to a given option</li>
      *     <li>sets a defaultValue to a given option when value is null</li>
-     *     <li>sets an option when both values are null</li>
+     *     <li>sets an option when both value and defaultValue are null</li>
      * </ul>
      * <pre>{@code
      * WekaUtils.getParamString(100, "R", 2) => " -R 100 "
@@ -344,6 +344,25 @@ public class WekaOptionHelper {
          }
      }
 
+
+    /**
+     * Option-string helper method for WEKA boolean options
+     * <pre>{@code
+     * WekaUtils.getBooleanParam("true", "R", true) => " -R "
+     * WekaUtils.getBooleanParam(1, "H", 1) => " -H "
+     * WekaUtils.getBooleanParam(1, "X", 0) => ""
+     * }</pre>
+     * @param value          value of the boolean option, e.g.: 1, true, -1
+     * @param option         option to set
+     * @param trueReference  to be compared with value
+     * @return String the resulting string
+     */
+    public static String getBooleanParam(Object value, String option, Object trueReference ){
+        if (value != null || trueReference != null){
+            if (value.toString().equals(trueReference.toString())) return " -" + option + " ";
+        }
+        return "";
+    }
 
     /**
      * Split parameter string with weka.core.Utils.splitOptions method
@@ -367,6 +386,12 @@ public class WekaOptionHelper {
             case "EM":
                 options = getEMOptions(params);
                 break;
+            case "HierarchicalClusterer":
+                options = getHierarchicalClustererOptions(params);
+                break;
+            case "SimpleKMeans":
+                options = getSimpleKMeansOptions(params);
+                break;
         }
 
         return options;
@@ -387,7 +412,37 @@ public class WekaOptionHelper {
         parameters += WekaOptionHelper.getParamString(params.get("maxIterations"),"I", 100);
 
         return splitOptions(parameters);
+    }
 
+    public static String[] getHierarchicalClustererOptions(HashMap params){
+        String parameters = "";
+        parameters += getBooleanParam(params.get("printNewick"), "P","true");
+        parameters += getParamString(params.get("numClusters"),"N", 2);
+        parameters += getParamString(params.get("linkType"),"L", "SINGLE");
+        parameters += getBooleanParam(params.get("distanceIsBranchLength"), "B","true");
+        parameters += getParamString("\"" + params.get("distanceFunction") + "\"","A", "\"weka.core.EuclideanDistance -R first-last\"");
+        return splitOptions(parameters);
+    }
+
+    public static String[] getSimpleKMeansOptions(HashMap params){
+        String parameters = "";
+        parameters += getParamString(params.get("canopyMaxNumCanopiesToHoldInMemory"),"max-candidates", 100);
+        parameters += getParamString(params.get("canopyMinimumCanopyDensity"),"min-density", 2.0);
+        parameters += getParamString(params.get("canopyPeriodicPruningRate"),"periodic-pruning", 10000);
+        parameters += getParamString(params.get("canopyT1"),"t1", -1.25);
+        parameters += getParamString(params.get("canopyT2"),"t2", -1.0);
+        parameters += getBooleanParam(params.get("displayStdDevs"), "V","true");
+        parameters += getParamString("\"" + params.get("distanceFunction") + "\"","A", "\"weka.core.EuclideanDistance -R first-last\"");
+        parameters += getBooleanParam(params.get("dontReplaceMissingValues"), "M","true");
+        parameters += getBooleanParam(params.get("fastDistanceCalc"), "fast","true");
+        parameters += getParamString(params.get("initializationMethod"),"init", 0);
+        parameters += getParamString(params.get("maxIterations"),"I", 500);
+        parameters += getParamString(params.get("numClusters"),"N", 2);
+        parameters += getParamString(params.get("numExecutionSlots"),"num-slots", 1);
+        parameters += getBooleanParam(params.get("preserveInstancesOrder"), "O","true");
+        parameters += getBooleanParam(params.get("reduceNumberOfDistanceCalcsViaCanopies"), "C","true");
+        parameters += getParamString(params.get("seed"), "S", 10);
+        return splitOptions(parameters);
     }
 
 }

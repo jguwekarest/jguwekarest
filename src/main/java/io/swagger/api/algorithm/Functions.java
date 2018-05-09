@@ -4,6 +4,7 @@ package io.swagger.api.algorithm;
 import io.swagger.annotations.*;
 import io.swagger.api.AlgorithmService;
 import io.swagger.api.NotFoundException;
+import io.swagger.api.annotations.GroupedApiResponsesOk;
 import io.swagger.api.factories.AlgorithmFactory;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
@@ -58,21 +59,16 @@ public class Functions {
             @Extension(properties = {@ExtensionProperty(name = "orn-@id",  value = "/algorithm/linearRegression")}),
             @Extension(properties = {@ExtensionProperty(name = "orn-@type",  value = "x-orn:Algorithm")}),
             @Extension(name = "orn:expects", properties = { @ExtensionProperty(name = "x-orn-@id",  value = "x-orn:Dataset")}),
-            @Extension(name = "orn:returns", properties = { @ExtensionProperty(name = "x-orn-@id",  value = "x-orn:Model")}),
+            @Extension(name = "orn:returns", properties = { @ExtensionProperty(name = "x-orn-@id",  value = "x-orn:Task")}),
             @Extension(name = "algorithm", properties = {
                 @ExtensionProperty(name = "Linear Regression", value = "https://en.wikipedia.org/wiki/Linear_regression")
             })
         })
-    @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "OK"),
-        @ApiResponse(code = 400, message = "Bad Request"/*, response = ApiException.class*/),
-        @ApiResponse(code = 401, message = "Unauthorized"),
-        @ApiResponse(code = 403, message = "Forbidden"),
-        @ApiResponse(code = 404, message = "Resource Not Found")})
+    @GroupedApiResponsesOk
     public Response algorithmLRPost(
         @FormDataParam("file") InputStream fileInputStream,
         @FormDataParam("file") FormDataContentDisposition fileDetail,
-        @ApiParam(value = "Dataset URI or local dataset ID (to the arff representation of a dataset).")@FormDataParam("datasetURI")  String datasetUri,
+        @ApiParam(value = "Dataset URI or local dataset ID (to the arff representation of a dataset).")@FormDataParam("datasetUri")  String datasetUri,
         @ApiParam(value = "Attribute selection method to be used (Default M5 method).Available methods are: no attribute selection(Value:1), attribute selection using M5's method (Value:0) and a greedy selection using the Akaike information metric(Value:2). One of 0,1,2 (Default: 0).", defaultValue = "0", allowableValues = "0, 1, 2" ) @FormDataParam("attributeSelectionMethod") Integer attributeSelectionMethod,
         @ApiParam(value = "Whether to eliminate colinear attributes. Must be 0 or 1 (Default: 1).", defaultValue = "1", allowableValues = "0, 1") @FormDataParam("eliminateColinearAttributes") Integer eliminateColinearAttributes,
         @ApiParam(value = "The ridge parameter (Default: 1.0E-8).", defaultValue = "1.0E-8") @FormDataParam("ridge") BigDecimal ridge,
@@ -105,21 +101,16 @@ public class Functions {
             @Extension(properties = {@ExtensionProperty(name = "orn-@id",  value = "/algorithm/libsvm")}),
             @Extension(properties = {@ExtensionProperty(name = "orn-@type",  value = "x-orn:Algorithm")}),
             @Extension(name = "orn:expects", properties = { @ExtensionProperty(name = "x-orn-@id",  value = "x-orn:Dataset")}),
-            @Extension(name = "orn:returns", properties = { @ExtensionProperty(name = "x-orn-@id",  value = "x-orn:Model")}),
+            @Extension(name = "orn:returns", properties = { @ExtensionProperty(name = "x-orn-@id",  value = "x-orn:Task")}),
             @Extension(name = "algorithm", properties = {
                 @ExtensionProperty(name = "support vector machine", value = "https://en.wikipedia.org/wiki/Support_vector_machine")
             })
         })
-    @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "OK"),
-        @ApiResponse(code = 400, message = "Bad Request"),
-        @ApiResponse(code = 401, message = "Unauthorized"),
-        @ApiResponse(code = 403, message = "Forbidden"),
-        @ApiResponse(code = 404, message = "Resource Not Found")})
+    @GroupedApiResponsesOk
     public Response algorithmLibSVMPost(
         @FormDataParam("file") InputStream fileInputStream,
         @FormDataParam("file") FormDataContentDisposition fileDetail,
-        @ApiParam(value = "Dataset URI or local dataset ID (to the arff representation of a dataset).")@FormDataParam("datasetURI")  String datasetUri,
+        @ApiParam(value = "Dataset URI or local dataset ID (to the arff representation of a dataset).")@FormDataParam("datasetUri")  String datasetUri,
         @ApiParam(value = "SVMType -- The type of SVM to use. \n 0: C-SVC (classification) \n 1: nu-SVC (classification) \n 2: one-class SVM (classification) \n 3: epsilon-SVR (regression)\n 4: nu-SVR (regression)\n (Default: 0).", defaultValue = "0", allowableValues = "0,1,2,3,4" ) @FormDataParam("svmType") Integer svmType,
         @ApiParam(value = "coef0 -- The coefficient to use. (Default: 0).", defaultValue = "0") @FormDataParam("coef0") Float coef0,
         @ApiParam(value = "cost -- The cost parameter C for C-SVC, epsilon-SVR and nu-SVR. (Default: 1.0).", defaultValue = "1.0") @FormDataParam("cost") Float cost,
@@ -171,21 +162,16 @@ public class Functions {
             @Extension(properties = {@ExtensionProperty(name = "orn-@id",  value = "/algorithm/logistic")}),
             @Extension(properties = {@ExtensionProperty(name = "orn-@type",  value = "x-orn:Algorithm")}),
             @Extension(name = "orn:expects", properties = { @ExtensionProperty(name = "x-orn-@id",  value = "x-orn:Dataset")}),
-            @Extension(name = "orn:returns", properties = { @ExtensionProperty(name = "x-orn-@id",  value = "x-orn:Model")}),
+            @Extension(name = "orn:returns", properties = { @ExtensionProperty(name = "x-orn-@id",  value = "x-orn:Task")}),
             @Extension(name = "algorithm", properties = {
                 @ExtensionProperty(name = "support vector machine", value = "https://en.wikipedia.org/wiki/Multinomial_logistic_regression")
             })
         })
-    @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "OK"),
-        @ApiResponse(code = 400, message = "Bad Request"),
-        @ApiResponse(code = 401, message = "Unauthorized"),
-        @ApiResponse(code = 403, message = "Forbidden"),
-        @ApiResponse(code = 404, message = "Resource Not Found")})
+    @GroupedApiResponsesOk
     public Response algorithmLogisticPost(
         @FormDataParam("file") InputStream fileInputStream,
         @FormDataParam("file") FormDataContentDisposition fileDetail,
-        @ApiParam(value = "Dataset URI or local dataset ID (to the arff representation of a dataset).")@FormDataParam("datasetURI")  String datasetUri,
+        @ApiParam(value = "Dataset URI or local dataset ID (to the arff representation of a dataset).")@FormDataParam("datasetUri")  String datasetUri,
         // logistic params
         @ApiParam(value = "Set the Ridge value in the log-likelihood.") @FormDataParam("ridge") BigDecimal ridge,
         @ApiParam(value = "Use conjugate gradient descent rather than BFGS updates; faster for problems with many parameters.") @FormDataParam("useConjugateGradientDescent") Boolean useConjugateGradientDescent,

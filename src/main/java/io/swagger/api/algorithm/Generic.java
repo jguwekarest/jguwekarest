@@ -56,15 +56,16 @@ public class Generic {
         ,extensions = {
         @Extension(properties = {@ExtensionProperty(name = "orn-@id",  value = "/algorithm/generic")}),
         @Extension(properties = {@ExtensionProperty(name = "orn-@type",  value = "x-orn:Algorithm")}),
+        @Extension(properties = {@ExtensionProperty(name = "orn-method",  value = "Post")}),
         @Extension(name = "orn:expects", properties = { @ExtensionProperty(name = "x-orn-@id",  value = "x-orn:Dataset")}),
-        @Extension(name = "orn:returns", properties = { @ExtensionProperty(name = "x-orn-@id",  value = "x-orn:Model")}),}
+        @Extension(name = "orn:returns", properties = { @ExtensionProperty(name = "x-orn-@id",  value = "x-orn:Task")}),}
     )
     @GroupedApiResponsesOk
 
     public Response algorithmGenericPost(
         @FormDataParam("file") InputStream fileInputStream,
         @FormDataParam("file") FormDataContentDisposition fileDetail,
-        @ApiParam(value = "Dataset URI or local dataset ID (to the arff representation of a dataset).")@FormDataParam("datasetURI")  String datasetUri,
+        @ApiParam(value = "Dataset URI or local dataset ID (to the arff representation of a dataset).")@FormDataParam("datasetUri")  String datasetUri,
         @ApiParam(value = "Classifier to use.", allowableValues = "BayesNet,DecisionStump,GaussianProcesses,J48,IBk,LibSVM,LinearRegression,Logistic,M5P,M5Rules,MultilayerPerceptron,NaiveBayes,RandomForest,SMO,SMOreg,ZeroR,AdaBoost,Bagging") @FormDataParam("classifierString") String classifierString,
         @ApiParam(value = "Parameter String. As shown as in WEKA Explorer classifierer line", example = "for SMO: -C 1.0 -L 0.001 -P 1.0E-12 -N 0 -V -1 -W 1 -K \"weka.classifiers.functions.supportVector.PolyKernel -E 1.0 -C 250007\" -calibrator \"weka.classifiers.functions.Logistic -R 1.0E-8 -M -1 -num-decimal-places 4\"")@FormDataParam("paramString") String paramString,
         // validation
@@ -90,17 +91,17 @@ public class Generic {
         @Extension(properties = {@ExtensionProperty(name = "orn-@id",  value = "/algorithm/generic")}),
         @Extension(properties = {@ExtensionProperty(name = "orn-@type",  value = "x-orn:Algorithm")}),
         @Extension(name = "orn:expects", properties = { @ExtensionProperty(name = "x-orn-@id",  value = "x-orn:Dataset")}),
-        @Extension(name = "orn:returns", properties = { @ExtensionProperty(name = "x-orn-@id",  value = "x-orn:Model")}),}
+        @Extension(name = "orn:returns", properties = { @ExtensionProperty(name = "x-orn-@id",  value = "x-orn:Task")}),}
     )
     @GroupedApiResponsesOk
 
     public Response algorithmGenericGet(
-        @ApiParam(value = "List Options for classifier.", allowableValues = "BayesNet,DecisionStump,GaussianProcesses,J48,IBk,LibSVM,LinearRegression,Logistic,M5P,M5Rules,MultilayerPerceptron,NaiveBayes,RandomForest,SMO,SMOreg,ZeroR,AdaBoost,Bagging") @HeaderParam("classifierName") String classifierString,
+        @ApiParam(value = "List Options for classifier.", allowableValues = "BayesNet,DecisionStump,GaussianProcesses,J48,IBk,LibSVM,LinearRegression,Logistic,M5P,M5Rules,MultilayerPerceptron,NaiveBayes,RandomForest,SMO,SMOreg,ZeroR,AdaBoost,Bagging") @HeaderParam("classifierName") String classifierName,
         @ApiParam(value = "authorization token") @HeaderParam("subjectid") String subjectid,
         @Context UriInfo ui, @Context HttpHeaders headers, @Context SecurityContext securityContext)
         throws io.swagger.api.NotFoundException, IOException {
 
-        return delegate.algorithmGenericGet(classifierString, headers, ui, securityContext);
+        return delegate.algorithmGenericGet(classifierName, headers, ui, securityContext);
     }
 
 }

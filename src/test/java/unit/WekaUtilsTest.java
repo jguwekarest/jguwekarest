@@ -163,5 +163,41 @@ public class WekaUtilsTest {
 
 
     }
+    @Test(description = "Test WekaOptionHelper for WEKA Clusterer params")
+    public void getClustererOptions() throws Exception {
+
+        HashMap<String, Object> params = new HashMap<>();
+        // SimpleKMeans
+        params.put("canopyMaxNumCanopiesToHoldInMemory", "101");
+        params.put("canopyMinimumCanopyDensity", "2.1");
+        params.put("canopyPeriodicPruningRate", "10001");
+        params.put("canopyT1", "-1.24");
+        params.put("canopyT2", "-1.01");
+        params.put("displayStdDevs", "true");
+        params.put("distanceFunction", "weka.core.ManhattanDistance -R 1,2,3,4");
+        params.put("dontReplaceMissingValues", "true");
+        params.put("fastDistanceCalc", true);
+        params.put("initializationMethod", "1");
+        params.put("maxIterations", "500");
+        params.put("numClusters", "3");
+        params.put("numExecutionSlots", "1");
+        params.put("preserveInstancesOrder", "true");
+        params.put("reduceNumberOfDistanceCalcsViaCanopies", "true");
+        params.put("seed", "11");
+
+        String[] options = WekaOptionHelper.getSimpleKMeansOptions(params);
+        Assert.assertEquals("-max-candidates 101 -min-density 2.1 -periodic-pruning 10001 -t1 -1.24 -t2 -1.01 -V -A weka.core.ManhattanDistance -R 1,2,3,4 -M -fast -init 1 -I 500 -N 3 -num-slots 1 -O -C -S 11", StringUtil.join(options," "), "get SimpleKMeans options");
+
+        // Hierarchical
+        params = new HashMap<>();
+        params.put("printNewick", "true");
+        params.put("numClusters", 3);
+        params.put("linkType", "MEAN");
+        params.put("distanceIsBranchLength", "true");
+        params.put("distanceFunction",  "weka.core.ManhattanDistance -R first-last");
+        options = WekaOptionHelper.getHierarchicalClustererOptions(params);
+        Assert.assertEquals("-P -N 3 -L MEAN -B -A weka.core.ManhattanDistance -R first-last",StringUtil.join(options," "), "get Hierachical Clusterer options");
+
+    }
 
 }

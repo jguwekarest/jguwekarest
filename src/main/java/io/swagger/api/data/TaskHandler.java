@@ -86,7 +86,7 @@ public abstract class TaskHandler implements Runnable {
 
     /**
      *
-     * @param creator name of the creator (e.G.: service or user)
+     * @param creator name of the creator (e.g.: service or user)
      * @param title task title
      * @param description description
      * @param baseuri base URI of the webservice

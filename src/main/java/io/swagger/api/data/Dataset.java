@@ -3,6 +3,7 @@ package io.swagger.api.data;
 import com.google.gson.internal.LinkedTreeMap;
 import io.swagger.annotations.*;
 import io.swagger.api.ApiException;
+import io.swagger.api.annotations.GroupedApiResponsesOk;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 
 import javax.ws.rs.*;
@@ -10,9 +11,7 @@ import javax.ws.rs.core.*;
 import java.util.List;
 import java.util.TreeMap;
 
-import static io.swagger.api.Constants.SAVE_DATASSET_NOTE;
-import static io.swagger.api.Constants.TEXT_ARFF;
-import static io.swagger.api.Constants.TEXT_URILIST;
+import static io.swagger.api.Constants.*;
 
 @Path("/")
 @Api(description = "Dataset API")
@@ -33,12 +32,7 @@ public class Dataset {
             @Extension(name = "orn:expects", properties = {@ExtensionProperty(name = "x-orn-@id", value = "x-orn:URI")}),
             @Extension(name = "orn:returns", properties = {@ExtensionProperty(name = "x-orn-@id", value = "x-orn:Dataset")})
         })
-    @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "OK"),
-        @ApiResponse(code = 400, message = "Bad Request"),
-        @ApiResponse(code = 401, message = "Unauthorized"),
-        @ApiResponse(code = 403, message = "Forbidden"),
-        @ApiResponse(code = 404, message = "Resource Not Found") })
+    @GroupedApiResponsesOk
     public Response create(
         @ApiParam(value = "URI of the dataset to be used.", required=true)@FormDataParam("dataset_uri") String dataset_uri,
         @ApiParam(value = "URI of the feature to define as weka class")@FormDataParam("class_uri") String class_uri,
@@ -46,7 +40,7 @@ public class Dataset {
         @Context HttpHeaders headers, @Context UriInfo ui) throws ApiException {
 
             Dataset ds = DatasetService.readExternalDataset(dataset_uri, subjectid);
-            if (ds.datasetURI == null) ds.datasetURI = dataset_uri;
+            if (ds.datasetUri == null) ds.datasetUri = dataset_uri;
             String accept = headers.getRequestHeaders().getFirst("accept");
 
             String out = DatasetService.toArff(ds, class_uri, accept, ui);
@@ -71,12 +65,7 @@ public class Dataset {
             @Extension(name = "orn:expects", properties = {@ExtensionProperty(name = "x-orn-@id", value = "")}),
             @Extension(name = "orn:returns", properties = {@ExtensionProperty(name = "x-orn-@id", value = "x-orn:URIList")})
         })
-    @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "OK"),
-        @ApiResponse(code = 400, message = "Bad Request"),
-        @ApiResponse(code = 401, message = "Unauthorized"),
-        @ApiResponse(code = 403, message = "Forbidden"),
-        @ApiResponse(code = 404, message = "Resource Not Found") })
+    @GroupedApiResponsesOk
     public Response list(
         @ApiParam(value = "Authorization token" )@HeaderParam("subjectid") String subjectid,
         @Context UriInfo ui, @Context HttpHeaders headers) throws ApiException {
@@ -104,12 +93,7 @@ public class Dataset {
             @Extension(name = "orn:expects", properties = {@ExtensionProperty(name = "x-orn-@id", value = "x-orn:ID")}),
             @Extension(name = "orn:returns", properties = {@ExtensionProperty(name = "x-orn-@id", value = "x-orn:Arff")})
         })
-    @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "OK"),
-        @ApiResponse(code = 400, message = "Bad Request"),
-        @ApiResponse(code = 401, message = "Unauthorized"),
-        @ApiResponse(code = 403, message = "Forbidden"),
-        @ApiResponse(code = 404, message = "Resource Not Found") })
+    @GroupedApiResponsesOk
     public Response getDatasetArff(
         @ApiParam(value = "Dataset ID" )@PathParam("id") String id,
         @ApiParam(value = "Authorization token" )@HeaderParam("subjectid") String subjectid, @Context UriInfo ui)
@@ -139,12 +123,7 @@ public class Dataset {
             @Extension(name = "orn:expects", properties = {@ExtensionProperty(name = "x-orn-@id", value = "x-orn:ID")}),
             @Extension(name = "orn:returns", properties = {@ExtensionProperty(name = "x-orn-@id", value = "x-orn:Dataset")})
         })
-    @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "OK"),
-        @ApiResponse(code = 400, message = "Bad Request"),
-        @ApiResponse(code = 401, message = "Unauthorized"),
-        @ApiResponse(code = 403, message = "Forbidden"),
-        @ApiResponse(code = 404, message = "Resource Not Found") })
+    @GroupedApiResponsesOk
     public Response filter(
         @ApiParam(value = "Dataset ID" )@PathParam("id") String id,
         @ApiParam(value = "Feature(s) to remove. ID or comma separated IDs of the attribute(s)(column(s)) to remove. (0 = no attribute will be deleted)",defaultValue = "0")@FormDataParam("idx_remove") String idx_remove,
@@ -174,7 +153,7 @@ public class Dataset {
 
     //dataset structure
     public String URI;
-    public String datasetURI;
+    public String datasetUri;
     public LinkedTreeMap meta;
     public List<Feature> features;
     public List<DataEntry> dataEntry;

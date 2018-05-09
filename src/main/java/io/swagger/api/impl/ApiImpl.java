@@ -17,6 +17,14 @@ import java.net.URL;
 
 public class ApiImpl extends ApiService {
 
+    /**
+     * get a JSON representation of the API
+     * @param securityContext SecurityContext
+     * @param ui UriInfo
+     * @return JSON representation of the API
+     * @throws NotFoundException
+     * @throws IOException
+     */
     @Override
     public Response apiApiJsonGet(SecurityContext securityContext, UriInfo ui) throws NotFoundException, IOException {
 

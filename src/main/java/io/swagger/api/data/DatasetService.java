@@ -79,18 +79,18 @@ public class DatasetService {
      * Get arff representation from dataset in mongoDB or from a posted file.
      * @param fileInputStream sended file
      * @param fileDetail details of sended file
-     * @param datasetURI dataset/mongodb id
+     * @param datasetUri dataset/mongodb id
      * @param subjectid security token
      * @return arff string
      * @throws IOException IOException description
      */
-    public static String getArff(InputStream fileInputStream, FormDataContentDisposition fileDetail, String datasetURI, String subjectid) throws IOException {
+    public static String getArff(InputStream fileInputStream, FormDataContentDisposition fileDetail, String datasetUri, String subjectid) throws IOException {
         StringBuilder txtStr = new StringBuilder();
-        if (datasetURI != null && !Objects.equals(datasetURI, "")) {
-            if(StringUtil.isUri(datasetURI)) {
-                System.out.println("isUri true: " + datasetURI);
+        if (datasetUri != null && !Objects.equals(datasetUri, "")) {
+            if(StringUtil.isUri(datasetUri)) {
+                System.out.println("isUri true: " + datasetUri);
             } else {
-                txtStr.append(DatasetService.getDatasetArff(datasetURI, subjectid));
+                txtStr.append(DatasetService.getDatasetArff(datasetUri, subjectid));
             }
         } else {
             int c;
@@ -102,7 +102,7 @@ public class DatasetService {
     }
 
     /**
-     * Download an external dataset in JSON format (e.G.: from JAQPOT service)
+     * Download an external dataset in JSON format (e.g.: from JAQPOT service)
      * @param uri URI of the external dataset
      * @param token authentication token
      * @return representation of the dataset in Dataset class
@@ -139,8 +139,8 @@ public class DatasetService {
         StringBuilder arff = new StringBuilder();
         StringBuilder comment = new StringBuilder();
 
-        //add comments datasetURI and dataset metadata
-        comment.append("% JGU weka service converted dataset from :").append(dataset.datasetURI).append("\n%\n");
+        //add comments datasetUri and dataset metadata
+        comment.append("% JGU weka service converted dataset from :").append(dataset.datasetUri).append("\n%\n");
         comment.append("% Using ").append(class_uri != null ? ("feature " + class_uri) : "no feature").append(" for the weka class.\n%\n");
         if (dataset.meta != null) {
             Set metaEntries = dataset.meta.entrySet();
@@ -162,7 +162,7 @@ public class DatasetService {
         //add current date
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
         comment.append("% created: ").append(sdf.format(new Date())).append("\n\n");
-        arff.append("@relation ").append(dataset.datasetURI).append("\n");
+        arff.append("@relation ").append(dataset.datasetUri).append("\n");
 
         StringBuilder dataStr = new StringBuilder("\n@data\n");
 
@@ -246,7 +246,7 @@ public class DatasetService {
      * @param standardize null/true Standardizes all numeric attributes in the given dataset to have zero mean and unit variance
      * @param ignore ignore the class attribute for standardize
      * @param attributeRange range (comma separated list) of string attributes to convert to nominal
-     * @param attributeIndicies comma separated list of attribute indices e.G."first,2,8" (discretize)
+     * @param attributeIndicies comma separated list of attribute indices e.g."first,2,8" (discretize)
      * @param bins Number of bins (discretize)
      * @param useEqualFrequency if true equal-frequency binning is used. Default is equal-width binning. (discretize)
      * @param accept requested mime-type

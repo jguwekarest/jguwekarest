@@ -3,6 +3,7 @@ package io.swagger.api.data;
 
 import io.swagger.annotations.*;
 import io.swagger.api.ApiException;
+import io.swagger.api.annotations.GroupedApiResponsesOk;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 
@@ -28,14 +29,9 @@ public class Model {
             @Extension(properties = {@ExtensionProperty(name = "orn-@id", value = "/model")}),
             @Extension(properties = {@ExtensionProperty(name = "orn-@type", value = "x-orn:Model")}),
             @Extension(name = "orn:expects", properties = {@ExtensionProperty(name = "x-orn-@id", value = "x-orn:void")}),
-            @Extension(name = "orn:returns", properties = {@ExtensionProperty(name = "x-orn-@id", value = "x-orn:Models")})
+            @Extension(name = "orn:returns", properties = {@ExtensionProperty(name = "x-orn-@id", value = "x-orn:ModelList")})
         })
-    @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "OK"),
-        @ApiResponse(code = 400, message = "Bad Request"),
-        @ApiResponse(code = 401, message = "Unauthorized"),
-        @ApiResponse(code = 403, message = "Forbidden"),
-        @ApiResponse(code = 404, message = "Resource Not Found") })
+    @GroupedApiResponsesOk
     public Response getModelList(
         @ApiParam(value = "Authorization token" )@HeaderParam("subjectid") String subjectid,
         @Context UriInfo ui, @Context HttpHeaders headers) throws ApiException {
@@ -49,7 +45,6 @@ public class Model {
                 .build();
     }
 
-
     @GET
     @Path("/{id}")
     @Consumes({ "multipart/form-data" })
@@ -61,15 +56,10 @@ public class Model {
             extensions = {
                 @Extension(properties = {@ExtensionProperty(name = "orn-@id", value = "/model/{id}")}),
                 @Extension(properties = {@ExtensionProperty(name = "orn-@type", value = "x-orn:Model")}),
-                @Extension(name = "orn:expects", properties = {@ExtensionProperty(name = "x-orn-@id", value = "x-orn:ID")}),
+                @Extension(name = "orn:expects", properties = {@ExtensionProperty(name = "x-orn-@id", value = "x-orn:ModelId")}),
                 @Extension(name = "orn:returns", properties = {@ExtensionProperty(name = "x-orn-@id", value = "x-orn:Model")})
             })
-    @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "OK"),
-        @ApiResponse(code = 400, message = "Bad Request"),
-        @ApiResponse(code = 401, message = "Unauthorized"),
-        @ApiResponse(code = 403, message = "Forbidden"),
-        @ApiResponse(code = 404, message = "Resource Not Found") })
+    @GroupedApiResponsesOk
     public Response getModel(
         @ApiParam(value = "model ID" )@PathParam("id") String id,
         @ApiParam(value = "Authorization token" )@HeaderParam("subjectid") String subjectid,
@@ -93,15 +83,11 @@ public class Model {
         extensions = {
             @Extension(properties = {@ExtensionProperty(name = "orn-@id", value = "/model/{id}")}),
             @Extension(properties = {@ExtensionProperty(name = "orn-@type", value = "x-orn:Model")}),
-            @Extension(name = "orn:expects", properties = {@ExtensionProperty(name = "x-orn-@id", value = "x-orn:ID")}),
+            @Extension(name = "orn:expects", properties = {@ExtensionProperty(name = "x-orn-@id", value = "x-orn:ModelId")}),
+            @Extension(name = "orn:expects", properties = {@ExtensionProperty(name = "x-orn-@id", value = "x-orn:Dataset")}),
             @Extension(name = "orn:returns", properties = {@ExtensionProperty(name = "x-orn-@id", value = "x-orn:Prediction")})
         })
-    @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "OK"),
-        @ApiResponse(code = 400, message = "Bad Request"),
-        @ApiResponse(code = 401, message = "Unauthorized"),
-        @ApiResponse(code = 403, message = "Forbidden"),
-        @ApiResponse(code = 404, message = "Resource Not Found") })
+    @GroupedApiResponsesOk
     public Response modelPost(
         @FormDataParam("file") InputStream fileInputStream,
         @FormDataParam("file") FormDataContentDisposition fileDetail,
