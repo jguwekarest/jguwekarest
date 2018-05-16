@@ -3,6 +3,9 @@ This document describes Keycloak authentication setup for the JGU WEKA REST serv
 
 tbc ...
 
+## Manual Approach
+
+### Define a new client in the SSO realm
 * Login to the Redhat Single Sing-On interface and switch into the openrisknet realm. 
 * Left hand menu click on Clients. 
 * Click on the Create button  
