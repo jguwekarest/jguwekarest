@@ -1,0 +1,29 @@
+FROM tomcat:8.0-jre8
+MAINTAINER "M Rautenberg <rautenberg@uni-mainz.de>"
+
+# remove preinstalled webapps 
+RUN rm -fr /usr/local/tomcat/webapps/ROOT
+RUN rm -fr /usr/local/tomcat/webapps/host-manager
+RUN rm -fr /usr/local/tomcat/webapps/manager
+RUN rm -fr /usr/local/tomcat/webapps/docs
+RUN rm -fr /usr/local/tomcat/webapps/examples
+
+# download and install keycloak
+# RUN wget -O /usr/local/tomcat/lib/keycloak-tomcat8.zip https://downloads.jboss.org/keycloak/4.0.0.Beta2/adapters/keycloak-oidc/keycloak-tomcat8-adapter-dist-4.0.0.Beta2.zip
+RUN wget -O /usr/local/tomcat/lib/keycloak-tomcat8.zip https://downloads.jboss.org/keycloak/3.4.3.Final/adapters/keycloak-oidc/keycloak-tomcat8-adapter-dist-3.4.3.Final.zip
+RUN cd /usr/local/tomcat/lib/ && unzip keycloak-tomcat8.zip
+
+# copy and unzip the application war file
+ADD target/weka_rs-0.2.0.war /usr/local/tomcat/webapps/ROOT.war
+RUN unzip -d /usr/local/tomcat/webapps/ROOT /usr/local/tomcat/webapps/ROOT.war && rm -f /usr/local/tomcat/webapps/ROOT.war
+
+# copy keycloak and tomcat configuration
+COPY openshift/keycloak/web.xml openshift/keycloak/keycloak.json /usr/local/tomcat/webapps/ROOT/WEB-INF/
+COPY openshift/keycloak/context.xml openshift/keycloak/tomcat-users.xml openshift/keycloak/server.xml /usr/local/tomcat/conf/
+
+
+# add openam certificat to tomcat's cert-store
+RUN openssl s_client -showcerts -connect openam.in-silico.ch:443 </dev/null 2>/dev/null|openssl x509 -outform PEM > /usr/local/tomcat/in-silicoch.crt
+RUN keytool -keystore /etc/ssl/certs/java/cacerts -keypass changeit -storepass changeit -noprompt -importcert -alias openam.in-silico.ch -file /usr/local/tomcat/in-silicoch.crt
+
+EXPOSE 8080

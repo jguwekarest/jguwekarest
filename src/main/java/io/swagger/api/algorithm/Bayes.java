@@ -6,7 +6,6 @@ import io.swagger.api.annotations.GroupedValidationParameters;
 import io.swagger.api.factories.AlgorithmFactory;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.enums.ParameterStyle;
 import io.swagger.v3.oas.annotations.extensions.Extension;
 import io.swagger.v3.oas.annotations.extensions.ExtensionProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -83,22 +82,33 @@ public class Bayes {
         //@FormDataParam("file") FormDataContentDisposition fileDetail,
         @FormDataParam("file") InputStream fileInputStream,
         @FormDataParam("file") FormDataContentDisposition fileDetail,
-        @Parameter(description = "Dataset URI or local dataset ID (to the arff representation of a dataset).")@FormDataParam("datasetUri")  String datasetUri,
+        @Parameter(description = "Dataset URI or local dataset ID (to the arff representation of a dataset).",
+            schema = @Schema(description = "Dataset URI or local dataset ID (to the arff representation of a dataset)."))@FormDataParam("datasetUri")  String datasetUri,
         @Parameter(description = "The estimator algorithm to be used in the compound. Must be SimpleEstimator,  MultiNomialBMAEstimator, BMAEstimator or BayesNetEstimator (Default: SimpleEstimator).",
-            schema = @Schema(allowableValues={"SimpleEstimator", "MultiNomialBMAEstimator", "BMAEstimator", "BayesNetEstimator"}, defaultValue="SimpleEstimator"), style = ParameterStyle.FORM)@FormDataParam("estimator") String estimator,
+            schema = @Schema(description = "The estimator algorithm to be used in the compound. Must be SimpleEstimator,  MultiNomialBMAEstimator, BMAEstimator or BayesNetEstimator (Default: SimpleEstimator).",
+                allowableValues={"SimpleEstimator", "MultiNomialBMAEstimator", "BMAEstimator", "BayesNetEstimator"},
+                defaultValue="SimpleEstimator",example="SimpleEstimator"))@FormDataParam("estimator") String estimator,
         //schema = @Schema(  allowableValues="SimpleEstimator, MultiNomialBMAEstimator, BMAEstimator, BayesNetEstimator", defaultValue="SimpleEstimator", type = "string", name = "estimator")
         @Parameter(description = "The parameter for the estimator to be used in the compound.  Must be of type double (Default: 0.5).",
-            schema = @Schema(defaultValue="0.5"))@FormDataParam("estimatorParams") BigDecimal estimatorParams,
+            schema = @Schema(description = "The parameter for the estimator to be used in the compound.  Must be of type double (Default: 0.5).",
+                defaultValue="0.5", example="0.5"),
+            extensions = {@Extension(properties = {@ExtensionProperty(name = "orn-@id",  value = "/algorithm/BayesNet")})})@FormDataParam("estimatorParams") BigDecimal estimatorParams,
         @Parameter(description = "Whether to use ADTrees for searching (using will increase the speed of the search, but will also raise the memory use (Default: 0).",
-            schema = @Schema(defaultValue="0", allowableValues = {"0", "1"}))@DefaultValue("0") @FormDataParam("useADTree") Integer useADTree,
+            schema = @Schema(description = "Whether to use ADTrees for searching (using will increase the speed of the search, but will also raise the memory use (Default: 0).",
+                defaultValue="0", allowableValues = {"0", "1"}))@DefaultValue("0") @FormDataParam("useADTree") Integer useADTree,
         @Parameter(description = "The algorithmn to be used for searching in the compound. Must be local.K2, local.GeneticSearch, local.HillClimber, local.LAGDHillClimber, local.RepeatedHillClimber, local.SimulatedAnnealing, local.TabuSearch, local.TAN, global.K2, global.GeneticSearch, global.HillClimber, global.RepeatedHillClimber, global.SimulatedAnnealing, global.TabuSearch, global.TAN, ci.CISearchAlgorithm, ci.ICSSearchAlgorithm (Default: local.K2).",
-            schema = @Schema(allowableValues={"local.K2", "local.GeneticSearch", "local.HillClimber", "local.LAGDHillClimber", "local.RepeatedHillClimber", "local.SimulatedAnnealing", "local.TabuSearch", "local.TAN", "global.K2", "global.GeneticSearch", "global.HillClimber", "global.RepeatedHillClimber", "global.SimulatedAnnealing", "global.TabuSearch", "global.TAN", "ci.CISearchAlgorithm", "ci.ICSSearchAlgorithm"},
-            defaultValue="local.K2"),example = "local.K2")@FormDataParam("searchAlgorithm") @DefaultValue("local.K2")  String searchAlgorithm,
+            schema = @Schema(description = "The algorithmn to be used for searching in the compound. Must be local.K2, local.GeneticSearch, local.HillClimber, local.LAGDHillClimber, local.RepeatedHillClimber, local.SimulatedAnnealing, local.TabuSearch, local.TAN, global.K2, global.GeneticSearch, global.HillClimber, global.RepeatedHillClimber, global.SimulatedAnnealing, global.TabuSearch, global.TAN, ci.CISearchAlgorithm, ci.ICSSearchAlgorithm (Default: local.K2).",
+                allowableValues={"local.K2", "local.GeneticSearch", "local.HillClimber", "local.LAGDHillClimber", "local.RepeatedHillClimber", "local.SimulatedAnnealing", "local.TabuSearch", "local.TAN", "global.K2", "global.GeneticSearch", "global.HillClimber", "global.RepeatedHillClimber", "global.SimulatedAnnealing", "global.TabuSearch", "global.TAN", "ci.CISearchAlgorithm", "ci.ICSSearchAlgorithm"},
+            defaultValue="local.K2"), example = "local.K2")@FormDataParam("searchAlgorithm") @DefaultValue("local.K2")  String searchAlgorithm,
         @Parameter(description = "The parameter for algorithmn to be used for searching in the compound. Are set automatically (WEKA's standard parameter setting) (Default '-P 1 -S BAYES' for local.K2).",
-            schema = @Schema(defaultValue="-P 1 -S BAYES"),example = "-P 1 -S BAYES")@FormDataParam("searchParams") String searchParams,
+            schema = @Schema(defaultValue="-P 1 -S BAYES",example = "-P 1 -S BAYES"))@FormDataParam("searchParams") String searchParams,
         // validation
-        @Parameter(description = "Validation to use.", schema = @Schema(defaultValue="CrossValidation", allowableValues = {"CrossValidation", "Hold-Out"})) @FormDataParam("validation") String validation ,
-        @Parameter(description = "Num of Crossvalidations or Percentage Split %.", schema = @Schema(defaultValue = "10", minimum = "0")) @FormDataParam("validationNum") Double validationNum,
+        @Parameter(description = "Validation to use.", schema = @Schema(description = "Validation to use.",
+            defaultValue="CrossValidation", allowableValues = {"CrossValidation", "Hold-Out"}),
+            extensions = {@Extension(name = "orn:expects",
+                properties = { @ExtensionProperty(name = "x-orn-@id",  value = "x-orn:Dataset")})}
+                ) @FormDataParam("validation") String validation ,
+        @Parameter(description = "Num of Crossvalidations or Percentage Split %.", schema = @Schema(description = "Num of Crossvalidations or Percentage Split %.", defaultValue = "10", minimum = "0",example = "10")) @FormDataParam("validationNum") Double validationNum,
         // authorization
         @Parameter(description = "authorization token") @HeaderParam("subjectid") String subjectid,
         @Context UriInfo ui, @Context HttpHeaders headers, @Context SecurityContext securityContext)
@@ -175,8 +185,8 @@ public class Bayes {
         @Parameter(description = "The parameter for algorithmn to be used for searching in the compound. Are set automatically (WEKA's standard parameter setting).",
             schema = @Schema(defaultValue="-P 1 -S BAYES"))@FormDataParam("searchParams")  String searchParams,
         // validation
-        @Parameter(description = "Validation to use.", schema = @Schema(defaultValue="CrossValidation", allowableValues = {"CrossValidation", "Hold-Out"})) @FormDataParam("validation") String validation ,
-        @Parameter(description = "Num of Crossvalidations or Percentage Split %.", schema = @Schema(defaultValue="10")) @FormDataParam("validationNum") Double validationNum,
+        @Parameter(description = "Validation to use.", schema = @Schema(description = "Validation to use.", defaultValue="CrossValidation", allowableValues = {"CrossValidation", "Hold-Out"})) @FormDataParam("validation") String validation ,
+        @Parameter(description = "Num of Crossvalidations or Percentage Split %.", schema = @Schema(description = "Num of Crossvalidations or Percentage Split %.", defaultValue = "10", minimum = "0",example = "10")) @FormDataParam("validationNum") Double validationNum,
         // authorization
         @Parameter(description = "authorization token") @HeaderParam("subjectid") String subjectid,
         @Context UriInfo ui, @Context HttpHeaders headers, @Context SecurityContext securityContext)
@@ -250,8 +260,8 @@ public class Bayes {
         @Parameter(description = "The parameter for algorithmn to be used for searching in the compound. Are set automatically (WEKA's standard parameter setting).",
             schema = @Schema(defaultValue="-P 1 -S BAYES"))@FormDataParam("searchParams")  String searchParams,
         // validation
-        @Parameter(description = "Validation to use.", schema = @Schema(defaultValue="CrossValidation", allowableValues = {"CrossValidation", "Hold-Out"})) @FormDataParam("validation") String validation ,
-        @Parameter(description = "Num of Crossvalidations or Percentage Split %.", schema = @Schema(defaultValue="10")) @FormDataParam("validationNum") Double validationNum,
+        @Parameter(description = "Validation to use.", schema = @Schema(description = "Validation to use.", defaultValue="CrossValidation", allowableValues = {"CrossValidation", "Hold-Out"})) @FormDataParam("validation") String validation ,
+        @Parameter(description = "Num of Crossvalidations or Percentage Split %.", schema = @Schema(description = "Num of Crossvalidations or Percentage Split %.", defaultValue = "10", minimum = "0",example = "10")) @FormDataParam("validationNum") Double validationNum,
         // authorization
         @Parameter(description = "authorization token") @HeaderParam("subjectid") String subjectid,
         @Context UriInfo ui, @Context HttpHeaders headers, @Context SecurityContext securityContext)
@@ -310,8 +320,8 @@ public class Bayes {
         @Parameter(description = "Use supervised discretization to convert numeric attributes to nominal ones. (Default: 0). Works not together with useKernelEstimator=1.",
             schema = @Schema(allowableValues={"0","1"}, defaultValue="0"))@FormDataParam("useSupervisedDiscretization") BigDecimal useSupervisedDiscretization,
         // validation
-        @Parameter(description = "Validation to use.", schema = @Schema(defaultValue="CrossValidation", allowableValues = {"CrossValidation", "Hold-Out"})) @FormDataParam("validation") String validation ,
-        @Parameter(description  = "Num of Crossvalidations or Percentage Split %.", schema = @Schema(defaultValue="10")) @FormDataParam("validationNum") Double validationNum,
+        @Parameter(description = "Validation to use.", schema = @Schema(description = "Validation to use.", defaultValue="CrossValidation", allowableValues = {"CrossValidation", "Hold-Out"})) @FormDataParam("validation") String validation ,
+        @Parameter(description = "Num of Crossvalidations or Percentage Split %.", schema = @Schema(description = "Num of Crossvalidations or Percentage Split %.", defaultValue = "10", minimum = "0",example = "10")) @FormDataParam("validationNum") Double validationNum,
         // authorization
         @Parameter(description = "authorization token") @HeaderParam("subjectid") String subjectid,
         @Context UriInfo ui, @Context HttpHeaders headers, @Context SecurityContext securityContext)
@@ -375,8 +385,8 @@ public class Bayes {
         @Parameter(description = "Use supervised discretization to convert numeric attributes to nominal ones. (Default: 0). Works not together with useKernelEstimator=1.",
             schema = @Schema(allowableValues={"0","1"}, defaultValue="0"))@FormDataParam("useSupervisedDiscretization") BigDecimal useSupervisedDiscretization,
         // validation
-        @Parameter(description = "Validation to use.", schema = @Schema(allowableValues = {"CrossValidation","Hold-Out"}, defaultValue = "CrossValidation")) @FormDataParam("validation") String validation,
-        @Parameter(description = "Num of Crossvalidations or Percentage Split %.", schema = @Schema(defaultValue = "10")) @FormDataParam("validationNum") Double validationNum,
+        @Parameter(description = "Validation to use.", schema = @Schema(description = "Validation to use.", defaultValue="CrossValidation", allowableValues = {"CrossValidation", "Hold-Out"})) @FormDataParam("validation") String validation ,
+        @Parameter(description = "Num of Crossvalidations or Percentage Split %.", schema = @Schema(description = "Num of Crossvalidations or Percentage Split %.", defaultValue = "10", minimum = "0",example = "10")) @FormDataParam("validationNum") Double validationNum,
         @Parameter(description = "authorization token") @HeaderParam("subjectid") String subjectid,
         @Context UriInfo ui, @Context HttpHeaders headers, @Context SecurityContext securityContext)
         throws io.swagger.api.NotFoundException, IOException {
@@ -442,9 +452,8 @@ public class Bayes {
         @Parameter(description = "Use supervised discretization to convert numeric attributes to nominal ones. (Default: 0). Works not together with useKernelEstimator=1.",
             schema = @Schema(allowableValues={"0","1"}, defaultValue="0"))@FormDataParam("useSupervisedDiscretization") BigDecimal useSupervisedDiscretization,
         // validation
-        @Parameter(description = "Validation to use.", schema = @Schema(allowableValues = "CrossValidation,Hold-Out", defaultValue = "CrossValidation"),
-            extensions = { @Extension(properties = {@ExtensionProperty(name = "orn-@id", value = "")})}) @FormDataParam("validation") String validation,
-        @Parameter(description = "Num of Crossvalidations or Percentage Split %.", schema = @Schema(defaultValue = "10")) @FormDataParam("validationNum") Double validationNum,
+        @Parameter(description = "Validation to use.", schema = @Schema(description = "Validation to use.", defaultValue="CrossValidation", allowableValues = {"CrossValidation", "Hold-Out"})) @FormDataParam("validation") String validation ,
+        @Parameter(description = "Num of Crossvalidations or Percentage Split %.", schema = @Schema(description = "Num of Crossvalidations or Percentage Split %.", defaultValue = "10", minimum = "0",example = "10")) @FormDataParam("validationNum") Double validationNum,
         @Parameter(description = "authorization token") @HeaderParam("subjectid") String subjectid,
         @Context UriInfo ui, @Context HttpHeaders headers, @Context SecurityContext securityContext)
         throws io.swagger.api.NotFoundException, IOException {

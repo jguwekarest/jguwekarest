@@ -16,26 +16,15 @@
             </param-value>
         </init-param>
 
-        <!-- init-param>
-            <param-name>jersey.config.server.wadl.disableWadl</param-name>
-            <param-value>true</param-value>
-        </init-param -->
 
         <init-param>
             <param-name>openApi.configuration.prettyPrint</param-name>
             <param-value>true</param-value>
         </init-param>
-        <!--init-param>
-            <param-name>jersey.config.server.provider.classnames</param-name>
-            <param-value>org.glassfish.jersey.media.multipart.MultiPartFeature</param-value>
-        </init-param -->
 
-        <!-- init-param>
-            <param-name>jersey.config.server.mvc.templateBasePath</param-name>
-            <param-value>/</param-value>
-        </init-param -->
 
         <load-on-startup>1</load-on-startup>
+
     </servlet>
 
     <servlet>
@@ -43,12 +32,6 @@
         <servlet-class>io.swagger.api.Bootstrap</servlet-class>
         <load-on-startup>2</load-on-startup>
     </servlet>
-
-    <!-- servlet-mapping>
-        <servlet-name>Bootstrap</servlet-name>
-        <url-pattern>/api/*</url-pattern>
-    </servlet-mapping -->
-
 
     <servlet-mapping>
         <servlet-name>jersey</servlet-name>
@@ -89,11 +72,6 @@
              <param-name>jersey.config.server.provider.classnames</param-name>
              <param-value>org.glassfish.jersey.media.multipart.MultiPartFeature</param-value>
         </init-param>
-
-        <!-- init-param>
-            <param-name>jersey.config.server.mvc.templateBasePath</param-name>
-            <param-value>/</param-value>
-        </init-param -->
 
         <load-on-startup>1</load-on-startup>
     </servlet>

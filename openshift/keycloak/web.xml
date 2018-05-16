@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<web-app version="3.0" xmlns="http://java.sun.com/xml/ns/javaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd">
+
+    <!-- web.xml for docker tomcat deployment with keycloak.
+         This file should be identic to web.xml in src/webapp/WEB-INF
+         with additional keycloak config part
+    -->
+
+    <servlet>
+        <servlet-name>jersey</servlet-name>
+        <servlet-class>io.swagger.v3.jaxrs2.integration.OpenApiServlet</servlet-class>
+
+        <init-param>
+            <param-name>openApi.configuration.resourcePackages</param-name>
+            <param-value>
+                io.swagger.api,
+                io.swagger.jaxrs2.listing,
+                io.swagger.v3.jaxrs2.integration.resources
+            </param-value>
+        </init-param>
+
+
+        <init-param>
+            <param-name>openApi.configuration.prettyPrint</param-name>
+            <param-value>true</param-value>
+        </init-param>
+
+
+        <load-on-startup>1</load-on-startup>
+
+    </servlet>
+
+    <!-- security config for keycloak  -->
+
+    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>jguweka</web-resource-name>
+            <url-pattern>/*</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <role-name>standard-user</role-name>
+        </auth-constraint>
+    </security-constraint>
+
+    <login-config>
+        <auth-method>BASIC</auth-method>
+        <realm-name>openrisknet</realm-name>
+    </login-config>
+
+    <security-role>
+        <role-name>standard-user</role-name>
+    </security-role>
+
+    <!-- end security config for keycloak -->
+
+    <servlet>
+        <servlet-name>Bootstrap</servlet-name>
+        <servlet-class>io.swagger.api.Bootstrap</servlet-class>
+        <load-on-startup>2</load-on-startup>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>jersey</servlet-name>
+        <url-pattern>/openapi/*</url-pattern>
+    </servlet-mapping>
+
+    <filter>
+        <filter-name>ApiOriginFilter</filter-name>
+        <filter-class>io.swagger.api.ApiOriginFilter</filter-class>
+    </filter>
+
+    <filter-mapping>
+        <filter-name>ApiOriginFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+    <servlet>
+        <servlet-name>rest-test</servlet-name>
+        <servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class>
+
+        <init-param>
+            <param-name>jersey.config.server.provider.packages</param-name>
+            <param-value>
+                io.swagger.api,
+                io.swagger.api.authorization,
+                io.swagger.api.data,
+                io.swagger.api.cluster,
+                io.swagger.api.task,
+                io.swagger.api.algorithm,
+            </param-value>
+        </init-param>
+        <init-param>
+            <param-name>jersey.config.server.provider.scanning.recursive</param-name>
+            <param-value>false</param-value>
+        </init-param>
+
+        <init-param>
+             <param-name>jersey.config.server.provider.classnames</param-name>
+             <param-value>org.glassfish.jersey.media.multipart.MultiPartFeature</param-value>
+        </init-param>
+
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>rest-test</servlet-name>
+        <url-pattern>/*</url-pattern>
+    </servlet-mapping>
+</web-app>
