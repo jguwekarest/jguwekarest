@@ -43,7 +43,15 @@ Alternative you can build the tomcat image and container with needed certificate
 
 ```
 docker build -t jguweka/jguweka -f Dockerfile .
-docker run -d  -p 0.0.0.0:8080:8080 rautenberg/jguweka
+docker run -d  -p 0.0.0.0:8080:8080 jguweka/jguweka
+```
+
+For Keycloak authentication do this with [Dockerfile-keycloak](../Dockerfile-keycloak).   
+Adjust settings for Keycloak as described in [Tomcat Keycloak Setup](./TomcatKeycloakSetup) 
+
+```
+docker build -t jguweka/jguweka:keycloak -f Dockerfile-keycloak .
+docker run -d  -p 0.0.0.0:8080:8080 jguweka/jguweka:keycloak
 ```
 
 ## Jenkins
