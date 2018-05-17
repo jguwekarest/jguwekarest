@@ -1,5 +1,14 @@
+github: [metadata]
+encoding: UTF-8
+kramdown:
+  input: GFM
+  hard_wrap: false
+future: true
+jailed: false
+gfm_quirks: paragraph_end
 theme: jekyll-theme-slate
 title: JGU WEKA REST Service
 description: RESTful API Webservice to WEKA Machine Learning Algorithms.
 repository: jguwekarest/jguwekarest.git
-  
+plugins:
+- jekyll-menus  

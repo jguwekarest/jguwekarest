@@ -1,0 +1,17 @@
+---
+docs_list_title: JGU WEKA REST Service Documentation
+docs:
+
+- title: Introduction
+  url: /index.html
+
+- title: Dockerized Development Environment Setup
+  url: /doc/DockerizedDevEnvSetup.html
+
+- title: Docker Deployment
+  url: /doc/DockerImageDeployment.html
+
+- title: Java documentation
+  url: /javadoc/index.html
+
+---
