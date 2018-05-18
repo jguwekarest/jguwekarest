@@ -1,5 +1,6 @@
 ---
 docs_list_title: JGU WEKA REST Service Documentation
+baseurl: /jguwekarest
 docs:
 
 - title: Introduction

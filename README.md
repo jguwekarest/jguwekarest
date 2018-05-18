@@ -1,3 +1,7 @@
+---
+title: JGU WEKA Rest Service 
+order: 0
+---
 # JGU WEKA Rest Service
 
 RESTful API Webservice to WEKA Machine Learning Algorithms.

@@ -1,3 +1,9 @@
+---
+title: Docker Deployment 
+sidebar: toc
+order: 4
+---
+
 # How to Build the Docker Image
 
 This document describes how to setup and start a docker image and its container for the JGU WEKA Rest service. 

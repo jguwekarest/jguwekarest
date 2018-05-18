@@ -36,16 +36,27 @@
       <section id="main_content" class="inner">
         {{ content }}
           <div id="menu">
+  <ul>
+    {% assign pages = site.pages | sort:'order'  %}
+    {% for p in pages %}     
+    {% if p.title   %} 
+        <li>
+          <a {% if p.url == page.url %}class="active"{% endif %} href="{{ p.url }}">{{ p.title }}</a>
+        </li>
+      {% endif %}
+      {% endfor %}
+
+    </ul>
+
 
 <strong>{{ site.data.documentlist.docs_list_title }}</strong>
 <ul>
    {% for item in site.data.documentlist.docs %}
-      <li><a href="{{ item.url }}" alt="{{ item.title }}">{{ item.title }}</a></li>
+      <li><a href="{{ item.url | prepend: site.baseurl }}" alt="{{ item.title }}">{{ item.title }}</a></li>
    {% endfor %}
 </ul>
 
 
-          </div>
 
       </section>
     </div>

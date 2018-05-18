@@ -11,4 +11,5 @@ title: JGU WEKA REST Service
 description: RESTful API Webservice to WEKA Machine Learning Algorithms.
 repository: jguwekarest/jguwekarest.git
 plugins:
-- jekyll-menus  
+- jekyll-menus 
+relative_permalinks: false 

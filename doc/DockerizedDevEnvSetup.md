@@ -1,3 +1,8 @@
+---
+title: Dockerized Development Environment Setup
+sidebar: toc
+order: 3
+---
 # Dockerized Development Environment Setup
 
 This describes an example dockerized development environment for a Java web project with a MongoDB database. A Jenkins server is used as a build setup for the code deployment. A Tomcat container hosts the application war file. Jenkins and Tomcat do share a file storage for easy deployment via copying within the Jenkins instance. 
