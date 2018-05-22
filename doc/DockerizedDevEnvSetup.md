@@ -107,6 +107,6 @@ Add the proxying to the /etc/apache2/sites-enabled/ configuration file
 
 ```
 ProxyPreserveHost On
-ProxyPass / http://localhost:8081/
-ProxyPassReverse / http://localhost:8081/
+ProxyPass / http://localhost:8080/
+ProxyPassReverse / http://localhost:8080/
 ```
