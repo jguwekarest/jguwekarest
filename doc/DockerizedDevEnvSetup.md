@@ -43,7 +43,7 @@ Alternative you can build the tomcat image and container with needed certificate
 
 ```
 docker build -t jguweka/jguweka -f Dockerfile .
-docker run -d  -p 0.0.0.0:8080:8080 jguweka/jguweka
+docker run -d  -p 0.0.0.0:8080:8080 --link mongodb:mongodb jguweka/jguweka
 ```
 
 For Keycloak authentication do this with [Dockerfile-keycloak](../Dockerfile-keycloak).   

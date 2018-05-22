@@ -31,3 +31,8 @@ route "jguweka" deleted
 service "jguweka" deleted
 service "mongodb" deleted
 ```
+
+## Documentation
+See also for full documentation on OpenRiskNet deployment: 
+* ***[Example Templates](https://github.com/OpenRiskNet/example-java-servlet/tree/master/openshift/templates)*** - OpenRiskNet GitHub
+* ***[Deploy using Keycloak](https://github.com/OpenRiskNet/example-java-servlet/tree/master/openshift/keycloak)*** - OpenRiskNet GitHub

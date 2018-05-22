@@ -1,11 +1,12 @@
 # Tomcat Keycloak Setup
 This document describes Keycloak authentication setup for the JGU WEKA REST service running in docker tomcat environment.
 
-tbc ...
+See main documentation  ***[Deploy using Keycloak](https://github.com/OpenRiskNet/example-java-servlet/tree/master/openshift/keycloak)*** at OpenRiskNet GitHub for Keycloak integration.
 
-## Manual Approach
 
-### Define a new client in the SSO realm
+
+### Define a new client in the SSO realm <span style="font-size:0.6em">(Manual Approach)</span>
+
 * Login to the Redhat Single Sing-On interface and switch into the openrisknet realm. 
 * Left hand menu click on Clients. 
 * Click on the Create button  
@@ -23,4 +24,5 @@ tbc ...
       "secret": "123456789-abcd-abcd-abcd-1234567890ab"
     },
   ``` 
-  
+ 
+tbc ...
