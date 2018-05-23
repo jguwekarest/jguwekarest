@@ -495,4 +495,104 @@ public class TreesTest {
 
     }
 
+    @Test(description = "Post an arff file to RandomForest algorithm and get a text representation.")
+    @Parameters({"host"})
+    public void algorithmRandomForestPost( @Optional String host ) throws Exception {
+
+        String uri = host + "/algorithm/RandomForest";
+
+        final Client client = ClientBuilder.newBuilder().register(MultiPartFeature.class).build();
+
+        final FileDataBodyPart filePart = new FileDataBodyPart("file", new File( getClass().getClassLoader().getResource("weather.numeric.arff").getFile()));
+        FormDataMultiPart formDataMultiPart = new FormDataMultiPart();
+        formDataMultiPart.field("storeOutOfBagPredictions", "false")
+            .field("numExecutionSlots", "1")
+            .field("numDecimalPlaces", "2")
+            .field("bagSizePercent", "100")
+            .field("batchSize", "100")
+            .field("printClassifiers", "false")
+            .field("numIterations", "100")
+            .field("outputOutOfBagComplexityStatistics", "false")
+            .field("breakTiesRandomly", "false")
+            .field("maxDepth", "0")
+            .field("computeAttributeImportance", "false")
+            .field("calcOutOfBag", "false")
+            .field("numFeatures", "0")
+            .field("validation", "CrossValidation")
+            .field("validationNum", "10");
+
+        final FormDataMultiPart multipart = (FormDataMultiPart) formDataMultiPart.field("save", "false").bodyPart(filePart);
+
+        final WebTarget target = client.target(uri);
+        Invocation.Builder request = target.request();
+        request.accept("text/uri-list");
+
+        final Response response = request.post(Entity.entity(multipart, multipart.getMediaType()));
+
+        formDataMultiPart.close();
+        multipart.close();
+
+        Assert.assertTrue(response.getStatus() == 200);
+        Assert.assertTrue(response.getMediaType().toString().equals("text/uri-list"));
+        String task_uri = response.readEntity(String.class);
+        Assert.assertTrue(task_uri.startsWith(host + "/task/"), "Task URI is: " + task_uri + ". It do not start with: " + host + "/task/");
+
+        final WebTarget taskTarget = client.target(task_uri);
+        Invocation.Builder taskRequest = taskTarget.request();
+        taskRequest.accept(MediaType.APPLICATION_JSON);
+
+        Response taskResponse = taskRequest.get();
+        Assert.assertTrue(taskResponse.getStatus() == 202, "Task at host: " + task_uri + " has wrong http code. Code is: " + taskResponse.getStatus());
+        Assert.assertTrue(taskResponse.getMediaType().toString().equals(MediaType.APPLICATION_JSON), "Task at host: " + task_uri + " not available in mime-type application/json. Is: " + taskResponse.getMediaType().toString());
+        //Assert.assertEquals(taskResponse.readEntity(String.class).replaceAll("(?m) +$",""), savedModelString.replaceAll("(?m) +$",""));
+        int i = 0;
+        while(taskResponse.getStatus() != 200){
+            i += 1;
+            TimeUnit.SECONDS.sleep(1);
+            taskResponse = taskRequest.get();
+            if (i>20) break;
+        }
+        Assert.assertTrue(taskResponse.getStatus() == 200, "Task at host: " + task_uri + " has wrong http code. Code is: " + taskResponse.getStatus());
+
+        Gson gson = new Gson();
+        String jsonString = taskResponse.readEntity(String.class);
+        Task taskRemote = gson.fromJson(jsonString, Task.class);
+
+        Assert.assertEquals(taskRemote.getStatus(), Task.Status.COMPLETED);
+        Assert.assertEquals(taskRemote.getStep(), Task.Step.SAVED);
+        Assert.assertEquals(taskRemote.getPercentageCompleted(), 100f);
+
+        String model_uri = taskRemote.getResultURI();
+        final WebTarget modelTarget = client.target(model_uri);
+        Invocation.Builder modelRequest = modelTarget.request();
+        modelRequest.accept("text/plain");
+
+        Response modelResponse = modelRequest.get();
+        Assert.assertTrue(modelResponse.getStatus() == 200, "Model at host: " + model_uri + " has wrong http code. Code is: " + modelResponse.getStatus());
+
+        String model_text = modelResponse.readEntity(String.class);
+
+        Assert.assertTrue(modelResponse.getMediaType().toString().equals("text/plain"));
+
+        Assert.assertTrue(model_text.contains("Correctly Classified Instances           9               64.2857 %\n" +
+            "Incorrectly Classified Instances         5               35.7143 %\n" +
+            "Kappa statistic                          0.186 \n" +
+            "Mean absolute error                      0.4733\n" +
+            "Root mean squared error                  0.5221\n" +
+            "Relative absolute error                 99.3961 %\n" +
+            "Root relative squared error            105.8227 %\n" +
+            "Total Number of Instances               14"),"Compared string is not in: " + model_text);
+
+        Assert.assertTrue(model_text.contains("TP Rate  FP Rate  Precision  Recall   F-Measure  MCC      ROC Area  PRC Area  Class\n" +
+            "                 0,778    0,600    0,700      0,778    0,737      0,189    0,444     0,669     yes\n" +
+            "                 0,400    0,222    0,500      0,400    0,444      0,189    0,444     0,385     no\n" +
+            "Weighted Avg.    0,643    0,465    0,629      0,643    0,632      0,189    0,444     0,567"),"Compared string is not in: " + model_text);
+
+        String id = model_uri.substring(model_uri.length() - 24);
+        Boolean resultDelete = ModelService.deleteModel(id);
+        Assert.assertTrue(resultDelete);
+        Boolean taskdelete= TaskService.delete(taskRemote);
+        Assert.assertTrue(taskdelete);
+
+    }
 }

@@ -357,6 +357,7 @@ public class Trees  {
         @ApiParam(value = "Whether to use unsmoothed predictions.", defaultValue = "0", allowableValues="0,1")@FormDataParam("useUnsmoothed") Integer useUnsmoothed,
         @ApiParam(value = "The minimum number of instances to allow at a leaf node.", defaultValue = "4")@FormDataParam("minNumInstances") Double minNumInstances,
         @ApiParam(value = "Whether to generate a regression tree/rule instead of a model tree/rule.", defaultValue = "0", allowableValues="0,1")@FormDataParam("buildRegressionTree") Integer buildRegressionTree,
+        // validation
         @ApiParam(value = "Validation to use.", allowableValues = "CrossValidation,Hold-Out", defaultValue = "CrossValidation") @FormDataParam("validation") String validation,
         @ApiParam(value = "Num of Crossvalidations or Percentage Split %.", defaultValue = "10") @FormDataParam("validationNum") Double validationNum,
         @ApiParam(value = "Authorization token" )@HeaderParam("subjectid") String subjectid,
@@ -503,4 +504,86 @@ public class Trees  {
         return delegate.algorithmPost(fileInputStream, fileDetail, datasetUri, "DecisionStump", params,
             "Bagging", metaParams, validation, validationNum, headers, ui, securityContext);
     }
+
+
+    // RandomForest
+    // Class for constructing a forest of random trees.
+
+    @POST
+    @Path("/RandomForest")
+    @Consumes({ "multipart/form-data" })
+    @Produces({ TEXT_URILIST, MediaType.APPLICATION_JSON})
+    @ApiOperation(value = "REST interface to the WEKA RandomForest classifier.",
+        notes = "REST interface to the WEKA RandomForest classifier. " + SAVE_MODEL_NOTE,
+        tags = {"algorithm","meta algorithm"},
+        extensions = {
+            @Extension(properties = {@ExtensionProperty(name = "orn-@id", value = "/algorithm/RandomForest")}),
+            @Extension(properties = {@ExtensionProperty(name = "orn-@type", value = "x-orn:Algorithm")}),
+            @Extension(name = "orn:expects", properties = {@ExtensionProperty(name = "x-orn-@id", value = "x-orn:Dataset")}),
+            @Extension(name = "orn:returns", properties = {@ExtensionProperty(name = "x-orn-@id", value = "x-orn:Task")}),
+            @Extension(name = "algorithm", properties = {
+                @ExtensionProperty(name = "Random Forest", value = "https://en.wikipedia.org/wiki/Random_forest")
+            })
+        })
+    @GroupedApiResponsesOk
+    public Response algorithmRandomForestPost(
+        //data params
+        @FormDataParam("file") InputStream fileInputStream,
+        @FormDataParam("file") FormDataContentDisposition fileDetail,
+        @ApiParam(value = "Dataset URI or local dataset ID (to the arff representation of a dataset).") @FormDataParam("datasetUri") String datasetUri,
+        //@Parameter(description = "Whether to represent copies of instances using weights rather than explicitly.",
+        //    schema = @Schema(defaultValue = "10", example = "10")) @FormDataParam("representCopiesUsingWeights ")  representCopiesUsingWeights
+        @ApiParam(value = "Whether to store the out-of-bag predictions.",
+            allowableValues =  "true,false", defaultValue = "false", example = "false") @FormDataParam("storeOutOfBagPredictions") Boolean storeOutOfBagPredictions,
+        @ApiParam(value = "The number of execution slots (threads) to use for constructing the ensemble.",
+            defaultValue = "1", example = "1") @FormDataParam("numExecutionSlots") Integer numExecutionSlots,
+        @ApiParam(value = "Size of each bag, as a percentage of the training set size.",
+            defaultValue = "100", example = "100") @FormDataParam("bagSizePercent") Integer bagSizePercent,
+        @ApiParam(value = "The number of decimal places to be used for the output of numbers in the model.",
+            defaultValue = "10", example = "10") @FormDataParam("numDecimalPlaces") Integer numDecimalPlaces,
+        @ApiParam(value = "The preferred number of instances to process if batch prediction is being performed. More or fewer instances may be provided, but this gives implementations a chance to specify a preferred batch size.",
+            defaultValue = "100", example = "100") @FormDataParam("batchSize") Integer batchSize,
+        @ApiParam(value = "Print the individual classifiers in the output",
+            allowableValues =  "true,false", defaultValue = "false", example = "false") @FormDataParam("printClassifiers") Boolean printClassifiers,
+        @ApiParam(value = "The number of iterations to be performed.",
+            defaultValue = "100", example = "100") @FormDataParam("numIterations") Integer numIterations,
+        @ApiParam(value = "Whether to output complexity-based statistics when out-of-bag evaluation is performed.",
+            allowableValues =  "true,false", defaultValue = "false", example = "false") @FormDataParam("outputOutOfBagComplexityStatistics") Boolean outputOutOfBagComplexityStatistics,
+        @ApiParam(value = "Break ties randomly when several attributes look equally good.",
+            allowableValues =  "true,false", defaultValue = "false", example = "false") @FormDataParam("breakTiesRandomly") Boolean breakTiesRandomly,
+        @ApiParam(value = "The maximum depth of the tree, 0 for unlimited.",
+            defaultValue = "0", example = "0") @FormDataParam("maxDepth") Integer maxDepth,
+        @ApiParam(value = "Compute attribute importance via mean impurity decrease",
+            allowableValues =  "true,false", defaultValue = "false", example = "false") @FormDataParam("computeAttributeImportance") Boolean computeAttributeImportance,
+        @ApiParam(value = "Whether the out-of-bag error is calculated.",
+            allowableValues =  "true,false", defaultValue = "false", example = "false") @FormDataParam("calcOutOfBag") Boolean calcOutOfBag,
+        @ApiParam(value = "Sets the number of randomly chosen attributes. If 0, int(log_2(#predictors) + 1) is used.",
+            defaultValue = "0", example = "0") @FormDataParam("numFeatures") Integer numFeatures,
+        // validation
+        @ApiParam(value = "Validation to use.", allowableValues = "CrossValidation,Hold-Out", defaultValue = "CrossValidation") @FormDataParam("validation") String validation,
+        @ApiParam(value = "Num of Crossvalidations or Percentage Split %.", defaultValue = "10") @FormDataParam("validationNum") Double validationNum,
+        @ApiParam(value = "Authorization token" )@HeaderParam("subjectid") String subjectid,
+        @Context UriInfo ui, @Context HttpHeaders headers, @Context SecurityContext securityContext)
+        throws NotFoundException, IOException {
+
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("datasetUri", datasetUri);
+        params.put("storeOutOfBagPredictions", storeOutOfBagPredictions);
+        params.put("numExecutionSlots", numExecutionSlots);
+        params.put("bagSizePercent", bagSizePercent);
+        params.put("numDecimalPlaces", numDecimalPlaces);
+        params.put("batchSize", batchSize);
+        params.put("printClassifiers", printClassifiers);
+        params.put("numIterations", numIterations);
+        params.put("outputOutOfBagComplexityStatistics", outputOutOfBagComplexityStatistics);
+        params.put("breakTiesRandomly", breakTiesRandomly);
+        params.put("maxDepth", maxDepth);
+        params.put("computeAttributeImportance", computeAttributeImportance);
+        params.put("calcOutOfBag", calcOutOfBag);
+        params.put("numFeatures", numFeatures);
+
+        return delegate.algorithmPost(fileInputStream, fileDetail, datasetUri, "RandomForest", params,
+            validation, validationNum, headers, ui, securityContext);
+    }
+
 }

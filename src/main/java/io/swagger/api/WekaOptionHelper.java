@@ -45,6 +45,12 @@ public class WekaOptionHelper {
             case "M5Rule":
                 options = getM5RuleOptions(params);
                 break;
+            case "MultilayerPerceptron":
+                options = getMultilayerPerceptronOptions(params);
+                break;
+            case "RandomForest":
+                options = getRandomForestOptions(params);
+                break;
             case "ZeroR":
                 //ZeroR has no options
                 break;
@@ -190,6 +196,7 @@ public class WekaOptionHelper {
         return splitOptions(parameters);
     }
 
+
     /**
      * Generate option string for LibSVM
      * @param params HashMap: svmType, coef0, cost, degree, eps, gamma, kernelType, loss, normalize, nu, probabilityEstimates, shrinking, weights
@@ -287,6 +294,48 @@ public class WekaOptionHelper {
         return splitOptions(parameters);
     }
 
+
+
+    public static String[] getMultilayerPerceptronOptions(HashMap params){
+        String parameters = "";
+
+        parameters += getParamString(params.get("momentum"),"M","0.2");
+        parameters += getBooleanParam(params.get("nominalToBinaryFilter"), "B", "false");
+        parameters += getParamString(params.get("hiddenLayers"), "H", "a");
+        parameters += getParamString(params.get("validationThreshold"),"E", "20");
+        parameters += getBooleanParam(params.get("normalizeAttributes"),"I","false");
+        parameters += getParamString(params.get("batchSize"),"batch-size","100");
+        parameters += getBooleanParam(params.get("decay"),"D","true");
+        parameters += getParamString(params.get("validationSetSize"),"V", "0");
+        parameters += getParamString(params.get("trainingTime"),"N","500");
+        parameters += getBooleanParam(params.get("normalizeNumericClass"),"C", "false");
+        parameters += getParamString(params.get("learningRate"),"L","0.3" );
+        parameters += getBooleanParam(params.get("reset"), "R","false");
+
+        return splitOptions(parameters);
+    }
+
+
+    public static String[] getRandomForestOptions(HashMap params){
+        String parameters = "";
+        parameters += getBooleanParam(params.get("storeOutOfBagPredictions"), "store-out-of-bag-predictions","true");
+        parameters += getParamString(params.get("numExecutionSlots"), "num-slots", "1");
+        parameters += getParamString(params.get("bagSizePercent"),"P","100");
+        parameters += getParamString(params.get("numDecimalPlaces"), "num-decimal-places","2");
+        parameters += getParamString(params.get("batchSize"), "batch-size", "100");
+        parameters += getBooleanParam(params.get("printClassifiers"),"print", "true");
+        parameters += getParamString(params.get("numIterations"), "I", "100");
+        parameters += getBooleanParam(params.get("outputOutOfBagComplexityStatistics"), "output-out-of-bag-complexity-statistics","true");
+        parameters += getBooleanParam(params.get("breakTiesRandomly"),"B","true");
+        parameters += getParamString(params.get("maxDepth"), "depth","0");
+        parameters += getBooleanParam(params.get("computeAttributeImportance"), "attribute-importance","true");
+        parameters += getBooleanParam(params.get("calcOutOfBag"), "O", "true");
+        parameters += getParamString(params.get("numFeatures"), "K","0");
+        parameters += " -S 1 ";
+        return splitOptions(parameters);
+    }
+
+
     /**
      * Generate option string for Adaboost M1
      * @param params HashMap: batchSize, numIterations, useResampling, weightThreshold
@@ -349,6 +398,7 @@ public class WekaOptionHelper {
      * Option-string helper method for WEKA boolean options
      * <pre>{@code
      * WekaUtils.getBooleanParam("true", "R", true) => " -R "
+     * WekaUtils.getBooleanParam("false", "X", false) => " -X "
      * WekaUtils.getBooleanParam(1, "H", 1) => " -H "
      * WekaUtils.getBooleanParam(1, "X", 0) => ""
      * }</pre>
@@ -359,7 +409,7 @@ public class WekaOptionHelper {
      */
     public static String getBooleanParam(Object value, String option, Object trueReference ){
         if (value != null || trueReference != null){
-            if (value.toString().equals(trueReference.toString())) return " -" + option + " ";
+            if (value.toString().toLowerCase().equals(trueReference.toString().toLowerCase())) return " -" + option + " ";
         }
         return "";
     }
@@ -379,6 +429,7 @@ public class WekaOptionHelper {
         }
         return options;
     }
+
 
     public static String[] getClustererOptions(String clusterer, HashMap params){
         String[] options = null;
