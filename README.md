@@ -8,7 +8,7 @@ OpenRiskNet is funded by the European Commission GA 731075. WEKA is developed by
 See [Documentation](https://jguwekarest.github.io/jguwekarest/), [Issue Tracker](https://github.com/jguwekarest/jguwekarest/issues) and [Code](https://github.com/jguwekarest/jguwekarest) at GitHub.
 
 ## Quickstart
-This is an a swagger-enabled JAX-RS server. The API is in OpenAPI Specification Version 2.0 [OpenAPI-Specification 2.0](https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md).
+This is an a swagger-enabled JAX-RS server. The API is in OpenAPI Specification Version 3.0.1 [OpenAPI-Specification 3.0.1](https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.1.md)
 The service uses the [JAX-RS](https://jax-rs-spec.java.net/) framework.
 
 To run a simple local environment, please execute the following:
@@ -41,4 +41,6 @@ curl  -X POST -H "Content-Type: multipart/form-data" -H "Accept:text/x-arff" -F 
 **See:**
  * Full example for a **[local or server hosted development environment](./doc/DockerizedDevEnvSetup.md).** 
  * **[Build the Docker image with a Dockerfile](./doc/DockerImageDeployment.md)**.
+ * **[Run Tests](./doc/Testing.md)**.
+ * **[Deployment in OpenShift](./openshift/README.md)**.
  * Java Docs on gh-pages **[JavaDocs](https://jguwekarest.github.io/jguwekarest/javadoc/index.html)**.

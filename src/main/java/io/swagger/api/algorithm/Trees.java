@@ -96,7 +96,7 @@ public class Trees  {
             schema = @Schema(defaultValue = "0", allowableValues = {"0", "1"})) @FormDataParam("useLaplace") Integer useLaplace,
         // validation
         @Parameter(description = "Validation to use.", schema = @Schema(defaultValue="CrossValidation", allowableValues = {"CrossValidation", "Hold-Out"})) @FormDataParam("validation") String validation ,
-        @Parameter(description  = "Num of Crossvalidations or Percentage Split %.", schema = @Schema(defaultValue="10")) @FormDataParam("validationNum") Double validationNum,
+        @Parameter(description  = "Num of Crossvalidations or Percentage Split %.", schema = @Schema(defaultValue="10", example = "10")) @FormDataParam("validationNum") Double validationNum,
         // authorization
         @Parameter(description = "Authorization token" )@HeaderParam("subjectid") String subjectid,
         @Context UriInfo ui, @Context HttpHeaders headers, @Context SecurityContext securityContext)
@@ -174,7 +174,7 @@ public class Trees  {
             schema = @Schema(defaultValue = "0", allowableValues = {"0", "1"})) @FormDataParam("useLaplace") Integer useLaplace,
         // validation
         @Parameter(description = "Validation to use.", schema = @Schema(defaultValue="CrossValidation", allowableValues = {"CrossValidation", "Hold-Out"})) @FormDataParam("validation") String validation ,
-        @Parameter(description  = "Num of Crossvalidations or Percentage Split %.", schema = @Schema(defaultValue="10")) @FormDataParam("validationNum") Double validationNum,
+        @Parameter(description  = "Num of Crossvalidations or Percentage Split %.", schema = @Schema(defaultValue="10", example = "10")) @FormDataParam("validationNum") Double validationNum,
         // authorization
         @Parameter(description = "Authorization token") @HeaderParam("subjectid") String subjectid,
         @Context UriInfo ui, @Context HttpHeaders headers, @Context SecurityContext securityContext)
@@ -250,7 +250,7 @@ public class Trees  {
             schema = @Schema(defaultValue = "0", allowableValues = {"0", "1"})) @FormDataParam("useLaplace") Integer useLaplace,
         // validation
         @Parameter(description = "Validation to use.", schema = @Schema(defaultValue="CrossValidation", allowableValues = {"CrossValidation", "Hold-Out"})) @FormDataParam("validation") String validation ,
-        @Parameter(description  = "Num of Crossvalidations or Percentage Split %.", schema = @Schema(defaultValue="10")) @FormDataParam("validationNum") Double validationNum,
+        @Parameter(description  = "Num of Crossvalidations or Percentage Split %.", schema = @Schema(defaultValue="10", example = "10")) @FormDataParam("validationNum") Double validationNum,
         // authorization
         @Parameter(description = "Authorization token") @HeaderParam("subjectid") String subjectid,
         @Context UriInfo ui, @Context HttpHeaders headers, @Context SecurityContext securityContext)
@@ -310,7 +310,7 @@ public class Trees  {
         // validation
         @Parameter(description = "Validation to use.",
             schema = @Schema(allowableValues = {"CrossValidation","Hold-Out"}, defaultValue = "CrossValidation")) @FormDataParam("validation") String validation,
-        @Parameter(description = "Num of Crossvalidations or Percentage Split %.", schema = @Schema(defaultValue = "10")) @FormDataParam("validationNum") Double validationNum,
+        @Parameter(description = "Num of Crossvalidations or Percentage Split %.", schema = @Schema(defaultValue = "10", example = "10")) @FormDataParam("validationNum") Double validationNum,
         // authorization
         @Parameter(description = "Authorization token" )@HeaderParam("subjectid") String subjectid,
         @Context UriInfo ui, @Context HttpHeaders headers, @Context SecurityContext securityContext)
@@ -369,7 +369,7 @@ public class Trees  {
         // validation
         @Parameter(description = "Validation to use.",
             schema = @Schema(allowableValues = {"CrossValidation","Hold-Out"}, defaultValue = "CrossValidation")) @FormDataParam("validation") String validation,
-        @Parameter(description = "Num of Crossvalidations or Percentage Split %.", schema = @Schema(defaultValue = "10")) @FormDataParam("validationNum") Double validationNum,
+        @Parameter(description = "Num of Crossvalidations or Percentage Split %.", schema = @Schema(defaultValue = "10", example = "10")) @FormDataParam("validationNum") Double validationNum,
         // authorization
         @Parameter(description = "Authorization token" )@HeaderParam("subjectid") String subjectid,
         @Context UriInfo ui, @Context HttpHeaders headers, @Context SecurityContext securityContext)
@@ -431,7 +431,7 @@ public class Trees  {
         // validation
         @Parameter(description = "Validation to use.",
             schema = @Schema(allowableValues = {"CrossValidation","Hold-Out"}, defaultValue = "CrossValidation")) @FormDataParam("validation") String validation,
-        @Parameter(description = "Num of Crossvalidations or Percentage Split %.", schema = @Schema(defaultValue = "10")) @FormDataParam("validationNum") Double validationNum,
+        @Parameter(description = "Num of Crossvalidations or Percentage Split %.", schema = @Schema(defaultValue = "10", example = "10")) @FormDataParam("validationNum") Double validationNum,
         // authorization
         @Parameter(description = "Authorization token" )@HeaderParam("subjectid") String subjectid,
         @Context UriInfo ui, @Context HttpHeaders headers, @Context SecurityContext securityContext)
@@ -477,7 +477,7 @@ public class Trees  {
         // validation
         @Parameter(description = "Validation to use.",
             schema = @Schema(allowableValues = {"CrossValidation","Hold-Out"}, defaultValue = "CrossValidation")) @FormDataParam("validation") String validation,
-        @Parameter(description = "Num of Crossvalidations or Percentage Split %.", schema = @Schema(defaultValue = "10")) @FormDataParam("validationNum") Double validationNum,
+        @Parameter(description = "Num of Crossvalidations or Percentage Split %.", schema = @Schema(defaultValue = "10", example = "10")) @FormDataParam("validationNum") Double validationNum,
         // authorization
         @Parameter(description = "Authorization token" )@HeaderParam("subjectid") String subjectid,
         @Context UriInfo ui, @Context HttpHeaders headers, @Context SecurityContext securityContext)
@@ -525,7 +525,7 @@ public class Trees  {
             // validation
             @Parameter(description = "Validation to use.",
                 schema = @Schema(allowableValues = {"CrossValidation","Hold-Out"}, defaultValue = "CrossValidation")) @FormDataParam("validation") String validation,
-            @Parameter(description = "Num of Crossvalidations or Percentage Split %.", schema = @Schema(defaultValue = "10")) @FormDataParam("validationNum") Double validationNum,
+            @Parameter(description = "Num of Crossvalidations or Percentage Split %.", schema = @Schema(defaultValue = "10", example = "10")) @FormDataParam("validationNum") Double validationNum,
             // authorization
         @Parameter(description = "Authorization token" )@HeaderParam("subjectid") String subjectid,
         @Context UriInfo ui, @Context HttpHeaders headers, @Context SecurityContext securityContext)
@@ -567,16 +567,16 @@ public class Trees  {
         @Parameter(description = "Dataset URI or local dataset ID (to the arff representation of a dataset).") @FormDataParam("datasetUri") String datasetUri,
         //meta params,
         @Parameter(description = "Bagging: Size of each bag, as a percentage of the training set size.",
-            schema = @Schema(defaultValue = "100")) @FormDataParam("bagSizePercent") Integer bagSizePercent,
+            schema = @Schema(defaultValue = "100", example = "100")) @FormDataParam("bagSizePercent") Integer bagSizePercent,
         @Parameter(description = "Bagging: The preferred number of instances to process if batch prediction is being performed. More or fewer instances may be provided, but this gives implementations a chance to specify a preferred batch size.",
-            schema = @Schema(defaultValue = "100")) @FormDataParam("batchSize") Integer batchSize,
+            schema = @Schema(defaultValue = "100", example = "100")) @FormDataParam("batchSize") Integer batchSize,
         @Parameter(description = "Bagging: The number of iterations to be performed.",
-            schema = @Schema(defaultValue = "10")) @FormDataParam("numIterations") Integer numIterations,
+            schema = @Schema(defaultValue = "10", example = "10")) @FormDataParam("numIterations") Integer numIterations,
         // DecisionStump
         // validation
         @Parameter(description = "Validation to use.",
             schema = @Schema(allowableValues = {"CrossValidation", "Hold-Out"}, defaultValue = "CrossValidation")) @FormDataParam("validation") String validation,
-        @Parameter(description = "Num of Crossvalidations or Percentage Split %.", schema = @Schema(defaultValue = "10")) @FormDataParam("validationNum") Double validationNum,
+        @Parameter(description = "Num of Crossvalidations or Percentage Split %.", schema = @Schema(defaultValue = "10", example = "10")) @FormDataParam("validationNum") Double validationNum,
         // authorization
         @Parameter(description = "Authorization token" )@HeaderParam("subjectid") String subjectid,
         @Context UriInfo ui, @Context HttpHeaders headers, @Context SecurityContext securityContext)
@@ -592,4 +592,89 @@ public class Trees  {
         return delegate.algorithmPost(fileInputStream, fileDetail, datasetUri, "DecisionStump", params,
             "Bagging", metaParams, validation, validationNum, headers, ui, securityContext);
     }
+
+
+    // RandomForest
+    // Class for constructing a forest of random trees.
+
+    @POST
+    @Path("/RandomForest")
+    @Consumes({ "multipart/form-data" })
+    @Produces({ TEXT_URILIST, MediaType.APPLICATION_JSON})
+    @Operation(summary = "REST interface to the WEKA RandomForest classifier.",
+        description = "REST interface to the WEKA RandomForest classifier. " + SAVE_MODEL_NOTE,
+        tags = {"algorithm","meta algorithm"},
+        extensions = {
+            @Extension(properties = {@ExtensionProperty(name = "orn-@id", value = "/algorithm/RandomForest")}),
+            @Extension(properties = {@ExtensionProperty(name = "orn-@type", value = "x-orn:Algorithm")}),
+            @Extension(name = "orn:expects", properties = {@ExtensionProperty(name = "x-orn-@id", value = "x-orn:Dataset")}),
+            @Extension(name = "orn:returns", properties = {@ExtensionProperty(name = "x-orn-@id", value = "x-orn:Task")}),
+            @Extension(name = "algorithm", properties = {
+                @ExtensionProperty(name = "Random Forest", value = "https://en.wikipedia.org/wiki/Random_forest")
+            })
+        })
+    @GroupedApiResponsesOk
+    public Response algorithmRandomForestPost(
+        //data params
+        @FormDataParam("file") InputStream fileInputStream,
+        @FormDataParam("file") FormDataContentDisposition fileDetail,
+        @Parameter(description = "Dataset URI or local dataset ID (to the arff representation of a dataset).") @FormDataParam("datasetUri") String datasetUri,
+        //@Parameter(description = "Whether to represent copies of instances using weights rather than explicitly.",
+        //    schema = @Schema(defaultValue = "10", example = "10")) @FormDataParam("representCopiesUsingWeights ")  representCopiesUsingWeights
+        @Parameter(description = "Whether to store the out-of-bag predictions.",
+            schema = @Schema(allowableValues =  {"true", "false"}, defaultValue = "false", example = "false")) @FormDataParam("storeOutOfBagPredictions") Boolean storeOutOfBagPredictions,
+        @Parameter(description = "The number of execution slots (threads) to use for constructing the ensemble.",
+            schema = @Schema(defaultValue = "1", example = "1")) @FormDataParam("numExecutionSlots") Integer numExecutionSlots,
+        @Parameter(description = "Size of each bag, as a percentage of the training set size.",
+            schema = @Schema(defaultValue = "100", example = "100")) @FormDataParam("bagSizePercent") Integer bagSizePercent,
+        @Parameter(description = "The number of decimal places to be used for the output of numbers in the model.",
+            schema = @Schema(defaultValue = "10", example = "10")) @FormDataParam("numDecimalPlaces") Integer numDecimalPlaces,
+        @Parameter(description = "The preferred number of instances to process if batch prediction is being performed. More or fewer instances may be provided, but this gives implementations a chance to specify a preferred batch size.",
+            schema = @Schema(defaultValue = "100", example = "100")) @FormDataParam("batchSize") Integer batchSize,
+        @Parameter(description = "Print the individual classifiers in the output",
+            schema = @Schema(allowableValues =  {"true", "false"}, defaultValue = "false", example = "false")) @FormDataParam("printClassifiers") Boolean printClassifiers,
+        @Parameter(description = "The number of iterations to be performed.",
+            schema = @Schema(defaultValue = "100", example = "100")) @FormDataParam("numIterations") Integer numIterations,
+        @Parameter(description = "Whether to output complexity-based statistics when out-of-bag evaluation is performed.",
+            schema = @Schema(allowableValues =  {"true", "false"}, defaultValue = "false", example = "false")) @FormDataParam("outputOutOfBagComplexityStatistics") Boolean outputOutOfBagComplexityStatistics,
+        @Parameter(description = "Break ties randomly when several attributes look equally good.",
+            schema = @Schema(allowableValues =  {"true", "false"}, defaultValue = "false", example = "false")) @FormDataParam("breakTiesRandomly") Boolean breakTiesRandomly,
+        @Parameter(description = "The maximum depth of the tree, 0 for unlimited.",
+            schema = @Schema(defaultValue = "0", example = "0")) @FormDataParam("maxDepth") Integer maxDepth,
+        @Parameter(description = "Compute attribute importance via mean impurity decrease",
+            schema = @Schema(allowableValues =  {"true", "false"}, defaultValue = "false", example = "false")) @FormDataParam("computeAttributeImportance") Boolean computeAttributeImportance,
+        @Parameter(description = "Whether the out-of-bag error is calculated.",
+            schema = @Schema(allowableValues =  {"true", "false"}, defaultValue = "false", example = "false")) @FormDataParam("calcOutOfBag") Boolean calcOutOfBag,
+        @Parameter(description = "Sets the number of randomly chosen attributes. If 0, int(log_2(#predictors) + 1) is used.",
+            schema = @Schema(defaultValue = "0", example = "0")) @FormDataParam("numFeatures") Integer numFeatures,
+        // validation
+            @Parameter(description = "Validation to use.",
+                schema = @Schema(allowableValues = {"CrossValidation", "Hold-Out"}, defaultValue = "CrossValidation")) @FormDataParam("validation") String validation,
+        @Parameter(description = "Num of Crossvalidations or Percentage Split %.", schema = @Schema(defaultValue = "10", example = "10")) @FormDataParam("validationNum") Double validationNum,
+        // authorization
+        @Parameter(description = "Authorization token" )@HeaderParam("subjectid") String subjectid,
+        @Context UriInfo ui, @Context HttpHeaders headers, @Context SecurityContext securityContext)
+        throws NotFoundException, IOException {
+
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("datasetUri", datasetUri);
+        params.put("storeOutOfBagPredictions", storeOutOfBagPredictions);
+        params.put("numExecutionSlots", numExecutionSlots);
+        params.put("bagSizePercent", bagSizePercent);
+        params.put("numDecimalPlaces", numDecimalPlaces);
+        params.put("batchSize", batchSize);
+        params.put("printClassifiers", printClassifiers);
+        params.put("numIterations", numIterations);
+        params.put("outputOutOfBagComplexityStatistics", outputOutOfBagComplexityStatistics);
+        params.put("breakTiesRandomly", breakTiesRandomly);
+        params.put("maxDepth", maxDepth);
+        params.put("computeAttributeImportance", computeAttributeImportance);
+        params.put("calcOutOfBag", calcOutOfBag);
+        params.put("numFeatures", numFeatures);
+        HashMap<String, Object> metaParams = new HashMap<>();
+
+        return delegate.algorithmPost(fileInputStream, fileDetail, datasetUri, "RandomForest", params,
+            validation, validationNum, headers, ui, securityContext);
+    }
+
 }

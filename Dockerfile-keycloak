@@ -14,7 +14,7 @@ RUN wget -O /usr/local/tomcat/lib/keycloak-tomcat8.zip https://downloads.jboss.o
 RUN cd /usr/local/tomcat/lib/ && unzip keycloak-tomcat8.zip
 
 # copy and unzip the application war file
-ADD target/weka_rs-0.2.0.war /usr/local/tomcat/webapps/ROOT.war
+ADD target/weka_rs-0.3.0.war /usr/local/tomcat/webapps/ROOT.war
 RUN unzip -d /usr/local/tomcat/webapps/ROOT /usr/local/tomcat/webapps/ROOT.war && rm -f /usr/local/tomcat/webapps/ROOT.war
 
 # copy keycloak and tomcat configuration

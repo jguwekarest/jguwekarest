@@ -130,7 +130,6 @@ public class FunctionsTest {
             .field("decay", "true")
             .field("validationSetSize", "0")
             .field("trainingTime", "500")
-            .field("autoBuild", "true")
             .field("normalizeNumericClass", "true")
             .field("learningRate", "0.3")
             .field("reset", "true")
@@ -189,23 +188,29 @@ public class FunctionsTest {
         String model_text = modelResponse.readEntity(String.class);
 
         Assert.assertTrue(modelResponse.getMediaType().toString().equals("text/plain"));
-
         Assert.assertTrue(model_text.contains("Sigmoid Node 0\n" +
             "    Inputs    Weights\n" +
-            "    Threshold    -3.248835441689124\n" +
-            "    Node 2    5.706344521860183\n" +
-            "    Node 3    2.443270263208691\n" +
-            "    Node 4    2.6425576499015655\n" +
-            "    Node 5    2.5103414057156117"));
+            "    Threshold    0.26982885978760257\n" +
+            "    Node 2    0.15514278608355117\n" +
+            "    Node 3    0.18876803923522797\n" +
+            "    Node 4    0.19368101877866986\n" +
+            "    Node 5    0.13685365034133318\n" +
+            "Sigmoid Node 1\n" +
+            "    Inputs    Weights\n" +
+            "    Threshold    -0.2564039232258344\n" +
+            "    Node 2    -0.1270526458326683\n" +
+            "    Node 3    -0.15773355619611837\n" +
+            "    Node 4    -0.1888933392630922\n" +
+            "    Node 5    -0.22385902643457084"));
 
-        Assert.assertTrue(model_text.contains("Correctly Classified Instances          11               78.5714 %\n" +
-            "Incorrectly Classified Instances         3               21.4286 %\n" +
-            "Kappa statistic                          0.5116\n" +
-            "Mean absolute error                      0.265 \n" +
-            "Root mean squared error                  0.4627\n" +
-            "Relative absolute error                 55.6497 %\n" +
-            "Root relative squared error             93.7923 %\n" +
-            "Total Number of Instances               14  "));
+        Assert.assertTrue(model_text.contains("orrectly Classified Instances           9               64.2857 %\n" +
+            "Incorrectly Classified Instances         5               35.7143 %\n" +
+            "Kappa statistic                          0     \n" +
+            "Mean absolute error                      0.472 \n" +
+            "Root mean squared error                  0.4954\n" +
+            "Relative absolute error                 99.1303 %\n" +
+            "Root relative squared error            100.4216 %\n" +
+            "Total Number of Instances               14"));
 
         String id = model_uri.substring(model_uri.length() - 24);
         Boolean resultDelete = ModelService.deleteModel(id);

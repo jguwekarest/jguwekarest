@@ -4,7 +4,7 @@
     <artifactId>weka_rs</artifactId>
     <packaging>war</packaging>
     <name>JGU WEKA REST</name>
-    <version>0.2.0</version>
+    <version>0.3.0</version>
 
     <licenses>
         <license>

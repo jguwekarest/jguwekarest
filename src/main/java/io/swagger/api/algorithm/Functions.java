@@ -81,7 +81,7 @@ public class Functions {
             schema = @Schema(defaultValue = "1.0E-8")) @FormDataParam("ridge") BigDecimal ridge,
         // validation
         @Parameter(description = "Validation to use.", schema = @Schema(defaultValue="CrossValidation", allowableValues = {"CrossValidation", "Hold-Out"})) @FormDataParam("validation") String validation ,
-        @Parameter(description  = "Num of Crossvalidations or Percentage Split %.", schema = @Schema(defaultValue="10")) @FormDataParam("validationNum") Double validationNum,
+        @Parameter(description  = "Num of Crossvalidations or Percentage Split %.", schema = @Schema(defaultValue="10", example = "10")) @FormDataParam("validationNum") Double validationNum,
         // authorization
         @Parameter(description = "authorization token") @HeaderParam("subjectid") String subjectid,
         @Context UriInfo ui, @Context HttpHeaders headers, @Context SecurityContext securityContext)
@@ -146,7 +146,7 @@ public class Functions {
         @Parameter(description = "weights -- The weights to use for the classes (blank-separated list, eg, \"1 1 1\" for a 3-class problem), if empty 1 is used by default.") @FormDataParam("weights") String weights,
         // validation
         @Parameter(description = "Validation to use.", schema = @Schema(defaultValue="CrossValidation", allowableValues = {"CrossValidation", "Hold-Out"})) @FormDataParam("validation") String validation ,
-        @Parameter(description  = "Num of Crossvalidations or Percentage Split %.", schema = @Schema(defaultValue="10")) @FormDataParam("validationNum") Double validationNum,
+        @Parameter(description  = "Num of Crossvalidations or Percentage Split %.", schema = @Schema(defaultValue="10", example = "10")) @FormDataParam("validationNum") Double validationNum,
         // authorization
         @Parameter(description = "authorization token") @HeaderParam("subjectid") String subjectid,
         @Context UriInfo ui, @Context HttpHeaders headers, @Context SecurityContext securityContext)
@@ -199,7 +199,7 @@ public class Functions {
         @Parameter(description = "Maximum number of iterations to perform.") @FormDataParam("maxIts") Integer maxIts,
         // validation
         @Parameter(description = "Validation to use.", schema = @Schema(allowableValues = {"CrossValidation","Hold-Out"}, defaultValue = "CrossValidation")) @FormDataParam("validation") String validation,
-        @Parameter(description = "Num of Crossvalidations or Percentage Split %.", schema = @Schema(defaultValue = "10")) @FormDataParam("validationNum") Double validationNum,
+        @Parameter(description = "Num of Crossvalidations or Percentage Split %.", schema = @Schema(defaultValue = "10",example = "10")) @FormDataParam("validationNum") Double validationNum,
         // headers
         @Parameter(description = "authorization token") @HeaderParam("subjectid") String subjectid,
         @Context UriInfo ui, @Context HttpHeaders headers, @Context SecurityContext securityContext)
@@ -272,8 +272,6 @@ public class Functions {
         @Parameter(description = "The number of epochs to train through. If the validation set is non-zero then it can terminate the network early",
             schema = @Schema(description = "", defaultValue = "500", example = "500"))@FormDataParam("trainingTime") Integer trainingTime,
 
-        @Parameter(description = "Adds and connects up hidden layers in the network.",
-            schema = @Schema(description = "", allowableValues={"true","false"}, defaultValue = "true", example = "true"))@FormDataParam("autoBuild") Boolean autoBuild,
         @Parameter(description = "This will normalize the class if it's numeric. This could help improve performance of the network, It normalizes the class to be " +
             "between -1 and 1. Note that this is only internally, the output will be scaled back to the original range.",
             schema = @Schema(description = "", allowableValues={"true","false"}, defaultValue = "true", example = "true"))@FormDataParam("normalizeNumericClass") Boolean normalizeNumericClass,
@@ -295,19 +293,15 @@ public class Functions {
 
         HashMap<String, Object> params = new HashMap<>();
         params.put("datasetUri", datasetUri);
-
-
         params.put("momentum", momentum);
         params.put("nominalToBinaryFilter", nominalToBinaryFilter);
         params.put("hiddenLayers", hiddenLayers);
-
         params.put("validationThreshold", validationThreshold);
         params.put("normalizeAttributes", normalizeAttributes);
         params.put("batchSize", batchSize);
         params.put("decay", decay);
         params.put("validationSetSize", validationSetSize);
         params.put("trainingTime", trainingTime);
-        params.put("autoBuild", autoBuild);
         params.put("normalizeNumericClass", normalizeNumericClass);
         params.put("learningRate", learningRate);
         params.put("reset", reset);
