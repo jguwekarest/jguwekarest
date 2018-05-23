@@ -30,10 +30,10 @@
         "name": "jguweka"
       },
       "spec": {
-        "dockerImageRepository": "docker.io/rautenberg/jguweka"
+        "dockerImageRepository": "docker.io/jguweka/jguweka"
       },
       "status": {
-        "dockerImageRepository": "docker.io/rautenberg/jguweka"
+        "dockerImageRepository": "docker.io/jguweka/jguweka"
       }
     },
     {
@@ -119,7 +119,7 @@
             "containers": [
               {
                 "name": "jguweka",
-                "image": "docker.io/rautenberg/jguweka:latest",
+                "image": "docker.io/jguweka/jguweka:latest",
                 "ports": [
                   {
                     "containerPort": 8080,

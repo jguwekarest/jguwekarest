@@ -32,7 +32,9 @@ public class FunctionsTest {
         FormDataMultiPart formDataMultiPart = new FormDataMultiPart();
         formDataMultiPart.field("ridge", "1.0E-8")
             .field("useConjugateGradientDescent", "true")
-            .field("maxIts", "-1");
+            .field("maxIts", "-1")
+            .field("validation", "CrossValidation")
+            .field("validationNum", "10");
 
         final FormDataMultiPart multipart = (FormDataMultiPart) formDataMultiPart.field("save", "false").bodyPart(filePart);
 
@@ -211,6 +213,97 @@ public class FunctionsTest {
             "Relative absolute error                 99.1303 %\n" +
             "Root relative squared error            100.4216 %\n" +
             "Total Number of Instances               14"));
+
+        String id = model_uri.substring(model_uri.length() - 24);
+        Boolean resultDelete = ModelService.deleteModel(id);
+        Assert.assertTrue(resultDelete);
+        Boolean taskdelete= TaskService.delete(taskRemote);
+        Assert.assertTrue(taskdelete);
+
+    }
+
+
+    @Test(description = "Post an arff file to SMO algorithm and get a text representation.")
+    @Parameters({"host"})
+    public void algorithmSMOPost( @Optional String host ) throws Exception {
+
+        String uri = host + "/algorithm/SMO";
+
+        final Client client = ClientBuilder.newBuilder().register(MultiPartFeature.class).build();
+
+        final FileDataBodyPart filePart = new FileDataBodyPart("file", new File( getClass().getClassLoader().getResource("weather.numeric.arff").getFile()));
+        FormDataMultiPart formDataMultiPart = new FormDataMultiPart();
+        formDataMultiPart.field("numFolds", "-1")
+            .field("c", "1.0")
+            .field("batchSize", "100")
+            .field("kernel", "weka.classifiers.functions.supportVector.PolyKernel -E 1.0 -C 250007")
+            .field("filterType", "0")
+            .field("calibratorcalibrator", "weka.classifiers.functions.Logistic -R 1.0E-8 -M -1 -num-decimal-places 4")
+            .field("validation", "CrossValidation")
+            .field("validationNum", "10");
+
+        final FormDataMultiPart multipart = (FormDataMultiPart) formDataMultiPart.field("save", "false").bodyPart(filePart);
+
+        final WebTarget target = client.target(uri);
+        Invocation.Builder request = target.request();
+        request.accept("text/uri-list");
+
+        final Response response = request.post(Entity.entity(multipart, multipart.getMediaType()));
+
+        formDataMultiPart.close();
+        multipart.close();
+
+        Assert.assertTrue(response.getStatus() == 200);
+        Assert.assertTrue(response.getMediaType().toString().equals("text/uri-list"));
+        String task_uri = response.readEntity(String.class);
+        Assert.assertTrue(task_uri.startsWith(host + "/task/"), "Task URI is: " + task_uri + ". It do not start with: " + host + "/task/");
+
+        final WebTarget taskTarget = client.target(task_uri);
+        Invocation.Builder taskRequest = taskTarget.request();
+        taskRequest.accept(MediaType.APPLICATION_JSON);
+
+        Response taskResponse = taskRequest.get();
+        Assert.assertTrue(taskResponse.getStatus() == 202, "Task at host: " + task_uri + " has wrong http code. Code is: " + taskResponse.getStatus());
+        Assert.assertTrue(taskResponse.getMediaType().toString().equals(MediaType.APPLICATION_JSON), "Task at host: " + task_uri + " not available in mime-type application/json. Is: " + taskResponse.getMediaType().toString());
+        //Assert.assertEquals(taskResponse.readEntity(String.class).replaceAll("(?m) +$",""), savedModelString.replaceAll("(?m) +$",""));
+        int i = 0;
+        while(taskResponse.getStatus() != 200){
+            i += 1;
+            TimeUnit.SECONDS.sleep(1);
+            taskResponse = taskRequest.get();
+            if (i>20) break;
+        }
+        Assert.assertTrue(taskResponse.getStatus() == 200, "Task at host: " + task_uri + " has wrong http code. Code is: " + taskResponse.getStatus());
+
+        Gson gson = new Gson();
+        String jsonString = taskResponse.readEntity(String.class);
+        Task taskRemote = gson.fromJson(jsonString, Task.class);
+
+        Assert.assertEquals(taskRemote.getStatus(), Task.Status.COMPLETED);
+        Assert.assertEquals(taskRemote.getStep(), Task.Step.SAVED);
+        Assert.assertEquals(taskRemote.getPercentageCompleted(), 100f);
+
+        String model_uri = taskRemote.getResultURI();
+        final WebTarget modelTarget = client.target(model_uri);
+        Invocation.Builder modelRequest = modelTarget.request();
+        modelRequest.accept("text/plain");
+
+        Response modelResponse = modelRequest.get();
+        Assert.assertTrue(modelResponse.getStatus() == 200, "Model at host: " + model_uri + " has wrong http code. Code is: " + modelResponse.getStatus());
+
+        String model_text = modelResponse.readEntity(String.class);
+
+        Assert.assertTrue(modelResponse.getMediaType().toString().equals("text/plain"));
+
+        Assert.assertTrue(model_text.contains("Machine linear: showing attribute weights, not support vectors.\n" +
+            "\n" +
+            "         0.8436 * (normalized) outlook=sunny\n" +
+            " +      -0.9535 * (normalized) outlook=overcast\n" +
+            " +       0.1099 * (normalized) outlook=rainy\n" +
+            " +       0.5276 * (normalized) temperature\n" +
+            " +       0.771  * (normalized) humidity\n" +
+            " +      -0.8901 * (normalized) windy=FALSE\n" +
+            " -       0.8683\n"),"Compared string is not in: " + model_text);
 
         String id = model_uri.substring(model_uri.length() - 24);
         Boolean resultDelete = ModelService.deleteModel(id);

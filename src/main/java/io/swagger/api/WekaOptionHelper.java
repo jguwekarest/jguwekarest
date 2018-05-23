@@ -51,6 +51,9 @@ public class WekaOptionHelper {
             case "RandomForest":
                 options = getRandomForestOptions(params);
                 break;
+            case "SMO":
+                options = getSMOOptions(params);
+                break;
             case "ZeroR":
                 //ZeroR has no options
                 break;
@@ -333,6 +336,20 @@ public class WekaOptionHelper {
         parameters += getParamString(params.get("numFeatures"), "K","0");
         parameters += " -S 1 ";
         return splitOptions(parameters);
+    }
+
+
+    public static String[] getSMOOptions(HashMap params) {
+        String parameters = "";
+        parameters += getParamString(params.get("numFolds"), "V","-1");
+        parameters += getParamString(params.get("c"), "C", "1.0");
+        parameters += getParamString(params.get("batchSize"), "batch-size", "100");
+        parameters += getParamString(params.get("kernel"), "K","weka.classifiers.functions.supportVector.PolyKernel -E 1.0 -C 250007");
+        parameters += getParamString(params.get("filterType"), "N","0");
+        parameters += getParamString(params.get("calibrator"), "calibrator","weka.classifiers.functions.Logistic -R 1.0E-8 -M -1 -num-decimal-places 4");
+        parameters += " -L 0.001 "; //The tolerance parameter (shouldn't be changed)
+        return splitOptions(parameters);
+
     }
 
 

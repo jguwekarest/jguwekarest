@@ -239,49 +239,49 @@ public class Functions {
         @FormDataParam("file") FormDataContentDisposition fileDetail,
         @Parameter(description = "Dataset URI or local dataset ID (to the arff representation of a dataset).")@FormDataParam("datasetUri")  String datasetUri,
         @Parameter(description = "Momentum applied to the weights during updating.",
-            schema = @Schema(description = "", defaultValue = "0.2", example = "0.2"))@FormDataParam("momentum") Double momentum,
+            schema = @Schema(defaultValue = "0.2", example = "0.2"))@FormDataParam("momentum") Double momentum,
         @Parameter(description = "This will preprocess the instances with the filter. This could help improve performance if there are nominal attributes in the data.",
-            schema = @Schema(description = "", allowableValues={"true","false"}, defaultValue = "true", example = "true")
+            schema = @Schema(allowableValues={"true","false"}, defaultValue = "true", example = "true")
             )@FormDataParam("nominalToBinaryFilter") Boolean nominalToBinaryFilter,
         @Parameter(description = "This defines the hidden layers of the neural network. This is a list of positive whole numbers. 1 for each hidden layer. Comma seperated. #" +
             "To have no hidden layers put a single 0 here. This will only be used if autobuild is set. There are also wildcard values 'a' = (attribs + classes) / 2, 'i' = attribs, 'o' = classes , 't' = attribs + classes.",
-            schema = @Schema(description = "", defaultValue = "a", example = "a")
+            schema = @Schema(defaultValue = "a", example = "a")
             )@FormDataParam("hiddenLayers") String hiddenLayers,
         @Parameter(description = "Used to terminate validation testing.The value here dictates how many times in a row the validation set error can get worse before " +
-            "training is terminated.",schema = @Schema(description = "", defaultValue = "20", example = "20")
+            "training is terminated.",schema = @Schema(defaultValue = "20", example = "20")
             )@FormDataParam("validationThreshold") Integer validationThreshold,
 
         @Parameter(description = "This will normalize the attributes. This could help improve performance of the network. This is not reliant on the class being numeric. " +
             "This will also normalize nominal attributes as well (after they have been run through the nominal to binary filter if that is in use) so that the nominal " +
-            "values are between -1 and 1", schema = @Schema(description = "", allowableValues={"true","false"}, defaultValue = "true", example = "true")
+            "values are between -1 and 1", schema = @Schema(allowableValues={"true","false"}, defaultValue = "true", example = "true")
             )@FormDataParam("normalizeAttributes") Boolean normalizeAttributes,
         @Parameter(description = "The number of decimal places to be used for the output of numbers in the model.")@FormDataParam("numDecimalPlaces") Integer numDecimalPlaces,
         @Parameter(description = "The preferred number of instances to process if batch prediction is being performed. More or fewer instances may be provided, " +
             "but this gives implementations a chance to specify a preferred batch size.",
-            schema = @Schema(description = "", defaultValue = "100", example = "100")
+            schema = @Schema(defaultValue = "100", example = "100")
         )@FormDataParam("batchSize") Integer batchSize,
         @Parameter(description = "This will cause the learning rate to decrease. This will divide the starting learning rate by the epoch number, to determine what " +
             "the current learning rate should be. This may help to stop the network from diverging from the target output, as well as improve general performance. " +
             "Note that the decaying learning rate will not be shown in the gui, only the original learning rate. If the learning rate is changed in the gui, this is " +
             "treated as the starting learning rate.",
-            schema = @Schema(description = "", allowableValues={"true","false"}, defaultValue = "true", example = "true"))@FormDataParam("decay") Boolean decay,
+            schema = @Schema(allowableValues={"true","false"}, defaultValue = "true", example = "true"))@FormDataParam("decay") Boolean decay,
         @Parameter(description = "The percentage size of the validation set.(The training will continue until it is observed that the error on the validation set has been " +
             "consistently getting worse, or if the training time is reached).  If This is set to zero no validation set will be used and instead the network will train for " +
             "the specified number of epochs.", schema = @Schema(defaultValue = "0", example = "0"))@FormDataParam("validationSetSize") Integer validationSetSize,
 
         @Parameter(description = "The number of epochs to train through. If the validation set is non-zero then it can terminate the network early",
-            schema = @Schema(description = "", defaultValue = "500", example = "500"))@FormDataParam("trainingTime") Integer trainingTime,
+            schema = @Schema(defaultValue = "500", example = "500"))@FormDataParam("trainingTime") Integer trainingTime,
 
         @Parameter(description = "This will normalize the class if it's numeric. This could help improve performance of the network, It normalizes the class to be " +
             "between -1 and 1. Note that this is only internally, the output will be scaled back to the original range.",
-            schema = @Schema(description = "", allowableValues={"true","false"}, defaultValue = "true", example = "true"))@FormDataParam("normalizeNumericClass") Boolean normalizeNumericClass,
+            schema = @Schema(allowableValues={"true","false"}, defaultValue = "true", example = "true"))@FormDataParam("normalizeNumericClass") Boolean normalizeNumericClass,
         @Parameter(description = "The amount the weights are updated.",
-            schema = @Schema(description = "", defaultValue = "0.3", example = "0.3"))@FormDataParam("learningRate") Double learningRate,
+            schema = @Schema(defaultValue = "0.3", example = "0.3"))@FormDataParam("learningRate") Double learningRate,
 
         @Parameter(description = "This will allow the network to reset with a lower learning rate. If the network diverges from the answer this will automatically " +
             "reset the network with a lower learning rate and begin training again. This option is only available if the gui is not set. " +
             "Note that if the network diverges but isn't allowed to reset it will fail the training process and return an error message.",
-            schema = @Schema(description = "", allowableValues={"true","false"}, defaultValue = "true", example = "true"))@FormDataParam("reset") Boolean reset,
+            schema = @Schema(allowableValues={"true","false"}, defaultValue = "true", example = "true"))@FormDataParam("reset") Boolean reset,
 
         // validation
         @Parameter(description = "Validation to use.", schema = @Schema(allowableValues = {"CrossValidation","Hold-Out"}, defaultValue = "CrossValidation")) @FormDataParam("validation") String validation,
@@ -309,5 +309,63 @@ public class Functions {
             validation, validationNum, headers, ui, securityContext);
     }
 
+
+    // SMO
+
+    @POST
+    @Path("/SMO")
+    @Consumes({"multipart/form-data"})
+    @Produces({ TEXT_URILIST, MediaType.APPLICATION_JSON})
+    @Operation(summary = "REST interface to the WEKA SMO classifier.",
+        description = "REST interface to the WEKA SMO classifier. " + SAVE_MODEL_NOTE,
+        tags = {"algorithm"},
+        extensions = {
+            @Extension(properties = {@ExtensionProperty(name = "orn-@id",  value = "/algorithm/SMO")}),
+            @Extension(properties = {@ExtensionProperty(name = "orn-@type",  value = "x-orn:Algorithm")}),
+            @Extension(name = "orn:expects", properties = { @ExtensionProperty(name = "x-orn-@id",  value = "x-orn:Dataset")}),
+            @Extension(name = "orn:returns", properties = { @ExtensionProperty(name = "x-orn-@id",  value = "x-orn:Task")}),
+            @Extension(name = "algorithm", properties = {
+                @ExtensionProperty(name = "Multilayer Perceptron", value = "https://en.wikipedia.org/wiki/SMO")
+            })
+        })
+    @GroupedApiResponsesOk
+    public Response algorithmSMOPost(
+        @FormDataParam("file") InputStream fileInputStream,
+        @FormDataParam("file") FormDataContentDisposition fileDetail,
+        @Parameter(description = "Dataset URI or local dataset ID (to the arff representation of a dataset).")@FormDataParam("datasetUri")  String datasetUri,
+        @Parameter(description = "The number of folds for cross-validation used to generate training data for calibration models (-1 means use training data).",
+            schema = @Schema(minimum = "-1", defaultValue = "-1", example = "-1"))@FormDataParam("numFolds") Integer numFolds,
+        @Parameter(description = "The complexity parameter C.",
+            schema = @Schema(defaultValue = "1.0", example = "1.0"))@FormDataParam("c") Double c,
+        @Parameter(description = "The preferred number of instances to process if batch prediction is being performed. More or fewer instances may be provided, but this gives implementations a chance to specify a preferred batch size.",
+            schema = @Schema(defaultValue = "100", example = "100"))@FormDataParam("batchSize") Integer batchSize,
+        @Parameter(description = "The kernel to use.",
+            schema = @Schema(description = "The kernel to use.", defaultValue = "weka.classifiers.functions.supportVector.PolyKernel -E 1.0 -C 250007",
+                example = "weka.classifiers.functions.supportVector.PolyKernel -E 1.0 -C 250007"))@FormDataParam("kernel") String kernel,
+        @Parameter(description = "Determines how/if the data will be transformed. (0=normalize training data, 1=standardize training data, 2=no mormalization/standardization",
+            schema = @Schema(allowableValues={"0","1","2"}, defaultValue = "0", example = "0"))@FormDataParam("filterType") Integer filterType,
+        @Parameter(description = "The calibration method to use. ",
+            schema = @Schema(description = "The calibration method to use.", defaultValue = "weka.classifiers.functions.Logistic -R 1.0E-8 -M -1 -num-decimal-places 4",
+                example = "weka.classifiers.functions.Logistic -R 1.0E-8 -M -1 -num-decimal-places 4"))@FormDataParam("calibrator") String calibrator,
+        // validation
+        @Parameter(description = "Validation to use.", schema = @Schema(allowableValues = {"CrossValidation","Hold-Out"}, defaultValue = "CrossValidation")) @FormDataParam("validation") String validation,
+        @Parameter(description = "Num of Crossvalidations or Percentage Split %.", schema = @Schema(defaultValue = "10", example = "10")) @FormDataParam("validationNum") Double validationNum,
+        // headers
+        @Parameter(description = "authorization token") @HeaderParam("subjectid") String subjectid,
+        @Context UriInfo ui, @Context HttpHeaders headers, @Context SecurityContext securityContext)
+        throws NotFoundException, IOException {
+
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("datasetUri", datasetUri);
+        params.put("numFolds", numFolds);
+        params.put("c", c);
+        params.put("batchSize", batchSize);
+        params.put("kernel", kernel);
+        params.put("filterType", filterType);
+        params.put("calibrator", calibrator);
+
+        return delegate.algorithmPost(fileInputStream, fileDetail, datasetUri, "SMO", params,
+            validation, validationNum, headers, ui, securityContext);
+        }
 
 }
