@@ -671,7 +671,6 @@ public class Trees  {
         params.put("computeAttributeImportance", computeAttributeImportance);
         params.put("calcOutOfBag", calcOutOfBag);
         params.put("numFeatures", numFeatures);
-        HashMap<String, Object> metaParams = new HashMap<>();
 
         return delegate.algorithmPost(fileInputStream, fileDetail, datasetUri, "RandomForest", params,
             validation, validationNum, headers, ui, securityContext);

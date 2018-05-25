@@ -75,7 +75,6 @@ public class Dataset {
         @Context UriInfo ui, @Context HttpHeaders headers) throws ApiException {
 
             String accept = headers.getRequestHeaders().getFirst("accept");
-            System.out.println("accept is: " + accept);
             Object datasetList = DatasetService.listDatasets(ui, accept, subjectid);
 
             return Response

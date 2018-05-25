@@ -35,10 +35,7 @@ import java.io.InputStream;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Objects;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 import static io.swagger.api.Constants.TEXT_URILIST;
@@ -143,7 +140,6 @@ public class AlgorithmImpl extends AlgorithmService {
     @Produces({MediaType.TEXT_PLAIN})
     public Response algorithmGenericGet(String classifierName, HttpHeaders headers, UriInfo ui, SecurityContext securityContext) throws NotFoundException {
         AbstractClassifier classifier;
-        System.out.println("********************************************\nclassifiername is: " + classifierName + "\n*************************************");
         classifier = getClassifier(classifierName);
         StringBuilder output = new StringBuilder();
         Enumeration<Option> enu = classifier.listOptions();

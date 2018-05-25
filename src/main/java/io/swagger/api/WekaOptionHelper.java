@@ -8,7 +8,7 @@ import java.util.logging.Logger;
 public class WekaOptionHelper {
 
     private static final Logger LOG = Logger.getLogger(WekaOptionHelper.class.getName());
-
+    private static final String QUOTE = "\"";
     public static String[] getClassifierOptions(String classifier, HashMap params){
         String[] options = null;
         switch (classifier) {
@@ -53,6 +53,9 @@ public class WekaOptionHelper {
                 break;
             case "SMO":
                 options = getSMOOptions(params);
+                break;
+            case "SMOreg":
+                options = getSMOregOptions(params);
                 break;
             case "ZeroR":
                 //ZeroR has no options
@@ -191,11 +194,18 @@ public class WekaOptionHelper {
         return splitOptions(parameters);
     }
 
-
-
+    /**
+     * Generate option string for Gaussian Processes
+     * @param params HashMap
+     * @return options array
+     */
     public static String[] getGaussianProcessesOptions(HashMap params){
         String parameters = "";
-
+        parameters += getParamString(params.get("batchSize"), "batch-size", "100");
+        parameters += getParamString(QUOTE + params.get("kernel")+ QUOTE, "K","\"weka.classifiers.functions.supportVector.PolyKernel -E 1.0 -C 250007\"");
+        parameters += getParamString(params.get("filterType"), "N","0");
+        parameters += getParamString(QUOTE + params.get("noise") + QUOTE, "L","1.0");
+        parameters += " -S 1 "; //seed = 1
         return splitOptions(parameters);
     }
 
@@ -231,6 +241,11 @@ public class WekaOptionHelper {
         return splitOptions(parameters);
     }
 
+    /**
+     * Generate option string for Logistic
+     * @param params HashMap
+     * @return options array
+     */
     public static String[] getLogisticOptions(HashMap params){
         String parameters = "";
         if (params.get("useConjugateGradientDescent") != null && (params.get("useConjugateGradientDescent").toString().equals("1")||params.get("useConjugateGradientDescent").toString().equals("true"))) { parameters += " -C ";}
@@ -260,7 +275,11 @@ public class WekaOptionHelper {
         return splitOptions(parameters);
     }
 
-
+    /**
+     * Generate option string for M5P
+     * @param params HashMap
+     * @return options array
+     */
     public static String[] getM5POptions(HashMap params) {
         String parameters = "";
         if (params.get("unpruned") != null && params.get("unpruned").toString().equals("1")) { parameters += " -N ";}
@@ -298,7 +317,11 @@ public class WekaOptionHelper {
     }
 
 
-
+    /**
+     * Generate option string for MultilayerPerceptron
+     * @param params HashMap
+     * @return options array
+     */
     public static String[] getMultilayerPerceptronOptions(HashMap params){
         String parameters = "";
 
@@ -318,7 +341,11 @@ public class WekaOptionHelper {
         return splitOptions(parameters);
     }
 
-
+    /**
+     * Generate option string for RandomForest
+     * @param params HashMap
+     * @return options array
+     */
     public static String[] getRandomForestOptions(HashMap params){
         String parameters = "";
         parameters += getBooleanParam(params.get("storeOutOfBagPredictions"), "store-out-of-bag-predictions","true");
@@ -338,20 +365,37 @@ public class WekaOptionHelper {
         return splitOptions(parameters);
     }
 
-
+    /**
+     * Generate option string for SMO
+     * @param params HashMap
+     * @return options array
+     */
     public static String[] getSMOOptions(HashMap params) {
         String parameters = "";
         parameters += getParamString(params.get("numFolds"), "V","-1");
         parameters += getParamString(params.get("c"), "C", "1.0");
         parameters += getParamString(params.get("batchSize"), "batch-size", "100");
-        parameters += getParamString(params.get("kernel"), "K","weka.classifiers.functions.supportVector.PolyKernel -E 1.0 -C 250007");
+        parameters += getParamString(QUOTE + params.get("kernel") + QUOTE, "K","\"weka.classifiers.functions.supportVector.PolyKernel -E 1.0 -C 250007\"");
         parameters += getParamString(params.get("filterType"), "N","0");
-        parameters += getParamString(params.get("calibrator"), "calibrator","weka.classifiers.functions.Logistic -R 1.0E-8 -M -1 -num-decimal-places 4");
+        parameters += getParamString(QUOTE + params.get("calibrator") + QUOTE, "calibrator","\"weka.classifiers.functions.Logistic -R 1.0E-8 -M -1 -num-decimal-places 4\"");
         parameters += " -L 0.001 "; //The tolerance parameter (shouldn't be changed)
         return splitOptions(parameters);
-
     }
 
+    /**
+     * Generate option string for SMO
+     * @param params HashMap
+     * @return options array
+     */
+    public static String[] getSMOregOptions(HashMap params) {
+        String parameters = "";
+        parameters += getParamString(params.get("c"), "C", "1.0");
+        parameters += getParamString(params.get("batchSize"), "batch-size", "100");
+        parameters += getParamString(QUOTE + params.get("kernel") + QUOTE, "K","\"weka.classifiers.functions.supportVector.PolyKernel -E 1.0 -C 250007\"");
+        parameters += getParamString(params.get("filterType"), "N","0");
+        parameters += getParamString(QUOTE + params.get("regOptimizer") + QUOTE, "I","\"weka.classifiers.functions.supportVector.RegSMOImproved -T 0.001 -V -P 1.0E-12 -L 0.001 -W 1\"");
+        return splitOptions(parameters);
+    }
 
     /**
      * Generate option string for Adaboost M1
@@ -488,7 +532,7 @@ public class WekaOptionHelper {
         parameters += getParamString(params.get("numClusters"),"N", 2);
         parameters += getParamString(params.get("linkType"),"L", "SINGLE");
         parameters += getBooleanParam(params.get("distanceIsBranchLength"), "B","true");
-        parameters += getParamString("\"" + params.get("distanceFunction") + "\"","A", "\"weka.core.EuclideanDistance -R first-last\"");
+        parameters += getParamString(QUOTE + params.get("distanceFunction") + QUOTE,"A", "\"weka.core.EuclideanDistance -R first-last\"");
         return splitOptions(parameters);
     }
 
@@ -500,7 +544,7 @@ public class WekaOptionHelper {
         parameters += getParamString(params.get("canopyT1"),"t1", -1.25);
         parameters += getParamString(params.get("canopyT2"),"t2", -1.0);
         parameters += getBooleanParam(params.get("displayStdDevs"), "V","true");
-        parameters += getParamString("\"" + params.get("distanceFunction") + "\"","A", "\"weka.core.EuclideanDistance -R first-last\"");
+        parameters += getParamString(QUOTE + params.get("distanceFunction") + QUOTE,"A", "\"weka.core.EuclideanDistance -R first-last\"");
         parameters += getBooleanParam(params.get("dontReplaceMissingValues"), "M","true");
         parameters += getBooleanParam(params.get("fastDistanceCalc"), "fast","true");
         parameters += getParamString(params.get("initializationMethod"),"init", 0);

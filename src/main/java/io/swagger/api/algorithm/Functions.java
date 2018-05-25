@@ -311,7 +311,6 @@ public class Functions {
 
 
     // SMO
-
     @POST
     @Path("/SMO")
     @Consumes({"multipart/form-data"})
@@ -325,7 +324,7 @@ public class Functions {
             @Extension(name = "orn:expects", properties = { @ExtensionProperty(name = "x-orn-@id",  value = "x-orn:Dataset")}),
             @Extension(name = "orn:returns", properties = { @ExtensionProperty(name = "x-orn-@id",  value = "x-orn:Task")}),
             @Extension(name = "algorithm", properties = {
-                @ExtensionProperty(name = "Multilayer Perceptron", value = "https://en.wikipedia.org/wiki/SMO")
+                @ExtensionProperty(name = "Multilayer Perceptron", value = "https://en.wikipedia.org/wiki/Sequential_minimal_optimization")
             })
         })
     @GroupedApiResponsesOk
@@ -368,4 +367,115 @@ public class Functions {
             validation, validationNum, headers, ui, securityContext);
         }
 
+    // SMOreg
+    @POST
+    @Path("/SMOreg")
+    @Consumes({"multipart/form-data"})
+    @Produces({ TEXT_URILIST, MediaType.APPLICATION_JSON})
+    @Operation(summary = "REST interface to the WEKA SMOreg classifier.",
+        description = "REST interface to the WEKA SMOreg classifier. " + SAVE_MODEL_NOTE,
+        tags = {"algorithm"},
+        extensions = {
+            @Extension(properties = {@ExtensionProperty(name = "orn-@id",  value = "/algorithm/SMOreg")}),
+            @Extension(properties = {@ExtensionProperty(name = "orn-@type",  value = "x-orn:Algorithm")}),
+            @Extension(name = "orn:expects", properties = { @ExtensionProperty(name = "x-orn-@id",  value = "x-orn:Dataset")}),
+            @Extension(name = "orn:returns", properties = { @ExtensionProperty(name = "x-orn-@id",  value = "x-orn:Task")}),
+            @Extension(name = "algorithm", properties = {
+                @ExtensionProperty(name = "Multilayer Perceptron", value = "https://en.wikipedia.org/wiki/Sequential_minimal_optimization")
+            })
+        })
+    @GroupedApiResponsesOk
+    public Response algorithmSMOregPost(
+        @FormDataParam("file") InputStream fileInputStream,
+        @FormDataParam("file") FormDataContentDisposition fileDetail,
+        @Parameter(description = "Dataset URI or local dataset ID (to the arff representation of a dataset).")@FormDataParam("datasetUri")  String datasetUri,
+        // SMOReg
+        @Parameter(description = "The preferred number of instances to process if batch prediction is being performed. More or fewer instances may be provided, but this gives implementations a chance to specify a preferred batch size.",
+            schema = @Schema(defaultValue = "100", example = "100"))@FormDataParam("batchSize") Integer batchSize,
+        @Parameter(description = "The complexity parameter C.",
+            schema = @Schema(defaultValue = "1.0", example = "1.0"))@FormDataParam("c") Double c,
+        @Parameter(description = "Determines how/if the data will be transformed. (0=normalize training data, 1=standardize training data, 2=no mormalization/standardization",
+            schema = @Schema(allowableValues={"0","1","2"}, defaultValue = "0", example = "0"))@FormDataParam("filterType") Integer filterType,
+        @Parameter(description = "The kernel to use.",
+            schema = @Schema(description = "The kernel to use.", defaultValue = "weka.classifiers.functions.supportVector.PolyKernel -E 1.0 -C 250007",
+                example = "weka.classifiers.functions.supportVector.PolyKernel -E 1.0 -C 250007"))@FormDataParam("kernel") String kernel,
+        @Parameter(description = "The calibration method to use. ",
+            schema = @Schema(description = "The learning algorithm.", defaultValue = "weka.classifiers.functions.Logistic -R 1.0E-8 -M -1 -num-decimal-places 4",
+                example = "weka.classifiers.functions.supportVector.RegSMOImproved -T 0.001 -V -P 1.0E-12 -L 0.001 -W 1"))@FormDataParam("regOptimizer") String regOptimizer,
+        // validation
+        @Parameter(description = "Validation to use.", schema = @Schema(allowableValues = {"CrossValidation","Hold-Out"}, defaultValue = "CrossValidation")) @FormDataParam("validation") String validation,
+        @Parameter(description = "Num of Crossvalidations or Percentage Split %.", schema = @Schema(defaultValue = "10", example = "10")) @FormDataParam("validationNum") Double validationNum,
+        // headers
+        @Parameter(description = "authorization token") @HeaderParam("subjectid") String subjectid,
+        @Context UriInfo ui, @Context HttpHeaders headers, @Context SecurityContext securityContext)
+        throws NotFoundException, IOException {
+
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("datasetUri", datasetUri);
+        params.put("batchSize", batchSize);
+        params.put("c", c);
+        params.put("filterType", filterType);
+        params.put("kernel", kernel);
+        params.put("regOptimizer", regOptimizer);
+
+        return delegate.algorithmPost(fileInputStream, fileDetail, datasetUri, "SMOreg", params,
+            validation, validationNum, headers, ui, securityContext);
+    }
+
+/*
+  need more debuging:
+  Error in ModelService.saveModel null: no.uib.cipr.matrix.UpperSPDDenseMatrix
+
+
+    // Gaussian Processes
+    @POST
+    @Path("/GaussianProcesses")
+    @Consumes({"multipart/form-data"})
+    @Produces({ TEXT_URILIST, MediaType.APPLICATION_JSON})
+    @Operation(summary = "REST interface to the WEKA Gaussian Processes classifier.",
+        description = "REST interface to the WEKA Gaussian Processes classifier. " + SAVE_MODEL_NOTE,
+        tags = {"algorithm"},
+        extensions = {
+            @Extension(properties = {@ExtensionProperty(name = "orn-@id",  value = "/algorithm/GaussianProcesses")}),
+            @Extension(properties = {@ExtensionProperty(name = "orn-@type",  value = "x-orn:Algorithm")}),
+            @Extension(name = "orn:expects", properties = { @ExtensionProperty(name = "x-orn-@id",  value = "x-orn:Dataset")}),
+            @Extension(name = "orn:returns", properties = { @ExtensionProperty(name = "x-orn-@id",  value = "x-orn:Task")}),
+            @Extension(name = "algorithm", properties = {
+                @ExtensionProperty(name = "Multilayer Perceptron", value = "https://en.wikipedia.org/wiki/Gaussian_process")
+            })
+        })
+    @GroupedApiResponsesOk
+    public Response algorithmGaussianProcessesPost(
+        @FormDataParam("file") InputStream fileInputStream,
+        @FormDataParam("file") FormDataContentDisposition fileDetail,
+        @Parameter(description = "Dataset URI or local dataset ID (to the arff representation of a dataset).")@FormDataParam("datasetUri")  String datasetUri,
+        // GaussianProcesses
+        @Parameter(description = "The preferred number of instances to process if batch prediction is being performed. More or fewer instances may be provided, but this gives implementations a chance to specify a preferred batch size.",
+            schema = @Schema(defaultValue = "100", example = "100"))@FormDataParam("batchSize") Integer batchSize,
+        @Parameter(description = "Determines how/if the data will be transformed. (0=normalize training data, 1=standardize training data, 2=no mormalization/standardization",
+            schema = @Schema(allowableValues={"0","1","2"}, defaultValue = "0", example = "0"))@FormDataParam("filterType") Integer filterType,
+        @Parameter(description = "The kernel to use.",
+            schema = @Schema(description = "The kernel to use.", defaultValue = "weka.classifiers.functions.supportVector.PolyKernel -E 1.0 -C 250007",
+                example = "weka.classifiers.functions.supportVector.PolyKernel -E 1.0 -C 250007"))@FormDataParam("kernel") String kernel,
+        @Parameter(description = "The level of Gaussian Noise (added to the diagonal of the Covariance Matrix), after the target has been normalized/standardized/left unchanged).",
+            schema = @Schema(defaultValue = "1.0", example = "1.0"))@FormDataParam("noise") Double noise,
+        // validation
+        @Parameter(description = "Validation to use.", schema = @Schema(allowableValues = {"CrossValidation","Hold-Out"}, defaultValue = "CrossValidation")) @FormDataParam("validation") String validation,
+        @Parameter(description = "Num of Crossvalidations or Percentage Split %.", schema = @Schema(defaultValue = "10", example = "10")) @FormDataParam("validationNum") Double validationNum,
+        // headers
+        @Parameter(description = "authorization token") @HeaderParam("subjectid") String subjectid,
+        @Context UriInfo ui, @Context HttpHeaders headers, @Context SecurityContext securityContext)
+        throws NotFoundException, IOException {
+
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("datasetUri", datasetUri);
+        params.put("batchSize", batchSize);
+        params.put("filterType", filterType);
+        params.put("kernel", kernel);
+        params.put("noise", noise);
+
+        return delegate.algorithmPost(fileInputStream, fileDetail, datasetUri, "GaussianProcesses", params,
+            validation, validationNum, headers, ui, securityContext);
+    }
+*/
 }

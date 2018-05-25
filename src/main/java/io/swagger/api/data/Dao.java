@@ -82,7 +82,6 @@ public class Dao {
     public Object listData(String collection, UriInfo ui, String accept) {
         StringBuilder result = new StringBuilder();
         mongoCollection = mongoDB.getCollection(collection);
-        System.out.println("collection is: " + collection);
         if (accept.equals("application/json")) {
             final ArrayList<Document> results = new ArrayList<>();
             Block<Document> printBlock = document -> {
@@ -103,7 +102,6 @@ public class Dao {
                 }
                 cursor.close();
             }
-            System.out.println("result is: " + result.toString());
             return result.toString();
         }
     }
