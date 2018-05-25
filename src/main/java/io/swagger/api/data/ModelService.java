@@ -108,7 +108,7 @@ public class ModelService {
      * @param token security token
      * @return model id
      */
-    public static String saveModel(Classifier classifier, String[] options, Map params, String validation, String token) {
+    public static String saveModel(Classifier classifier, String[] options, Map params, String validation, String token) throws Exception {
         Dao modelDao = new Dao();
         String id;
         try {
@@ -131,7 +131,7 @@ public class ModelService {
             //weka.core.SerializationHelper.write(dataDirectory + id + ".model", classifier);
         } catch (Exception e) {
             e.printStackTrace();
-            return "";
+            throw new Exception("Error in ModelService.saveModel " + e.getCause() + ": " + e.getMessage());
         } finally {
             modelDao.close();
         }

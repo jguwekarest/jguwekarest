@@ -23,7 +23,7 @@ RUN rm -fr /usr/local/tomcat/webapps/manager
 RUN rm -fr /usr/local/tomcat/webapps/docs
 RUN rm -fr /usr/local/tomcat/webapps/examples
 
-COPY target/weka_rs-0.2.0.war /usr/local/tomcat/webapps/ROOT.war
+COPY target/weka_rs-<VERSION_NUMBER>.war /usr/local/tomcat/webapps/ROOT.war
 
 # add openam certificat to tomcat's cert-store
 RUN openssl s_client -showcerts -connect openam.in-silico.ch:443 </dev/null 2>/dev/null|openssl x509 -outform PEM > /usr/local/tomcat/in-silicoch.crt
@@ -40,20 +40,21 @@ Customise the [Dockerfile](../Dockerfile) as needed (e.g.: adjust the war file n
 * Change into code directory   
 `cd jguwekarest`
 * Checkout branch (optional)   
-`git checkout feature/oas3.0`
+  ***master*** for OpenAPI 2.0, ***OAS3*** for OpenApi 3.0.1 version    
+  `git checkout OAS3`
 * Compile the war (Web Application Archive) file with maven   
-`mvn clean package`
+  `mvn clean package`
 * Build the docker image (replace dockerhubuser with your docker hub account user)   
-`docker build -t dockerhubuser/jguweka:OAS3 .`
+  `docker build -t dockerhubuser/jguweka:OAS3 .`
 * Check images    
-`docker images`
+  `docker images`
 
 ## Run the Docker Container
 
-* Run the image as a local container   
-`docker run -p 8080:8080 dockerhubuser/jguweka:OAS3`
+* Run the image as a local container 
+`docker run -p 8080:8080 --link mongodb:mongodb dockerhubuser/jguweka:OAS3`
 * If you run the container locally don't forget to start also a mongodb container as a data base with:   
-`docker pull mongo; docker run -d mongo`
+`docker pull mongo; docker run --name mongodb -d mongo`
 * Load the Swagger-UI representation in a web-browser   
 e.g.: `firefox http://0.0.0.0:8080`
 

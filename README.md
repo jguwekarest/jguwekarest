@@ -38,9 +38,11 @@ curl  -X POST -H "Content-Type: multipart/form-data" -H "Accept:text/x-arff" -F 
 ```
 
 ## Documentation
-**See:**
+
  * Full example for a **[local or server hosted development environment](./doc/DockerizedDevEnvSetup.md).** 
- * **[Build the Docker image with a Dockerfile](./doc/DockerImageDeployment.md)**.
- * **[Run Tests](./doc/Testing.md)**.
- * **[Deployment in OpenShift](./openshift/README.md)**.
- * Java Docs on gh-pages **[JavaDocs](https://jguwekarest.github.io/jguwekarest/javadoc/index.html)**.
+ * Docker Deployment: **[Build the Docker image with a Dockerfile](./doc/DockerImageDeployment.md)**.
+ * Running tests: **[Run Tests](./doc/Testing.md)**.
+ * OpenShift Deployment: **[Deployment in OpenShift](./openshift/README.md)**.
+ * Authentication: **[Keycloak Integration](./doc/TomcatKeyCloakSetup.md)**.
+ * Java Docs on gh-pages: **[JavaDocs](https://jguwekarest.github.io/jguwekarest/javadoc/index.html)**.
+ 
