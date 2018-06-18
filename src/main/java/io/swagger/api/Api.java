@@ -15,7 +15,7 @@ import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
 import java.io.IOException;
 
-@Path("/api")
+@Path("/openapi")
 
 @io.swagger.annotations.Api(description = "the api API")
 public class Api {
@@ -43,7 +43,7 @@ public class Api {
     }
 
     @GET
-    @Path("/api.json")
+    @Path("/openapi.json")
 
     @Produces({"application/json", "application/ld+json"})
     @ApiOperation(value = "", notes = "Get swagger api in JSON", response = void.class, tags = {"api",})
