@@ -1,12 +1,36 @@
 package io.swagger.api;
 
 
+import io.swagger.v3.oas.annotations.ExternalDocumentation;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.annotations.extensions.Extension;
+import io.swagger.v3.oas.annotations.extensions.ExtensionProperty;
 import io.swagger.v3.oas.annotations.info.Contact;
 import io.swagger.v3.oas.annotations.info.Info;
 import io.swagger.v3.oas.annotations.info.License;
 
 @OpenAPIDefinition(
+
+    /*
+
+    'x-orn-@context':
+        '@vocab': 'http://openrisknet.org/schema#'
+        x-orn: 'http://openrisknet.org/schema#'
+        x-orn-@id: '@id'
+        x-orn-@type: '@type'
+
+    */
+
+    extensions = {
+        @Extension(name = "orn-@context", properties = {
+            @ExtensionProperty(name = "@vocab", value = "http://openrisknet.org/schema#"),
+            @ExtensionProperty(name = "orn",  value = "http://openrisknet.org/schema#"),
+            @ExtensionProperty(name = "orn-@id",  value = "@id"),
+            @ExtensionProperty(name = "orn-@type",  value = "@type")
+        }),
+        @Extension(properties = {@ExtensionProperty(name = "orn-@type",  value = "Service")}),
+        @Extension(properties = {@ExtensionProperty(name = "orn-@id",  value = "https://jguweka.prod.openrisknet.org")})
+    },
     info = @Info(
         title = "JGU WEKA REST Service",
         version = "0.3.0-OAS3",
@@ -17,7 +41,10 @@ import io.swagger.v3.oas.annotations.info.License;
             "  See [Documentation](https://jguwekarest.github.io/jguwekarest/), [Issue Tracker](https://github.com/jguwekarest/jguwekarest/issues) and [Code](https://github.com/jguwekarest/jguwekarest) at Github.",
         license = @License(name = "GNU General Public License 3", url = "https://www.gnu.org/licenses/gpl-3.0.de.html"),
         contact = @Contact(url = "http://www.datamining.informatik.uni-mainz.de", name = "Data Mining Group JGU Mainz", email = "rautenberg@uni-mainz.de")
-    )
+    ),
+    externalDocs = @ExternalDocumentation(description = "JGU WEKA REST Service Documentation on GitHub", url = "https://jguwekarest.github.io/jguwekarest/")
+
+
 )
 
 
