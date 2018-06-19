@@ -11,16 +11,6 @@ import io.swagger.v3.oas.annotations.info.License;
 
 @OpenAPIDefinition(
 
-    /*
-
-    'x-orn-@context':
-        '@vocab': 'http://openrisknet.org/schema#'
-        x-orn: 'http://openrisknet.org/schema#'
-        x-orn-@id: '@id'
-        x-orn-@type: '@type'
-
-    */
-
     extensions = {
         @Extension(name = "orn-@context", properties = {
             @ExtensionProperty(name = "@vocab", value = "http://openrisknet.org/schema#"),
@@ -44,9 +34,7 @@ import io.swagger.v3.oas.annotations.info.License;
     ),
     externalDocs = @ExternalDocumentation(description = "JGU WEKA REST Service Documentation on GitHub", url = "https://jguwekarest.github.io/jguwekarest/")
 
-
 )
-
 
 
 public class Metadata {

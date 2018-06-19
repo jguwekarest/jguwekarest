@@ -399,8 +399,10 @@ public class FunctionsTest {
 
     }
 
-/*
-see Functions.java
+  /*
+
+  see Functions.java
+
     @Test(description = "Post an arff file to GaussianProcesses algorithm and get a text representation.")
     @Parameters({"host"})
     public void algorithmGaussianProcessesPost( @Optional String host ) throws Exception {
