@@ -293,6 +293,185 @@ public class Functions {
     }
 
     @POST
+    @Path("/libsvm/adaboost")
+    @Consumes({"multipart/form-data"})
+    @Produces({ TEXT_URILIST, MediaType.APPLICATION_JSON})
+    @Operation(summary = "REST interface to the WEKA support vector machine wrapper library classifier.",
+        description = "REST interface to the WEKA support vector machine wrapper library classifier." + SAVE_MODEL_NOTE,
+        tags = {"algorithm"},
+        extensions = {
+            @Extension(properties = {@ExtensionProperty(name = "orn-@id",  value = "/algorithm/libsvm/adaboost")}),
+            @Extension(properties = {@ExtensionProperty(name = "orn-@type",  value = "x-orn:Algorithm")}),
+            @Extension(name = "orn:expects", properties = { @ExtensionProperty(name = "x-orn-@id",  value = "x-orn:Dataset")}),
+            @Extension(name = "orn:returns", properties = { @ExtensionProperty(name = "x-orn-@id",  value = "x-orn:Task")}),
+            @Extension(name = "algorithm", properties = {
+                @ExtensionProperty(name = "support vector machine", value = "https://en.wikipedia.org/wiki/Support_vector_machine")
+            })
+        })
+    @GroupedApiResponsesOk
+    public Response algorithmLibSVMAdaBoostPost(
+        @FormDataParam("file") InputStream fileInputStream,
+        @FormDataParam("file") FormDataContentDisposition fileDetail,
+        @Parameter(description = "Dataset URI or local dataset ID (to the arff representation of a dataset).")@FormDataParam("datasetUri")  String datasetUri,
+        //meta params
+        @Parameter(description = "Adaboost M1: The preferred number of instances to process if batch prediction is being performed. More or fewer instances may be provided, but this gives implementations a chance to specify a preferred batch size.",
+            schema = @Schema(defaultValue = "100", example = "100")) @DefaultValue("100") @FormDataParam("batchSize") Integer batchSize,
+        @Parameter(
+            description = "Adaboost M1: The number of iterations to be performed.",
+            schema = @Schema(defaultValue = "10", example = "10")) @FormDataParam("numIterations") Integer numIterations,
+        @Parameter(
+            description = "Adaboost M1: Whether resampling is used instead of reweighting.",
+            schema = @Schema(defaultValue = "0", allowableValues = {"0", "1"})) @FormDataParam("useResampling") Integer useResampling,
+        @Parameter(
+            description = "Adaboost M1: Weight threshold for weight pruning.",
+            schema = @Schema(defaultValue = "100", example = "100")) @FormDataParam("weightThreshold") Integer weightThreshold,
+        // SVM params
+        @Parameter(description = "SVMType -- The type of SVM to use. \n 0: C-SVC (classification) \n 1: nu-SVC (classification) \n 2: one-class SVM (classification) \n 3: epsilon-SVR (regression)\n 4: nu-SVR (regression)\n (Default: 0).",
+            schema = @Schema(defaultValue = "0", allowableValues = {"0","1","2","3","4"} )) @FormDataParam("svmType") Integer svmType,
+        @Parameter(description = "coef0 -- The coefficient to use. (Default: 0).",
+            schema = @Schema(defaultValue = "0")) @FormDataParam("coef0") Float coef0,
+        @Parameter(description = "cost -- The cost parameter C for C-SVC, epsilon-SVR and nu-SVR. (Default: 1.0).",
+            schema = @Schema(defaultValue = "1.0")) @FormDataParam("cost") Float cost,
+        @Parameter(description = "degree -- The degree of the kernel. (Default: 3).",
+            schema = @Schema(defaultValue = "3")) @FormDataParam("degree") Integer degree,
+        @Parameter(description = "eps -- The tolerance of the termination criterion. (Default: 0.001).",
+            schema = @Schema(defaultValue = "0.001")) @FormDataParam("eps") BigDecimal eps,
+        @Parameter(description = "gamma -- The gamma to use, if 0 then 1/max_index is used. (Default: 0.0).",
+            schema = @Schema(defaultValue = "0.0")) @FormDataParam("gamma") BigDecimal gamma,
+        @Parameter(description = "kernelType -- The type of kernel to use.\n 0: linear:u'*v \n 1: polynomial: (gamma*u'*v + coef0)^degree \n 2: radial basis function: exp(-gamma*|u-v|^2) \n 3: sigmoid: tanh()gamma*u'*v + coef0) \n (Default: 2).",
+            schema = @Schema(defaultValue = "2", allowableValues = {"0","1","2","3"} )) @FormDataParam("kernelType") Integer kernelType,
+        @Parameter(description = "loss -- The epsilon for the loss function in epsilon-SVR. (Default: 0.1).",
+            schema = @Schema(defaultValue = "0.1")) @FormDataParam("loss") BigDecimal loss,
+        @Parameter(description = "normalize -- Whether to normalize the data.",
+            schema = @Schema(defaultValue = "false")) @FormDataParam("normalize") Boolean normalize,
+        @Parameter(description = "nu -- The value of nu for nu-SVC, one-class SVM and nu-SVR. (Default: 0.5).",
+            schema = @Schema(defaultValue = "0.5")) @FormDataParam("nu") BigDecimal nu,
+        @Parameter(description = "probabilityEstimates -- Whether to generate probability estimates instead of -1/+1 for classification problems.",
+            schema = @Schema(defaultValue = "false")) @FormDataParam("probabilityEstimates") Boolean probabilityEstimates,
+        @Parameter(description = "shrinking -- Whether to use the shrinking heuristic.",
+            schema = @Schema(defaultValue = "true")) @FormDataParam("shrinking") Boolean shrinking,
+        @Parameter(description = "weights -- The weights to use for the classes (blank-separated list, eg, \"1 1 1\" for a 3-class problem), if empty 1 is used by default.") @FormDataParam("weights") String weights,
+        // validation
+        @Parameter(description = "Validation to use.", schema = @Schema(defaultValue="CrossValidation", allowableValues = {"CrossValidation", "Hold-Out"})) @FormDataParam("validation") String validation ,
+        @Parameter(description  = "Num of Crossvalidations or Percentage Split %.", schema = @Schema(defaultValue="10", example = "10")) @FormDataParam("validationNum") Double validationNum,
+        // authorization
+        @Parameter(description = "authorization token") @HeaderParam("subjectid") String subjectid,
+        @Context UriInfo ui, @Context HttpHeaders headers, @Context SecurityContext securityContext)
+        throws NotFoundException, IOException {
+
+        HashMap<String, Object> params = new HashMap<>();
+        HashMap<String, Object> metaParams = new HashMap<>();
+        params.put("datasetUri", datasetUri);
+        params.put("svmType", svmType);
+        params.put("coef0", coef0);
+        params.put("cost", cost);
+        params.put("degree", degree);
+        params.put("eps", eps);
+        params.put("gamma", gamma);
+        params.put("kernelType", kernelType);
+        params.put("loss", loss);
+        params.put("normalize", normalize);
+        params.put("nu", nu);
+        params.put("probabilityEstimates", probabilityEstimates);
+        params.put("shrinking", shrinking);
+        params.put("weights", weights);
+        metaParams.put("batchSize", batchSize);
+        metaParams.put("numIterations", numIterations);
+        metaParams.put("useResampling", useResampling);
+        metaParams.put("weightThreshold", weightThreshold);
+        //svmType, coef0, cost, degree, eps, gamma, kernelType, loss, normalize, nu, probabilityEstimates, shrinking, weights
+        return delegate.algorithmPost(fileInputStream, fileDetail, datasetUri, "LibSVM", params,
+            "AdaBoost", metaParams, validation, validationNum, headers, ui, securityContext);
+    }
+
+
+    @POST
+    @Path("/libsvm/bagging")
+    @Consumes({"multipart/form-data"})
+    @Produces({ TEXT_URILIST, MediaType.APPLICATION_JSON})
+    @Operation(summary = "REST interface to the WEKA support vector machine wrapper library classifier.",
+        description = "REST interface to the WEKA support vector machine wrapper library classifier." + SAVE_MODEL_NOTE,
+        tags = {"algorithm"},
+        extensions = {
+            @Extension(properties = {@ExtensionProperty(name = "orn-@id",  value = "/algorithm/libsvm/bagging")}),
+            @Extension(properties = {@ExtensionProperty(name = "orn-@type",  value = "x-orn:Algorithm")}),
+            @Extension(name = "orn:expects", properties = { @ExtensionProperty(name = "x-orn-@id",  value = "x-orn:Dataset")}),
+            @Extension(name = "orn:returns", properties = { @ExtensionProperty(name = "x-orn-@id",  value = "x-orn:Task")}),
+            @Extension(name = "algorithm", properties = {
+                @ExtensionProperty(name = "support vector machine", value = "https://en.wikipedia.org/wiki/Support_vector_machine")
+            })
+        })
+    @GroupedApiResponsesOk
+    public Response algorithmLibSVMBaggingPost(
+        @FormDataParam("file") InputStream fileInputStream,
+        @FormDataParam("file") FormDataContentDisposition fileDetail,
+        @Parameter(description = "Dataset URI or local dataset ID (to the arff representation of a dataset).")@FormDataParam("datasetUri")  String datasetUri,
+        //meta params
+        @Parameter(description = "Bagging: Size of each bag, as a percentage of the training set size.",
+            schema = @Schema(defaultValue = "100", example = "100")) @FormDataParam("bagSizePercent") Integer bagSizePercent,
+        @Parameter(description = "Bagging: The preferred number of instances to process if batch prediction is being performed. More or fewer instances may be provided, but this gives implementations a chance to specify a preferred batch size.",
+            schema = @Schema(defaultValue = "100", example = "100")) @FormDataParam("batchSize") Integer batchSize,
+        @Parameter(description = "Bagging: The number of iterations to be performed.",
+            schema = @Schema(defaultValue = "10", example = "10")) @FormDataParam("numIterations") Integer numIterations,
+        // SVM params
+        @Parameter(description = "SVMType -- The type of SVM to use. \n 0: C-SVC (classification) \n 1: nu-SVC (classification) \n 2: one-class SVM (classification) \n 3: epsilon-SVR (regression)\n 4: nu-SVR (regression)\n (Default: 0).",
+            schema = @Schema(defaultValue = "0", allowableValues = {"0","1","2","3","4"} )) @FormDataParam("svmType") Integer svmType,
+        @Parameter(description = "coef0 -- The coefficient to use. (Default: 0).",
+            schema = @Schema(defaultValue = "0")) @FormDataParam("coef0") Float coef0,
+        @Parameter(description = "cost -- The cost parameter C for C-SVC, epsilon-SVR and nu-SVR. (Default: 1.0).",
+            schema = @Schema(defaultValue = "1.0")) @FormDataParam("cost") Float cost,
+        @Parameter(description = "degree -- The degree of the kernel. (Default: 3).",
+            schema = @Schema(defaultValue = "3")) @FormDataParam("degree") Integer degree,
+        @Parameter(description = "eps -- The tolerance of the termination criterion. (Default: 0.001).",
+            schema = @Schema(defaultValue = "0.001")) @FormDataParam("eps") BigDecimal eps,
+        @Parameter(description = "gamma -- The gamma to use, if 0 then 1/max_index is used. (Default: 0.0).",
+            schema = @Schema(defaultValue = "0.0")) @FormDataParam("gamma") BigDecimal gamma,
+        @Parameter(description = "kernelType -- The type of kernel to use.\n 0: linear:u'*v \n 1: polynomial: (gamma*u'*v + coef0)^degree \n 2: radial basis function: exp(-gamma*|u-v|^2) \n 3: sigmoid: tanh()gamma*u'*v + coef0) \n (Default: 2).",
+            schema = @Schema(defaultValue = "2", allowableValues = {"0","1","2","3"} )) @FormDataParam("kernelType") Integer kernelType,
+        @Parameter(description = "loss -- The epsilon for the loss function in epsilon-SVR. (Default: 0.1).",
+            schema = @Schema(defaultValue = "0.1")) @FormDataParam("loss") BigDecimal loss,
+        @Parameter(description = "normalize -- Whether to normalize the data.",
+            schema = @Schema(defaultValue = "false")) @FormDataParam("normalize") Boolean normalize,
+        @Parameter(description = "nu -- The value of nu for nu-SVC, one-class SVM and nu-SVR. (Default: 0.5).",
+            schema = @Schema(defaultValue = "0.5")) @FormDataParam("nu") BigDecimal nu,
+        @Parameter(description = "probabilityEstimates -- Whether to generate probability estimates instead of -1/+1 for classification problems.",
+            schema = @Schema(defaultValue = "false")) @FormDataParam("probabilityEstimates") Boolean probabilityEstimates,
+        @Parameter(description = "shrinking -- Whether to use the shrinking heuristic.",
+            schema = @Schema(defaultValue = "true")) @FormDataParam("shrinking") Boolean shrinking,
+        @Parameter(description = "weights -- The weights to use for the classes (blank-separated list, eg, \"1 1 1\" for a 3-class problem), if empty 1 is used by default.") @FormDataParam("weights") String weights,
+        // validation
+        @Parameter(description = "Validation to use.", schema = @Schema(defaultValue="CrossValidation", allowableValues = {"CrossValidation", "Hold-Out"})) @FormDataParam("validation") String validation ,
+        @Parameter(description  = "Num of Crossvalidations or Percentage Split %.", schema = @Schema(defaultValue="10", example = "10")) @FormDataParam("validationNum") Double validationNum,
+        // authorization
+        @Parameter(description = "authorization token") @HeaderParam("subjectid") String subjectid,
+        @Context UriInfo ui, @Context HttpHeaders headers, @Context SecurityContext securityContext)
+        throws NotFoundException, IOException {
+
+        HashMap<String, Object> params = new HashMap<>();
+        HashMap<String, Object> metaParams = new HashMap<>();
+        params.put("datasetUri", datasetUri);
+        params.put("svmType", svmType);
+        params.put("coef0", coef0);
+        params.put("cost", cost);
+        params.put("degree", degree);
+        params.put("eps", eps);
+        params.put("gamma", gamma);
+        params.put("kernelType", kernelType);
+        params.put("loss", loss);
+        params.put("normalize", normalize);
+        params.put("nu", nu);
+        params.put("probabilityEstimates", probabilityEstimates);
+        params.put("shrinking", shrinking);
+        params.put("weights", weights);
+        metaParams.put("bagSizePercent", bagSizePercent);
+        metaParams.put("batchSize", batchSize);
+        metaParams.put("numIterations", numIterations);
+        //svmType, coef0, cost, degree, eps, gamma, kernelType, loss, normalize, nu, probabilityEstimates, shrinking, weights
+        return delegate.algorithmPost(fileInputStream, fileDetail, datasetUri, "LibSVM", params,
+            "Bagging", metaParams, validation, validationNum, headers, ui, securityContext);
+    }
+
+    @POST
     @Path("/logistic")
     @Consumes({"multipart/form-data"})
     @Produces({ TEXT_URILIST, MediaType.APPLICATION_JSON})
