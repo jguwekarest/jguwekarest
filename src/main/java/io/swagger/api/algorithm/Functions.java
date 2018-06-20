@@ -99,6 +99,126 @@ public class Functions {
 
 
     @POST
+    @Path("/linearRegression/adaboost")
+    @Consumes({"multipart/form-data"})
+    @Produces({ TEXT_URILIST, MediaType.APPLICATION_JSON})
+    @Operation(summary = "REST interface to the WEKA Bagging with linear regression classifier.",
+        description = "REST interface to the WEKA Bagging with linear regression classifier. " + SAVE_MODEL_NOTE,
+        tags = {"algorithm","meta algorithm"},
+        extensions = {
+            @Extension(properties = {@ExtensionProperty(name = "orn-@id",  value = "/algorithm/linearRegression/adaboost")}),
+            @Extension(properties = {@ExtensionProperty(name = "orn-@type",  value = "x-orn:Algorithm")}),
+            @Extension(name = "orn:expects", properties = { @ExtensionProperty(name = "x-orn-@id",  value = "x-orn:Dataset")}),
+            @Extension(name = "orn:returns", properties = { @ExtensionProperty(name = "x-orn-@id",  value = "x-orn:Task")}),
+            @Extension(name = "algorithm", properties = {
+                @ExtensionProperty(name = "Linear Regression", value = "https://en.wikipedia.org/wiki/Linear_regression")
+            })
+        })
+    @GroupedApiResponsesOk
+    public Response algorithmLRAdaBoostPost(
+        @FormDataParam("file") InputStream fileInputStream,
+        @FormDataParam("file") FormDataContentDisposition fileDetail,
+        @Parameter(description = "Dataset URI or local dataset ID (to the arff representation of a dataset).")@FormDataParam("datasetUri")  String datasetUri,
+        //meta params
+        @Parameter(description = "Adaboost M1: The preferred number of instances to process if batch prediction is being performed. More or fewer instances may be provided, but this gives implementations a chance to specify a preferred batch size.",
+            schema = @Schema(defaultValue = "100", example = "100")) @DefaultValue("100") @FormDataParam("batchSize") Integer batchSize,
+        @Parameter(
+            description = "Adaboost M1: The number of iterations to be performed.",
+            schema = @Schema(defaultValue = "10", example = "10")) @FormDataParam("numIterations") Integer numIterations,
+        @Parameter(
+            description = "Adaboost M1: Whether resampling is used instead of reweighting.",
+            schema = @Schema(defaultValue = "0", allowableValues = {"0", "1"})) @FormDataParam("useResampling") Integer useResampling,
+        @Parameter(
+            description = "Adaboost M1: Weight threshold for weight pruning.",
+            schema = @Schema(defaultValue = "100", example = "100")) @FormDataParam("weightThreshold") Integer weightThreshold,
+        // LR params
+        @Parameter(description = "Attribute selection method to be used (Default M5 method).Available methods are: no attribute selection(Value:1), attribute selection using M5's method (Value:0) and a greedy selection using the Akaike information metric(Value:2). One of 0,1,2 (Default: 0).",
+            schema = @Schema(defaultValue = "0", allowableValues = {"0", "1", "2"}) ) @FormDataParam("attributeSelectionMethod") Integer attributeSelectionMethod,
+        @Parameter(description = "Whether to eliminate colinear attributes. Must be 0 or 1 (Default: 1).",
+            schema = @Schema(defaultValue = "1", allowableValues = {"0", "1"})) @FormDataParam("eliminateColinearAttributes") Integer eliminateColinearAttributes,
+        @Parameter(description = "The ridge parameter (Default: 1.0E-8).",
+            schema = @Schema(defaultValue = "1.0E-8")) @FormDataParam("ridge") BigDecimal ridge,
+        // validation
+        @Parameter(description = "Validation to use.", schema = @Schema(defaultValue="CrossValidation", allowableValues = {"CrossValidation", "Hold-Out"})) @FormDataParam("validation") String validation ,
+        @Parameter(description  = "Num of Crossvalidations or Percentage Split %.", schema = @Schema(defaultValue="10", example = "10")) @FormDataParam("validationNum") Double validationNum,
+        // authorization
+        @Parameter(description = "authorization token") @HeaderParam("subjectid") String subjectid,
+        @Context UriInfo ui, @Context HttpHeaders headers, @Context SecurityContext securityContext)
+        throws NotFoundException, IOException {
+
+        HashMap<String, Object> params = new HashMap<>();
+        HashMap<String, Object> metaParams = new HashMap<>();
+        params.put("datasetUri", datasetUri);
+        params.put("attributeSelectionMethod", attributeSelectionMethod);
+        params.put("eliminateColinearAttributes", eliminateColinearAttributes);
+        params.put("ridge", ridge);
+        metaParams.put("batchSize", batchSize);
+        metaParams.put("numIterations", numIterations);
+        metaParams.put("useResampling", useResampling);
+        metaParams.put("weightThreshold", weightThreshold);
+
+        return delegate.algorithmPost(fileInputStream, fileDetail, datasetUri, "LinearRegression", params,
+            "AdaBoost", metaParams, validation, validationNum, headers, ui, securityContext);
+    }
+
+    @POST
+    @Path("/linearRegression/bagging")
+    @Consumes({"multipart/form-data"})
+    @Produces({ TEXT_URILIST, MediaType.APPLICATION_JSON})
+    @Operation(summary = "REST interface to the WEKA Bagging with linear regression classifier.",
+        description = "REST interface to the WEKA linear Bagging with regression classifier. " + SAVE_MODEL_NOTE,
+        tags = {"algorithm","meta algorithm"},
+        extensions = {
+            @Extension(properties = {@ExtensionProperty(name = "orn-@id",  value = "/algorithm/linearRegression/bagging")}),
+            @Extension(properties = {@ExtensionProperty(name = "orn-@type",  value = "x-orn:Algorithm")}),
+            @Extension(name = "orn:expects", properties = { @ExtensionProperty(name = "x-orn-@id",  value = "x-orn:Dataset")}),
+            @Extension(name = "orn:returns", properties = { @ExtensionProperty(name = "x-orn-@id",  value = "x-orn:Task")}),
+            @Extension(name = "algorithm", properties = {
+                @ExtensionProperty(name = "Linear Regression", value = "https://en.wikipedia.org/wiki/Linear_regression")
+            })
+        })
+    @GroupedApiResponsesOk
+    public Response algorithmLRBaggingPost(
+        @FormDataParam("file") InputStream fileInputStream,
+        @FormDataParam("file") FormDataContentDisposition fileDetail,
+        @Parameter(description = "Dataset URI or local dataset ID (to the arff representation of a dataset).")@FormDataParam("datasetUri")  String datasetUri,
+        //meta params
+        @Parameter(description = "Bagging: Size of each bag, as a percentage of the training set size.",
+            schema = @Schema(defaultValue = "100", example = "100")) @FormDataParam("bagSizePercent") Integer bagSizePercent,
+        @Parameter(description = "Bagging: The preferred number of instances to process if batch prediction is being performed. More or fewer instances may be provided, but this gives implementations a chance to specify a preferred batch size.",
+            schema = @Schema(defaultValue = "100", example = "100")) @FormDataParam("batchSize") Integer batchSize,
+        @Parameter(description = "Bagging: The number of iterations to be performed.",
+            schema = @Schema(defaultValue = "10", example = "10")) @FormDataParam("numIterations") Integer numIterations,
+        // LR params
+        @Parameter(description = "Attribute selection method to be used (Default M5 method).Available methods are: no attribute selection(Value:1), attribute selection using M5's method (Value:0) and a greedy selection using the Akaike information metric(Value:2). One of 0,1,2 (Default: 0).",
+            schema = @Schema(defaultValue = "0", allowableValues = {"0", "1", "2"}) ) @FormDataParam("attributeSelectionMethod") Integer attributeSelectionMethod,
+        @Parameter(description = "Whether to eliminate colinear attributes. Must be 0 or 1 (Default: 1).",
+            schema = @Schema(defaultValue = "1", allowableValues = {"0", "1"})) @FormDataParam("eliminateColinearAttributes") Integer eliminateColinearAttributes,
+        @Parameter(description = "The ridge parameter (Default: 1.0E-8).",
+            schema = @Schema(defaultValue = "1.0E-8")) @FormDataParam("ridge") BigDecimal ridge,
+        // validation
+        @Parameter(description = "Validation to use.", schema = @Schema(defaultValue="CrossValidation", allowableValues = {"CrossValidation", "Hold-Out"})) @FormDataParam("validation") String validation ,
+        @Parameter(description  = "Num of Crossvalidations or Percentage Split %.", schema = @Schema(defaultValue="10", example = "10")) @FormDataParam("validationNum") Double validationNum,
+        // authorization
+        @Parameter(description = "authorization token") @HeaderParam("subjectid") String subjectid,
+        @Context UriInfo ui, @Context HttpHeaders headers, @Context SecurityContext securityContext)
+        throws NotFoundException, IOException {
+
+        HashMap<String, Object> params = new HashMap<>();
+        HashMap<String, Object> metaParams = new HashMap<>();
+        params.put("datasetUri", datasetUri);
+        params.put("attributeSelectionMethod", attributeSelectionMethod);
+        params.put("eliminateColinearAttributes", eliminateColinearAttributes);
+        params.put("ridge", ridge);
+        metaParams.put("bagSizePercent", bagSizePercent);
+        metaParams.put("batchSize", batchSize);
+        metaParams.put("numIterations", numIterations);
+
+        return delegate.algorithmPost(fileInputStream, fileDetail, datasetUri, "LinearRegression", params,
+            "Bagging", metaParams, validation, validationNum, headers, ui, securityContext);
+    }
+
+    @POST
     @Path("/libsvm")
     @Consumes({"multipart/form-data"})
     @Produces({ TEXT_URILIST, MediaType.APPLICATION_JSON})

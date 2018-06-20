@@ -222,7 +222,8 @@ public class Bayes {
     @Path("/BayesNet/bagging")
     @Consumes({ "multipart/form-data" })
     @Produces({ TEXT_URILIST, MediaType.APPLICATION_JSON})
-    @Operation(summary = "REST interface to the WEKA Bagging with BayesNet classifier.", description = "REST interface to the WEKA Bagging with BayesNet BayesNet classifier. " + SAVE_MODEL_NOTE, tags={ "algorithm","meta algorithm" }
+    @Operation(summary = "REST interface to the WEKA Bagging with BayesNet classifier.", description = "REST interface to the WEKA Bagging with BayesNet BayesNet classifier. " + SAVE_MODEL_NOTE,
+        tags={ "algorithm","meta algorithm" }
         ,extensions = {
         @Extension(properties = {@ExtensionProperty(name = "orn-@id",  value = "/algorithm/BayesNet/adaboost")}),
         @Extension(properties = {@ExtensionProperty(name = "orn-@type",  value = "x-orn:Algorithm")}),
