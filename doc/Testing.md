@@ -1,6 +1,6 @@
 ## Testing
 
-Tests are handeled with the [maven-surefire-plugin](maven-surefire-plugin) .
+Tests are handeled with the [maven-surefire-plugin](http://maven.apache.org/surefire/maven-surefire-plugin/maven-surefire-plugin) .
 
 ### Run Integration Test
 * start the mongoDB container   
