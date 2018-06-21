@@ -31,23 +31,6 @@
         </header>
     </div>
 
-    <!-- MAIN CONTENT -->
-    <div id="main_content_wrap" class="outer">
-      <section id="main_content" class="inner">
-        {{ content }}
-          <div id="menu">
-  <ul>
-    {% assign pages = site.pages | sort:'order'  %}
-    {% for p in pages %}     
-    {% if p.title   %} 
-        <li>
-          <a {% if p.url == page.url %}class="active"{% endif %} href="{{ p.url }}">{{ p.title }}</a>
-        </li>
-      {% endif %}
-      {% endfor %}
-
-    </ul>
-
 
 <strong>{{ site.data.documentlist.docs_list_title }}</strong>
 <ul>

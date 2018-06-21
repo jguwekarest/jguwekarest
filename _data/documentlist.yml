@@ -14,5 +14,14 @@ docs:
 
 - title: Java documentation
   url: /javadoc/index.html
+  
+- title: Testing
+  url: /doc/Testing.html  
+  
+- title: Commandline Examples with Curl
+  url: /doc/CommandlineCurlExamples.html
+
+- title: Tomcat Keycloak Setup
+  url: /doc/TomcatKeycloakSetup.html
 
 ---
