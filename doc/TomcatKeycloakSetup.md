@@ -1,7 +1,3 @@
----
-title Tomcat Keycloak Setup
-order: 6
----
 # Tomcat Keycloak Setup
 This document describes Keycloak authentication setup for the JGU WEKA REST service running in docker tomcat environment.
 

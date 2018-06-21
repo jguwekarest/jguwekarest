@@ -31,14 +31,20 @@
         </header>
     </div>
 
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        {{ content }}
+          <div id="menu">
 
-<strong>{{ site.data.documentlist.docs_list_title }}</strong>
-<ul>
-   {% for item in site.data.documentlist.docs %}
-      <li><a href="{{ item.url | prepend: site.baseurl }}" alt="{{ item.title }}">{{ item.title }}</a></li>
-   {% endfor %}
-</ul>
-
+ 
+      <!-- Menu -->
+      <strong>{{ site.data.documentlist.docs_list_title }}</strong>
+      <ul>
+         {% for item in site.data.documentlist.docs %}
+            <li><a href="{{ item.url | prepend: site.baseurl }}" alt="{{ item.title }}">{{ item.title }}</a></li>
+         {% endfor %}
+      </ul>
 
 
       </section>
