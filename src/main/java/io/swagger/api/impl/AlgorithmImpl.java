@@ -41,6 +41,9 @@ import java.util.concurrent.TimeUnit;
 import static io.swagger.api.Constants.TEXT_URILIST;
 import static io.swagger.api.WekaOptionHelper.getClassifierOptions;
 
+/**
+ * Central Class to train WEKA Classifier
+ */
 public class AlgorithmImpl extends AlgorithmService {
 
     @Override
