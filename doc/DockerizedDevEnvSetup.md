@@ -52,7 +52,7 @@ Adjust settings for Keycloak as described in [Tomcat Keycloak Setup](./TomcatKey
 
 ```
 docker build -t jguweka/jguweka:keycloak -f Dockerfile-keycloak .
-docker run -d  -p 0.0.0.0:8080:8080 jguweka/jguweka:keycloak
+docker run -d  -p 0.0.0.0:8080:8080  --link mongodb:mongodb jguweka/jguweka:keycloak
 ```
 
 ## Jenkins
