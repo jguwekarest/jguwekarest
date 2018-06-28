@@ -1,0 +1,27 @@
+{
+  "realm" : "openrisknet",
+  "resource" : "jguweka",
+  "realm-public-key" : "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA0MV1Apjw9N7dlW/sXWfzsooSsuSNdLbq8hC9mRf8vlau1/X/GlQPf8YeJ5ezIqtpmPq1GpraYGDpuzyw6Al9HlUGUUpfHe7UAlOta+NOmAhqODM+kJkweNnGkisCkkRzJBETnahn7qjbv0X1BBVnKv58aLffdH6g8fxXqs9oBigmoARsa7qc8eqds92NbhyH/RMJOqGL8yF32mgaVNorauUbprnsKbHvAd827vhMGxACnjM8xkY3i/uAQi+7WddrMZTGNQyLDbtofd89hpl12PxosmaROtZqn3H7p1v7TG2pC3tNrMZKyhczSlC4oqmIP/wRdUrok7T+56p4yjNZrQIDAQAB",
+  "auth-server-url" : "https://sso.prod.openrisknet.org/auth",
+  "ssl-required" : "external",
+  "use-resource-role-mappings" : false,
+  "enable-cors" : true,
+  "cors-max-age" : 1000,
+  "cors-allowed-methods" : "POST, PUT, DELETE, GET",
+  "cors-exposed-headers" : "WWW-Authenticate, My-custom-exposed-Header",
+  "bearer-only" : false,
+  "enable-basic-auth" : false,
+  "expose-token" : true,
+  "credentials" : {
+    "secret": "96149744-5c85-41e2-b4cc-2e8c4c9a9b2f"
+  },
+  "connection-pool-size" : 20,
+  "disable-trust-manager": true,
+  "allow-any-hostname" : false,
+  "token-minimum-time-to-live" : 10,
+  "min-time-between-jwks-requests" : 10,
+  "public-key-cache-ttl": 86400,
+  "redirect-rewrite-rules" : {
+    "^/wsmaster/api/(.*)$" : "/api/$1"
+  }
+}

@@ -85,7 +85,7 @@ EXECUTE SHELL
 ```
 echo "db.name=production\ndb.host={MONGODB_IP}\ndb.port=27017\n" > $WORKSPACE/src/main/resources/config/db.properties
 ```
-Or if you use additional authentication then (you have to add --auth too the docker run command above):
+If you use additional authentication (this not needed when running on the same network with the application, mongodb is not exposed to the internet) then (you have to add --auth too the docker run command above):
 ```
 echo "db.name=production\ndb.host={MONGODB_IP}\ndb.port=27017\ndb.user={DBUSER}\ndb.password={PASSWORD}\n" > $WORKSPACE/src/main/resources/config/db.properties
 ```
@@ -93,7 +93,7 @@ echo "db.name=production\ndb.host={MONGODB_IP}\ndb.port=27017\ndb.user={DBUSER}\
 * Add build step 
 INVOKE TOP LEVEL MAVEN TARGETS
 to compile the java code
-```maven package```
+```maven clean package```
 
 * Copy the compiled war file to the tomcat containers file storage 
 EXECUTE SHELL

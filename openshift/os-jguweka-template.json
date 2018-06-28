@@ -1,0 +1,222 @@
+{
+  "kind": "Template",
+  "apiVersion": "v1",
+  "metadata": {
+    "name": "jguweka-template",
+    "annotations": {
+      "description": "JGU WEKA REST service",
+      "iconClass": "",
+      "tags": "weka,algorithm"
+    }
+  },
+  "objects": [
+    {
+      "kind": "ImageStream",
+      "apiVersion": "v1",
+      "metadata": {
+        "name": "mongodb"
+      },
+      "spec": {
+        "dockerImageRepository": "docker.io/gebele/mongodb"
+      },
+      "status": {
+        "dockerImageRepository": "docker.io/gebele/mongodb"
+      }
+    },
+    {
+      "kind": "ImageStream",
+      "apiVersion": "v1",
+      "metadata": {
+        "name": "jguweka"
+      },
+      "spec": {
+        "dockerImageRepository": "docker.io/jguweka/jguweka"
+      },
+      "status": {
+        "dockerImageRepository": "docker.io/jguweka/jguweka"
+      }
+    },
+    {
+      "kind": "DeploymentConfig",
+      "apiVersion": "v1",
+      "metadata": {
+        "name": "mongodb"
+      },
+      "spec": {
+        "strategy": {
+          "type": "Recreate",
+          "resources": {}
+        },
+        "triggers": [
+          {
+            "type": "ConfigChange"
+          }
+        ],
+        "replicas": 1,
+        "selector": {
+          "name": "mongodb"
+        },
+        "template": {
+          "metadata": {
+            "labels": {
+              "name": "mongodb"
+            }
+          },
+          "spec": {
+            "containers": [
+              {
+                "name": "mongodb",
+                "image": "docker.io/gebele/mongodb:latest",
+                "ports": [
+                  {
+                    "containerPort": 27017,
+                    "protocol": "TCP"
+                  }
+                ],
+                "resources": {},
+                "terminationMessagePath": "/dev/termination-log",
+                "imagePullPolicy": "Always",
+                "securityContext": {
+                  "capabilities": {},
+                  "privileged": false
+                }
+              }
+            ],
+            "restartPolicy": "Always",
+            "dnsPolicy": "ClusterFirst"
+          }
+        }
+      },
+      "status": {}
+    },
+    {
+      "kind": "DeploymentConfig",
+      "apiVersion": "v1",
+      "metadata": {
+        "name": "jguweka"
+      },
+      "spec": {
+        "strategy": {
+          "type": "Recreate",
+          "resources": {}
+        },
+        "triggers": [
+          {
+            "type": "ConfigChange"
+          }
+        ],
+        "replicas": 1,
+        "selector": {
+          "name": "jguweka"
+        },
+        "template": {
+          "metadata": {
+            "labels": {
+              "name": "jguweka"
+            }
+          },
+          "spec": {
+            "containers": [
+              {
+                "name": "jguweka",
+                "image": "docker.io/jguweka/jguweka:latest",
+                "ports": [
+                  {
+                    "containerPort": 8080,
+                    "protocol": "TCP"
+                  }
+                ],
+                "resources": {},
+                "terminationMessagePath": "/dev/termination-log",
+                "imagePullPolicy": "Always",
+                "securityContext": {
+                  "capabilities": {},
+                  "privileged": false
+                }
+              }
+            ],
+            "restartPolicy": "Always",
+            "dnsPolicy": "ClusterFirst"
+          }
+        }
+      },
+      "status": {}
+    },
+    {
+      "kind": "Service",
+      "apiVersion": "v1",
+      "metadata": {
+        "name": "mongodb"
+      },
+      "spec": {
+        "ports": [
+          {
+            "name": "mongodb",
+            "protocol": "TCP",
+            "port": 27017,
+            "targetPort": 27017,
+            "nodePort": 0
+          }
+        ],
+        "selector": {
+          "name": "mongodb"
+        },
+        "type": "ClusterIP",
+        "sessionAffinity": "None"
+      },
+      "status": {
+        "loadBalancer": {}
+      }
+    },
+    {
+      "kind": "Service",
+      "apiVersion": "v1",
+      "metadata": {
+        "name": "jguweka"
+      },
+      "spec": {
+        "ports": [
+          {
+            "name": "jguweka",
+            "protocol": "TCP",
+            "port": 8080,
+            "targetPort": 8080,
+            "nodePort": 0
+          }
+        ],
+        "selector": {
+          "name": "jguweka"
+        },
+        "type": "ClusterIP",
+        "sessionAffinity": "None"
+      },
+      "status": {
+        "loadBalancer": {}
+      }
+    },
+    {
+      "kind": "Route",
+      "apiVersion": "v1",
+      "metadata": {
+        "name": "jguweka",
+        "annotations": {
+          "kubernetes.io/tls-acme": "true"
+        }
+      },
+      "spec": {
+        "to": {
+          "kind": "Service",
+          "name": "jguweka"
+        },
+        "tls": {
+          "termination": "edge"
+        }
+      },
+      "status": {}
+    }
+  ],
+  "parameters": [],
+  "labels": {
+    "template": "jguweka-template"
+  }
+}
