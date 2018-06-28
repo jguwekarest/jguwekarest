@@ -40,8 +40,8 @@ Customise the [Dockerfile](../Dockerfile) as needed (e.g.: adjust the war file n
 * Change into code directory   
 `cd jguwekarest`
 * Checkout branch (optional)   
-  ***master*** for OpenAPI 2.0, ***OAS3*** for OpenApi 3.0.1 version    
-  `git checkout OAS3`
+  ***master*** for OpenAPI 3.0.1, ***OAS2*** for OpenApi 2.0 version    
+  `git checkout master`
 * Compile the war (Web Application Archive) file with maven   
   `mvn clean package`
 * Build the docker image (replace dockerhubuser with your docker hub account user)   
