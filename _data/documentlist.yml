@@ -24,4 +24,7 @@ docs:
 - title: Tomcat Keycloak Setup
   url: /doc/TomcatKeycloakSetup.html
 
+- title: OpenShift Deployment
+  url /openshift/index.html
+
 ---
