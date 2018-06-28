@@ -5,6 +5,9 @@ import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * Wrapper Class to translate webparam names into WEKA library params.
+ */
 public class WekaOptionHelper {
 
     private static final Logger LOG = Logger.getLogger(WekaOptionHelper.class.getName());

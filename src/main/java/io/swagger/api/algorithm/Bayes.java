@@ -24,10 +24,13 @@ import static io.swagger.api.Constants.SAVE_MODEL_NOTE;
 import static io.swagger.api.Constants.TEXT_URILIST;
 
 
+
 @Path("/algorithm")
 
-//@Api(description = "Bayes algorithm API")
-
+/**
+ * Webservice Routes to Bayes Classifiers and
+ * Annotations to the Bayes Algorithm API
+ */
 public class Bayes {
     private final AlgorithmService delegate;
 

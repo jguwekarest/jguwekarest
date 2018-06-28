@@ -17,6 +17,9 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 
 
+/**
+ * Helper Class to deliver static web contents.
+ */
 @Path("/")
 public class StaticContent {
 

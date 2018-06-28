@@ -9,6 +9,10 @@ import io.swagger.v3.oas.annotations.info.Contact;
 import io.swagger.v3.oas.annotations.info.Info;
 import io.swagger.v3.oas.annotations.info.License;
 
+/**
+ * Metadata Class to add info-object and OpenRiskNet JSON-LD annotations to the OpenAPI representation.
+ *
+ */
 @OpenAPIDefinition(
 
     extensions = {
