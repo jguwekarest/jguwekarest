@@ -25,7 +25,7 @@ public class Dataset {
     @POST
     @Path("/dataset")
     @Consumes({ "multipart/form-data" })
-    @Produces({ TEXT_ARFF, TEXT_URILIST })
+    @Produces({ TEXT_URILIST, TEXT_ARFF })
     @Operation(
         summary = "Download dataset and convert into weka arff format.",
         description = "Download an external dataset and convert it into weka arff format. " + SAVE_DATASSET_NOTE,
@@ -38,12 +38,13 @@ public class Dataset {
         })
     @GroupedApiResponsesOk
     public Response create(
-        @Parameter(description = "URI of the dataset to be used.", required=true)@FormDataParam("dataset_uri") String dataset_uri,
-        @Parameter(description = "URI of the feature to define as weka class")@FormDataParam("class_uri") String class_uri,
-        @Parameter(description = "Authorization token" )@HeaderParam("subjectid") String subjectid,
+        @Parameter(schema = @Schema(description = "URI of the dataset to be used.", example = "https://api-jaqpot.prod.openrisknet.org/jaqpot/services/dataset/Gajewicz_10_29_class", required=true)) @FormDataParam("dataset_uri") String dataset_uri,
+        @Parameter(schema = @Schema(description = "URI of the feature to define as weka class")) @FormDataParam("class_uri") String class_uri,
+        @Parameter(description = "Authorization token" ) @HeaderParam("subjectid") String subjectid,
+        @Parameter(description = "Token for Bearer Authentication", example = "Bearer eyJhbGciO...") @HeaderParam("bearerToken") String bearerToken,
         @Context HttpHeaders headers, @Context UriInfo ui) throws ApiException {
 
-            Dataset ds = DatasetService.readExternalDataset(dataset_uri, subjectid);
+            Dataset ds = DatasetService.readExternalDataset(dataset_uri, subjectid, bearerToken);
             if (ds.datasetUri == null) ds.datasetUri = dataset_uri;
             String accept = headers.getRequestHeaders().getFirst("accept");
 

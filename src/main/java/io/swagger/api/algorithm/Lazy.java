@@ -9,7 +9,6 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.extensions.Extension;
 import io.swagger.v3.oas.annotations.extensions.ExtensionProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
-import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 
 import javax.servlet.ServletConfig;
@@ -68,57 +67,50 @@ public class Lazy {
         })
     @GroupedApiResponsesOk
     public Response algorithmIBkPost(
-        @FormDataParam("file") InputStream fileInputStream,
-        @FormDataParam("file") FormDataContentDisposition fileDetail,
-        @Parameter(description = "Dataset URI or local dataset ID (to the arff representation of a dataset).")@FormDataParam("datasetUri")  String datasetUri,
-        @Parameter(
+        @Parameter(schema = @Schema(description="ARFF data file.", type = "string", format = "binary")) @FormDataParam("file") InputStream fileInputStream,
+        @Parameter(schema = @Schema(description = "Dataset URI or local dataset ID (to the arff representation of a dataset).",
+            defaultValue = "", example = "")) @DefaultValue("") @FormDataParam("datasetUri") String datasetUri,
+        @Parameter(schema = @Schema(
             description = "Gets the maximum number of instances allowed in the training pool. The addition of new instances above this value will result in old instances being removed. A value of 0 signifies no limit to the number of training instances. Must be 0 or 1 (Default: 0).",
-            schema = @Schema(
-                type = "integer",
-                format = "int64",
-                allowableValues = {"0","1"},
-                defaultValue = "1"))@FormDataParam("windowSize")  Integer windowSize,
-        @Parameter(
+            type = "integer",
+            format = "int64",
+            allowableValues = {"0","1"},
+            defaultValue = "1"))@FormDataParam("windowSize")  Integer windowSize,
+        @Parameter(schema = @Schema(
             description = "The number of neighbors to use. Must be an integer greater than 0 (Default: 1).",
-            schema = @Schema(
-                type = "integer",
-                format = "int64",
-                description = "The number of neighbors to use. Must be an integer greater than 0 (Default: 1).",
-                defaultValue = "1"
+            type = "integer",
+            format = "int64",
+            defaultValue = "1"
             ))@FormDataParam("KNN") Integer KNN,
-        @Parameter(
+        @Parameter(schema = @Schema(
             description = "Whether hold-one-out cross-validation will be used to select the best k value. Must be 0 or 1 (Default: 0).",
-            schema = @Schema(
-                type = "integer",
-                format = "int64",
-                allowableValues = {"0","1"},
-                defaultValue = "0"
+            type = "integer",
+            format = "int64",
+            allowableValues = {"0","1"},
+            defaultValue = "0"
             ))@FormDataParam("crossValidate")  Integer crossValidate,
-        @Parameter(
+        @Parameter(schema = @Schema(
             description = "May be 0 for no distance weighting, I for 1/distance or F for 1-distance. Must be 0, I or F (Default: 0).",
-            schema = @Schema(
-                type = "integer",
-                format = "int64",
-                allowableValues = {"0","I","F"},
-                defaultValue = "0"
+            type = "integer",
+            format = "int64",
+            allowableValues = {"0","I","F"},
+            defaultValue = "0"
             ))@FormDataParam("distanceWeighting")  String distanceWeighting,
-        @Parameter(
+        @Parameter(schema = @Schema(
             description = "Whether the mean squared error is used rather than mean absolute error when doing cross-validation for regression problems. Must be 0 or 1 (Default: 0).",
-            schema = @Schema(
-                type = "integer",
-                format = "int64",
-                allowableValues = {"0","1"},
-                defaultValue = "0"
+            type = "integer",
+            format = "int64",
+            allowableValues = {"0","1"},
+            defaultValue = "0"
             ))@FormDataParam("meanSquared")  Integer meanSquared,
-        @Parameter(
+        @Parameter(schema = @Schema(
             description = "The nearest neighbour search algorithm to use (Default: weka.core.neighboursearch.LinearNNSearch). Fixed.",
-            schema = @Schema(
-                allowableValues = {"LinearNNSearch"},
-                defaultValue = "LinearNNSearch"
+            allowableValues = {"LinearNNSearch"},
+            defaultValue = "LinearNNSearch"
             ))@FormDataParam("nearestNeighbourSearchAlgorithm")  String nearestNeighbourSearchAlgorithm,
         // validation
-        @Parameter(description = "Validation to use.", schema = @Schema(defaultValue="CrossValidation", allowableValues = {"CrossValidation", "Hold-Out"})) @FormDataParam("validation") String validation ,
-        @Parameter(description  = "Num of Crossvalidations or Percentage Split %.", schema = @Schema(defaultValue="10")) @FormDataParam("validationNum") Double validationNum,
+        @Parameter(schema = @Schema(description = "Validation to use.", defaultValue="CrossValidation", allowableValues = {"CrossValidation", "Hold-Out"})) @FormDataParam("validation") String validation ,
+        @Parameter(schema = @Schema(description  = "Num of Crossvalidations or Percentage Split %.", defaultValue="10")) @FormDataParam("validationNum") Double validationNum,
         // authorization
         @Parameter(description = "Authorization token" ) @HeaderParam("subjectid") String subjectid,
         @Context UriInfo uriInfo, @Context HttpHeaders headers, @Context SecurityContext securityContext)
@@ -133,7 +125,7 @@ public class Lazy {
         params.put("meanSquared", meanSquared);
         params.put("nearestNeighbourSearchAlgorithm", nearestNeighbourSearchAlgorithm);
 
-        return delegate.algorithmPost(fileInputStream, fileDetail, datasetUri, "IBk", params,
+        return delegate.algorithmPost(fileInputStream, datasetUri, "IBk", params,
                                       validation, validationNum, headers, uriInfo, securityContext);
     }
 

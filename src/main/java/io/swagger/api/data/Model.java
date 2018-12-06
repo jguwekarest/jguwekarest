@@ -8,7 +8,6 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.extensions.Extension;
 import io.swagger.v3.oas.annotations.extensions.ExtensionProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
-import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 
 import javax.ws.rs.*;
@@ -95,15 +94,14 @@ public class Model {
         })
     @GroupedApiResponsesOk
     public Response modelPost(
-        @FormDataParam("file") InputStream fileInputStream,
-        @FormDataParam("file") FormDataContentDisposition fileDetail,
+        @Parameter(schema = @Schema(description="ARFF data file.", type = "string", format = "binary")) @FormDataParam("file") InputStream fileInputStream,
         @Parameter(description = "Dataset ID (to the arff representation of a dataset).")@FormDataParam("datasetID")  String datasetID,
         @Parameter(description = "model ID" )@PathParam("id") String id,
         @Parameter(description = "authorization token") @HeaderParam("subjectid") String subjectid,
         @Context UriInfo ui, @Context HttpHeaders headers, @Context SecurityContext securityContext)
         throws Exception {
             return Response
-                .ok(ModelService.predictModel(fileInputStream, fileDetail,datasetID,id,subjectid))
+                .ok(ModelService.predictModel(fileInputStream, datasetID,id,subjectid))
                 .status(Response.Status.OK)
                 .build();
     }

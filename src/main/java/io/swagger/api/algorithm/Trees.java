@@ -9,7 +9,6 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.extensions.Extension;
 import io.swagger.v3.oas.annotations.extensions.ExtensionProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
-import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 
 import javax.servlet.ServletConfig;
@@ -72,31 +71,31 @@ public class Trees  {
         })
     @GroupedApiResponsesOk
     public Response algorithmJ48Post(
-        @FormDataParam("file") InputStream fileInputStream,
-        @FormDataParam("file") FormDataContentDisposition fileDetail,
-        @Parameter(description = "Dataset URI or local dataset ID (to the arff representation of a dataset).")@FormDataParam("datasetUri")  String datasetUri,
+        @Parameter(schema = @Schema(description="ARFF data file.", type = "string", format = "binary")) @FormDataParam("file") InputStream fileInputStream,
+        @Parameter(schema = @Schema(description = "Dataset URI or local dataset ID (to the arff representation of a dataset).",
+            defaultValue = "", example = "")) @DefaultValue("") @FormDataParam("datasetUri") String datasetUri,
 //J48,
-        @Parameter(description = "Whether to use binary splits on nominal attributes when building the trees.",
-            schema = @Schema(allowableValues = {"0", "1"}, defaultValue = "0")) @FormDataParam("binarySplits") Integer binarySplits,
-        @Parameter(description = "The confidence factor used for pruning (smaller values incur more pruning).",
-            schema = @Schema(defaultValue = "0.25")) @FormDataParam("confidenceFactor") BigDecimal confidenceFactor,
-        @Parameter(description = "The minimum number of instances per leaf.",
-            schema = @Schema(defaultValue = "2")) @FormDataParam("minNumObj") Integer minNumObj,
-        @Parameter(description = "Determines the amount of data used for reduced-error pruning.  One fold is used for pruning, the rest for growing the tree",
-            schema = @Schema(defaultValue = "3")) @FormDataParam("numFolds") Integer numFolds,
-        @Parameter(description = "Whether reduced-error pruning is used instead of C.4.5 pruning.",
-            schema = @Schema(allowableValues = "0, 1", defaultValue = "0")) @FormDataParam("reducedErrorPruning") Integer reducedErrorPruning,
-        @Parameter(description = "The seed used for randomizing the data when reduced-error pruning is used.",
-            schema = @Schema(defaultValue = "1")) @FormDataParam("seed") Integer seed,
-        @Parameter(description = "Whether to consider the subtree raising operation when pruning.",
-            schema = @Schema(allowableValues = {"0", "1"}, defaultValue = "1")) @FormDataParam("subtreeRaising") Integer subtreeRaising,
-        @Parameter(description = "Whether pruning is performed.",
-            schema = @Schema(defaultValue = "1", allowableValues = {"0", "1"})) @FormDataParam("unpruned") Integer unpruned,
-        @Parameter(description = "Whether counts at leaves are smoothed based on Laplace.",
-            schema = @Schema(defaultValue = "0", allowableValues = {"0", "1"})) @FormDataParam("useLaplace") Integer useLaplace,
+        @Parameter(schema = @Schema(description = "Whether to use binary splits on nominal attributes when building the trees.",
+            allowableValues = {"0", "1"}, defaultValue = "0")) @FormDataParam("binarySplits") Integer binarySplits,
+        @Parameter(schema = @Schema(description = "The confidence factor used for pruning (smaller values incur more pruning).",
+            defaultValue = "0.25")) @FormDataParam("confidenceFactor") BigDecimal confidenceFactor,
+        @Parameter(schema = @Schema(description = "The minimum number of instances per leaf.",
+            defaultValue = "2")) @FormDataParam("minNumObj") Integer minNumObj,
+        @Parameter(schema = @Schema(description = "Determines the amount of data used for reduced-error pruning.  One fold is used for pruning, the rest for growing the tree",
+            defaultValue = "3")) @FormDataParam("numFolds") Integer numFolds,
+        @Parameter(schema = @Schema(description = "Whether reduced-error pruning is used instead of C.4.5 pruning.",
+            allowableValues = "0, 1", defaultValue = "0")) @FormDataParam("reducedErrorPruning") Integer reducedErrorPruning,
+        @Parameter(schema = @Schema(description = "The seed used for randomizing the data when reduced-error pruning is used.",
+            defaultValue = "1")) @FormDataParam("seed") Integer seed,
+        @Parameter(schema = @Schema(description = "Whether to consider the subtree raising operation when pruning.",
+            allowableValues = {"0", "1"}, defaultValue = "1")) @FormDataParam("subtreeRaising") Integer subtreeRaising,
+        @Parameter(schema = @Schema(description = "Whether pruning is performed.",
+            defaultValue = "1", allowableValues = {"0", "1"})) @FormDataParam("unpruned") Integer unpruned,
+        @Parameter(schema = @Schema(description = "Whether counts at leaves are smoothed based on Laplace.",
+            defaultValue = "0", allowableValues = {"0", "1"})) @FormDataParam("useLaplace") Integer useLaplace,
         // validation
-        @Parameter(description = "Validation to use.", schema = @Schema(defaultValue="CrossValidation", allowableValues = {"CrossValidation", "Hold-Out"})) @FormDataParam("validation") String validation ,
-        @Parameter(description  = "Num of Crossvalidations or Percentage Split %.", schema = @Schema(defaultValue="10", example = "10")) @FormDataParam("validationNum") Double validationNum,
+        @Parameter(schema = @Schema(description = "Validation to use.", defaultValue="CrossValidation", allowableValues = {"CrossValidation", "Hold-Out"})) @FormDataParam("validation") String validation ,
+        @Parameter(schema = @Schema(description  = "Num of Crossvalidations or Percentage Split %.", defaultValue="10", example = "10")) @FormDataParam("validationNum") Double validationNum,
         // authorization
         @Parameter(description = "Authorization token" )@HeaderParam("subjectid") String subjectid,
         @Context UriInfo ui, @Context HttpHeaders headers, @Context SecurityContext securityContext)
@@ -114,7 +113,7 @@ public class Trees  {
         params.put("unpruned", unpruned);
         params.put("useLaplace", useLaplace);
 
-        return delegate.algorithmPost(fileInputStream, fileDetail, datasetUri,"J48", params,
+        return delegate.algorithmPost(fileInputStream, datasetUri,"J48", params,
                                       validation, validationNum, headers, ui, securityContext);
     }
 
@@ -138,43 +137,43 @@ public class Trees  {
     @GroupedApiResponsesOk
     public Response algorithmJ48AdaBoostPost(
         //data params
-        @FormDataParam("file") InputStream fileInputStream,
-        @FormDataParam("file") FormDataContentDisposition fileDetail,
-        @Parameter(description = "Dataset URI or local dataset ID (to the arff representation of a dataset).") @FormDataParam("datasetUri") String datasetUri,
+        @Parameter(schema = @Schema(description="ARFF data file.", type = "string", format = "binary")) @FormDataParam("file") InputStream fileInputStream,
+        @Parameter(schema = @Schema(description = "Dataset URI or local dataset ID (to the arff representation of a dataset).",
+            defaultValue = "", example = "")) @DefaultValue("") @FormDataParam("datasetUri") String datasetUri,
         //meta params,
-        @Parameter(description = "Adaboost M1: The preferred number of instances to process if batch prediction is being performed. More or fewer instances may be provided, but this gives implementations a chance to specify a preferred batch size.",
-            schema = @Schema(defaultValue = "100")) @FormDataParam("batchSize") Integer batchSize,
-        @Parameter(
+        @Parameter(schema = @Schema(description = "Adaboost M1: The preferred number of instances to process if batch prediction is being performed. More or fewer instances may be provided, but this gives implementations a chance to specify a preferred batch size.",
+            defaultValue = "100")) @FormDataParam("batchSize") Integer batchSize,
+        @Parameter(schema = @Schema(
             description = "Adaboost M1: The number of iterations to be performed.",
-            schema = @Schema(defaultValue = "10")) @FormDataParam("numIterations") Integer numIterations,
-        @Parameter(
+            defaultValue = "10")) @FormDataParam("numIterations") Integer numIterations,
+        @Parameter(schema = @Schema(
             description = "Adaboost M1: Whether resampling is used instead of reweighting.",
-            schema = @Schema(defaultValue = "0", allowableValues = {"0", "1"})) @FormDataParam("useResampling") Integer useResampling,
-        @Parameter(
+            defaultValue = "0", allowableValues = {"0", "1"})) @FormDataParam("useResampling") Integer useResampling,
+        @Parameter(schema = @Schema(
             description = "Adaboost M1: Weight threshold for weight pruning.",
-            schema = @Schema(defaultValue = "100")) @FormDataParam("weightThreshold") Integer weightThreshold,
+            defaultValue = "100")) @FormDataParam("weightThreshold") Integer weightThreshold,
         //J48,
-        @Parameter(description = "Whether to use binary splits on nominal attributes when building the trees.",
-            schema = @Schema(allowableValues = {"0", "1"}, defaultValue = "0")) @FormDataParam("binarySplits") Integer binarySplits,
-        @Parameter(description = "The confidence factor used for pruning (smaller values incur more pruning).",
-            schema = @Schema(defaultValue = "0.25")) @FormDataParam("confidenceFactor") BigDecimal confidenceFactor,
-        @Parameter(description = "The minimum number of instances per leaf.",
-            schema = @Schema(defaultValue = "2")) @FormDataParam("minNumObj") Integer minNumObj,
-        @Parameter(description = "Determines the amount of data used for reduced-error pruning.  One fold is used for pruning, the rest for growing the tree",
-            schema = @Schema(defaultValue = "3")) @FormDataParam("numFolds") Integer numFolds,
-        @Parameter(description = "Whether reduced-error pruning is used instead of C.4.5 pruning.",
-            schema = @Schema(allowableValues = "0, 1", defaultValue = "0")) @FormDataParam("reducedErrorPruning") Integer reducedErrorPruning,
-        @Parameter(description = "The seed used for randomizing the data when reduced-error pruning is used.",
-            schema = @Schema(defaultValue = "1")) @FormDataParam("seed") Integer seed,
-        @Parameter(description = "Whether to consider the subtree raising operation when pruning.",
-            schema = @Schema(allowableValues = {"0", "1"}, defaultValue = "1")) @FormDataParam("subtreeRaising") Integer subtreeRaising,
-        @Parameter(description = "Whether pruning is performed.",
-            schema = @Schema(defaultValue = "1", allowableValues = {"0", "1"})) @FormDataParam("unpruned") Integer unpruned,
-        @Parameter(description = "Whether counts at leaves are smoothed based on Laplace.",
-            schema = @Schema(defaultValue = "0", allowableValues = {"0", "1"})) @FormDataParam("useLaplace") Integer useLaplace,
+        @Parameter(schema = @Schema(description = "Whether to use binary splits on nominal attributes when building the trees.",
+            allowableValues = {"0", "1"}, defaultValue = "0")) @FormDataParam("binarySplits") Integer binarySplits,
+        @Parameter(schema = @Schema(description = "The confidence factor used for pruning (smaller values incur more pruning).",
+            defaultValue = "0.25")) @FormDataParam("confidenceFactor") BigDecimal confidenceFactor,
+        @Parameter(schema = @Schema(description = "The minimum number of instances per leaf.",
+            defaultValue = "2")) @FormDataParam("minNumObj") Integer minNumObj,
+        @Parameter(schema = @Schema(description = "Determines the amount of data used for reduced-error pruning.  One fold is used for pruning, the rest for growing the tree",
+            defaultValue = "3")) @FormDataParam("numFolds") Integer numFolds,
+        @Parameter(schema = @Schema(description = "Whether reduced-error pruning is used instead of C.4.5 pruning.",
+            allowableValues = "0, 1", defaultValue = "0")) @FormDataParam("reducedErrorPruning") Integer reducedErrorPruning,
+        @Parameter(schema = @Schema(description = "The seed used for randomizing the data when reduced-error pruning is used.",
+            defaultValue = "1")) @FormDataParam("seed") Integer seed,
+        @Parameter(schema = @Schema(description = "Whether to consider the subtree raising operation when pruning.",
+            allowableValues = {"0", "1"}, defaultValue = "1")) @FormDataParam("subtreeRaising") Integer subtreeRaising,
+        @Parameter(schema = @Schema(description = "Whether pruning is performed.",
+            defaultValue = "1", allowableValues = {"0", "1"})) @FormDataParam("unpruned") Integer unpruned,
+        @Parameter(schema = @Schema(description = "Whether counts at leaves are smoothed based on Laplace.",
+            defaultValue = "0", allowableValues = {"0", "1"})) @FormDataParam("useLaplace") Integer useLaplace,
         // validation
-        @Parameter(description = "Validation to use.", schema = @Schema(defaultValue="CrossValidation", allowableValues = {"CrossValidation", "Hold-Out"})) @FormDataParam("validation") String validation ,
-        @Parameter(description  = "Num of Crossvalidations or Percentage Split %.", schema = @Schema(defaultValue="10", example = "10")) @FormDataParam("validationNum") Double validationNum,
+        @Parameter(schema = @Schema(description = "Validation to use.", defaultValue="CrossValidation", allowableValues = {"CrossValidation", "Hold-Out"})) @FormDataParam("validation") String validation ,
+        @Parameter(schema = @Schema(description  = "Num of Crossvalidations or Percentage Split %.", defaultValue="10", example = "10")) @FormDataParam("validationNum") Double validationNum,
         // authorization
         @Parameter(description = "Authorization token") @HeaderParam("subjectid") String subjectid,
         @Context UriInfo ui, @Context HttpHeaders headers, @Context SecurityContext securityContext)
@@ -197,7 +196,7 @@ public class Trees  {
         metaParams.put("useResampling", useResampling);
         metaParams.put("weightThreshold", weightThreshold);
 
-        return delegate.algorithmPost(fileInputStream, fileDetail, datasetUri,"J48", params,
+        return delegate.algorithmPost(fileInputStream, datasetUri,"J48", params,
             "AdaBoost", metaParams, validation, validationNum, headers, ui, securityContext);
 
     }
@@ -219,38 +218,38 @@ public class Trees  {
     @GroupedApiResponsesOk
     public Response algorithmJ48BaggingPost(
         //data params
-        @FormDataParam("file") InputStream fileInputStream,
-        @FormDataParam("file") FormDataContentDisposition fileDetail,
-        @Parameter(description = "Dataset URI or local dataset ID (to the arff representation of a dataset).") @FormDataParam("datasetUri") String datasetUri,
+        @Parameter(schema = @Schema(description="ARFF data file.", type = "string", format = "binary")) @FormDataParam("file") InputStream fileInputStream,
+        @Parameter(schema = @Schema(description = "Dataset URI or local dataset ID (to the arff representation of a dataset).",
+            defaultValue = "", example = "")) @DefaultValue("") @FormDataParam("datasetUri") String datasetUri,
         //meta params,
-        @Parameter(description = "Bagging: Size of each bag, as a percentage of the training set size.",
-            schema = @Schema(defaultValue = "100")) @FormDataParam("bagSizePercent") Integer bagSizePercent,
-        @Parameter(description = "Bagging: The preferred number of instances to process if batch prediction is being performed. More or fewer instances may be provided, but this gives implementations a chance to specify a preferred batch size.",
-            schema = @Schema(defaultValue = "100")) @FormDataParam("batchSize") Integer batchSize,
-        @Parameter(description = "Bagging: The number of iterations to be performed.",
-            schema = @Schema(defaultValue = "10")) @FormDataParam("numIterations") Integer numIterations,
+        @Parameter(schema = @Schema(description = "Bagging: Size of each bag, as a percentage of the training set size.",
+            defaultValue = "100")) @FormDataParam("bagSizePercent") Integer bagSizePercent,
+        @Parameter(schema = @Schema(description = "Bagging: The preferred number of instances to process if batch prediction is being performed. More or fewer instances may be provided, but this gives implementations a chance to specify a preferred batch size.",
+            defaultValue = "100")) @FormDataParam("batchSize") Integer batchSize,
+        @Parameter(schema = @Schema(description = "Bagging: The number of iterations to be performed.",
+            defaultValue = "10")) @FormDataParam("numIterations") Integer numIterations,
         //J48,
-        @Parameter(description = "Whether to use binary splits on nominal attributes when building the trees.",
-            schema = @Schema(allowableValues = {"0", "1"}, defaultValue = "0")) @FormDataParam("binarySplits") Integer binarySplits,
-        @Parameter(description = "The confidence factor used for pruning (smaller values incur more pruning).",
-            schema = @Schema(defaultValue = "0.25")) @FormDataParam("confidenceFactor") BigDecimal confidenceFactor,
-        @Parameter(description = "The minimum number of instances per leaf.",
-            schema = @Schema(defaultValue = "2")) @FormDataParam("minNumObj") Integer minNumObj,
-        @Parameter(description = "Determines the amount of data used for reduced-error pruning.  One fold is used for pruning, the rest for growing the tree",
-            schema = @Schema(defaultValue = "3")) @FormDataParam("numFolds") Integer numFolds,
-        @Parameter(description = "Whether reduced-error pruning is used instead of C.4.5 pruning.",
-            schema = @Schema(allowableValues = "0, 1", defaultValue = "0")) @FormDataParam("reducedErrorPruning") Integer reducedErrorPruning,
-        @Parameter(description = "The seed used for randomizing the data when reduced-error pruning is used.",
-            schema = @Schema(defaultValue = "1")) @FormDataParam("seed") Integer seed,
-        @Parameter(description = "Whether to consider the subtree raising operation when pruning.",
-            schema = @Schema(allowableValues = {"0", "1"}, defaultValue = "1")) @FormDataParam("subtreeRaising") Integer subtreeRaising,
-        @Parameter(description = "Whether pruning is performed.",
-            schema = @Schema(defaultValue = "1", allowableValues = {"0", "1"})) @FormDataParam("unpruned") Integer unpruned,
-        @Parameter(description = "Whether counts at leaves are smoothed based on Laplace.",
-            schema = @Schema(defaultValue = "0", allowableValues = {"0", "1"})) @FormDataParam("useLaplace") Integer useLaplace,
+        @Parameter(schema = @Schema(description = "Whether to use binary splits on nominal attributes when building the trees.",
+            allowableValues = {"0", "1"}, defaultValue = "0")) @FormDataParam("binarySplits") Integer binarySplits,
+        @Parameter(schema = @Schema(description = "The confidence factor used for pruning (smaller values incur more pruning).",
+            defaultValue = "0.25")) @FormDataParam("confidenceFactor") BigDecimal confidenceFactor,
+        @Parameter(schema = @Schema(description = "The minimum number of instances per leaf.",
+            defaultValue = "2")) @FormDataParam("minNumObj") Integer minNumObj,
+        @Parameter(schema = @Schema(description = "Determines the amount of data used for reduced-error pruning.  One fold is used for pruning, the rest for growing the tree",
+            defaultValue = "3")) @FormDataParam("numFolds") Integer numFolds,
+        @Parameter(schema = @Schema(description = "Whether reduced-error pruning is used instead of C.4.5 pruning.",
+            allowableValues = "0, 1", defaultValue = "0")) @FormDataParam("reducedErrorPruning") Integer reducedErrorPruning,
+        @Parameter(schema = @Schema(description = "The seed used for randomizing the data when reduced-error pruning is used.",
+            defaultValue = "1")) @FormDataParam("seed") Integer seed,
+        @Parameter(schema = @Schema(description = "Whether to consider the subtree raising operation when pruning.",
+            allowableValues = {"0", "1"}, defaultValue = "1")) @FormDataParam("subtreeRaising") Integer subtreeRaising,
+        @Parameter(schema = @Schema(description = "Whether pruning is performed.",
+            defaultValue = "1", allowableValues = {"0", "1"})) @FormDataParam("unpruned") Integer unpruned,
+        @Parameter(schema = @Schema(description = "Whether counts at leaves are smoothed based on Laplace.",
+            defaultValue = "0", allowableValues = {"0", "1"})) @FormDataParam("useLaplace") Integer useLaplace,
         // validation
-        @Parameter(description = "Validation to use.", schema = @Schema(defaultValue="CrossValidation", allowableValues = {"CrossValidation", "Hold-Out"})) @FormDataParam("validation") String validation ,
-        @Parameter(description  = "Num of Crossvalidations or Percentage Split %.", schema = @Schema(defaultValue="10", example = "10")) @FormDataParam("validationNum") Double validationNum,
+        @Parameter(schema = @Schema(description = "Validation to use.", defaultValue="CrossValidation", allowableValues = {"CrossValidation", "Hold-Out"})) @FormDataParam("validation") String validation ,
+        @Parameter(schema = @Schema(description  = "Num of Crossvalidations or Percentage Split %.", defaultValue="10", example = "10")) @FormDataParam("validationNum") Double validationNum,
         // authorization
         @Parameter(description = "Authorization token") @HeaderParam("subjectid") String subjectid,
         @Context UriInfo ui, @Context HttpHeaders headers, @Context SecurityContext securityContext)
@@ -272,7 +271,7 @@ public class Trees  {
         params.put("unpruned", unpruned);
         params.put("useLaplace", useLaplace);
 
-        return delegate.algorithmPost(fileInputStream, fileDetail, datasetUri,"J48", params,
+        return delegate.algorithmPost(fileInputStream, datasetUri,"J48", params,
             "Bagging", metaParams, validation, validationNum, headers, ui, securityContext);
     }
 
@@ -295,22 +294,22 @@ public class Trees  {
     @GroupedApiResponsesOk
     public Response algorithmM5PPost(
         //data params
-        @FormDataParam("file") InputStream fileInputStream,
-        @FormDataParam("file") FormDataContentDisposition fileDetail,
-        @Parameter(description = "Dataset URI or local dataset ID (to the arff representation of a dataset).") @FormDataParam("datasetUri") String datasetUri,
+        @Parameter(schema = @Schema(description="ARFF data file.", type = "string", format = "binary")) @FormDataParam("file") InputStream fileInputStream,
+        @Parameter(schema = @Schema(description = "Dataset URI or local dataset ID (to the arff representation of a dataset).",
+            defaultValue = "", example = "")) @DefaultValue("") @FormDataParam("datasetUri") String datasetUri,
         // M5P
-        @Parameter(description = "Whether unpruned tree to be generated.", example = "0",
-            schema = @Schema(defaultValue = "0", allowableValues = {"0", "1"}))@FormDataParam("unpruned") Integer unpruned,
-        @Parameter(description = "Whether to use unsmoothed predictions.",
-            schema = @Schema(defaultValue = "0", allowableValues={"0", "1"}))@FormDataParam("useUnsmoothed") Integer useUnsmoothed,
-        @Parameter(description = "The minimum number of instances to allow at a leaf node.",
-            schema = @Schema(defaultValue = "4"))@FormDataParam("minNumInstances") Double minNumInstances,
-        @Parameter(description = "Whether to generate a regression tree/rule instead of a model tree/rule.",
-            schema = @Schema(defaultValue = "0", allowableValues={"0", "1"}))@FormDataParam("buildRegressionTree") Integer buildRegressionTree,
+        @Parameter(schema = @Schema(description = "Whether unpruned tree to be generated.", example = "0",
+            defaultValue = "0", allowableValues = {"0", "1"}))@FormDataParam("unpruned") Integer unpruned,
+        @Parameter(schema = @Schema(description = "Whether to use unsmoothed predictions.",
+            defaultValue = "0", allowableValues={"0", "1"}))@FormDataParam("useUnsmoothed") Integer useUnsmoothed,
+        @Parameter(schema = @Schema(description = "The minimum number of instances to allow at a leaf node.",
+            defaultValue = "4"))@FormDataParam("minNumInstances") Double minNumInstances,
+        @Parameter(schema = @Schema(description = "Whether to generate a regression tree/rule instead of a model tree/rule.",
+            defaultValue = "0", allowableValues={"0", "1"}))@FormDataParam("buildRegressionTree") Integer buildRegressionTree,
         // validation
-        @Parameter(description = "Validation to use.",
-            schema = @Schema(allowableValues = {"CrossValidation","Hold-Out"}, defaultValue = "CrossValidation")) @FormDataParam("validation") String validation,
-        @Parameter(description = "Num of Crossvalidations or Percentage Split %.", schema = @Schema(defaultValue = "10", example = "10")) @FormDataParam("validationNum") Double validationNum,
+        @Parameter(schema = @Schema(description = "Validation to use.",
+            allowableValues = {"CrossValidation","Hold-Out"}, defaultValue = "CrossValidation")) @FormDataParam("validation") String validation,
+        @Parameter(schema = @Schema(description = "Num of Crossvalidations or Percentage Split %.", defaultValue = "10", example = "10")) @FormDataParam("validationNum") Double validationNum,
         // authorization
         @Parameter(description = "Authorization token" )@HeaderParam("subjectid") String subjectid,
         @Context UriInfo ui, @Context HttpHeaders headers, @Context SecurityContext securityContext)
@@ -322,7 +321,7 @@ public class Trees  {
         params.put("unpruned", unpruned);
         params.put("useUnsmoothed", useUnsmoothed);
         params.put("buildRegressionTree", buildRegressionTree);
-        return delegate.algorithmPost(fileInputStream, fileDetail, datasetUri, "M5P", params,
+        return delegate.algorithmPost(fileInputStream, datasetUri, "M5P", params,
             validation, validationNum, headers, ui, securityContext);
     }
 
@@ -345,31 +344,31 @@ public class Trees  {
     @GroupedApiResponsesOk
     public Response algorithmM5PAdaBoostPost(
         //data params
-        @FormDataParam("file") InputStream fileInputStream,
-        @FormDataParam("file") FormDataContentDisposition fileDetail,
-        @Parameter(description = "Dataset URI or local dataset ID (to the arff representation of a dataset).") @FormDataParam("datasetUri") String datasetUri,
+        @Parameter(schema = @Schema(description="ARFF data file.", type = "string", format = "binary")) @FormDataParam("file") InputStream fileInputStream,
+        @Parameter(schema = @Schema(description = "Dataset URI or local dataset ID (to the arff representation of a dataset).",
+            defaultValue = "", example = "")) @DefaultValue("") @FormDataParam("datasetUri") String datasetUri,
         //meta params,
-        @Parameter(description = "Adaboost M1: The preferred number of instances to process if batch prediction is being performed. More or fewer instances may be provided, but this gives implementations a chance to specify a preferred batch size.",
-            schema = @Schema(defaultValue = "100")) @FormDataParam("batchSize") Integer batchSize,
-        @Parameter(description = "Adaboost M1: The number of iterations to be performed.",
-            schema = @Schema(defaultValue = "10")) @FormDataParam("numIterations") Integer numIterations,
-        @Parameter(description = "Adaboost M1: Whether resampling is used instead of reweighting.",
-            schema = @Schema(defaultValue = "0", allowableValues = {"0", "1"})) @FormDataParam("useResampling") Integer useResampling,
-        @Parameter(description = "Adaboost M1: Weight threshold for weight pruning.",
-            schema = @Schema(defaultValue = "100"))@FormDataParam("weightThreshold") Integer weightThreshold,
+        @Parameter(schema = @Schema(description = "Adaboost M1: The preferred number of instances to process if batch prediction is being performed. More or fewer instances may be provided, but this gives implementations a chance to specify a preferred batch size.",
+            defaultValue = "100")) @FormDataParam("batchSize") Integer batchSize,
+        @Parameter(schema = @Schema(description = "Adaboost M1: The number of iterations to be performed.",
+            defaultValue = "10")) @FormDataParam("numIterations") Integer numIterations,
+        @Parameter(schema = @Schema(description = "Adaboost M1: Whether resampling is used instead of reweighting.",
+            defaultValue = "0", allowableValues = {"0", "1"})) @FormDataParam("useResampling") Integer useResampling,
+        @Parameter(schema = @Schema(description = "Adaboost M1: Weight threshold for weight pruning.",
+            defaultValue = "100"))@FormDataParam("weightThreshold") Integer weightThreshold,
         // M5P
-        @Parameter(description = "Whether unpruned tree to be generated.", example = "0",
-            schema = @Schema(defaultValue = "0", allowableValues = {"0", "1"}))@FormDataParam("unpruned") Integer unpruned,
-        @Parameter(description = "Whether to use unsmoothed predictions.",
-            schema = @Schema(defaultValue = "0", allowableValues = {"0", "1"}))@FormDataParam("useUnsmoothed") Integer useUnsmoothed,
-        @Parameter(description = "The minimum number of instances to allow at a leaf node.",
-            schema = @Schema(defaultValue = "4"))@FormDataParam("minNumInstances") Double minNumInstances,
-        @Parameter(description = "Whether to generate a regression tree/rule instead of a model tree/rule.",
-            schema = @Schema(defaultValue = "0", allowableValues = {"0", "1"}))@FormDataParam("buildRegressionTree") Integer buildRegressionTree,
+        @Parameter(schema = @Schema(description = "Whether unpruned tree to be generated.", example = "0",
+            defaultValue = "0", allowableValues = {"0", "1"}))@FormDataParam("unpruned") Integer unpruned,
+        @Parameter(schema = @Schema(description = "Whether to use unsmoothed predictions.",
+            defaultValue = "0", allowableValues = {"0", "1"}))@FormDataParam("useUnsmoothed") Integer useUnsmoothed,
+        @Parameter(schema = @Schema(description = "The minimum number of instances to allow at a leaf node.",
+            defaultValue = "4"))@FormDataParam("minNumInstances") Double minNumInstances,
+        @Parameter(schema = @Schema(description = "Whether to generate a regression tree/rule instead of a model tree/rule.",
+            defaultValue = "0", allowableValues = {"0", "1"}))@FormDataParam("buildRegressionTree") Integer buildRegressionTree,
         // validation
-        @Parameter(description = "Validation to use.",
-            schema = @Schema(allowableValues = {"CrossValidation","Hold-Out"}, defaultValue = "CrossValidation")) @FormDataParam("validation") String validation,
-        @Parameter(description = "Num of Crossvalidations or Percentage Split %.", schema = @Schema(defaultValue = "10", example = "10")) @FormDataParam("validationNum") Double validationNum,
+        @Parameter(schema = @Schema(description = "Validation to use.",
+            allowableValues = {"CrossValidation","Hold-Out"}, defaultValue = "CrossValidation")) @FormDataParam("validation") String validation,
+        @Parameter(schema = @Schema(description = "Num of Crossvalidations or Percentage Split %.", defaultValue = "10", example = "10")) @FormDataParam("validationNum") Double validationNum,
         // authorization
         @Parameter(description = "Authorization token" )@HeaderParam("subjectid") String subjectid,
         @Context UriInfo ui, @Context HttpHeaders headers, @Context SecurityContext securityContext)
@@ -386,7 +385,7 @@ public class Trees  {
         params.put("unpruned", unpruned);
         params.put("useUnsmoothed", useUnsmoothed);
         params.put("buildRegressionTree", buildRegressionTree);
-        return delegate.algorithmPost(fileInputStream, fileDetail, datasetUri, "M5P", params,
+        return delegate.algorithmPost(fileInputStream, datasetUri, "M5P", params,
             "AdaBoost", metaParams, validation, validationNum, headers, ui, securityContext);
     }
 
@@ -409,29 +408,29 @@ public class Trees  {
     @GroupedApiResponsesOk
     public Response algorithmM5PBaggingPost(
         //data params
-        @FormDataParam("file") InputStream fileInputStream,
-        @FormDataParam("file") FormDataContentDisposition fileDetail,
-        @Parameter(description = "Dataset URI or local dataset ID (to the arff representation of a dataset).") @FormDataParam("datasetUri") String datasetUri,
+        @Parameter(schema = @Schema(description="ARFF data file.", type = "string", format = "binary")) @FormDataParam("file") InputStream fileInputStream,
+        @Parameter(schema = @Schema(description = "Dataset URI or local dataset ID (to the arff representation of a dataset).",
+            defaultValue = "", example = "")) @DefaultValue("") @FormDataParam("datasetUri") String datasetUri,
         //meta params,
-        @Parameter(description = "Bagging: Size of each bag, as a percentage of the training set size.",
-            schema = @Schema(defaultValue = "100")) @FormDataParam("bagSizePercent") Integer bagSizePercent,
-        @Parameter(description = "Bagging: The preferred number of instances to process if batch prediction is being performed. More or fewer instances may be provided, but this gives implementations a chance to specify a preferred batch size.",
-            schema = @Schema(defaultValue = "100")) @FormDataParam("batchSize") Integer batchSize,
-        @Parameter(description = "Bagging: The number of iterations to be performed.",
-            schema = @Schema(defaultValue = "10")) @FormDataParam("numIterations") Integer numIterations,
+        @Parameter(schema = @Schema(description = "Bagging: Size of each bag, as a percentage of the training set size.",
+            defaultValue = "100")) @FormDataParam("bagSizePercent") Integer bagSizePercent,
+        @Parameter(schema = @Schema(description = "Bagging: The preferred number of instances to process if batch prediction is being performed. More or fewer instances may be provided, but this gives implementations a chance to specify a preferred batch size.",
+            defaultValue = "100")) @FormDataParam("batchSize") Integer batchSize,
+        @Parameter(schema = @Schema(description = "Bagging: The number of iterations to be performed.",
+            defaultValue = "10")) @FormDataParam("numIterations") Integer numIterations,
         // M5P
-        @Parameter(description = "Whether unpruned tree to be generated.", example = "0",
-            schema = @Schema(defaultValue = "0", allowableValues = {"0", "1"}))@FormDataParam("unpruned") Integer unpruned,
-        @Parameter(description = "Whether to use unsmoothed predictions.",
-            schema = @Schema(defaultValue = "0", allowableValues = {"0", "1"}))@FormDataParam("useUnsmoothed") Integer useUnsmoothed,
-        @Parameter(description = "The minimum number of instances to allow at a leaf node.",
-            schema = @Schema(defaultValue = "4"))@FormDataParam("minNumInstances") Double minNumInstances,
-        @Parameter(description = "Whether to generate a regression tree/rule instead of a model tree/rule.",
-            schema = @Schema(defaultValue = "0", allowableValues = {"0", "1"}))@FormDataParam("buildRegressionTree") Integer buildRegressionTree,
+        @Parameter(schema = @Schema(description = "Whether unpruned tree to be generated.", example = "0",
+            defaultValue = "0", allowableValues = {"0", "1"}))@FormDataParam("unpruned") Integer unpruned,
+        @Parameter(schema = @Schema(description = "Whether to use unsmoothed predictions.",
+            defaultValue = "0", allowableValues = {"0", "1"}))@FormDataParam("useUnsmoothed") Integer useUnsmoothed,
+        @Parameter(schema = @Schema(description = "The minimum number of instances to allow at a leaf node.",
+            defaultValue = "4"))@FormDataParam("minNumInstances") Double minNumInstances,
+        @Parameter(schema = @Schema(description = "Whether to generate a regression tree/rule instead of a model tree/rule.",
+            defaultValue = "0", allowableValues = {"0", "1"}))@FormDataParam("buildRegressionTree") Integer buildRegressionTree,
         // validation
-        @Parameter(description = "Validation to use.",
-            schema = @Schema(allowableValues = {"CrossValidation","Hold-Out"}, defaultValue = "CrossValidation")) @FormDataParam("validation") String validation,
-        @Parameter(description = "Num of Crossvalidations or Percentage Split %.", schema = @Schema(defaultValue = "10", example = "10")) @FormDataParam("validationNum") Double validationNum,
+        @Parameter(schema = @Schema(description = "Validation to use.",
+            allowableValues = {"CrossValidation","Hold-Out"}, defaultValue = "CrossValidation")) @FormDataParam("validation") String validation,
+        @Parameter(schema = @Schema(description = "Num of Crossvalidations or Percentage Split %.", defaultValue = "10", example = "10")) @FormDataParam("validationNum") Double validationNum,
         // authorization
         @Parameter(description = "Authorization token" )@HeaderParam("subjectid") String subjectid,
         @Context UriInfo ui, @Context HttpHeaders headers, @Context SecurityContext securityContext)
@@ -447,7 +446,7 @@ public class Trees  {
         params.put("unpruned", unpruned);
         params.put("useUnsmoothed", useUnsmoothed);
         params.put("buildRegressionTree", buildRegressionTree);
-        return delegate.algorithmPost(fileInputStream, fileDetail, datasetUri, "M5P", params,
+        return delegate.algorithmPost(fileInputStream, datasetUri, "M5P", params,
             "Bagging", metaParams, validation, validationNum, headers, ui, securityContext);
     }
 
@@ -470,14 +469,14 @@ public class Trees  {
     @GroupedApiResponsesOk
     public Response algorithmDecisionStumpPost(
         //data params
-        @FormDataParam("file") InputStream fileInputStream,
-        @FormDataParam("file") FormDataContentDisposition fileDetail,
-        @Parameter(description = "Dataset URI or local dataset ID (to the arff representation of a dataset).") @FormDataParam("datasetUri") String datasetUri,
+        @Parameter(schema = @Schema(description="ARFF data file.", type = "string", format = "binary")) @FormDataParam("file") InputStream fileInputStream,
+        @Parameter(schema = @Schema(description = "Dataset URI or local dataset ID (to the arff representation of a dataset).",
+            defaultValue = "", example = "")) @DefaultValue("") @FormDataParam("datasetUri") String datasetUri,
         // DecisionStump
         // validation
-        @Parameter(description = "Validation to use.",
-            schema = @Schema(allowableValues = {"CrossValidation","Hold-Out"}, defaultValue = "CrossValidation")) @FormDataParam("validation") String validation,
-        @Parameter(description = "Num of Crossvalidations or Percentage Split %.", schema = @Schema(defaultValue = "10", example = "10")) @FormDataParam("validationNum") Double validationNum,
+        @Parameter(schema = @Schema(description = "Validation to use.",
+            allowableValues = {"CrossValidation","Hold-Out"}, defaultValue = "CrossValidation")) @FormDataParam("validation") String validation,
+        @Parameter(schema = @Schema(description = "Num of Crossvalidations or Percentage Split %.", defaultValue = "10", example = "10")) @FormDataParam("validationNum") Double validationNum,
         // authorization
         @Parameter(description = "Authorization token" )@HeaderParam("subjectid") String subjectid,
         @Context UriInfo ui, @Context HttpHeaders headers, @Context SecurityContext securityContext)
@@ -485,7 +484,7 @@ public class Trees  {
 
         HashMap<String, Object> params = new HashMap<>();
         params.put("datasetUri", datasetUri);
-        return delegate.algorithmPost(fileInputStream, fileDetail, datasetUri, "DecisionStump", params,
+        return delegate.algorithmPost(fileInputStream, datasetUri, "DecisionStump", params,
             validation, validationNum, headers, ui, securityContext);
     }
 
@@ -509,23 +508,23 @@ public class Trees  {
     @GroupedApiResponsesOk
     public Response algorithmDecisionStumpAdaBoostPost(
         //data params
-        @FormDataParam("file") InputStream fileInputStream,
-        @FormDataParam("file") FormDataContentDisposition fileDetail,
-        @Parameter(description = "Dataset URI or local dataset ID (to the arff representation of a dataset).") @FormDataParam("datasetUri") String datasetUri,
+        @Parameter(schema = @Schema(description="ARFF data file.", type = "string", format = "binary")) @FormDataParam("file") InputStream fileInputStream,
+        @Parameter(schema = @Schema(description = "Dataset URI or local dataset ID (to the arff representation of a dataset).",
+            defaultValue = "", example = "")) @DefaultValue("") @FormDataParam("datasetUri") String datasetUri,
         //meta params,
-        @Parameter(description = "Adaboost M1: The preferred number of instances to process if batch prediction is being performed. More or fewer instances may be provided, but this gives implementations a chance to specify a preferred batch size.",
-            schema = @Schema(defaultValue = "100")) @FormDataParam("batchSize") Integer batchSize,
-        @Parameter(description = "Adaboost M1: The number of iterations to be performed.",
-            schema = @Schema(defaultValue = "10")) @FormDataParam("numIterations") Integer numIterations,
-        @Parameter(description = "Adaboost M1: Whether resampling is used instead of reweighting.",
-            schema = @Schema(defaultValue = "0", allowableValues = {"0", "1"})) @FormDataParam("useResampling") Integer useResampling,
-        @Parameter(description = "Adaboost M1: Weight threshold for weight pruning.",
-            schema = @Schema(defaultValue = "100")) @FormDataParam("weightThreshold") Integer weightThreshold,
+        @Parameter(schema = @Schema(description = "Adaboost M1: The preferred number of instances to process if batch prediction is being performed. More or fewer instances may be provided, but this gives implementations a chance to specify a preferred batch size.",
+            defaultValue = "100")) @FormDataParam("batchSize") Integer batchSize,
+        @Parameter(schema = @Schema(description = "Adaboost M1: The number of iterations to be performed.",
+            defaultValue = "10")) @FormDataParam("numIterations") Integer numIterations,
+        @Parameter(schema = @Schema(description = "Adaboost M1: Whether resampling is used instead of reweighting.",
+            defaultValue = "0", allowableValues = {"0", "1"})) @FormDataParam("useResampling") Integer useResampling,
+        @Parameter(schema = @Schema(description = "Adaboost M1: Weight threshold for weight pruning.",
+            defaultValue = "100")) @FormDataParam("weightThreshold") Integer weightThreshold,
         // DecisionStump
             // validation
-            @Parameter(description = "Validation to use.",
-                schema = @Schema(allowableValues = {"CrossValidation","Hold-Out"}, defaultValue = "CrossValidation")) @FormDataParam("validation") String validation,
-            @Parameter(description = "Num of Crossvalidations or Percentage Split %.", schema = @Schema(defaultValue = "10", example = "10")) @FormDataParam("validationNum") Double validationNum,
+            @Parameter(schema = @Schema(description = "Validation to use.",
+                allowableValues = {"CrossValidation","Hold-Out"}, defaultValue = "CrossValidation")) @FormDataParam("validation") String validation,
+            @Parameter(schema = @Schema(description = "Num of Crossvalidations or Percentage Split %.", defaultValue = "10", example = "10")) @FormDataParam("validationNum") Double validationNum,
             // authorization
         @Parameter(description = "Authorization token" )@HeaderParam("subjectid") String subjectid,
         @Context UriInfo ui, @Context HttpHeaders headers, @Context SecurityContext securityContext)
@@ -538,7 +537,7 @@ public class Trees  {
         metaParams.put("numIterations", numIterations);
         metaParams.put("useResampling", useResampling);
         metaParams.put("weightThreshold", weightThreshold);
-        return delegate.algorithmPost(fileInputStream, fileDetail, datasetUri, "DecisionStump", params,
+        return delegate.algorithmPost(fileInputStream, datasetUri, "DecisionStump", params,
             "AdaBoost", metaParams, validation, validationNum, headers, ui, securityContext);
     }
 
@@ -562,21 +561,21 @@ public class Trees  {
     @GroupedApiResponsesOk
     public Response algorithmDecisionStumpBaggingPost(
         //data params
-        @FormDataParam("file") InputStream fileInputStream,
-        @FormDataParam("file") FormDataContentDisposition fileDetail,
-        @Parameter(description = "Dataset URI or local dataset ID (to the arff representation of a dataset).") @FormDataParam("datasetUri") String datasetUri,
+        @Parameter(schema = @Schema(description="ARFF data file.", type = "string", format = "binary")) @FormDataParam("file") InputStream fileInputStream,
+        @Parameter(schema = @Schema(description = "Dataset URI or local dataset ID (to the arff representation of a dataset).",
+            defaultValue = "", example = "")) @DefaultValue("") @FormDataParam("datasetUri") String datasetUri,
         //meta params,
-        @Parameter(description = "Bagging: Size of each bag, as a percentage of the training set size.",
-            schema = @Schema(defaultValue = "100", example = "100")) @FormDataParam("bagSizePercent") Integer bagSizePercent,
-        @Parameter(description = "Bagging: The preferred number of instances to process if batch prediction is being performed. More or fewer instances may be provided, but this gives implementations a chance to specify a preferred batch size.",
-            schema = @Schema(defaultValue = "100", example = "100")) @FormDataParam("batchSize") Integer batchSize,
-        @Parameter(description = "Bagging: The number of iterations to be performed.",
-            schema = @Schema(defaultValue = "10", example = "10")) @FormDataParam("numIterations") Integer numIterations,
+        @Parameter(schema = @Schema(description = "Bagging: Size of each bag, as a percentage of the training set size.",
+            defaultValue = "100", example = "100")) @FormDataParam("bagSizePercent") Integer bagSizePercent,
+        @Parameter(schema = @Schema(description = "Bagging: The preferred number of instances to process if batch prediction is being performed. More or fewer instances may be provided, but this gives implementations a chance to specify a preferred batch size.",
+            defaultValue = "100", example = "100")) @FormDataParam("batchSize") Integer batchSize,
+        @Parameter(schema = @Schema(description = "Bagging: The number of iterations to be performed.",
+            defaultValue = "10", example = "10")) @FormDataParam("numIterations") Integer numIterations,
         // DecisionStump
         // validation
-        @Parameter(description = "Validation to use.",
-            schema = @Schema(allowableValues = {"CrossValidation", "Hold-Out"}, defaultValue = "CrossValidation")) @FormDataParam("validation") String validation,
-        @Parameter(description = "Num of Crossvalidations or Percentage Split %.", schema = @Schema(defaultValue = "10", example = "10")) @FormDataParam("validationNum") Double validationNum,
+        @Parameter(schema = @Schema(description = "Validation to use.",
+            allowableValues = {"CrossValidation", "Hold-Out"}, defaultValue = "CrossValidation")) @FormDataParam("validation") String validation,
+        @Parameter(schema = @Schema(description = "Num of Crossvalidations or Percentage Split %.", defaultValue = "10", example = "10")) @FormDataParam("validationNum") Double validationNum,
         // authorization
         @Parameter(description = "Authorization token" )@HeaderParam("subjectid") String subjectid,
         @Context UriInfo ui, @Context HttpHeaders headers, @Context SecurityContext securityContext)
@@ -589,7 +588,7 @@ public class Trees  {
         metaParams.put("batchSize", batchSize);
         metaParams.put("numIterations", numIterations);
 
-        return delegate.algorithmPost(fileInputStream, fileDetail, datasetUri, "DecisionStump", params,
+        return delegate.algorithmPost(fileInputStream, datasetUri, "DecisionStump", params,
             "Bagging", metaParams, validation, validationNum, headers, ui, securityContext);
     }
 
@@ -616,41 +615,41 @@ public class Trees  {
     @GroupedApiResponsesOk
     public Response algorithmRandomForestPost(
         //data params
-        @FormDataParam("file") InputStream fileInputStream,
-        @FormDataParam("file") FormDataContentDisposition fileDetail,
-        @Parameter(description = "Dataset URI or local dataset ID (to the arff representation of a dataset).") @FormDataParam("datasetUri") String datasetUri,
+        @Parameter(schema = @Schema(description="ARFF data file.", type = "string", format = "binary")) @FormDataParam("file") InputStream fileInputStream,
+        @Parameter(schema = @Schema(description = "Dataset URI or local dataset ID (to the arff representation of a dataset).",
+            defaultValue = "", example = "")) @DefaultValue("") @FormDataParam("datasetUri") String datasetUri,
         //@Parameter(description = "Whether to represent copies of instances using weights rather than explicitly.",
         //    schema = @Schema(defaultValue = "10", example = "10")) @FormDataParam("representCopiesUsingWeights ")  representCopiesUsingWeights
-        @Parameter(description = "Whether to store the out-of-bag predictions.",
-            schema = @Schema(allowableValues =  {"true", "false"}, defaultValue = "false", example = "false")) @FormDataParam("storeOutOfBagPredictions") Boolean storeOutOfBagPredictions,
-        @Parameter(description = "The number of execution slots (threads) to use for constructing the ensemble.",
-            schema = @Schema(defaultValue = "1", example = "1")) @FormDataParam("numExecutionSlots") Integer numExecutionSlots,
-        @Parameter(description = "Size of each bag, as a percentage of the training set size.",
-            schema = @Schema(defaultValue = "100", example = "100")) @FormDataParam("bagSizePercent") Integer bagSizePercent,
-        @Parameter(description = "The number of decimal places to be used for the output of numbers in the model.",
-            schema = @Schema(defaultValue = "10", example = "10")) @FormDataParam("numDecimalPlaces") Integer numDecimalPlaces,
-        @Parameter(description = "The preferred number of instances to process if batch prediction is being performed. More or fewer instances may be provided, but this gives implementations a chance to specify a preferred batch size.",
-            schema = @Schema(defaultValue = "100", example = "100")) @FormDataParam("batchSize") Integer batchSize,
-        @Parameter(description = "Print the individual classifiers in the output",
-            schema = @Schema(allowableValues =  {"true", "false"}, defaultValue = "false", example = "false")) @FormDataParam("printClassifiers") Boolean printClassifiers,
-        @Parameter(description = "The number of iterations to be performed.",
-            schema = @Schema(defaultValue = "100", example = "100")) @FormDataParam("numIterations") Integer numIterations,
-        @Parameter(description = "Whether to output complexity-based statistics when out-of-bag evaluation is performed.",
-            schema = @Schema(allowableValues =  {"true", "false"}, defaultValue = "false", example = "false")) @FormDataParam("outputOutOfBagComplexityStatistics") Boolean outputOutOfBagComplexityStatistics,
-        @Parameter(description = "Break ties randomly when several attributes look equally good.",
-            schema = @Schema(allowableValues =  {"true", "false"}, defaultValue = "false", example = "false")) @FormDataParam("breakTiesRandomly") Boolean breakTiesRandomly,
-        @Parameter(description = "The maximum depth of the tree, 0 for unlimited.",
-            schema = @Schema(defaultValue = "0", example = "0")) @FormDataParam("maxDepth") Integer maxDepth,
-        @Parameter(description = "Compute attribute importance via mean impurity decrease",
-            schema = @Schema(allowableValues =  {"true", "false"}, defaultValue = "false", example = "false")) @FormDataParam("computeAttributeImportance") Boolean computeAttributeImportance,
-        @Parameter(description = "Whether the out-of-bag error is calculated.",
-            schema = @Schema(allowableValues =  {"true", "false"}, defaultValue = "false", example = "false")) @FormDataParam("calcOutOfBag") Boolean calcOutOfBag,
-        @Parameter(description = "Sets the number of randomly chosen attributes. If 0, int(log_2(#predictors) + 1) is used.",
-            schema = @Schema(defaultValue = "0", example = "0")) @FormDataParam("numFeatures") Integer numFeatures,
+        @Parameter(schema = @Schema(description = "Whether to store the out-of-bag predictions.",
+            allowableValues =  {"true", "false"}, defaultValue = "false", example = "false")) @FormDataParam("storeOutOfBagPredictions") Boolean storeOutOfBagPredictions,
+        @Parameter(schema = @Schema(description = "The number of execution slots (threads) to use for constructing the ensemble.",
+            defaultValue = "1", example = "1")) @FormDataParam("numExecutionSlots") Integer numExecutionSlots,
+        @Parameter(schema = @Schema(description = "Size of each bag, as a percentage of the training set size.",
+            defaultValue = "100", example = "100")) @FormDataParam("bagSizePercent") Integer bagSizePercent,
+        @Parameter(schema = @Schema(description = "The number of decimal places to be used for the output of numbers in the model.",
+            defaultValue = "10", example = "10")) @FormDataParam("numDecimalPlaces") Integer numDecimalPlaces,
+        @Parameter(schema = @Schema(description = "The preferred number of instances to process if batch prediction is being performed. More or fewer instances may be provided, but this gives implementations a chance to specify a preferred batch size.",
+            defaultValue = "100", example = "100")) @FormDataParam("batchSize") Integer batchSize,
+        @Parameter(schema = @Schema(description = "Print the individual classifiers in the output",
+            allowableValues =  {"true", "false"}, defaultValue = "false", example = "false")) @FormDataParam("printClassifiers") Boolean printClassifiers,
+        @Parameter(schema = @Schema(description = "The number of iterations to be performed.",
+            defaultValue = "100", example = "100")) @FormDataParam("numIterations") Integer numIterations,
+        @Parameter(schema = @Schema(description = "Whether to output complexity-based statistics when out-of-bag evaluation is performed.",
+            allowableValues =  {"true", "false"}, defaultValue = "false", example = "false")) @FormDataParam("outputOutOfBagComplexityStatistics") Boolean outputOutOfBagComplexityStatistics,
+        @Parameter(schema = @Schema(description = "Break ties randomly when several attributes look equally good.",
+            allowableValues =  {"true", "false"}, defaultValue = "false", example = "false")) @FormDataParam("breakTiesRandomly") Boolean breakTiesRandomly,
+        @Parameter(schema = @Schema(description = "The maximum depth of the tree, 0 for unlimited.",
+            defaultValue = "0", example = "0")) @FormDataParam("maxDepth") Integer maxDepth,
+        @Parameter(schema = @Schema(description = "Compute attribute importance via mean impurity decrease",
+            allowableValues =  {"true", "false"}, defaultValue = "false", example = "false")) @FormDataParam("computeAttributeImportance") Boolean computeAttributeImportance,
+        @Parameter(schema = @Schema(description = "Whether the out-of-bag error is calculated.",
+            allowableValues =  {"true", "false"}, defaultValue = "false", example = "false")) @FormDataParam("calcOutOfBag") Boolean calcOutOfBag,
+        @Parameter(schema = @Schema(description = "Sets the number of randomly chosen attributes. If 0, int(log_2(#predictors) + 1) is used.",
+            defaultValue = "0", example = "0")) @FormDataParam("numFeatures") Integer numFeatures,
         // validation
-            @Parameter(description = "Validation to use.",
-                schema = @Schema(allowableValues = {"CrossValidation", "Hold-Out"}, defaultValue = "CrossValidation")) @FormDataParam("validation") String validation,
-        @Parameter(description = "Num of Crossvalidations or Percentage Split %.", schema = @Schema(defaultValue = "10", example = "10")) @FormDataParam("validationNum") Double validationNum,
+        @Parameter(schema = @Schema(description = "Validation to use.",
+            allowableValues = {"CrossValidation", "Hold-Out"}, defaultValue = "CrossValidation")) @FormDataParam("validation") String validation,
+        @Parameter(schema = @Schema(description = "Num of Crossvalidations or Percentage Split %.", defaultValue = "10", example = "10")) @FormDataParam("validationNum") Double validationNum,
         // authorization
         @Parameter(description = "Authorization token" )@HeaderParam("subjectid") String subjectid,
         @Context UriInfo ui, @Context HttpHeaders headers, @Context SecurityContext securityContext)
@@ -672,7 +671,7 @@ public class Trees  {
         params.put("calcOutOfBag", calcOutOfBag);
         params.put("numFeatures", numFeatures);
 
-        return delegate.algorithmPost(fileInputStream, fileDetail, datasetUri, "RandomForest", params,
+        return delegate.algorithmPost(fileInputStream, datasetUri, "RandomForest", params,
             validation, validationNum, headers, ui, securityContext);
     }
 

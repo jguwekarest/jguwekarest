@@ -10,7 +10,6 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.extensions.Extension;
 import io.swagger.v3.oas.annotations.extensions.ExtensionProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
-import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 
 import javax.servlet.ServletConfig;
@@ -70,18 +69,20 @@ public class Functions {
         })
     @GroupedApiResponsesOk
     public Response algorithmLRPost(
-        @FormDataParam("file") InputStream fileInputStream,
-        @FormDataParam("file") FormDataContentDisposition fileDetail,
-        @Parameter(description = "Dataset URI or local dataset ID (to the arff representation of a dataset).")@FormDataParam("datasetUri")  String datasetUri,
-        @Parameter(description = "Attribute selection method to be used (Default M5 method).Available methods are: no attribute selection(Value:1), attribute selection using M5's method (Value:0) and a greedy selection using the Akaike information metric(Value:2). One of 0,1,2 (Default: 0).",
-            schema = @Schema(defaultValue = "0", allowableValues = {"0", "1", "2"}) ) @FormDataParam("attributeSelectionMethod") Integer attributeSelectionMethod,
-        @Parameter(description = "Whether to eliminate colinear attributes. Must be 0 or 1 (Default: 1).",
-            schema = @Schema(defaultValue = "1", allowableValues = {"0", "1"})) @FormDataParam("eliminateColinearAttributes") Integer eliminateColinearAttributes,
-        @Parameter(description = "The ridge parameter (Default: 1.0E-8).",
-            schema = @Schema(defaultValue = "1.0E-8")) @FormDataParam("ridge") BigDecimal ridge,
+        @Parameter(schema = @Schema(description="ARFF data file.", type = "string", format = "binary")) @FormDataParam("file") InputStream fileInputStream,
+        @Parameter(schema = @Schema(description = "Dataset URI or local dataset ID (to the arff representation of a dataset).",
+            defaultValue = "", example = "")) @DefaultValue("") @FormDataParam("datasetUri") String datasetUri,
+        @Parameter(schema = @Schema(description = "Attribute selection method to be used (Default M5 method).Available methods are: no attribute selection(Value:1), attribute selection using M5's method (Value:0) and a greedy selection using the Akaike information metric(Value:2). One of 0,1,2 (Default: 0).",
+            defaultValue = "0", allowableValues = {"0", "1", "2"}) ) @FormDataParam("attributeSelectionMethod") Integer attributeSelectionMethod,
+        @Parameter(schema = @Schema(description = "Whether to eliminate colinear attributes. Must be 0 or 1 (Default: 1).",
+            defaultValue = "1", allowableValues = {"0", "1"})) @FormDataParam("eliminateColinearAttributes") Integer eliminateColinearAttributes,
+        @Parameter(schema = @Schema(description = "The ridge parameter (Default: 1.0E-8).",
+            defaultValue = "1.0E-8")) @FormDataParam("ridge") BigDecimal ridge,
         // validation
-        @Parameter(description = "Validation to use.", schema = @Schema(defaultValue="CrossValidation", allowableValues = {"CrossValidation", "Hold-Out"})) @FormDataParam("validation") String validation ,
-        @Parameter(description  = "Num of Crossvalidations or Percentage Split %.", schema = @Schema(defaultValue="10", example = "10")) @FormDataParam("validationNum") Double validationNum,
+        @Parameter(schema = @Schema(description = "Validation to use.", defaultValue="CrossValidation", example="CrossValidation",
+            allowableValues = {"CrossValidation", "Hold-Out"})) @DefaultValue("CrossValidation") @FormDataParam("validation") String validation ,
+        @Parameter(schema = @Schema(description = "Num of Crossvalidations or Percentage Split %.", defaultValue = "10", minimum = "0",example = "10"))
+        @FormDataParam("validationNum") Double validationNum,
         // authorization
         @Parameter(description = "authorization token") @HeaderParam("subjectid") String subjectid,
         @Context UriInfo ui, @Context HttpHeaders headers, @Context SecurityContext securityContext)
@@ -93,7 +94,7 @@ public class Functions {
             params.put("eliminateColinearAttributes", eliminateColinearAttributes);
             params.put("ridge", ridge);
 
-            return delegate.algorithmPost(fileInputStream, fileDetail, datasetUri, "LinearRegression", params,
+            return delegate.algorithmPost(fileInputStream, datasetUri, "LinearRegression", params,
                                           validation, validationNum, headers, ui, securityContext);
     }
 
@@ -116,31 +117,30 @@ public class Functions {
         })
     @GroupedApiResponsesOk
     public Response algorithmLRAdaBoostPost(
-        @FormDataParam("file") InputStream fileInputStream,
-        @FormDataParam("file") FormDataContentDisposition fileDetail,
-        @Parameter(description = "Dataset URI or local dataset ID (to the arff representation of a dataset).")@FormDataParam("datasetUri")  String datasetUri,
+        @Parameter(schema = @Schema(description="ARFF data file.", type = "string", format = "binary")) @FormDataParam("file") InputStream fileInputStream,
+        @Parameter(schema = @Schema(description = "Dataset URI or local dataset ID (to the arff representation of a dataset).",
+            defaultValue = "", example = "")) @DefaultValue("") @FormDataParam("datasetUri") String datasetUri,
         //meta params
-        @Parameter(description = "Adaboost M1: The preferred number of instances to process if batch prediction is being performed. More or fewer instances may be provided, but this gives implementations a chance to specify a preferred batch size.",
-            schema = @Schema(defaultValue = "100", example = "100")) @DefaultValue("100") @FormDataParam("batchSize") Integer batchSize,
-        @Parameter(
-            description = "Adaboost M1: The number of iterations to be performed.",
-            schema = @Schema(defaultValue = "10", example = "10")) @FormDataParam("numIterations") Integer numIterations,
-        @Parameter(
-            description = "Adaboost M1: Whether resampling is used instead of reweighting.",
-            schema = @Schema(defaultValue = "0", allowableValues = {"0", "1"})) @FormDataParam("useResampling") Integer useResampling,
-        @Parameter(
-            description = "Adaboost M1: Weight threshold for weight pruning.",
-            schema = @Schema(defaultValue = "100", example = "100")) @FormDataParam("weightThreshold") Integer weightThreshold,
+        @Parameter(schema = @Schema(description = "Adaboost M1: The preferred number of instances to process if batch prediction is being performed. More or fewer instances may be provided, but this gives implementations a chance to specify a preferred batch size.",
+            defaultValue = "100", example = "100")) @DefaultValue("100") @FormDataParam("batchSize") Integer batchSize,
+        @Parameter(schema = @Schema(description = "Adaboost M1: The number of iterations to be performed.",
+            defaultValue = "10", example = "10")) @FormDataParam("numIterations") Integer numIterations,
+        @Parameter(schema = @Schema(description = "Adaboost M1: Whether resampling is used instead of reweighting.",
+            defaultValue = "0", allowableValues = {"0", "1"})) @FormDataParam("useResampling") Integer useResampling,
+        @Parameter(schema = @Schema(description = "Adaboost M1: Weight threshold for weight pruning.",
+            defaultValue = "100", example = "100")) @FormDataParam("weightThreshold") Integer weightThreshold,
         // LR params
-        @Parameter(description = "Attribute selection method to be used (Default M5 method).Available methods are: no attribute selection(Value:1), attribute selection using M5's method (Value:0) and a greedy selection using the Akaike information metric(Value:2). One of 0,1,2 (Default: 0).",
-            schema = @Schema(defaultValue = "0", allowableValues = {"0", "1", "2"}) ) @FormDataParam("attributeSelectionMethod") Integer attributeSelectionMethod,
-        @Parameter(description = "Whether to eliminate colinear attributes. Must be 0 or 1 (Default: 1).",
-            schema = @Schema(defaultValue = "1", allowableValues = {"0", "1"})) @FormDataParam("eliminateColinearAttributes") Integer eliminateColinearAttributes,
-        @Parameter(description = "The ridge parameter (Default: 1.0E-8).",
-            schema = @Schema(defaultValue = "1.0E-8")) @FormDataParam("ridge") BigDecimal ridge,
+        @Parameter(schema = @Schema(description = "Attribute selection method to be used (Default M5 method).Available methods are: no attribute selection(Value:1), attribute selection using M5's method (Value:0) and a greedy selection using the Akaike information metric(Value:2). One of 0,1,2 (Default: 0).",
+            defaultValue = "0", allowableValues = {"0", "1", "2"}) ) @FormDataParam("attributeSelectionMethod") Integer attributeSelectionMethod,
+        @Parameter(schema = @Schema(description = "Whether to eliminate colinear attributes. Must be 0 or 1 (Default: 1).",
+            defaultValue = "1", allowableValues = {"0", "1"})) @FormDataParam("eliminateColinearAttributes") Integer eliminateColinearAttributes,
+        @Parameter(schema = @Schema(description = "The ridge parameter (Default: 1.0E-8).",
+            defaultValue = "1.0E-8")) @FormDataParam("ridge") BigDecimal ridge,
         // validation
-        @Parameter(description = "Validation to use.", schema = @Schema(defaultValue="CrossValidation", allowableValues = {"CrossValidation", "Hold-Out"})) @FormDataParam("validation") String validation ,
-        @Parameter(description  = "Num of Crossvalidations or Percentage Split %.", schema = @Schema(defaultValue="10", example = "10")) @FormDataParam("validationNum") Double validationNum,
+        @Parameter(schema = @Schema(description = "Validation to use.", defaultValue="CrossValidation", example="CrossValidation",
+            allowableValues = {"CrossValidation", "Hold-Out"})) @DefaultValue("CrossValidation") @FormDataParam("validation") String validation ,
+        @Parameter(schema = @Schema(description = "Num of Crossvalidations or Percentage Split %.", defaultValue = "10", minimum = "0",example = "10"))
+            @FormDataParam("validationNum") Double validationNum,
         // authorization
         @Parameter(description = "authorization token") @HeaderParam("subjectid") String subjectid,
         @Context UriInfo ui, @Context HttpHeaders headers, @Context SecurityContext securityContext)
@@ -157,7 +157,7 @@ public class Functions {
         metaParams.put("useResampling", useResampling);
         metaParams.put("weightThreshold", weightThreshold);
 
-        return delegate.algorithmPost(fileInputStream, fileDetail, datasetUri, "LinearRegression", params,
+        return delegate.algorithmPost(fileInputStream, datasetUri, "LinearRegression", params,
             "AdaBoost", metaParams, validation, validationNum, headers, ui, securityContext);
     }
 
@@ -179,26 +179,27 @@ public class Functions {
         })
     @GroupedApiResponsesOk
     public Response algorithmLRBaggingPost(
-        @FormDataParam("file") InputStream fileInputStream,
-        @FormDataParam("file") FormDataContentDisposition fileDetail,
-        @Parameter(description = "Dataset URI or local dataset ID (to the arff representation of a dataset).")@FormDataParam("datasetUri")  String datasetUri,
+        @Parameter(schema = @Schema(description="ARFF data file.", type = "string", format = "binary")) @FormDataParam("file") InputStream fileInputStream,
+        @Parameter(schema = @Schema(description = "Dataset URI or local dataset ID (to the arff representation of a dataset).",
+                defaultValue = "", example = "")) @DefaultValue("") @FormDataParam("datasetUri") String datasetUri,
         //meta params
-        @Parameter(description = "Bagging: Size of each bag, as a percentage of the training set size.",
-            schema = @Schema(defaultValue = "100", example = "100")) @FormDataParam("bagSizePercent") Integer bagSizePercent,
-        @Parameter(description = "Bagging: The preferred number of instances to process if batch prediction is being performed. More or fewer instances may be provided, but this gives implementations a chance to specify a preferred batch size.",
-            schema = @Schema(defaultValue = "100", example = "100")) @FormDataParam("batchSize") Integer batchSize,
-        @Parameter(description = "Bagging: The number of iterations to be performed.",
-            schema = @Schema(defaultValue = "10", example = "10")) @FormDataParam("numIterations") Integer numIterations,
+        @Parameter(schema = @Schema(description = "Bagging: Size of each bag, as a percentage of the training set size.",
+            defaultValue = "100", example = "100")) @FormDataParam("bagSizePercent") Integer bagSizePercent,
+        @Parameter(schema = @Schema(description = "Bagging: The preferred number of instances to process if batch prediction is being performed. More or fewer instances may be provided, but this gives implementations a chance to specify a preferred batch size.",
+            defaultValue = "100", example = "100")) @FormDataParam("batchSize") Integer batchSize,
+        @Parameter(schema = @Schema(description = "Bagging: The number of iterations to be performed.",
+            defaultValue = "10", example = "10")) @FormDataParam("numIterations") Integer numIterations,
         // LR params
-        @Parameter(description = "Attribute selection method to be used (Default M5 method).Available methods are: no attribute selection(Value:1), attribute selection using M5's method (Value:0) and a greedy selection using the Akaike information metric(Value:2). One of 0,1,2 (Default: 0).",
-            schema = @Schema(defaultValue = "0", allowableValues = {"0", "1", "2"}) ) @FormDataParam("attributeSelectionMethod") Integer attributeSelectionMethod,
-        @Parameter(description = "Whether to eliminate colinear attributes. Must be 0 or 1 (Default: 1).",
-            schema = @Schema(defaultValue = "1", allowableValues = {"0", "1"})) @FormDataParam("eliminateColinearAttributes") Integer eliminateColinearAttributes,
-        @Parameter(description = "The ridge parameter (Default: 1.0E-8).",
-            schema = @Schema(defaultValue = "1.0E-8")) @FormDataParam("ridge") BigDecimal ridge,
+        @Parameter(schema = @Schema(description = "Attribute selection method to be used (Default M5 method).Available methods are: no attribute selection(Value:1), attribute selection using M5's method (Value:0) and a greedy selection using the Akaike information metric(Value:2). One of 0,1,2 (Default: 0).",
+            defaultValue = "0", allowableValues = {"0", "1", "2"}) ) @FormDataParam("attributeSelectionMethod") Integer attributeSelectionMethod,
+        @Parameter(schema = @Schema(description = "Whether to eliminate colinear attributes. Must be 0 or 1 (Default: 1).",
+            defaultValue = "1", allowableValues = {"0", "1"})) @FormDataParam("eliminateColinearAttributes") Integer eliminateColinearAttributes,
+        @Parameter(schema = @Schema(description = "The ridge parameter (Default: 1.0E-8).",
+            defaultValue = "1.0E-8")) @FormDataParam("ridge") BigDecimal ridge,
         // validation
-        @Parameter(description = "Validation to use.", schema = @Schema(defaultValue="CrossValidation", allowableValues = {"CrossValidation", "Hold-Out"})) @FormDataParam("validation") String validation ,
-        @Parameter(description  = "Num of Crossvalidations or Percentage Split %.", schema = @Schema(defaultValue="10", example = "10")) @FormDataParam("validationNum") Double validationNum,
+        @Parameter(schema = @Schema(description = "Validation to use.",
+            defaultValue="CrossValidation", example="CrossValidation", allowableValues = {"CrossValidation", "Hold-Out"})) @DefaultValue("CrossValidation") @FormDataParam("validation") String validation ,
+        @Parameter(schema = @Schema(description = "Num of Crossvalidations or Percentage Split %.", defaultValue = "10", minimum = "0",example = "10")) @FormDataParam("validationNum") Double validationNum,
         // authorization
         @Parameter(description = "authorization token") @HeaderParam("subjectid") String subjectid,
         @Context UriInfo ui, @Context HttpHeaders headers, @Context SecurityContext securityContext)
@@ -214,7 +215,7 @@ public class Functions {
         metaParams.put("batchSize", batchSize);
         metaParams.put("numIterations", numIterations);
 
-        return delegate.algorithmPost(fileInputStream, fileDetail, datasetUri, "LinearRegression", params,
+        return delegate.algorithmPost(fileInputStream, datasetUri, "LinearRegression", params,
             "Bagging", metaParams, validation, validationNum, headers, ui, securityContext);
     }
 
@@ -236,37 +237,40 @@ public class Functions {
         })
     @GroupedApiResponsesOk
     public Response algorithmLibSVMPost(
-        @FormDataParam("file") InputStream fileInputStream,
-        @FormDataParam("file") FormDataContentDisposition fileDetail,
-        @Parameter(description = "Dataset URI or local dataset ID (to the arff representation of a dataset).")@FormDataParam("datasetUri")  String datasetUri,
-        @Parameter(description = "SVMType -- The type of SVM to use. \n 0: C-SVC (classification) \n 1: nu-SVC (classification) \n 2: one-class SVM (classification) \n 3: epsilon-SVR (regression)\n 4: nu-SVR (regression)\n (Default: 0).",
-            schema = @Schema(defaultValue = "0", allowableValues = {"0","1","2","3","4"} )) @FormDataParam("svmType") Integer svmType,
-        @Parameter(description = "coef0 -- The coefficient to use. (Default: 0).",
-            schema = @Schema(defaultValue = "0")) @FormDataParam("coef0") Float coef0,
-        @Parameter(description = "cost -- The cost parameter C for C-SVC, epsilon-SVR and nu-SVR. (Default: 1.0).",
-            schema = @Schema(defaultValue = "1.0")) @FormDataParam("cost") Float cost,
-        @Parameter(description = "degree -- The degree of the kernel. (Default: 3).",
-            schema = @Schema(defaultValue = "3")) @FormDataParam("degree") Integer degree,
-        @Parameter(description = "eps -- The tolerance of the termination criterion. (Default: 0.001).",
-            schema = @Schema(defaultValue = "0.001")) @FormDataParam("eps") BigDecimal eps,
-        @Parameter(description = "gamma -- The gamma to use, if 0 then 1/max_index is used. (Default: 0.0).",
-            schema = @Schema(defaultValue = "0.0")) @FormDataParam("gamma") BigDecimal gamma,
-        @Parameter(description = "kernelType -- The type of kernel to use.\n 0: linear:u'*v \n 1: polynomial: (gamma*u'*v + coef0)^degree \n 2: radial basis function: exp(-gamma*|u-v|^2) \n 3: sigmoid: tanh()gamma*u'*v + coef0) \n (Default: 2).",
-            schema = @Schema(defaultValue = "2", allowableValues = {"0","1","2","3"} )) @FormDataParam("kernelType") Integer kernelType,
-        @Parameter(description = "loss -- The epsilon for the loss function in epsilon-SVR. (Default: 0.1).",
-            schema = @Schema(defaultValue = "0.1")) @FormDataParam("loss") BigDecimal loss,
-        @Parameter(description = "normalize -- Whether to normalize the data.",
-            schema = @Schema(defaultValue = "false")) @FormDataParam("normalize") Boolean normalize,
-        @Parameter(description = "nu -- The value of nu for nu-SVC, one-class SVM and nu-SVR. (Default: 0.5).",
-            schema = @Schema(defaultValue = "0.5")) @FormDataParam("nu") BigDecimal nu,
-        @Parameter(description = "probabilityEstimates -- Whether to generate probability estimates instead of -1/+1 for classification problems.",
-            schema = @Schema(defaultValue = "false")) @FormDataParam("probabilityEstimates") Boolean probabilityEstimates,
-        @Parameter(description = "shrinking -- Whether to use the shrinking heuristic.",
-            schema = @Schema(defaultValue = "true")) @FormDataParam("shrinking") Boolean shrinking,
-        @Parameter(description = "weights -- The weights to use for the classes (blank-separated list, eg, \"1 1 1\" for a 3-class problem), if empty 1 is used by default.") @FormDataParam("weights") String weights,
+        @Parameter(schema = @Schema(description="ARFF data file.", type = "string", format = "binary")) @FormDataParam("file") InputStream fileInputStream,
+        @Parameter(schema = @Schema(description = "Dataset URI or local dataset ID (to the arff representation of a dataset).",
+            defaultValue = "", example = "")) @DefaultValue("") @FormDataParam("datasetUri") String datasetUri,
+        @Parameter(schema = @Schema(description = "SVMType -- The type of SVM to use. \n 0: C-SVC (classification) \n 1: nu-SVC (classification) \n 2: one-class SVM (classification) \n 3: epsilon-SVR (regression)\n 4: nu-SVR (regression)\n (Default: 0).",
+            defaultValue = "0", allowableValues = {"0","1","2","3","4"} )) @FormDataParam("svmType") Integer svmType,
+        @Parameter(schema = @Schema(description = "coef0 -- The coefficient to use. (Default: 0).",
+            defaultValue = "0")) @FormDataParam("coef0") Float coef0,
+        @Parameter(schema = @Schema(description = "cost -- The cost parameter C for C-SVC, epsilon-SVR and nu-SVR. (Default: 1.0).",
+            defaultValue = "1.0")) @FormDataParam("cost") Float cost,
+        @Parameter(schema = @Schema(description = "degree -- The degree of the kernel. (Default: 3).",
+            defaultValue = "3")) @FormDataParam("degree") Integer degree,
+        @Parameter(schema = @Schema(description = "eps -- The tolerance of the termination criterion. (Default: 0.001).",
+            defaultValue = "0.001")) @FormDataParam("eps") BigDecimal eps,
+        @Parameter(schema = @Schema(description = "gamma -- The gamma to use, if 0 then 1/max_index is used. (Default: 0.0).",
+            defaultValue = "0.0")) @FormDataParam("gamma") BigDecimal gamma,
+        @Parameter(schema = @Schema(description = "kernelType -- The type of kernel to use.\n 0: linear:u'*v \n 1: polynomial: (gamma*u'*v + coef0)^degree \n 2: radial basis function: exp(-gamma*|u-v|^2) \n 3: sigmoid: tanh()gamma*u'*v + coef0) \n (Default: 2).",
+            defaultValue = "2", allowableValues = {"0","1","2","3"} )) @FormDataParam("kernelType") Integer kernelType,
+        @Parameter(schema = @Schema(description = "loss -- The epsilon for the loss function in epsilon-SVR. (Default: 0.1).",
+            defaultValue = "0.1")) @FormDataParam("loss") BigDecimal loss,
+        @Parameter(schema = @Schema(description = "normalize -- Whether to normalize the data.",
+            defaultValue = "false")) @FormDataParam("normalize") Boolean normalize,
+        @Parameter(schema = @Schema(description = "nu -- The value of nu for nu-SVC, one-class SVM and nu-SVR. (Default: 0.5).",
+            defaultValue = "0.5")) @FormDataParam("nu") BigDecimal nu,
+        @Parameter(schema = @Schema(description = "probabilityEstimates -- Whether to generate probability estimates instead of -1/+1 for classification problems.",
+            defaultValue = "false")) @FormDataParam("probabilityEstimates") Boolean probabilityEstimates,
+        @Parameter(schema = @Schema(description = "shrinking -- Whether to use the shrinking heuristic.",
+            defaultValue = "true")) @FormDataParam("shrinking") Boolean shrinking,
+        @Parameter(schema = @Schema(description = "weights -- The weights to use for the classes (blank-separated list, eg, \"1 1 1\" for a 3-class problem), if empty 1 is used by default."))
+            @FormDataParam("weights") String weights,
         // validation
-        @Parameter(description = "Validation to use.", schema = @Schema(defaultValue="CrossValidation", allowableValues = {"CrossValidation", "Hold-Out"})) @FormDataParam("validation") String validation ,
-        @Parameter(description  = "Num of Crossvalidations or Percentage Split %.", schema = @Schema(defaultValue="10", example = "10")) @FormDataParam("validationNum") Double validationNum,
+        @Parameter(schema = @Schema(description = "Validation to use.", defaultValue="CrossValidation", example="CrossValidation",
+            allowableValues = {"CrossValidation", "Hold-Out"})) @DefaultValue("CrossValidation") @FormDataParam("validation") String validation ,
+        @Parameter(schema = @Schema(description = "Num of Crossvalidations or Percentage Split %.", defaultValue = "10", minimum = "0",example = "10"))
+        @FormDataParam("validationNum") Double validationNum,
         // authorization
         @Parameter(description = "authorization token") @HeaderParam("subjectid") String subjectid,
         @Context UriInfo ui, @Context HttpHeaders headers, @Context SecurityContext securityContext)
@@ -288,7 +292,7 @@ public class Functions {
             params.put("shrinking", shrinking);
             params.put("weights", weights);
             //svmType, coef0, cost, degree, eps, gamma, kernelType, loss, normalize, nu, probabilityEstimates, shrinking, weights
-            return delegate.algorithmPost(fileInputStream, fileDetail, datasetUri, "LibSVM", params,
+            return delegate.algorithmPost(fileInputStream, datasetUri, "LibSVM", params,
                                           validation, validationNum, headers, ui, securityContext);
     }
 
@@ -310,50 +314,51 @@ public class Functions {
         })
     @GroupedApiResponsesOk
     public Response algorithmLibSVMAdaBoostPost(
-        @FormDataParam("file") InputStream fileInputStream,
-        @FormDataParam("file") FormDataContentDisposition fileDetail,
-        @Parameter(description = "Dataset URI or local dataset ID (to the arff representation of a dataset).")@FormDataParam("datasetUri")  String datasetUri,
+        @Parameter(schema = @Schema(description="ARFF data file.", type = "string", format = "binary")) @FormDataParam("file") InputStream fileInputStream,
+        @Parameter(schema = @Schema(description = "Dataset URI or local dataset ID (to the arff representation of a dataset).",
+            defaultValue = "", example = "")) @DefaultValue("") @FormDataParam("datasetUri") String datasetUri,
         //meta params
-        @Parameter(description = "Adaboost M1: The preferred number of instances to process if batch prediction is being performed. More or fewer instances may be provided, but this gives implementations a chance to specify a preferred batch size.",
-            schema = @Schema(defaultValue = "100", example = "100")) @DefaultValue("100") @FormDataParam("batchSize") Integer batchSize,
+        @Parameter(schema = @Schema(description = "Adaboost M1: The preferred number of instances to process if batch prediction is being performed. More or fewer instances may be provided, but this gives implementations a chance to specify a preferred batch size.",
+            defaultValue = "100", example = "100")) @DefaultValue("100") @FormDataParam("batchSize") Integer batchSize,
+        @Parameter(schema = @Schema(description = "Adaboost M1: The number of iterations to be performed.",
+            defaultValue = "10", example = "10")) @FormDataParam("numIterations") Integer numIterations,
+        @Parameter(schema = @Schema(description = "Adaboost M1: Whether resampling is used instead of reweighting.",
+            defaultValue = "0", allowableValues = {"0", "1"})) @FormDataParam("useResampling") Integer useResampling,
         @Parameter(
-            description = "Adaboost M1: The number of iterations to be performed.",
-            schema = @Schema(defaultValue = "10", example = "10")) @FormDataParam("numIterations") Integer numIterations,
-        @Parameter(
-            description = "Adaboost M1: Whether resampling is used instead of reweighting.",
-            schema = @Schema(defaultValue = "0", allowableValues = {"0", "1"})) @FormDataParam("useResampling") Integer useResampling,
-        @Parameter(
-            description = "Adaboost M1: Weight threshold for weight pruning.",
-            schema = @Schema(defaultValue = "100", example = "100")) @FormDataParam("weightThreshold") Integer weightThreshold,
+            schema = @Schema(description = "Adaboost M1: Weight threshold for weight pruning.",
+            defaultValue = "100", example = "100")) @FormDataParam("weightThreshold") Integer weightThreshold,
         // SVM params
-        @Parameter(description = "SVMType -- The type of SVM to use. \n 0: C-SVC (classification) \n 1: nu-SVC (classification) \n 2: one-class SVM (classification) \n 3: epsilon-SVR (regression)\n 4: nu-SVR (regression)\n (Default: 0).",
-            schema = @Schema(defaultValue = "0", allowableValues = {"0","1","2","3","4"} )) @FormDataParam("svmType") Integer svmType,
-        @Parameter(description = "coef0 -- The coefficient to use. (Default: 0).",
-            schema = @Schema(defaultValue = "0")) @FormDataParam("coef0") Float coef0,
-        @Parameter(description = "cost -- The cost parameter C for C-SVC, epsilon-SVR and nu-SVR. (Default: 1.0).",
-            schema = @Schema(defaultValue = "1.0")) @FormDataParam("cost") Float cost,
-        @Parameter(description = "degree -- The degree of the kernel. (Default: 3).",
-            schema = @Schema(defaultValue = "3")) @FormDataParam("degree") Integer degree,
-        @Parameter(description = "eps -- The tolerance of the termination criterion. (Default: 0.001).",
-            schema = @Schema(defaultValue = "0.001")) @FormDataParam("eps") BigDecimal eps,
-        @Parameter(description = "gamma -- The gamma to use, if 0 then 1/max_index is used. (Default: 0.0).",
-            schema = @Schema(defaultValue = "0.0")) @FormDataParam("gamma") BigDecimal gamma,
-        @Parameter(description = "kernelType -- The type of kernel to use.\n 0: linear:u'*v \n 1: polynomial: (gamma*u'*v + coef0)^degree \n 2: radial basis function: exp(-gamma*|u-v|^2) \n 3: sigmoid: tanh()gamma*u'*v + coef0) \n (Default: 2).",
-            schema = @Schema(defaultValue = "2", allowableValues = {"0","1","2","3"} )) @FormDataParam("kernelType") Integer kernelType,
-        @Parameter(description = "loss -- The epsilon for the loss function in epsilon-SVR. (Default: 0.1).",
-            schema = @Schema(defaultValue = "0.1")) @FormDataParam("loss") BigDecimal loss,
-        @Parameter(description = "normalize -- Whether to normalize the data.",
-            schema = @Schema(defaultValue = "false")) @FormDataParam("normalize") Boolean normalize,
-        @Parameter(description = "nu -- The value of nu for nu-SVC, one-class SVM and nu-SVR. (Default: 0.5).",
-            schema = @Schema(defaultValue = "0.5")) @FormDataParam("nu") BigDecimal nu,
-        @Parameter(description = "probabilityEstimates -- Whether to generate probability estimates instead of -1/+1 for classification problems.",
-            schema = @Schema(defaultValue = "false")) @FormDataParam("probabilityEstimates") Boolean probabilityEstimates,
-        @Parameter(description = "shrinking -- Whether to use the shrinking heuristic.",
-            schema = @Schema(defaultValue = "true")) @FormDataParam("shrinking") Boolean shrinking,
-        @Parameter(description = "weights -- The weights to use for the classes (blank-separated list, eg, \"1 1 1\" for a 3-class problem), if empty 1 is used by default.") @FormDataParam("weights") String weights,
+        @Parameter(schema = @Schema(description = "SVMType -- The type of SVM to use. \n 0: C-SVC (classification) \n 1: nu-SVC (classification) \n 2: one-class SVM (classification) \n 3: epsilon-SVR (regression)\n 4: nu-SVR (regression)\n (Default: 0).",
+            defaultValue = "0", allowableValues = {"0","1","2","3","4"} )) @FormDataParam("svmType") Integer svmType,
+        @Parameter(schema = @Schema(description = "coef0 -- The coefficient to use. (Default: 0).",
+            defaultValue = "0")) @FormDataParam("coef0") Float coef0,
+        @Parameter(schema = @Schema(description = "cost -- The cost parameter C for C-SVC, epsilon-SVR and nu-SVR. (Default: 1.0).",
+            defaultValue = "1.0")) @FormDataParam("cost") Float cost,
+        @Parameter(schema = @Schema(description = "degree -- The degree of the kernel. (Default: 3).",
+            defaultValue = "3")) @FormDataParam("degree") Integer degree,
+        @Parameter(schema = @Schema(description = "eps -- The tolerance of the termination criterion. (Default: 0.001).",
+            defaultValue = "0.001")) @FormDataParam("eps") BigDecimal eps,
+        @Parameter(schema = @Schema(description = "gamma -- The gamma to use, if 0 then 1/max_index is used. (Default: 0.0).",
+            defaultValue = "0.0")) @FormDataParam("gamma") BigDecimal gamma,
+        @Parameter(schema = @Schema(description = "kernelType -- The type of kernel to use.\n 0: linear:u'*v \n 1: polynomial: (gamma*u'*v + coef0)^degree \n 2: radial basis function: exp(-gamma*|u-v|^2) \n 3: sigmoid: tanh()gamma*u'*v + coef0) \n (Default: 2).",
+            defaultValue = "2", allowableValues = {"0","1","2","3"} )) @FormDataParam("kernelType") Integer kernelType,
+        @Parameter(schema = @Schema(description = "loss -- The epsilon for the loss function in epsilon-SVR. (Default: 0.1).",
+            defaultValue = "0.1")) @FormDataParam("loss") BigDecimal loss,
+        @Parameter(schema = @Schema(description = "normalize -- Whether to normalize the data.",
+            defaultValue = "false")) @FormDataParam("normalize") Boolean normalize,
+        @Parameter(schema = @Schema(description = "nu -- The value of nu for nu-SVC, one-class SVM and nu-SVR. (Default: 0.5).",
+            defaultValue = "0.5")) @FormDataParam("nu") BigDecimal nu,
+        @Parameter(schema = @Schema(description = "probabilityEstimates -- Whether to generate probability estimates instead of -1/+1 for classification problems.",
+            defaultValue = "false")) @FormDataParam("probabilityEstimates") Boolean probabilityEstimates,
+        @Parameter(schema = @Schema(description = "shrinking -- Whether to use the shrinking heuristic.",
+            defaultValue = "true")) @FormDataParam("shrinking") Boolean shrinking,
+        @Parameter(schema = @Schema(description = "weights -- The weights to use for the classes (blank-separated list, eg, \"1 1 1\" for a 3-class problem), if empty 1 is used by default."))
+            @FormDataParam("weights") String weights,
         // validation
-        @Parameter(description = "Validation to use.", schema = @Schema(defaultValue="CrossValidation", allowableValues = {"CrossValidation", "Hold-Out"})) @FormDataParam("validation") String validation ,
-        @Parameter(description  = "Num of Crossvalidations or Percentage Split %.", schema = @Schema(defaultValue="10", example = "10")) @FormDataParam("validationNum") Double validationNum,
+        @Parameter(schema = @Schema(description = "Validation to use.", defaultValue="CrossValidation", example="CrossValidation",
+            allowableValues = {"CrossValidation", "Hold-Out"})) @DefaultValue("CrossValidation") @FormDataParam("validation") String validation ,
+        @Parameter(schema = @Schema(description = "Num of Crossvalidations or Percentage Split %.", defaultValue = "10", minimum = "0",example = "10"))
+        @FormDataParam("validationNum") Double validationNum,
         // authorization
         @Parameter(description = "authorization token") @HeaderParam("subjectid") String subjectid,
         @Context UriInfo ui, @Context HttpHeaders headers, @Context SecurityContext securityContext)
@@ -380,7 +385,7 @@ public class Functions {
         metaParams.put("useResampling", useResampling);
         metaParams.put("weightThreshold", weightThreshold);
         //svmType, coef0, cost, degree, eps, gamma, kernelType, loss, normalize, nu, probabilityEstimates, shrinking, weights
-        return delegate.algorithmPost(fileInputStream, fileDetail, datasetUri, "LibSVM", params,
+        return delegate.algorithmPost(fileInputStream, datasetUri, "LibSVM", params,
             "AdaBoost", metaParams, validation, validationNum, headers, ui, securityContext);
     }
 
@@ -403,45 +408,48 @@ public class Functions {
         })
     @GroupedApiResponsesOk
     public Response algorithmLibSVMBaggingPost(
-        @FormDataParam("file") InputStream fileInputStream,
-        @FormDataParam("file") FormDataContentDisposition fileDetail,
-        @Parameter(description = "Dataset URI or local dataset ID (to the arff representation of a dataset).")@FormDataParam("datasetUri")  String datasetUri,
+        @Parameter(schema = @Schema(description="ARFF data file.", type = "string", format = "binary")) @FormDataParam("file") InputStream fileInputStream,
+        @Parameter(schema = @Schema(description = "Dataset URI or local dataset ID (to the arff representation of a dataset).",
+            defaultValue = "", example = "")) @DefaultValue("") @FormDataParam("datasetUri") String datasetUri,
         //meta params
-        @Parameter(description = "Bagging: Size of each bag, as a percentage of the training set size.",
-            schema = @Schema(defaultValue = "100", example = "100")) @FormDataParam("bagSizePercent") Integer bagSizePercent,
-        @Parameter(description = "Bagging: The preferred number of instances to process if batch prediction is being performed. More or fewer instances may be provided, but this gives implementations a chance to specify a preferred batch size.",
-            schema = @Schema(defaultValue = "100", example = "100")) @FormDataParam("batchSize") Integer batchSize,
-        @Parameter(description = "Bagging: The number of iterations to be performed.",
-            schema = @Schema(defaultValue = "10", example = "10")) @FormDataParam("numIterations") Integer numIterations,
+        @Parameter(schema = @Schema(description = "Bagging: Size of each bag, as a percentage of the training set size.",
+            defaultValue = "100", example = "100")) @FormDataParam("bagSizePercent") Integer bagSizePercent,
+        @Parameter(schema = @Schema(description = "Bagging: The preferred number of instances to process if batch prediction is being performed. More or fewer instances may be provided, but this gives implementations a chance to specify a preferred batch size.",
+            defaultValue = "100", example = "100")) @FormDataParam("batchSize") Integer batchSize,
+        @Parameter(schema = @Schema(description = "Bagging: The number of iterations to be performed.",
+            defaultValue = "10", example = "10")) @FormDataParam("numIterations") Integer numIterations,
         // SVM params
-        @Parameter(description = "SVMType -- The type of SVM to use. \n 0: C-SVC (classification) \n 1: nu-SVC (classification) \n 2: one-class SVM (classification) \n 3: epsilon-SVR (regression)\n 4: nu-SVR (regression)\n (Default: 0).",
-            schema = @Schema(defaultValue = "0", allowableValues = {"0","1","2","3","4"} )) @FormDataParam("svmType") Integer svmType,
-        @Parameter(description = "coef0 -- The coefficient to use. (Default: 0).",
-            schema = @Schema(defaultValue = "0")) @FormDataParam("coef0") Float coef0,
-        @Parameter(description = "cost -- The cost parameter C for C-SVC, epsilon-SVR and nu-SVR. (Default: 1.0).",
-            schema = @Schema(defaultValue = "1.0")) @FormDataParam("cost") Float cost,
-        @Parameter(description = "degree -- The degree of the kernel. (Default: 3).",
-            schema = @Schema(defaultValue = "3")) @FormDataParam("degree") Integer degree,
-        @Parameter(description = "eps -- The tolerance of the termination criterion. (Default: 0.001).",
-            schema = @Schema(defaultValue = "0.001")) @FormDataParam("eps") BigDecimal eps,
-        @Parameter(description = "gamma -- The gamma to use, if 0 then 1/max_index is used. (Default: 0.0).",
-            schema = @Schema(defaultValue = "0.0")) @FormDataParam("gamma") BigDecimal gamma,
-        @Parameter(description = "kernelType -- The type of kernel to use.\n 0: linear:u'*v \n 1: polynomial: (gamma*u'*v + coef0)^degree \n 2: radial basis function: exp(-gamma*|u-v|^2) \n 3: sigmoid: tanh()gamma*u'*v + coef0) \n (Default: 2).",
-            schema = @Schema(defaultValue = "2", allowableValues = {"0","1","2","3"} )) @FormDataParam("kernelType") Integer kernelType,
-        @Parameter(description = "loss -- The epsilon for the loss function in epsilon-SVR. (Default: 0.1).",
-            schema = @Schema(defaultValue = "0.1")) @FormDataParam("loss") BigDecimal loss,
-        @Parameter(description = "normalize -- Whether to normalize the data.",
-            schema = @Schema(defaultValue = "false")) @FormDataParam("normalize") Boolean normalize,
-        @Parameter(description = "nu -- The value of nu for nu-SVC, one-class SVM and nu-SVR. (Default: 0.5).",
-            schema = @Schema(defaultValue = "0.5")) @FormDataParam("nu") BigDecimal nu,
-        @Parameter(description = "probabilityEstimates -- Whether to generate probability estimates instead of -1/+1 for classification problems.",
-            schema = @Schema(defaultValue = "false")) @FormDataParam("probabilityEstimates") Boolean probabilityEstimates,
-        @Parameter(description = "shrinking -- Whether to use the shrinking heuristic.",
-            schema = @Schema(defaultValue = "true")) @FormDataParam("shrinking") Boolean shrinking,
-        @Parameter(description = "weights -- The weights to use for the classes (blank-separated list, eg, \"1 1 1\" for a 3-class problem), if empty 1 is used by default.") @FormDataParam("weights") String weights,
+        @Parameter(schema = @Schema(description = "SVMType -- The type of SVM to use. \n 0: C-SVC (classification) \n 1: nu-SVC (classification) \n 2: one-class SVM (classification) \n 3: epsilon-SVR (regression)\n 4: nu-SVR (regression)\n (Default: 0).",
+            defaultValue = "0", allowableValues = {"0","1","2","3","4"} )) @FormDataParam("svmType") Integer svmType,
+        @Parameter(schema = @Schema(description = "coef0 -- The coefficient to use. (Default: 0).",
+            defaultValue = "0")) @FormDataParam("coef0") Float coef0,
+        @Parameter(schema = @Schema(description = "cost -- The cost parameter C for C-SVC, epsilon-SVR and nu-SVR. (Default: 1.0).",
+            defaultValue = "1.0")) @FormDataParam("cost") Float cost,
+        @Parameter(schema = @Schema(description = "degree -- The degree of the kernel. (Default: 3).",
+            defaultValue = "3")) @FormDataParam("degree") Integer degree,
+        @Parameter(schema = @Schema(description = "eps -- The tolerance of the termination criterion. (Default: 0.001).",
+            defaultValue = "0.001")) @FormDataParam("eps") BigDecimal eps,
+        @Parameter(schema = @Schema(description = "gamma -- The gamma to use, if 0 then 1/max_index is used. (Default: 0.0).",
+            defaultValue = "0.0")) @FormDataParam("gamma") BigDecimal gamma,
+        @Parameter(schema = @Schema(description = "kernelType -- The type of kernel to use.\n 0: linear:u'*v \n 1: polynomial: (gamma*u'*v + coef0)^degree \n 2: radial basis function: exp(-gamma*|u-v|^2) \n 3: sigmoid: tanh()gamma*u'*v + coef0) \n (Default: 2).",
+            defaultValue = "2", allowableValues = {"0","1","2","3"} )) @FormDataParam("kernelType") Integer kernelType,
+        @Parameter(schema = @Schema(description = "loss -- The epsilon for the loss function in epsilon-SVR. (Default: 0.1).",
+            defaultValue = "0.1")) @FormDataParam("loss") BigDecimal loss,
+        @Parameter(schema = @Schema(description = "normalize -- Whether to normalize the data.",
+            defaultValue = "false")) @FormDataParam("normalize") Boolean normalize,
+        @Parameter(schema = @Schema(description = "nu -- The value of nu for nu-SVC, one-class SVM and nu-SVR. (Default: 0.5).",
+            defaultValue = "0.5")) @FormDataParam("nu") BigDecimal nu,
+        @Parameter(schema = @Schema(description = "probabilityEstimates -- Whether to generate probability estimates instead of -1/+1 for classification problems.",
+            defaultValue = "false")) @FormDataParam("probabilityEstimates") Boolean probabilityEstimates,
+        @Parameter(schema = @Schema(description = "shrinking -- Whether to use the shrinking heuristic.",
+            defaultValue = "true")) @FormDataParam("shrinking") Boolean shrinking,
+        @Parameter(schema = @Schema(description = "weights -- The weights to use for the classes (blank-separated list, eg, \"1 1 1\" for a 3-class problem), if empty 1 is used by default."))
+            @FormDataParam("weights") String weights,
         // validation
-        @Parameter(description = "Validation to use.", schema = @Schema(defaultValue="CrossValidation", allowableValues = {"CrossValidation", "Hold-Out"})) @FormDataParam("validation") String validation ,
-        @Parameter(description  = "Num of Crossvalidations or Percentage Split %.", schema = @Schema(defaultValue="10", example = "10")) @FormDataParam("validationNum") Double validationNum,
+        @Parameter(schema = @Schema(description = "Validation to use.", defaultValue="CrossValidation", example="CrossValidation",
+            allowableValues = {"CrossValidation", "Hold-Out"})) @DefaultValue("CrossValidation") @FormDataParam("validation") String validation ,
+        @Parameter(schema = @Schema(description = "Num of Crossvalidations or Percentage Split %.", defaultValue = "10", minimum = "0",example = "10"))
+        @FormDataParam("validationNum") Double validationNum,
         // authorization
         @Parameter(description = "authorization token") @HeaderParam("subjectid") String subjectid,
         @Context UriInfo ui, @Context HttpHeaders headers, @Context SecurityContext securityContext)
@@ -467,7 +475,7 @@ public class Functions {
         metaParams.put("batchSize", batchSize);
         metaParams.put("numIterations", numIterations);
         //svmType, coef0, cost, degree, eps, gamma, kernelType, loss, normalize, nu, probabilityEstimates, shrinking, weights
-        return delegate.algorithmPost(fileInputStream, fileDetail, datasetUri, "LibSVM", params,
+        return delegate.algorithmPost(fileInputStream, datasetUri, "LibSVM", params,
             "Bagging", metaParams, validation, validationNum, headers, ui, securityContext);
     }
 
@@ -489,16 +497,20 @@ public class Functions {
         })
     @GroupedApiResponsesOk
     public Response algorithmLogisticPost(
-        @FormDataParam("file") InputStream fileInputStream,
-        @FormDataParam("file") FormDataContentDisposition fileDetail,
-        @Parameter(description = "Dataset URI or local dataset ID (to the arff representation of a dataset).")@FormDataParam("datasetUri")  String datasetUri,
+        @Parameter(schema = @Schema(description="ARFF data file.", type = "string", format = "binary")) @FormDataParam("file") InputStream fileInputStream,
+        @Parameter(schema = @Schema(description = "Dataset URI or local dataset ID (to the arff representation of a dataset).",
+            defaultValue = "", example = "")) @DefaultValue("") @FormDataParam("datasetUri") String datasetUri,
         // logistic params
-        @Parameter(description = "Set the Ridge value in the log-likelihood.") @FormDataParam("ridge") BigDecimal ridge,
-        @Parameter(description = "Use conjugate gradient descent rather than BFGS updates; faster for problems with many parameters.") @FormDataParam("useConjugateGradientDescent") Boolean useConjugateGradientDescent,
-        @Parameter(description = "Maximum number of iterations to perform.") @FormDataParam("maxIts") Integer maxIts,
+        @Parameter(schema = @Schema(description = "Set the Ridge value in the log-likelihood."))
+            @FormDataParam("ridge") BigDecimal ridge,
+        @Parameter(schema = @Schema(description = "Use conjugate gradient descent rather than BFGS updates; faster for problems with many parameters."))
+            @FormDataParam("useConjugateGradientDescent") Boolean useConjugateGradientDescent,
+        @Parameter(schema = @Schema(description = "Maximum number of iterations to perform.")) @FormDataParam("maxIts") Integer maxIts,
         // validation
-        @Parameter(description = "Validation to use.", schema = @Schema(allowableValues = {"CrossValidation","Hold-Out"}, defaultValue = "CrossValidation")) @FormDataParam("validation") String validation,
-        @Parameter(description = "Num of Crossvalidations or Percentage Split %.", schema = @Schema(defaultValue = "10",example = "10")) @FormDataParam("validationNum") Double validationNum,
+        @Parameter(schema = @Schema(description = "Validation to use.", defaultValue="CrossValidation", example="CrossValidation",
+            allowableValues = {"CrossValidation", "Hold-Out"})) @DefaultValue("CrossValidation") @FormDataParam("validation") String validation ,
+        @Parameter(schema = @Schema(description = "Num of Crossvalidations or Percentage Split %.", defaultValue = "10", minimum = "0",example = "10"))
+        @FormDataParam("validationNum") Double validationNum,
         // headers
         @Parameter(description = "authorization token") @HeaderParam("subjectid") String subjectid,
         @Context UriInfo ui, @Context HttpHeaders headers, @Context SecurityContext securityContext)
@@ -510,7 +522,7 @@ public class Functions {
         params.put("useConjugateGradientDescent", useConjugateGradientDescent);
         params.put("maxIts", maxIts);
 
-        return delegate.algorithmPost(fileInputStream, fileDetail, datasetUri, "Logistic", params,
+        return delegate.algorithmPost(fileInputStream, datasetUri, "Logistic", params,
                                       validation, validationNum, headers, ui, securityContext);
     }
 
@@ -534,57 +546,60 @@ public class Functions {
         })
     @GroupedApiResponsesOk
     public Response algorithmMultilayerPerceptronPost(
-        @FormDataParam("file") InputStream fileInputStream,
-        @FormDataParam("file") FormDataContentDisposition fileDetail,
-        @Parameter(description = "Dataset URI or local dataset ID (to the arff representation of a dataset).")@FormDataParam("datasetUri")  String datasetUri,
-        @Parameter(description = "Momentum applied to the weights during updating.",
-            schema = @Schema(defaultValue = "0.2", example = "0.2"))@FormDataParam("momentum") Double momentum,
-        @Parameter(description = "This will preprocess the instances with the filter. This could help improve performance if there are nominal attributes in the data.",
-            schema = @Schema(allowableValues={"true","false"}, defaultValue = "true", example = "true")
+        @Parameter(schema = @Schema(description="ARFF data file.", type = "string", format = "binary")) @FormDataParam("file") InputStream fileInputStream,
+        @Parameter(schema = @Schema(description = "Dataset URI or local dataset ID (to the arff representation of a dataset).",
+            defaultValue = "", example = "")) @DefaultValue("") @FormDataParam("datasetUri") String datasetUri,
+        @Parameter(schema = @Schema(description = "Momentum applied to the weights during updating.",
+            defaultValue = "0.2", example = "0.2"))@FormDataParam("momentum") Double momentum,
+        @Parameter(schema = @Schema(description = "This will preprocess the instances with the filter. This could help improve performance if there are nominal attributes in the data.",
+            allowableValues={"true","false"}, defaultValue = "true", example = "true")
             )@FormDataParam("nominalToBinaryFilter") Boolean nominalToBinaryFilter,
-        @Parameter(description = "This defines the hidden layers of the neural network. This is a list of positive whole numbers. 1 for each hidden layer. Comma seperated. #" +
+        @Parameter(schema = @Schema(description = "This defines the hidden layers of the neural network. This is a list of positive whole numbers. 1 for each hidden layer. Comma seperated. #" +
             "To have no hidden layers put a single 0 here. This will only be used if autobuild is set. There are also wildcard values 'a' = (attribs + classes) / 2, 'i' = attribs, 'o' = classes , 't' = attribs + classes.",
-            schema = @Schema(defaultValue = "a", example = "a")
+            defaultValue = "a", example = "a")
             )@FormDataParam("hiddenLayers") String hiddenLayers,
-        @Parameter(description = "Used to terminate validation testing.The value here dictates how many times in a row the validation set error can get worse before " +
-            "training is terminated.",schema = @Schema(defaultValue = "20", example = "20")
+        @Parameter(schema = @Schema(description = "Used to terminate validation testing.The value here dictates how many times in a row the validation set error can get worse before " +
+            "training is terminated.",defaultValue = "20", example = "20")
             )@FormDataParam("validationThreshold") Integer validationThreshold,
 
-        @Parameter(description = "This will normalize the attributes. This could help improve performance of the network. This is not reliant on the class being numeric. " +
+        @Parameter(schema = @Schema(description = "This will normalize the attributes. This could help improve performance of the network. This is not reliant on the class being numeric. " +
             "This will also normalize nominal attributes as well (after they have been run through the nominal to binary filter if that is in use) so that the nominal " +
-            "values are between -1 and 1", schema = @Schema(allowableValues={"true","false"}, defaultValue = "true", example = "true")
+            "values are between -1 and 1", allowableValues={"true","false"}, defaultValue = "true", example = "true")
             )@FormDataParam("normalizeAttributes") Boolean normalizeAttributes,
-        @Parameter(description = "The number of decimal places to be used for the output of numbers in the model.")@FormDataParam("numDecimalPlaces") Integer numDecimalPlaces,
-        @Parameter(description = "The preferred number of instances to process if batch prediction is being performed. More or fewer instances may be provided, " +
+        @Parameter(schema = @Schema(description = "The number of decimal places to be used for the output of numbers in the model."))
+            @FormDataParam("numDecimalPlaces") Integer numDecimalPlaces,
+        @Parameter(schema = @Schema(description = "The preferred number of instances to process if batch prediction is being performed. More or fewer instances may be provided, " +
             "but this gives implementations a chance to specify a preferred batch size.",
-            schema = @Schema(defaultValue = "100", example = "100")
+            defaultValue = "100", example = "100")
         )@FormDataParam("batchSize") Integer batchSize,
-        @Parameter(description = "This will cause the learning rate to decrease. This will divide the starting learning rate by the epoch number, to determine what " +
+        @Parameter(schema = @Schema(description = "This will cause the learning rate to decrease. This will divide the starting learning rate by the epoch number, to determine what " +
             "the current learning rate should be. This may help to stop the network from diverging from the target output, as well as improve general performance. " +
             "Note that the decaying learning rate will not be shown in the gui, only the original learning rate. If the learning rate is changed in the gui, this is " +
             "treated as the starting learning rate.",
-            schema = @Schema(allowableValues={"true","false"}, defaultValue = "true", example = "true"))@FormDataParam("decay") Boolean decay,
-        @Parameter(description = "The percentage size of the validation set.(The training will continue until it is observed that the error on the validation set has been " +
+            allowableValues={"true","false"}, defaultValue = "true", example = "true"))@FormDataParam("decay") Boolean decay,
+        @Parameter(schema = @Schema(description = "The percentage size of the validation set.(The training will continue until it is observed that the error on the validation set has been " +
             "consistently getting worse, or if the training time is reached).  If This is set to zero no validation set will be used and instead the network will train for " +
-            "the specified number of epochs.", schema = @Schema(defaultValue = "0", example = "0"))@FormDataParam("validationSetSize") Integer validationSetSize,
+            "the specified number of epochs.", defaultValue = "0", example = "0"))@FormDataParam("validationSetSize") Integer validationSetSize,
 
-        @Parameter(description = "The number of epochs to train through. If the validation set is non-zero then it can terminate the network early",
-            schema = @Schema(defaultValue = "500", example = "500"))@FormDataParam("trainingTime") Integer trainingTime,
+        @Parameter(schema = @Schema(description = "The number of epochs to train through. If the validation set is non-zero then it can terminate the network early",
+            defaultValue = "500", example = "500"))@FormDataParam("trainingTime") Integer trainingTime,
 
-        @Parameter(description = "This will normalize the class if it's numeric. This could help improve performance of the network, It normalizes the class to be " +
+        @Parameter(schema = @Schema(description = "This will normalize the class if it's numeric. This could help improve performance of the network, It normalizes the class to be " +
             "between -1 and 1. Note that this is only internally, the output will be scaled back to the original range.",
-            schema = @Schema(allowableValues={"true","false"}, defaultValue = "true", example = "true"))@FormDataParam("normalizeNumericClass") Boolean normalizeNumericClass,
-        @Parameter(description = "The amount the weights are updated.",
-            schema = @Schema(defaultValue = "0.3", example = "0.3"))@FormDataParam("learningRate") Double learningRate,
+            allowableValues={"true","false"}, defaultValue = "true", example = "true"))@FormDataParam("normalizeNumericClass") Boolean normalizeNumericClass,
+        @Parameter(schema = @Schema(description = "The amount the weights are updated.",
+            defaultValue = "0.3", example = "0.3"))@FormDataParam("learningRate") Double learningRate,
 
-        @Parameter(description = "This will allow the network to reset with a lower learning rate. If the network diverges from the answer this will automatically " +
+        @Parameter(schema = @Schema(description = "This will allow the network to reset with a lower learning rate. If the network diverges from the answer this will automatically " +
             "reset the network with a lower learning rate and begin training again. This option is only available if the gui is not set. " +
             "Note that if the network diverges but isn't allowed to reset it will fail the training process and return an error message.",
-            schema = @Schema(allowableValues={"true","false"}, defaultValue = "true", example = "true"))@FormDataParam("reset") Boolean reset,
+            allowableValues={"true","false"}, defaultValue = "true", example = "true"))@FormDataParam("reset") Boolean reset,
 
         // validation
-        @Parameter(description = "Validation to use.", schema = @Schema(allowableValues = {"CrossValidation","Hold-Out"}, defaultValue = "CrossValidation")) @FormDataParam("validation") String validation,
-        @Parameter(description = "Num of Crossvalidations or Percentage Split %.", schema = @Schema(defaultValue = "10", example = "10")) @FormDataParam("validationNum") Double validationNum,
+        @Parameter(schema = @Schema(description = "Validation to use.", defaultValue="CrossValidation", example="CrossValidation",
+            allowableValues = {"CrossValidation", "Hold-Out"})) @DefaultValue("CrossValidation") @FormDataParam("validation") String validation ,
+        @Parameter(schema = @Schema(description = "Num of Crossvalidations or Percentage Split %.", defaultValue = "10", minimum = "0",example = "10"))
+        @FormDataParam("validationNum") Double validationNum,
         // headers
         @Parameter(description = "authorization token") @HeaderParam("subjectid") String subjectid,
         @Context UriInfo ui, @Context HttpHeaders headers, @Context SecurityContext securityContext)
@@ -604,7 +619,7 @@ public class Functions {
         params.put("normalizeNumericClass", normalizeNumericClass);
         params.put("learningRate", learningRate);
         params.put("reset", reset);
-        return delegate.algorithmPost(fileInputStream, fileDetail, datasetUri, "MultilayerPerceptron", params,
+        return delegate.algorithmPost(fileInputStream, datasetUri, "MultilayerPerceptron", params,
             validation, validationNum, headers, ui, securityContext);
     }
 
@@ -628,26 +643,28 @@ public class Functions {
         })
     @GroupedApiResponsesOk
     public Response algorithmSMOPost(
-        @FormDataParam("file") InputStream fileInputStream,
-        @FormDataParam("file") FormDataContentDisposition fileDetail,
-        @Parameter(description = "Dataset URI or local dataset ID (to the arff representation of a dataset).")@FormDataParam("datasetUri")  String datasetUri,
-        @Parameter(description = "The number of folds for cross-validation used to generate training data for calibration models (-1 means use training data).",
-            schema = @Schema(minimum = "-1", defaultValue = "-1", example = "-1"))@FormDataParam("numFolds") Integer numFolds,
-        @Parameter(description = "The complexity parameter C.",
-            schema = @Schema(defaultValue = "1.0", example = "1.0"))@FormDataParam("c") Double c,
-        @Parameter(description = "The preferred number of instances to process if batch prediction is being performed. More or fewer instances may be provided, but this gives implementations a chance to specify a preferred batch size.",
-            schema = @Schema(defaultValue = "100", example = "100"))@FormDataParam("batchSize") Integer batchSize,
-        @Parameter(description = "The kernel to use.",
-            schema = @Schema(description = "The kernel to use.", defaultValue = "weka.classifiers.functions.supportVector.PolyKernel -E 1.0 -C 250007",
-                example = "weka.classifiers.functions.supportVector.PolyKernel -E 1.0 -C 250007"))@FormDataParam("kernel") String kernel,
-        @Parameter(description = "Determines how/if the data will be transformed. (0=normalize training data, 1=standardize training data, 2=no mormalization/standardization",
-            schema = @Schema(allowableValues={"0","1","2"}, defaultValue = "0", example = "0"))@FormDataParam("filterType") Integer filterType,
-        @Parameter(description = "The calibration method to use. ",
-            schema = @Schema(description = "The calibration method to use.", defaultValue = "weka.classifiers.functions.Logistic -R 1.0E-8 -M -1 -num-decimal-places 4",
-                example = "weka.classifiers.functions.Logistic -R 1.0E-8 -M -1 -num-decimal-places 4"))@FormDataParam("calibrator") String calibrator,
+        @Parameter(schema = @Schema(description="ARFF data file.", type = "string", format = "binary")) @FormDataParam("file") InputStream fileInputStream,
+        @Parameter(schema = @Schema(description = "Dataset URI or local dataset ID (to the arff representation of a dataset).",
+            defaultValue = "", example = "")) @DefaultValue("") @FormDataParam("datasetUri") String datasetUri,
+        @Parameter(schema = @Schema(description = "The number of folds for cross-validation used to generate training data for calibration models (-1 means use training data).",
+            minimum = "-1", defaultValue = "-1", example = "-1"))@FormDataParam("numFolds") Integer numFolds,
+        @Parameter(schema = @Schema(description = "The complexity parameter C.",
+            defaultValue = "1.0", example = "1.0"))@FormDataParam("c") Double c,
+        @Parameter(schema = @Schema(description = "The preferred number of instances to process if batch prediction is being performed. More or fewer instances may be provided, but this gives implementations a chance to specify a preferred batch size.",
+            defaultValue = "100", example = "100"))@FormDataParam("batchSize") Integer batchSize,
+        @Parameter(schema = @Schema(description = "The kernel to use.",
+            defaultValue = "weka.classifiers.functions.supportVector.PolyKernel -E 1.0 -C 250007",
+            example = "weka.classifiers.functions.supportVector.PolyKernel -E 1.0 -C 250007"))@FormDataParam("kernel") String kernel,
+        @Parameter(schema = @Schema(description = "Determines how/if the data will be transformed. (0=normalize training data, 1=standardize training data, 2=no mormalization/standardization",
+            allowableValues={"0","1","2"}, defaultValue = "0", example = "0"))@FormDataParam("filterType") Integer filterType,
+        @Parameter(schema = @Schema(description = "The calibration method to use. ",
+            defaultValue = "weka.classifiers.functions.Logistic -R 1.0E-8 -M -1 -num-decimal-places 4",
+            example = "weka.classifiers.functions.Logistic -R 1.0E-8 -M -1 -num-decimal-places 4"))@FormDataParam("calibrator") String calibrator,
         // validation
-        @Parameter(description = "Validation to use.", schema = @Schema(allowableValues = {"CrossValidation","Hold-Out"}, defaultValue = "CrossValidation")) @FormDataParam("validation") String validation,
-        @Parameter(description = "Num of Crossvalidations or Percentage Split %.", schema = @Schema(defaultValue = "10", example = "10")) @FormDataParam("validationNum") Double validationNum,
+        @Parameter(schema = @Schema(description = "Validation to use.", defaultValue="CrossValidation", example="CrossValidation",
+            allowableValues = {"CrossValidation", "Hold-Out"})) @DefaultValue("CrossValidation") @FormDataParam("validation") String validation ,
+        @Parameter(schema = @Schema(description = "Num of Crossvalidations or Percentage Split %.", defaultValue = "10", minimum = "0",example = "10"))
+        @FormDataParam("validationNum") Double validationNum,
         // headers
         @Parameter(description = "authorization token") @HeaderParam("subjectid") String subjectid,
         @Context UriInfo ui, @Context HttpHeaders headers, @Context SecurityContext securityContext)
@@ -662,7 +679,7 @@ public class Functions {
         params.put("filterType", filterType);
         params.put("calibrator", calibrator);
 
-        return delegate.algorithmPost(fileInputStream, fileDetail, datasetUri, "SMO", params,
+        return delegate.algorithmPost(fileInputStream, datasetUri, "SMO", params,
             validation, validationNum, headers, ui, securityContext);
         }
 
@@ -685,25 +702,27 @@ public class Functions {
         })
     @GroupedApiResponsesOk
     public Response algorithmSMOregPost(
-        @FormDataParam("file") InputStream fileInputStream,
-        @FormDataParam("file") FormDataContentDisposition fileDetail,
-        @Parameter(description = "Dataset URI or local dataset ID (to the arff representation of a dataset).")@FormDataParam("datasetUri")  String datasetUri,
+        @Parameter(schema = @Schema(description="ARFF data file.", type = "string", format = "binary")) @FormDataParam("file") InputStream fileInputStream,
+        @Parameter(schema = @Schema(description = "Dataset URI or local dataset ID (to the arff representation of a dataset).",
+            defaultValue = "", example = "")) @DefaultValue("") @FormDataParam("datasetUri") String datasetUri,
         // SMOReg
-        @Parameter(description = "The preferred number of instances to process if batch prediction is being performed. More or fewer instances may be provided, but this gives implementations a chance to specify a preferred batch size.",
-            schema = @Schema(defaultValue = "100", example = "100"))@FormDataParam("batchSize") Integer batchSize,
-        @Parameter(description = "The complexity parameter C.",
-            schema = @Schema(defaultValue = "1.0", example = "1.0"))@FormDataParam("c") Double c,
-        @Parameter(description = "Determines how/if the data will be transformed. (0=normalize training data, 1=standardize training data, 2=no mormalization/standardization",
-            schema = @Schema(allowableValues={"0","1","2"}, defaultValue = "0", example = "0"))@FormDataParam("filterType") Integer filterType,
-        @Parameter(description = "The kernel to use.",
-            schema = @Schema(description = "The kernel to use.", defaultValue = "weka.classifiers.functions.supportVector.PolyKernel -E 1.0 -C 250007",
-                example = "weka.classifiers.functions.supportVector.PolyKernel -E 1.0 -C 250007"))@FormDataParam("kernel") String kernel,
-        @Parameter(description = "The calibration method to use. ",
-            schema = @Schema(description = "The learning algorithm.", defaultValue = "weka.classifiers.functions.Logistic -R 1.0E-8 -M -1 -num-decimal-places 4",
-                example = "weka.classifiers.functions.supportVector.RegSMOImproved -T 0.001 -V -P 1.0E-12 -L 0.001 -W 1"))@FormDataParam("regOptimizer") String regOptimizer,
+        @Parameter(schema = @Schema(description = "The preferred number of instances to process if batch prediction is being performed. More or fewer instances may be provided, but this gives implementations a chance to specify a preferred batch size.",
+            defaultValue = "100", example = "100"))@FormDataParam("batchSize") Integer batchSize,
+        @Parameter(schema = @Schema(description = "The complexity parameter C.",
+            defaultValue = "1.0", example = "1.0"))@FormDataParam("c") Double c,
+        @Parameter(schema = @Schema(description = "Determines how/if the data will be transformed. (0=normalize training data, 1=standardize training data, 2=no mormalization/standardization",
+            allowableValues={"0","1","2"}, defaultValue = "0", example = "0"))@FormDataParam("filterType") Integer filterType,
+        @Parameter(schema = @Schema(description = "The kernel to use.",
+            defaultValue = "weka.classifiers.functions.supportVector.PolyKernel -E 1.0 -C 250007",
+            example = "weka.classifiers.functions.supportVector.PolyKernel -E 1.0 -C 250007"))@FormDataParam("kernel") String kernel,
+        @Parameter(schema = @Schema(description = "The calibration method to use. ",
+            defaultValue = "weka.classifiers.functions.Logistic -R 1.0E-8 -M -1 -num-decimal-places 4",
+            example = "weka.classifiers.functions.supportVector.RegSMOImproved -T 0.001 -V -P 1.0E-12 -L 0.001 -W 1"))@FormDataParam("regOptimizer") String regOptimizer,
         // validation
-        @Parameter(description = "Validation to use.", schema = @Schema(allowableValues = {"CrossValidation","Hold-Out"}, defaultValue = "CrossValidation")) @FormDataParam("validation") String validation,
-        @Parameter(description = "Num of Crossvalidations or Percentage Split %.", schema = @Schema(defaultValue = "10", example = "10")) @FormDataParam("validationNum") Double validationNum,
+        @Parameter(schema = @Schema(description = "Validation to use.", defaultValue="CrossValidation", example="CrossValidation",
+            allowableValues = {"CrossValidation", "Hold-Out"})) @DefaultValue("CrossValidation") @FormDataParam("validation") String validation ,
+        @Parameter(schema = @Schema(description = "Num of Crossvalidations or Percentage Split %.", defaultValue = "10", minimum = "0",example = "10"))
+        @FormDataParam("validationNum") Double validationNum,
         // headers
         @Parameter(description = "authorization token") @HeaderParam("subjectid") String subjectid,
         @Context UriInfo ui, @Context HttpHeaders headers, @Context SecurityContext securityContext)
@@ -717,7 +736,7 @@ public class Functions {
         params.put("kernel", kernel);
         params.put("regOptimizer", regOptimizer);
 
-        return delegate.algorithmPost(fileInputStream, fileDetail, datasetUri, "SMOreg", params,
+        return delegate.algorithmPost(fileInputStream, datasetUri, "SMOreg", params,
             validation, validationNum, headers, ui, securityContext);
     }
 
@@ -746,22 +765,24 @@ public class Functions {
         })
     @GroupedApiResponsesOk
     public Response algorithmGaussianProcessesPost(
-        @FormDataParam("file") InputStream fileInputStream,
-        @FormDataParam("file") FormDataContentDisposition fileDetail,
-        @Parameter(description = "Dataset URI or local dataset ID (to the arff representation of a dataset).")@FormDataParam("datasetUri")  String datasetUri,
+        @Parameter(schema = @Schema(description="ARFF data file.", type = "string", format = "binary")) @FormDataParam("file") InputStream fileInputStream,
+        @Parameter(schema = @Schema(description = "Dataset URI or local dataset ID (to the arff representation of a dataset).",
+                defaultValue = "", example = "")) @DefaultValue("") @FormDataParam("datasetUri") String datasetUri,
         // GaussianProcesses
-        @Parameter(description = "The preferred number of instances to process if batch prediction is being performed. More or fewer instances may be provided, but this gives implementations a chance to specify a preferred batch size.",
-            schema = @Schema(defaultValue = "100", example = "100"))@FormDataParam("batchSize") Integer batchSize,
-        @Parameter(description = "Determines how/if the data will be transformed. (0=normalize training data, 1=standardize training data, 2=no mormalization/standardization",
-            schema = @Schema(allowableValues={"0","1","2"}, defaultValue = "0", example = "0"))@FormDataParam("filterType") Integer filterType,
-        @Parameter(description = "The kernel to use.",
-            schema = @Schema(description = "The kernel to use.", defaultValue = "weka.classifiers.functions.supportVector.PolyKernel -E 1.0 -C 250007",
+        @Parameter(schema = @Schema(description = "The preferred number of instances to process if batch prediction is being performed. More or fewer instances may be provided, but this gives implementations a chance to specify a preferred batch size.",
+            defaultValue = "100", example = "100"))@FormDataParam("batchSize") Integer batchSize,
+        @Parameter(schema = @Schema(description = "Determines how/if the data will be transformed. (0=normalize training data, 1=standardize training data, 2=no mormalization/standardization",
+            allowableValues={"0","1","2"}, defaultValue = "0", example = "0"))@FormDataParam("filterType") Integer filterType,
+        @Parameter(schema = @Schema(description = "The kernel to use.",
+            description = "The kernel to use.", defaultValue = "weka.classifiers.functions.supportVector.PolyKernel -E 1.0 -C 250007",
                 example = "weka.classifiers.functions.supportVector.PolyKernel -E 1.0 -C 250007"))@FormDataParam("kernel") String kernel,
-        @Parameter(description = "The level of Gaussian Noise (added to the diagonal of the Covariance Matrix), after the target has been normalized/standardized/left unchanged).",
-            schema = @Schema(defaultValue = "1.0", example = "1.0"))@FormDataParam("noise") Double noise,
+        @Parameter(schema = @Schema(description = "The level of Gaussian Noise (added to the diagonal of the Covariance Matrix), after the target has been normalized/standardized/left unchanged).",
+            defaultValue = "1.0", example = "1.0"))@FormDataParam("noise") Double noise,
         // validation
-        @Parameter(description = "Validation to use.", schema = @Schema(allowableValues = {"CrossValidation","Hold-Out"}, defaultValue = "CrossValidation")) @FormDataParam("validation") String validation,
-        @Parameter(description = "Num of Crossvalidations or Percentage Split %.", schema = @Schema(defaultValue = "10", example = "10")) @FormDataParam("validationNum") Double validationNum,
+        @Parameter(schema = @Schema(description = "Validation to use.", defaultValue="CrossValidation", example="CrossValidation",
+            allowableValues = {"CrossValidation", "Hold-Out"})) @DefaultValue("CrossValidation") @FormDataParam("validation") String validation ,
+        @Parameter(schema = @Schema(description = "Num of Crossvalidations or Percentage Split %.", defaultValue = "10", minimum = "0",example = "10"))
+            @FormDataParam("validationNum") Double validationNum,
         // headers
         @Parameter(description = "authorization token") @HeaderParam("subjectid") String subjectid,
         @Context UriInfo ui, @Context HttpHeaders headers, @Context SecurityContext securityContext)
@@ -774,7 +795,7 @@ public class Functions {
         params.put("kernel", kernel);
         params.put("noise", noise);
 
-        return delegate.algorithmPost(fileInputStream, fileDetail, datasetUri, "GaussianProcesses", params,
+        return delegate.algorithmPost(fileInputStream, datasetUri, "GaussianProcesses", params,
             validation, validationNum, headers, ui, securityContext);
     }
 */

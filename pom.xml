@@ -4,7 +4,7 @@
     <artifactId>weka_rs</artifactId>
     <packaging>war</packaging>
     <name>JGU WEKA REST</name>
-    <version>0.3.0</version>
+    <version>0.5.0</version>
 
     <licenses>
         <license>
@@ -34,6 +34,7 @@
                 <version>2.21.0</version>
 
                 <configuration>
+                    <useSystemClassLoader>false</useSystemClassLoader>
                     <properties>
                         <property>
                             <name>surefire.testng.verbose</name>
@@ -324,7 +325,7 @@
         <java.version>1.8</java.version>
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
-        <swagger-core-version>2.0.2</swagger-core-version>
+        <swagger-core-version>2.0.5</swagger-core-version>
 
         <jetty-version>9.4.7.v20170914</jetty-version>
         <jersey2-version>2.27</jersey2-version>

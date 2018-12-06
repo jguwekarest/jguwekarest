@@ -7,7 +7,6 @@ import io.swagger.api.data.Task;
 import io.swagger.api.data.TaskHandler;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.ArrayUtils;
-import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.json.JSONObject;
 import weka.classifiers.AbstractClassifier;
 import weka.classifiers.SingleClassifierEnhancer;
@@ -35,7 +34,10 @@ import java.io.InputStream;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 import static io.swagger.api.Constants.TEXT_URILIST;
@@ -108,7 +110,6 @@ public class AlgorithmImpl extends AlgorithmService {
      * Method overload to: Train a classifier or meta classifier - with parameters already as string
      *
      * @param fileInputStream dataset file handle
-     * @param fileDetail      dataset file details
      * @param datasetUri      dataset URI
      * @param classifierName  String classifier name
      * @param paramString     param string for classifier as used in WEKA
@@ -122,10 +123,10 @@ public class AlgorithmImpl extends AlgorithmService {
      * @throws IOException       io exception
      */
     @Produces("text/plain")
-    public Response algorithmGenericPost(InputStream fileInputStream, FormDataContentDisposition fileDetail, String datasetUri,
+    public Response algorithmGenericPost(InputStream fileInputStream, String datasetUri,
                                          String classifierName, String paramString, String validation, Double validationNum, HttpHeaders headers, UriInfo ui, SecurityContext securityContext)
         throws NotFoundException, IOException {
-        return algorithmPost(fileInputStream, fileDetail, datasetUri, classifierName, null, null, null, paramString,
+        return algorithmPost(fileInputStream, datasetUri, classifierName, null, null, null, paramString,
                              validation, validationNum, headers, ui, securityContext);
     }
 
@@ -159,7 +160,6 @@ public class AlgorithmImpl extends AlgorithmService {
      * Method overload to: Train a classifier or meta classifier - without metaClassifierName and metaParams for meta classifier
      *
      * @param fileInputStream dataset file handle
-     * @param fileDetail      dataset file details
      * @param datasetUri      dataset URI
      * @param classifierName  String classifier name
      * @param params          HashMap hashed params for classifier
@@ -171,11 +171,11 @@ public class AlgorithmImpl extends AlgorithmService {
      * @throws IOException       io exception
      */
     @Produces("text/plain")
-    public Response algorithmPost(InputStream fileInputStream, FormDataContentDisposition fileDetail, String datasetUri,
+    public Response algorithmPost(InputStream fileInputStream, String datasetUri,
                                   String classifierName, HashMap params, String validation, Double validationNum,
                                   HttpHeaders headers, UriInfo ui, SecurityContext securityContext)
         throws NotFoundException, IOException {
-        return algorithmPost(fileInputStream, fileDetail, datasetUri, classifierName, params, null, null, null,
+        return algorithmPost(fileInputStream, datasetUri, classifierName, params, null, null, null,
                              validation, validationNum, headers, ui, securityContext);
     }
 
@@ -185,7 +185,6 @@ public class AlgorithmImpl extends AlgorithmService {
      * Method overload to: Train a classifier or meta classifier - without metaClassifierName and metaParams for meta classifier
      *
      * @param fileInputStream dataset file handle
-     * @param fileDetail      dataset file details
      * @param datasetUri      dataset URI
      * @param classifierName  String classifier name
      * @param params          HashMap hashed params for classifier
@@ -197,11 +196,11 @@ public class AlgorithmImpl extends AlgorithmService {
      * @throws IOException       io exception
      */
     @Produces("text/plain")
-    public Response algorithmPost(InputStream fileInputStream, FormDataContentDisposition fileDetail, String datasetUri,
+    public Response algorithmPost(InputStream fileInputStream, String datasetUri,
                                   String classifierName, HashMap params, String metaClassifierName, HashMap metaParams,
                                   String validation, Double validationNum,
                                   HttpHeaders headers, UriInfo ui, SecurityContext securityContext) throws NotFoundException, IOException {
-        return algorithmPost(fileInputStream, fileDetail, datasetUri, classifierName, params, metaClassifierName, metaParams, null,
+        return algorithmPost(fileInputStream, datasetUri, classifierName, params, metaClassifierName, metaParams, null,
                              validation, validationNum,headers, ui, securityContext);
     }
 
@@ -209,7 +208,6 @@ public class AlgorithmImpl extends AlgorithmService {
      * Train a classifier or meta classifier
      *
      * @param fileInputStream    dataset file handle
-     * @param fileDetail         dataset file details
      * @param datasetUri         dataset URI
      * @param classifierName     String classifier name
      * @param params             HashMap hashed params for classifier
@@ -224,14 +222,14 @@ public class AlgorithmImpl extends AlgorithmService {
      * @throws IOException       io exception
      */
     @Produces({TEXT_URILIST, MediaType.APPLICATION_JSON})
-    public Response algorithmPost(InputStream fileInputStream, FormDataContentDisposition fileDetail, String datasetUri,
+    public Response algorithmPost(InputStream fileInputStream, String datasetUri,
                                   String classifierName, HashMap params, String metaClassifierName, HashMap metaParams,
                                   String paramString, String validation, Double validationNum,
                                   HttpHeaders headers, UriInfo ui, SecurityContext securityContext)
         throws NotFoundException, IOException {
 
         String subjectid = headers.getRequestHeaders().getFirst("subjectid");
-        String txtStr = DatasetService.getArff(fileInputStream, fileDetail, datasetUri, subjectid);
+        String txtStr = DatasetService.getArff(fileInputStream, datasetUri, subjectid);
         String baseuri = ui.getBaseUri().toString();
         String accept = headers.getRequestHeaders().getFirst("accept");
         String metaStr = (metaClassifierName != null ? metaClassifierName + " with " : "");

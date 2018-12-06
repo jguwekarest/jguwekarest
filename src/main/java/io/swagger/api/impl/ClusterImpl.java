@@ -4,7 +4,6 @@ import io.swagger.api.WekaOptionHelper;
 import io.swagger.api.WekaUtils;
 import io.swagger.api.cluster.ClusterService;
 import io.swagger.api.data.DatasetService;
-import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import weka.clusterers.*;
 import weka.core.Instances;
 import weka.filters.unsupervised.attribute.StringToNominal;
@@ -20,11 +19,11 @@ import java.util.HashMap;
 public class ClusterImpl extends ClusterService {
     @Override
     @Produces("text/plain")
-    public Response clustererPost(InputStream fileInputStream, FormDataContentDisposition fileDetail, String datasetUri, String clustererName, HashMap params,
+    public Response clustererPost(InputStream fileInputStream, String datasetUri, String clustererName, HashMap params,
                                   HttpHeaders headers, UriInfo ui, SecurityContext securityContext) throws Exception {
 
         String subjectid = headers.getRequestHeaders().getFirst("subjectid");
-        String txtStr = DatasetService.getArff(fileInputStream, fileDetail, datasetUri, subjectid);
+        String txtStr = DatasetService.getArff(fileInputStream, datasetUri, subjectid);
         String baseuri = ui.getBaseUri().toString();
         String accept = headers.getRequestHeaders().getFirst("accept");
         Instances instances = WekaUtils.instancesFromString(txtStr, false);

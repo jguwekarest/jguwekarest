@@ -9,7 +9,6 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.extensions.Extension;
 import io.swagger.v3.oas.annotations.extensions.ExtensionProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
-import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 
 import javax.servlet.ServletConfig;
@@ -68,19 +67,19 @@ public class Rules {
         })
     @GroupedApiResponsesOk
     public Response algorithmZeroRclassificationPost(
-        @FormDataParam("file") InputStream fileInputStream,
-        @FormDataParam("file") FormDataContentDisposition fileDetail,
-        @Parameter(description = "Dataset URI or local dataset ID (to the arff representation of a dataset).")@FormDataParam("datasetUri")  String datasetUri,
+        @Parameter(schema = @Schema(description="ARFF data file.", type = "string", format = "binary")) @FormDataParam("file") InputStream fileInputStream,
+        @Parameter(schema = @Schema(description = "Dataset URI or local dataset ID (to the arff representation of a dataset).",
+            defaultValue = "", example = "")) @DefaultValue("") @FormDataParam("datasetUri") String datasetUri,
         // validation
-        @Parameter(description = "Validation to use.", schema = @Schema(defaultValue="CrossValidation", allowableValues = {"CrossValidation", "Hold-Out"})) @FormDataParam("validation") String validation ,
-        @Parameter(description  = "Num of Crossvalidations or Percentage Split %.", schema = @Schema(defaultValue="10")) @FormDataParam("validationNum") Double validationNum,
+        @Parameter(schema = @Schema(description = "Validation to use.", defaultValue="CrossValidation", allowableValues = {"CrossValidation", "Hold-Out"})) @FormDataParam("validation") String validation ,
+        @Parameter(schema = @Schema(description  = "Num of Crossvalidations or Percentage Split %.", defaultValue="10")) @FormDataParam("validationNum") Double validationNum,
         // authorization
         @Parameter(description = "authorization token") @HeaderParam("subjectid") String subjectid,
         @Context UriInfo uriInfo, @Context HttpHeaders headers, @Context SecurityContext securityContext)
         throws NotFoundException, IOException {
             HashMap<String, Object> params = new HashMap<>();
 
-            return delegate.algorithmPost(fileInputStream,fileDetail,datasetUri,"ZeroR", params,
+            return delegate.algorithmPost(fileInputStream, datasetUri,"ZeroR", params,
                                           validation, validationNum, headers, uriInfo, securityContext);
     }
 
@@ -101,24 +100,20 @@ public class Rules {
         })
     @GroupedApiResponsesOk
     public Response algorithmM5RclassificationPost(
-        @FormDataParam("file") InputStream fileInputStream,
-        @FormDataParam("file") FormDataContentDisposition fileDetail,
-        @Parameter(description = "Dataset URI or local dataset ID (to the arff representation of a dataset).")@FormDataParam("datasetUri")  String datasetUri,
-        @Parameter(
-            description = "Whether pruning is performed.", example = "0",
-            schema = @Schema(defaultValue = "0", allowableValues="0,1"))@FormDataParam("unpruned") Integer unpruned,
-        @Parameter(
-            description = "Whether to use unsmoothed predictions.",
-            schema = @Schema(defaultValue = "0", allowableValues="0,1"))@FormDataParam("useUnsmoothed") Integer useUnsmoothed,
-        @Parameter(
-            description = "The minimum number of instances to allow at a leaf node.",
-            schema = @Schema(defaultValue = "4"))@FormDataParam("minNumInstances") Double minNumInstances,
-        @Parameter(
-            description = "Whether to generate a regression tree/rule instead of a model tree/rule.",
-            schema = @Schema(defaultValue = "0", allowableValues="0,1"))@FormDataParam("buildRegressionTree") Integer buildRegressionTree,
+        @Parameter(schema = @Schema(description="ARFF data file.", type = "string", format = "binary")) @FormDataParam("file") InputStream fileInputStream,
+        @Parameter(schema = @Schema(description = "Dataset URI or local dataset ID (to the arff representation of a dataset).",
+            defaultValue = "", example = "")) @DefaultValue("") @FormDataParam("datasetUri") String datasetUri,
+        @Parameter(schema = @Schema(description = "Whether pruning is performed.", example = "0",
+            defaultValue = "0", allowableValues="0,1"))@FormDataParam("unpruned") Integer unpruned,
+        @Parameter(schema = @Schema(description = "Whether to use unsmoothed predictions.",
+            defaultValue = "0", allowableValues="0,1"))@FormDataParam("useUnsmoothed") Integer useUnsmoothed,
+        @Parameter(schema = @Schema(description = "The minimum number of instances to allow at a leaf node.",
+            defaultValue = "4"))@FormDataParam("minNumInstances") Double minNumInstances,
+        @Parameter(schema = @Schema(description = "Whether to generate a regression tree/rule instead of a model tree/rule.",
+            defaultValue = "0", allowableValues="0,1"))@FormDataParam("buildRegressionTree") Integer buildRegressionTree,
         // validation
-        @Parameter(description = "Validation to use.", schema = @Schema(defaultValue="CrossValidation", allowableValues = {"CrossValidation", "Hold-Out"})) @FormDataParam("validation") String validation ,
-        @Parameter(description  = "Num of Crossvalidations or Percentage Split %.", schema = @Schema(defaultValue="10")) @FormDataParam("validationNum") Double validationNum,
+        @Parameter(schema = @Schema(description = "Validation to use.", defaultValue="CrossValidation", allowableValues = {"CrossValidation", "Hold-Out"})) @FormDataParam("validation") String validation ,
+        @Parameter(schema = @Schema(description  = "Num of Crossvalidations or Percentage Split %.", defaultValue="10")) @FormDataParam("validationNum") Double validationNum,
         // authorization
         @Parameter(description = "authorization token") @HeaderParam("subjectid") String subjectid,
         @Context UriInfo uriInfo, @Context HttpHeaders headers, @Context SecurityContext securityContext)
@@ -130,7 +125,7 @@ public class Rules {
             params.put("minNumInstances", minNumInstances);
             params.put("buildRegressionTree", buildRegressionTree);
 
-            return delegate.algorithmPost(fileInputStream, fileDetail, datasetUri, "M5Rules", params,
+            return delegate.algorithmPost(fileInputStream, datasetUri, "M5Rules", params,
                                           validation, validationNum, headers, uriInfo, securityContext);
     }
 

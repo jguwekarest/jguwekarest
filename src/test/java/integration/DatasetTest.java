@@ -22,10 +22,14 @@ import static io.swagger.api.Constants.TEXT_ARFF;
 public class DatasetTest {
 
 
-    private static final String EXT_DATASET = "http://dev.jaqpot.org:8081/jaqpot/services/dataset/yzsAXE5rLPzz";
+    //private static final String EXT_DATASET = "http://dev.jaqpot.org:8081/jaqpot/services/dataset/yzsAXE5rLPzz";
+    private static final String EXT_DATASET = "https://api-jaqpot.prod.openrisknet.org/jaqpot/services/dataset/Gajewicz_10_29_class";
+    // Has Errors: Authorization header not provided. Please provide header and token
+    // needs --header 'Authorization: Bearer <oAuthToken>' for the ORN web authentication
+    // Tests are disabled 12/2018
 
     @Parameters({"host"})
-    @Test(description = "Get an external dataset and convert it to arff.")
+    //@Test(description = "Get an external dataset and convert it to arff.")
     public void loadExternalDatasetToArff( @Optional  String host ) throws Exception {
         String uri = host + "/dataset";
         final Client client = ClientBuilder.newBuilder().register(MultiPartFeature.class).build();
@@ -57,7 +61,7 @@ public class DatasetTest {
     }
 
     @Parameters({"host"})
-    @Test(description = "Get an external dataset, ..., save it and delete it.")
+    //@Test(description = "Get an external dataset, ..., save it and delete it.")
     public void loadExternalDatasetToArffSaveAndDelete( @Optional  String host ) throws Exception {
         String uri = host + "/dataset";
         final Client client = ClientBuilder.newBuilder().register(MultiPartFeature.class).build();

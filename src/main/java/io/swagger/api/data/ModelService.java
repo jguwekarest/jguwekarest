@@ -5,7 +5,6 @@ import com.google.gson.Gson;
 import io.swagger.api.ApiException;
 import io.swagger.api.WekaUtils;
 import org.bson.Document;
-import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import weka.classifiers.Classifier;
 import weka.core.Instance;
 import weka.core.Instances;
@@ -162,16 +161,15 @@ public class ModelService {
     /**
     * Predict a dataset in arff format with an existing local model.
     * @param fileInputStream file handle to upload an arff file
-    * @param fileDetail file handle to upload an arff file
     * @param datasetId ID of a local dataset
     * @param modelId ID of the local model in mongoDB
     * @param subjectid token for authentication and authorization
     *
     */
-    public static String predictModel(InputStream fileInputStream, FormDataContentDisposition fileDetail, String datasetId, String modelId, String subjectid) throws Exception {
+    public static String predictModel(InputStream fileInputStream, String datasetId, String modelId, String subjectid) throws Exception {
         StringBuilder out = new StringBuilder();
         Classifier cls = getClassifier(modelId);
-        String arff = DatasetService.getArff(fileInputStream, fileDetail, datasetId, subjectid);
+        String arff = DatasetService.getArff(fileInputStream, datasetId, subjectid);
         Instances instances = WekaUtils.instancesFromString(arff, true);
         for (Instance instance: instances) {
             Double result = cls.classifyInstance(instance);

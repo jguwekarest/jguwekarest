@@ -9,7 +9,6 @@ import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.extensions.Extension;
 import io.swagger.v3.oas.annotations.extensions.ExtensionProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
-import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 
 import javax.servlet.ServletConfig;
@@ -64,24 +63,24 @@ public class Generic {
     @GroupedApiResponsesOk
 
     public Response algorithmGenericPost(
-        @FormDataParam("file") InputStream fileInputStream,
-        @FormDataParam("file") FormDataContentDisposition fileDetail,
-        @Parameter(description = "Dataset URI or local dataset ID (to the arff representation of a dataset).")@FormDataParam("datasetUri")  String datasetUri,
-        @Parameter(description = "Classifier to use.",
-            schema = @Schema(
-                allowableValues = { "BayesNet","DecisionStump","GaussianProcesses","J48","IBk","LibSVM","LinearRegression",
-                    "Logistic","M5P","M5Rules","MultilayerPerceptron","NaiveBayes","RandomForest","SMO","SMOreg","ZeroR",
-                    "AdaBoost","Bagging"})) @FormDataParam("classifierString") String classifierString,
-        @Parameter(description = "Parameter String. As shown as in WEKA Explorer classifierer line", example = "for SMO: -C 1.0 -L 0.001 -P 1.0E-12 -N 0 -V -1 -W 1 -K \"weka.classifiers.functions.supportVector.PolyKernel -E 1.0 -C 250007\" -calibrator \"weka.classifiers.functions.Logistic -R 1.0E-8 -M -1 -num-decimal-places 4\"")@FormDataParam("paramString") String paramString,
+        @Parameter(schema = @Schema(description="ARFF data file.", type = "string", format = "binary")) @FormDataParam("file") InputStream fileInputStream,
+        @Parameter(schema = @Schema(description = "Dataset URI or local dataset ID (to the arff representation of a dataset).",
+            defaultValue = "", example = "")) @DefaultValue("") @FormDataParam("datasetUri") String datasetUri,
+        @Parameter(schema = @Schema(description = "Classifier to use.",
+            allowableValues = { "BayesNet","DecisionStump","GaussianProcesses","J48","IBk","LibSVM","LinearRegression",
+                "Logistic","M5P","M5Rules","MultilayerPerceptron","NaiveBayes","RandomForest","SMO","SMOreg","ZeroR",
+                "AdaBoost","Bagging"})) @FormDataParam("classifierString") String classifierString,
+        @Parameter(schema = @Schema(description = "Parameter String. As shown as in WEKA Explorer classifierer line. example for SMO: -C 1.0 -L 0.001 -P 1.0E-12 -N 0 -V -1 -W 1 -K \"weka.classifiers.functions.supportVector.PolyKernel -E 1.0 -C 250007\" -calibrator \"weka.classifiers.functions.Logistic -R 1.0E-8 -M -1 -num-decimal-places 4\""))
+            @FormDataParam("paramString") String paramString,
         // validation
-        @Parameter(description = "Validation to use.", schema = @Schema(defaultValue="CrossValidation", allowableValues = {"CrossValidation", "Hold-Out"})) @FormDataParam("validation") String validation ,
-        @Parameter(description  = "Num of Crossvalidations or Percentage Split %.", schema = @Schema(defaultValue="10")) @FormDataParam("validationNum") Double validationNum,
+        @Parameter(schema = @Schema(description = "Validation to use.", defaultValue="CrossValidation", allowableValues = {"CrossValidation", "Hold-Out"})) @FormDataParam("validation") String validation ,
+        @Parameter(schema = @Schema(description  = "Num of Crossvalidations or Percentage Split %.", defaultValue="10")) @FormDataParam("validationNum") Double validationNum,
         // authorization
         @Parameter(description = "Authorization token") @HeaderParam("subjectid") String subjectid,
         @Context UriInfo ui, @Context HttpHeaders headers, @Context SecurityContext securityContext)
         throws io.swagger.api.NotFoundException, IOException {
 
-        return delegate.algorithmGenericPost(fileInputStream, fileDetail, datasetUri, classifierString, paramString,
+        return delegate.algorithmGenericPost(fileInputStream, datasetUri, classifierString, paramString,
             validation, validationNum, headers, ui, securityContext);
     }
 
@@ -102,8 +101,8 @@ public class Generic {
     @GroupedApiResponsesOk
 
     public Response algorithmGenericGet(
-        @Parameter(in = ParameterIn.QUERY, description = "Classifier to use.",
-            schema = @Schema(
+        @Parameter(in = ParameterIn.QUERY,
+            schema = @Schema(description = "Classifier to use.",
                 allowableValues = { "BayesNet","DecisionStump","GaussianProcesses","J48","IBk","LibSVM","LinearRegression",
                     "Logistic","M5P","M5Rules","MultilayerPerceptron","NaiveBayes","RandomForest","SMO","SMOreg","ZeroR",
                     "AdaBoost","Bagging"})) @QueryParam("classifierName") String classifierName,

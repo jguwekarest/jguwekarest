@@ -6,7 +6,6 @@ import io.swagger.api.ApiException;
 import io.swagger.api.StringUtil;
 import io.swagger.api.WekaUtils;
 import org.bson.Document;
-import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import weka.core.Instances;
 import weka.filters.Filter;
 import weka.filters.unsupervised.attribute.*;
@@ -78,13 +77,12 @@ public class DatasetService {
     /**
      * Get arff representation from dataset in mongoDB or from a posted file.
      * @param fileInputStream sended file
-     * @param fileDetail details of sended file
      * @param datasetUri dataset/mongodb id
      * @param subjectid security token
      * @return arff string
      * @throws IOException IOException description
      */
-    public static String getArff(InputStream fileInputStream, FormDataContentDisposition fileDetail, String datasetUri, String subjectid) throws IOException {
+    public static String getArff(InputStream fileInputStream, String datasetUri, String subjectid) throws IOException {
         StringBuilder txtStr = new StringBuilder();
         if (datasetUri != null && !Objects.equals(datasetUri, "")) {
             if(StringUtil.isUri(datasetUri)) {
@@ -105,16 +103,18 @@ public class DatasetService {
      * Download an external dataset in JSON format (e.g.: from JAQPOT service)
      * @param uri URI of the external dataset
      * @param token authentication token
+     * @param bearerToken token for Bearer Authentication
      * @return representation of the dataset in Dataset class
     */
 
-    static Dataset readExternalDataset(String uri, String token) throws ApiException {
+    static Dataset readExternalDataset(String uri, String token, String bearerToken) throws ApiException {
         String jsonString;
         Client client = ClientBuilder.newClient();
 
         Response response = client.target(uri)
                 .request()
                 .header("subjectid", token)
+                .header("Authorization", bearerToken)
                 .accept(MediaType.APPLICATION_JSON)
                 .get();
 

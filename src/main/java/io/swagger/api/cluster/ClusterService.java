@@ -10,5 +10,5 @@ import java.io.InputStream;
 import java.util.HashMap;
 
 public abstract class ClusterService {
-    public abstract Response clustererPost(InputStream fileInputStream, FormDataContentDisposition fileDetail, String datasetUri, String clusterer, HashMap params, HttpHeaders headers, UriInfo ui, SecurityContext securityContext) throws Exception;
+    public abstract Response clustererPost(InputStream fileInputStream, String datasetUri, String clusterer, HashMap params, HttpHeaders headers, UriInfo ui, SecurityContext securityContext) throws Exception;
 }

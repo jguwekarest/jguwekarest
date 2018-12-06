@@ -27,7 +27,7 @@ import io.swagger.v3.oas.annotations.info.License;
     },
     info = @Info(
         title = "JGU WEKA REST Service",
-        version = "0.3.0-OAS3",
+        version = "0.5.0-OAS3",
         description = "RESTful API Webservice to WEKA Machine Learning Algorithms.\n" +
             "  This webservice provides an [OpenRiskNet](https://openrisknet.org/) compliant REST interface to machine learning algorithms from the WEKA Java Library.\n" +
             "  This application is developed by the [Institute of Computer Science](http://www.datamining.informatik.uni-mainz.de) at the Johannes Gutenberg University Mainz.\n\n" +
