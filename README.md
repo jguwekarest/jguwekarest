@@ -44,6 +44,6 @@ curl  -X POST -H "Content-Type: multipart/form-data" -H "Accept:text/x-arff" -F 
  * Running tests: **[Run Tests](./doc/Testing.md)**.
  * OpenShift Deployment: **[Deployment in OpenShift](./openshift/README.md)**.
  * Commandline Examples with Curl: **[Curl Examples](./doc/CommandlineCurlExamples.md)**.
- * Authentication: **[Keycloak Integration](./doc/TomcatKeyCloakSetup.md)**.
+ * Authentication: **[Keycloak Integration](./doc/TomcatKeycloakSetup.md)**.
  * Java Docs on gh-pages: **[JavaDocs](https://jguwekarest.github.io/jguwekarest/javadoc/index.html)**.
  
