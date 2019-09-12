@@ -8,6 +8,8 @@ import java.util.logging.Logger;
 /**
  * Wrapper Class to translate webparam names into WEKA library params.
  */
+// FIXME Replace raw types with parameterized 
+@SuppressWarnings("rawtypes")
 public class WekaOptionHelper {
 
     private static final Logger LOG = Logger.getLogger(WekaOptionHelper.class.getName());

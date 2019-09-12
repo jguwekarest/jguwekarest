@@ -46,6 +46,8 @@ import static io.swagger.api.WekaOptionHelper.getClassifierOptions;
 /**
  * Central Class to train WEKA Classifier
  */
+// FIXME Replace raw types with parameterized 
+@SuppressWarnings("rawtypes")
 public class AlgorithmImpl extends AlgorithmService {
 
     @Override

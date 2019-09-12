@@ -15,7 +15,8 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-@SuppressWarnings("ALL")
+// FIXME Replace raw types with parameterized 
+@SuppressWarnings("rawtypes")
 public class ModelService {
 
     private static String dataDirectory = System.getProperty("user.home") + "/.jguweka/data/";
@@ -71,7 +72,7 @@ public class ModelService {
      * @param token security token
      * @return model id
      */
-    public static String saveModel(Classifier classifier, String[] options, String validation, @SuppressWarnings("unused") String token) {
+    public static String saveModel(Classifier classifier, String[] options, String validation, String token) {
         Dao modelDao = new Dao();
         String id;
         try {

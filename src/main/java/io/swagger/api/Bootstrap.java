@@ -18,6 +18,8 @@ import java.util.stream.Stream;
 /**
  * Class to init the servlet and set Swagger/OpenAPI Info
  */
+// FIXME Replace raw types with parameterized 
+@SuppressWarnings("rawtypes")
 public class Bootstrap extends HttpServlet {
   @Override
   public void init(ServletConfig config) throws ServletException {

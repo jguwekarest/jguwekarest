@@ -16,6 +16,8 @@ import javax.ws.rs.core.UriInfo;
 import java.io.InputStream;
 import java.util.HashMap;
 
+// FIXME Replace raw types with parameterized 
+@SuppressWarnings("rawtypes")
 public class ClusterImpl extends ClusterService {
     @Override
     @Produces("text/plain")

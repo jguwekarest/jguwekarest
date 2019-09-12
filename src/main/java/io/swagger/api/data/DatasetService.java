@@ -22,6 +22,8 @@ import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+// FIXME Replace raw types with parameterized 
+@SuppressWarnings("rawtypes")
 public class DatasetService {
 
     private static final Logger LOG = Logger.getLogger(DatasetService.class.getName());

@@ -20,6 +20,8 @@ import static io.swagger.api.Constants.*;
 @Path("/")
 //@Api(description = "Dataset API")
 
+// FIXME Replace raw types with parameterized 
+@SuppressWarnings("rawtypes")
 public class Dataset {
 
     @POST

@@ -15,6 +15,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+// FIXME Replace raw types with parameterized 
+@SuppressWarnings("rawtypes")
 public class TaskTest {
     private static final Logger LOG = Logger.getLogger(Task.class.getName());
 
