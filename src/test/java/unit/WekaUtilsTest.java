@@ -1,8 +1,8 @@
 package unit;
 
-import io.swagger.api.StringUtil;
-import io.swagger.api.WekaOptionHelper;
-import io.swagger.api.WekaUtils;
+import org.kramerlab.wekarestapi.StringUtil;
+import org.kramerlab.wekarestapi.WekaOptionHelper;
+import org.kramerlab.wekarestapi.WekaUtils;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import weka.core.Instances;

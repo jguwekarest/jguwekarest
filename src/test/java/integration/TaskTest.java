@@ -1,10 +1,11 @@
 package integration;
 
 import com.google.gson.Gson;
-import io.swagger.api.data.Task;
-import io.swagger.api.data.TaskHandler;
-import io.swagger.api.data.TaskService;
+
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
+import org.kramerlab.wekarestapi.data.Task;
+import org.kramerlab.wekarestapi.data.TaskHandler;
+import org.kramerlab.wekarestapi.data.TaskService;
 import org.testng.Assert;
 import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;

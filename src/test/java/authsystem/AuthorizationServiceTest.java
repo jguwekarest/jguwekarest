@@ -1,6 +1,6 @@
 package authsystem;
 
-import io.swagger.api.authorization.AuthorizationService;
+import org.kramerlab.wekarestapi.authorization.AuthorizationService;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

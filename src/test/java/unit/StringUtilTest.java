@@ -1,6 +1,6 @@
 package unit;
 
-import io.swagger.api.StringUtil;
+import org.kramerlab.wekarestapi.StringUtil;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

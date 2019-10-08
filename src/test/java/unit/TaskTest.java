@@ -1,11 +1,11 @@
 package unit;
 
-import io.swagger.api.ErrorReport;
-import io.swagger.api.data.Task;
-import io.swagger.api.data.TaskHandler;
-import io.swagger.api.data.TaskService;
 import org.junit.Rule;
 import org.junit.rules.ExpectedException;
+import org.kramerlab.wekarestapi.ErrorReport;
+import org.kramerlab.wekarestapi.data.Task;
+import org.kramerlab.wekarestapi.data.TaskHandler;
+import org.kramerlab.wekarestapi.data.TaskService;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

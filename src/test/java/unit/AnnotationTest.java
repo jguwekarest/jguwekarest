@@ -1,8 +1,8 @@
 package unit;
 
 
-import io.swagger.api.Api;
 import org.glassfish.jersey.media.multipart.FormDataParam;
+import org.kramerlab.wekarestapi.Api;
 
 import java.lang.annotation.Annotation;
 

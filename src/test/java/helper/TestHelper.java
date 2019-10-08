@@ -1,9 +1,9 @@
 package helper;
 
-import io.swagger.api.Api;
 import org.apache.commons.io.IOUtils;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.jackson.JacksonFeature;
+import org.kramerlab.wekarestapi.Api;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
