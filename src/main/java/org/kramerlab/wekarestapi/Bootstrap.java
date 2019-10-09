@@ -1,69 +1,67 @@
 package org.kramerlab.wekarestapi;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+
 import io.swagger.v3.jaxrs2.integration.JaxrsOpenApiContextBuilder;
 import io.swagger.v3.jaxrs2.integration.ServletOpenApiContextBuilder;
 import io.swagger.v3.oas.integration.OpenApiConfigurationException;
 import io.swagger.v3.oas.integration.SwaggerConfiguration;
 import io.swagger.v3.oas.models.OpenAPI;
 
-import javax.servlet.ServletConfig;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
-
 /**
  * Class to init the servlet and set Swagger/OpenAPI Info
  */
-// FIXME Replace raw types with parameterized 
+//FIXME Replace raw types with parameterized 
 @SuppressWarnings("rawtypes")
 public class Bootstrap extends HttpServlet {
-  @Override
-  public void init(ServletConfig config) throws ServletException {
-
-
-    //((LoggerContext) LoggerFactory.getILoggerFactory()).getLogger("org.mongodb.driver").setLevel(Level.ERROR);
-    //((LoggerContext) LoggerFactory.getILoggerFactory()).getLogger("org.mongodb.driver.cluster").setLevel(Level.ERROR);
-    final Map<String, Object> map = new HashMap< >();
-    map.put("type", "H2020");
-    map.put("name", "OpenRiskNet");
-    map.put("cordis", "http://www.cordis.europa.eu/project/rcn/206759_en.html");
-
-    final Map<String, Object> contextmap = new HashMap< >();
-    contextmap.put("@vocab", "http://schema.org/");
-
-
-    OpenAPI oas = new OpenAPI();
-    SwaggerConfiguration oasConfig = new SwaggerConfiguration()
-        .openAPI(oas)
-        .prettyPrint(true)
-        .resourcePackages(Stream.of("org.kramerlab.wekarestapi").collect(Collectors.toSet()));
-
-    try {
-      new JaxrsOpenApiContextBuilder()
-          .servletConfig(config)
-          .openApiConfiguration(oasConfig)
-          .buildContext(true);
-    } catch (OpenApiConfigurationException e) {
-      throw new ServletException("Bootstrap Error: " + e.getMessage(), e);
-    } catch (Exception e){
-      e.printStackTrace();
-    }
-
-
-    try {
-      OpenAPI openAPI = new ServletOpenApiContextBuilder()
-          .servletConfig(config)
-          .buildContext(true)
-          .read();
-    } catch (OpenApiConfigurationException e) {
-      throw new RuntimeException(e.getMessage(), e);
-    }
-
- /*
+    
+    private static final long serialVersionUID = -3027164743593330062L;
+    
+    @Override
+    public void init(ServletConfig config) throws ServletException {
+        
+        // ((LoggerContext) LoggerFactory.getILoggerFactory()).getLogger("org.mongodb.driver").setLevel(Level.ERROR);
+        // ((LoggerContext) LoggerFactory.getILoggerFactory()).getLogger("org.mongodb.driver.cluster").setLevel(Level.ERROR);
+        final Map<String, Object> map = new HashMap<>();
+        map.put("type", "H2020");
+        map.put("name", "OpenRiskNet");
+        map.put("cordis", "http://www.cordis.europa.eu/project/rcn/206759_en.html");
+        
+        final Map<String, Object> contextmap = new HashMap<>();
+        contextmap.put("@vocab", "http://schema.org/");
+        
+        OpenAPI oas = new OpenAPI();
+        
+        SwaggerConfiguration oasConfig = new SwaggerConfiguration();
+        
+        oasConfig.openAPI(oas).prettyPrint(true)
+                 .resourcePackages(Stream.of("io.swagger.api").collect(Collectors.toSet()));
+        
+        try {
+            JaxrsOpenApiContextBuilder jaxrsOApiContextBuilder = new JaxrsOpenApiContextBuilder<>();
+            jaxrsOApiContextBuilder.servletConfig(config).openApiConfiguration(oasConfig)
+                                   .buildContext(true);
+        } catch (OpenApiConfigurationException e) {
+            throw new ServletException("Bootstrap Error: " + e.getMessage(), e);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        
+        try {
+            ServletOpenApiContextBuilder servletOApiContextBuilder = new ServletOpenApiContextBuilder<>();
+            servletOApiContextBuilder.servletConfig(config).buildContext(true).read();
+        } catch (OpenApiConfigurationException e) {
+            throw new RuntimeException(e.getMessage(), e);
+        }
+        
+        /*
 
 
 
@@ -100,6 +98,6 @@ public class Bootstrap extends HttpServlet {
     //swagger.securityDefinition("subjectid", new ApiKeyAuthDefinition("subjectid", In.HEADER));
 
     new SwaggerContextService().withServletConfig(config).updateSwagger(swagger);
-    */
-  }
+         */
+    }
 }

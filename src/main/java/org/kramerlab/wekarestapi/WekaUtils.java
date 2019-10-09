@@ -1,31 +1,39 @@
 package org.kramerlab.wekarestapi;
 
-import weka.core.Instances;
-import weka.core.SerializationHelper;
-
 import java.io.IOException;
 import java.io.StringReader;
 
-public class WekaUtils {
+import weka.core.Instances;
+import weka.core.SerializationHelper;
 
+public class WekaUtils {
+    
     /**
-     * Get Instances out of an arff string
-     * @param arff String arff data
-     * @param setClass Boolean set a class
+     * Get Instances out of an ARFF string
+     * 
+     * @param arff
+     *     String ARFF data
+     * @param setClass
+     *     Boolean set a class
      * @return Instances
-     * @throws IOException error
+     * @throws IOException
+     *     error
      */
     public static Instances instancesFromString(String arff, Boolean setClass) throws IOException {
         StringReader reader = new StringReader(arff);
         Instances insts = new Instances(reader);
-        if (insts.classIndex() == -1 && setClass) insts.setClassIndex(insts.numAttributes() - 1);
+        if (insts.classIndex() == -1 && setClass)
+            insts.setClassIndex(insts.numAttributes() - 1);
         return insts;
     }
-
+    
     /**
-     * Write a model to filesystem
-     * @param model WEKA model
-     * @param filename to save to
+     * Write a model to file system
+     * 
+     * @param model
+     *     WEKA model
+     * @param filename
+     *     to save to
      * @return Boolean success
      */
     public static Boolean saveWekaModel(Object model, String filename) {
@@ -37,6 +45,4 @@ public class WekaUtils {
         }
         return true;
     }
-
-
 }
