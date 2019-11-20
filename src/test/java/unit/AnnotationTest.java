@@ -1,12 +1,12 @@
 package unit;
 
 
-import org.glassfish.jersey.media.multipart.FormDataParam;
-import org.kramerlab.wekarestapi.Api;
+import static org.testng.Assert.assertEquals;
 
 import java.lang.annotation.Annotation;
 
-import static org.testng.Assert.assertEquals;
+import org.glassfish.jersey.media.multipart.FormDataParam;
+import org.kramerlab.wekarestapi.Api;
 
 //import org.glassfish.jersey.media.multipart.FormDataParam;
 

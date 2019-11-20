@@ -1,36 +1,38 @@
 package unit;
 
+import java.math.BigDecimal;
+import java.util.HashMap;
+
 import org.kramerlab.wekarestapi.StringUtil;
 import org.kramerlab.wekarestapi.WekaOptionHelper;
 import org.kramerlab.wekarestapi.WekaUtils;
 import org.testng.Assert;
 import org.testng.annotations.Test;
+
 import weka.core.Instances;
 
-import java.math.BigDecimal;
-import java.util.HashMap;
-
 public class WekaUtilsTest {
+    
     @Test(description = "Create instances from an arff string")
     public void instancesFromString() throws Exception {
-        String arff = "@relation weather-weka.filters.unsupervised.instance.RemoveRange-R5-last\n" +
-            "@attribute outlook {sunny,overcast,rainy}\n" +
-            "@attribute temperature numeric\n" +
-            "@attribute humidity numeric\n" +
-            "@attribute windy {TRUE,FALSE}\n" +
-            "@attribute play {yes,no}\n" +
-            "@data\n" +
-            "sunny,87,87,TRUE,yes\n" +
-            "sunny,75,90,FALSE,no\n" +
-            "overcast,81,76,FALSE,yes\n" +
-            "rainy,59,96,FALSE,yes";
+        String arff = "@relation weather-weka.filters.unsupervised.instance.RemoveRange-R5-last\n"
+                      + "@attribute outlook {sunny,overcast,rainy}\n"
+                      + "@attribute temperature numeric\n"
+                      + "@attribute humidity numeric\n"
+                      + "@attribute windy {TRUE,FALSE}\n"
+                      + "@attribute play {yes,no}\n"
+                      + "@data\n"
+                      + "sunny,87,87,TRUE,yes\n"
+                      + "sunny,75,90,FALSE,no\n"
+                      + "overcast,81,76,FALSE,yes\n"
+                      + "rainy,59,96,FALSE,yes";
         Instances instances = WekaUtils.instancesFromString(arff, true);
         Assert.assertEquals(instances.getClass(), Instances.class);
         Assert.assertEquals(5, instances.numAttributes());
         Assert.assertEquals(4, instances.classIndex(), "Class index error.");
         Assert.assertEquals(4, instances.size());
     }
-
+    
     @Test
     public void saveWekaModel() throws Exception {
     }
@@ -81,7 +83,8 @@ public class WekaUtilsTest {
         // String nearestNeighbourSearchAlgorithm
         // 0, 1, 0, "0",0, "LinearNNSearch"
         options = WekaOptionHelper.getIBkOptions(params);
-        Assert.assertEquals("-W 0 -K 1 -A weka.core.neighboursearch.LinearNNSearch -A \"weka.core.EuclideanDistance -R first-last\"", StringUtil.join(options, " "), "get KNN options");
+        Assert.assertEquals("-W 0 -K 1 -A weka.core.neighboursearch.LinearNNSearch -A \"weka.core.EuclideanDistance -R first-last\"",
+                            StringUtil.join(options, " "), "get KNN options");
 
 
         // Linear Regression
@@ -102,7 +105,8 @@ public class WekaUtilsTest {
         params.put("searchParams", "-P 1 -S BAYES");
 
         options = WekaOptionHelper.getBayesNetOptions(params);
-        Assert.assertEquals("-D -Q weka.classifiers.bayes.net.search.local.K2 -- -P 1 -S BAYES -E weka.classifiers.bayes.net.estimate.SimpleEstimator -- -A 0.5", StringUtil.join(options, " "), "get BayesNet options");
+        Assert.assertEquals("-D -Q weka.classifiers.bayes.net.search.local.K2 -- -P 1 -S BAYES -E weka.classifiers.bayes.net.estimate.SimpleEstimator -- -A 0.5",
+                            StringUtil.join(options, " "), "get BayesNet options");
 
         // NaiveBayes
         params = new HashMap<>();
@@ -139,7 +143,8 @@ public class WekaUtilsTest {
         params.put("weights", "1");
 
         options = WekaOptionHelper.getLibSVMOptions(params);
-        Assert.assertEquals("-S 0 -R 0.0 -C 1.0 -D 3 -E 0.001 -G 0.1 -K 2 -P 0.1 -N 0.5 -W 1", StringUtil.join(options, " "), "get Lib SVM options");
+        Assert.assertEquals("-S 0 -R 0.0 -C 1.0 -D 3 -E 0.001 -G 0.1 -K 2 -P 0.1 -N 0.5 -W 1",
+                            StringUtil.join(options, " "), "get Lib SVM options");
 
         // M5Rules
         params = new HashMap<>();
@@ -166,7 +171,8 @@ public class WekaUtilsTest {
         params.put("learningRate", "0.3");
         params.put("reset", "true");
         options = WekaOptionHelper.getMultilayerPerceptronOptions(params);
-        Assert.assertEquals("-M 0.2 -B -H a -E 22 -I -batch-size 110 -D -V 0 -N 520 -L 0.3", StringUtil.join(options, " "), "get MultilayerPerceptron options");
+        Assert.assertEquals("-M 0.2 -B -H a -E 22 -I -batch-size 110 -D -V 0 -N 520 -L 0.3",
+                            StringUtil.join(options, " "), "get MultilayerPerceptron options");
 
 
         // AdaBoost M1
@@ -186,8 +192,6 @@ public class WekaUtilsTest {
 
         options = WekaOptionHelper.getBaggingOptions(params);
         Assert.assertEquals("-batch-size 100 -P 75 -I 10", StringUtil.join(options, " "), "get Bagging options");
-
-
     }
 
     @Test(description = "Test WekaOptionHelper for WEKA Clusterer params")
@@ -213,7 +217,8 @@ public class WekaUtilsTest {
         params.put("seed", "11");
 
         String[] options = WekaOptionHelper.getSimpleKMeansOptions(params);
-        Assert.assertEquals("-max-candidates 101 -min-density 2.1 -periodic-pruning 10001 -t1 -1.24 -t2 -1.01 -V -A weka.core.ManhattanDistance -R 1,2,3,4 -M -fast -init 1 -I 500 -N 3 -num-slots 1 -O -C -S 11", StringUtil.join(options, " "), "get SimpleKMeans options");
+        Assert.assertEquals("-max-candidates 101 -min-density 2.1 -periodic-pruning 10001 -t1 -1.24 -t2 -1.01 -V -A weka.core.ManhattanDistance -R 1,2,3,4 -M -fast -init 1 -I 500 -N 3 -num-slots 1 -O -C -S 11",
+                            StringUtil.join(options, " "), "get SimpleKMeans options");
 
         // Hierarchical
         params = new HashMap<>();
@@ -223,7 +228,7 @@ public class WekaUtilsTest {
         params.put("distanceIsBranchLength", "true");
         params.put("distanceFunction", "weka.core.ManhattanDistance -R first-last");
         options = WekaOptionHelper.getHierarchicalClustererOptions(params);
-        Assert.assertEquals("-P -N 3 -L MEAN -B -A weka.core.ManhattanDistance -R first-last", StringUtil.join(options, " "), "get Hierachical Clusterer options");
-
+        Assert.assertEquals("-P -N 3 -L MEAN -B -A weka.core.ManhattanDistance -R first-last",
+                            StringUtil.join(options, " "), "get Hierachical Clusterer options");
     }
 }

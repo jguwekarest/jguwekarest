@@ -1,11 +1,11 @@
 package unit;
 
+import java.io.ByteArrayOutputStream;
+import java.io.ObjectOutputStream;
+
 import org.kramerlab.wekarestapi.StringUtil;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
-import java.io.ByteArrayOutputStream;
-import java.io.ObjectOutputStream;
 
 public class StringUtilTest {
     @Test
@@ -57,21 +57,21 @@ public class StringUtilTest {
         ObjectOutputStream os = new ObjectOutputStream(out);
 
         Object obj = new Object();
-        obj = "class weka.classifiers.functions.GaussianProcesses\n" +
-            "Gaussian Processes\n" +
-            "\n" +
-            "Kernel used:\n" +
-            "  Linear Kernel: K(x,y) = <x,y>\n" +
-            "\n" +
-            "All values shown based on: Normalize training data\n" +
-            "\n" +
-            "Average Target Value : 0.4851421188630491\n" +
-            "Inverted Covariance Matrix:\n" +
-            "    Lowest Value = -0.07579825336723331\n" +
-            "    Highest Value = 0.9991157622596833\n" +
-            "Inverted Covariance Matrix * Target-value Vector:\n" +
-            "    Lowest Value = -0.4782845987029812\n" +
-            "    Highest Value = 0.46648681733797204";
+        obj = "class weka.classifiers.functions.GaussianProcesses\n"
+              + "Gaussian Processes\n"
+              + "\n"
+              + "Kernel used:\n"
+              + "  Linear Kernel: K(x,y) = <x,y>\n"
+              + "\n"
+              + "All values shown based on: Normalize training data\n"
+              + "\n"
+              + "Average Target Value : 0.4851421188630491\n"
+              + "Inverted Covariance Matrix:\n"
+              + "    Lowest Value = -0.07579825336723331\n"
+              + "    Highest Value = 0.9991157622596833\n"
+              + "Inverted Covariance Matrix * Target-value Vector:\n"
+              + "    Lowest Value = -0.4782845987029812\n"
+              + "    Highest Value = 0.46648681733797204";
         os.writeObject(obj);
         System.out.println( out.toByteArray().toString());
     }
