@@ -15,17 +15,17 @@ import io.swagger.v3.oas.annotations.info.License;
 @OpenAPIDefinition(extensions = {@Extension(name = "orn-@context",
                                             properties = {@ExtensionProperty(name = "@vocab",
                                                                              value = "http://openrisknet.org/schema#"),
-                                                          @ExtensionProperty(name = "orn",
+                                                          @ExtensionProperty(name = "x-orn",
                                                                              value = "http://openrisknet.org/schema#"),
-                                                          @ExtensionProperty(name = "orn-@id",
+                                                          @ExtensionProperty(name = "x-orn-@id",
                                                                              value = "@id"),
-                                                          @ExtensionProperty(name = "orn-@type",
+                                                          @ExtensionProperty(name = "x-orn-@type",
                                                                              value = "@type")}),
                                  @Extension(properties = {@ExtensionProperty(name = "orn-@type",
                                                                              value = "Service")}),
                                  @Extension(properties = {@ExtensionProperty(name = "orn-@id",
                                                                              value = "https://jguweka.prod.openrisknet.org")})},
-                   info = @Info(title = "JGU WEKA REST Service", version = "0.5.0-OAS3",
+                   info = @Info(title = "JGU WEKA REST Service", version = "0.5.1-OAS3",
                                 description = "This is a RESTful API Webservice for WEKA Machine "
                                               + "Learning algorithms.\nThis webservice provides an "
                                               + "[OpenRiskNet](https://openrisknet.org/) compliant "
