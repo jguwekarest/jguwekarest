@@ -1,30 +1,28 @@
 # How to Build the Docker Image
 
-This document describes how to setup and start a docker image and its container for the JGU WEKA Rest service. 
-
+This document describes how to setup a docker image and then start a container based on that image for the JGU WEKA Rest service.
 
 ## Setup the Dockerfile
-The current docker image is build with a simple Dockerfile that 
-uses a tomcat base-image from [hub.docker.com/_/tomcat](https://hub.docker.com/_/tomcat/), the official Apache Tomcat repository.    
-The Dockerfile removes all pre-installed webapps from tomcat and copies the JGU WEKA Rest service war file to */usr/local/tomcat/webapps/ROOT.war*
-as the main application.    
-Finally port 8080 is exposed.     
+The docker image is built with a simple Dockerfile that 
+uses a Tomcat base-image from [hub.docker.com/_/tomcat](https://hub.docker.com/_/tomcat/), the official Apache Tomcat repository.
+
+The Dockerfile exposes port 8080, removes all pre-installed webapps from the Tomcat server, creates a new user and grants this user the ownership of the */usr/local/tomcat/* directory.    
+Finally, the war built by maven is copied to */usr/local/tomcat/webapps/ROOT.war* and the proper ownership is granted.    
 
     
 ```
-FROM tomcat:8.0-jre8
-MAINTAINER "MyName <xyz@uni-mainz.de>"
-
-# remove preinstalled webapps 
-RUN rm -fr /usr/local/tomcat/webapps/ROOT
-RUN rm -fr /usr/local/tomcat/webapps/host-manager
-RUN rm -fr /usr/local/tomcat/webapps/manager
-RUN rm -fr /usr/local/tomcat/webapps/docs
-RUN rm -fr /usr/local/tomcat/webapps/examples
-
-COPY target/weka_rs.war /usr/local/tomcat/webapps/ROOT.war
+FROM tomcat:8.5.47-jdk8
+MAINTAINER "Maintainer Name <xyz@uni-mainz.de>"
 
 EXPOSE 8080
+
+RUN rm -fr /usr/local/tomcat/webapps/*    # remove preinstalled webapps and manager
+
+RUN useradd -u 501 -m -g root tomcat && chown -R tomcat:root /usr/local/tomcat    # Create a non-priviledged user to run Tomcat
+
+ADD --chown=tomcat:root target/weka_rs.war /usr/local/tomcat/webapps/ROOT.war    # add the application war file
+
+USER 501    # run as new user
 ```
 Customise the [Dockerfile](../Dockerfile) as needed (e.g.: adjust the war file name and version).  
 
@@ -46,19 +44,19 @@ Customise the [Dockerfile](../Dockerfile) as needed (e.g.: adjust the war file n
 
 ## Run the Docker Container
 
-* Run the image as a local container 
-`docker run -p 8080:8080 --link mongodb:mongodb dockerhubuser/jguweka:OAS3`
-* If you run the container locally don't forget to start also a mongodb container as a data base with:   
+* Run a mongodb container as a data base with:   
 `docker pull mongo; docker run --name mongodb -d mongo`
+* Run the Weka REST API image as a local container 
+`docker run -p 8080:8080 --link mongodb:mongodb dockerhubuser/jguweka:OAS3`
 * Load the Swagger-UI representation in a web-browser   
 e.g.: `firefox http://0.0.0.0:8080`
 
 ## Documentation
 
-* [jguwekarest documentation on github](https://jguwekarest.github.io/jguwekarest/)
+* [JGU WEKA REST API Documentation](https://jguwekarest.github.io/jguwekarest/)
 
 **See also:**
 
 * [Dockerfile Reference](https://docs.docker.com/engine/reference/builder/)
-* [Tomcat Official Repository](https://hub.docker.com/r/_/tomcat/)
+* [Tomcat Official Dockerhub Repository](https://hub.docker.com/r/_/tomcat/)
 * [Docker Official Image packaging for Apache Tomcat ](https://github.com/docker-library/tomcat/) 
