@@ -15,7 +15,7 @@
         <init-param>
             <param-name>openApi.configuration.resourcePackages</param-name>
             <param-value>
-                io.swagger.api,
+                org.kramerlab.wekarestapi,
                 io.swagger.jaxrs2.listing,
                 io.swagger.v3.jaxrs2.integration.resources
             </param-value>
@@ -57,7 +57,7 @@
 
     <servlet>
         <servlet-name>Bootstrap</servlet-name>
-        <servlet-class>io.swagger.api.Bootstrap</servlet-class>
+        <servlet-class>org.kramerlab.wekarestapi.Bootstrap</servlet-class>
         <load-on-startup>2</load-on-startup>
     </servlet>
 
@@ -68,7 +68,7 @@
 
     <filter>
         <filter-name>ApiOriginFilter</filter-name>
-        <filter-class>io.swagger.api.ApiOriginFilter</filter-class>
+        <filter-class>org.kramerlab.wekarestapi.ApiOriginFilter</filter-class>
     </filter>
 
     <filter-mapping>
@@ -83,12 +83,12 @@
         <init-param>
             <param-name>jersey.config.server.provider.packages</param-name>
             <param-value>
-                io.swagger.api,
-                io.swagger.api.authorization,
-                io.swagger.api.data,
-                io.swagger.api.cluster,
-                io.swagger.api.task,
-                io.swagger.api.algorithm,
+                org.kramerlab.wekarestapi,
+                org.kramerlab.wekarestapi.authorization,
+                org.kramerlab.wekarestapi.data,
+                org.kramerlab.wekarestapi.cluster,
+                org.kramerlab.wekarestapi.task,
+                org.kramerlab.wekarestapi.algorithm,
             </param-value>
         </init-param>
         <init-param>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<configuration scan="true">
+  <appender name="CONSOLE"
+    class="ch.qos.logback.core.ConsoleAppender">
+    <encoder>
+      <charset>utf-8</charset>
+      <Pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{48} - %msg %n</Pattern> <!-- '[%p] %c ' -->
+    </encoder>
+  </appender>
+
+
+<!--   <logger name="io.swagger.v3" level="INFO" /> -->
+  
+  <logger name="org.kramerlab.wekarestapi" level="DEBUG" />
+
+
+  <contextListener
+    class="ch.qos.logback.classic.jul.LevelChangePropagator">
+    <resetJUL>true</resetJUL>
+  </contextListener>
+
+  <root level="INFO">
+    <appender-ref ref="CONSOLE" />
+  </root>
+
+</configuration>

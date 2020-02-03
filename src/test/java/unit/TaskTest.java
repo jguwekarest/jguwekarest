@@ -1,20 +1,22 @@
 package unit;
 
-import io.swagger.api.ErrorReport;
-import io.swagger.api.data.Task;
-import io.swagger.api.data.TaskHandler;
-import io.swagger.api.data.TaskService;
-import org.junit.Rule;
-import org.junit.rules.ExpectedException;
-import org.testng.Assert;
-import org.testng.annotations.Test;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.junit.Rule;
+import org.junit.rules.ExpectedException;
+import org.kramerlab.wekarestapi.ErrorReport;
+import org.kramerlab.wekarestapi.data.Task;
+import org.kramerlab.wekarestapi.data.TaskHandler;
+import org.kramerlab.wekarestapi.data.TaskService;
+import org.testng.Assert;
+import org.testng.annotations.Test;
+
+// FIXME Replace raw types with parameterized 
+@SuppressWarnings("rawtypes")
 public class TaskTest {
     private static final Logger LOG = Logger.getLogger(Task.class.getName());
 
@@ -128,8 +130,9 @@ public class TaskTest {
                     TimeUnit.SECONDS.sleep(2);
                     thrown.expect(IndexOutOfBoundsException.class);
                     ArrayList emptyList = new ArrayList();
+                    @SuppressWarnings("unused")
                     Object o = emptyList.get(0);
-                    Assert.assertFalse(1==1,"Code should have thrown error before.");
+                    Assert.assertFalse(true,"Code should have thrown error before.");
                     TimeUnit.SECONDS.sleep(5);
                     finish();
                 } catch (InterruptedException e) {

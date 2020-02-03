@@ -1,49 +1,53 @@
-# JGU WEKA Rest Service
+# JGU WEKA REST Service
 
-RESTful API Webservice to WEKA Machine Learning Algorithms.
-This webservice provides an [OpenRiskNet](https://openrisknet.org/) compliant REST interface to machine learning algorithms from the WEKA Java Library.
-This application is developed by the [Institute of Computer Science](http://www.datamining.informatik.uni-mainz.de/) at the Johannes Gutenberg University Mainz.
-OpenRiskNet is funded by the European Commission GA 731075. WEKA is developed by the [Machine Learning Group](https://www.cs.waikato.ac.nz/ml/index.html) at the University of Waikato.
+## RESTful API web service to WEKA Machine Learning Algorithms
 
-See [Documentation](https://jguwekarest.github.io/jguwekarest/), [Issue Tracker](https://github.com/jguwekarest/jguwekarest/issues) and [Code](https://github.com/jguwekarest/jguwekarest) at GitHub.
+The JGU WEKA REST service provides an [OpenRiskNet](https://openrisknet.org/) compliant REST interface to machine learning algorithms from the WEKA library.
+This web service is developed by the [Institute of Computer Science](http://www.datamining.informatik.uni-mainz.de/) at the [Johannes Gutenberg University Mainz](https://www.uni-mainz.de).
 
-## Quickstart
-This is an a swagger-enabled JAX-RS server. The API is in OpenAPI Specification Version 3.0.1 [OpenAPI-Specification 3.0.1](https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.1.md)
-The service uses the [JAX-RS](https://jax-rs-spec.java.net/) framework.
+[OpenRiskNet](https://openrisknet.org/) is funded by the European Commission GA 731075.
 
-To run a simple local environment, please execute the following:
+WEKA is developed by the [Machine Learning Group](https://www.cs.waikato.ac.nz/ml/index.html) at the University of Waikato.
+
+[Documentation](https://jguwekarest.github.io/jguwekarest/), [Issue Tracker](https://github.com/jguwekarest/jguwekarest/issues) and [Code](https://github.com/jguwekarest/jguwekarest) available at GitHub.
+
+## Quick start
+
+The JGU WEKA REST service is based on the [Swagger-UI](https://swagger.io/tools/swagger-ui/) and [JAX-RS](https://jax-rs-spec.java.net/) frameworks. The API is in [OpenAPI Specification ver. 3.0.1](https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.1.md)
+
+To run a local environment for exploring the web service, execute the following:
 
 ```
 mvn clean package jetty:run
 ```
 
-You can then view the full Rest API on Swagger-UI here:
+This will run the Swagger-UI based REST API web service on a local Jetty instance which can then be viewed at the following URI:
 
 ```
 http://0.0.0.0:8081
 ```
 
-To connect the server to a mongodb database you can use a standard mongo docker image pulled from docker hub:
+To use the web service for modelling, etc., refer to the documents [Docker Image Deployment](./doc/DockerImageDeployment.md) and [Docker Development Environment](./doc/DockerizedDevEnvSetup.md).
+
+### Usage with the *curl* command
+
+`POST`ing a WEKA ARFF file to the web service and training a BayesNet based WEKA model using the `curl` command is done as follows:
 
 ```
-docker pull mongo
-docker run -d mongo
-```
-
-### *curl* Example
-
-POST an arff file to the WEKA BayesNet algorithm using curl:
-```
-curl  -X POST -H "Content-Type: multipart/form-data" -H "Accept:text/x-arff" -F "file=@/yourpathtowekadata/weka-3-8-1/data/weather.nominal.arff;" -F "estimatorParams=0.5"  -F "searchAlgorithm=local.K2" -F useADTree=0 -F "estimator=SimpleEstimator" -F searchParams='-P 1 -S BAYES' http://0.0.0.0:8081/algorithm/BayesNet
+curl -X POST -H "Content-Type: multipart/form-data" -H "Accept:text/x-arff" \
+     -F "file=@/path/to/data/weather.nominal.arff;" -F "estimatorParams=0.5" \
+     -F "searchAlgorithm=local.K2" -F "estimator=SimpleEstimator" \
+     -F useADTree=0 -F searchParams='-P 1 -S BAYES' \
+     http://0.0.0.0:8081/algorithm/BayesNet
 ```
 
 ## Documentation
 
- * Full example for a **[local or server hosted development environment](./doc/DockerizedDevEnvSetup.md).** 
- * Docker Deployment: **[Build the Docker image with a Dockerfile](./doc/DockerImageDeployment.md)**.
+ * Deploying a Dockerized environment **[local or server hosted development environment](./doc/DockerizedDevEnvSetup.md).** 
+ * Deploying a Docker image: **[Build the Docker image with a Dockerfile](./doc/DockerImageDeployment.md)**.
  * Running tests: **[Run Tests](./doc/Testing.md)**.
  * OpenShift Deployment: **[Deployment in OpenShift](./openshift/README.md)**.
- * Commandline Examples with Curl: **[Curl Examples](./doc/CommandlineCurlExamples.md)**.
+ * Examples of invoking model training/uploading dataset, etc using CLI/curl: **[Curl Examples](./doc/CommandlineCurlExamples.md)**.
  * Authentication: **[Keycloak Integration](./doc/TomcatKeycloakSetup.md)**.
- * Java Docs on gh-pages: **[JavaDocs](https://jguwekarest.github.io/jguwekarest/javadoc/index.html)**.
+ * Java docs on gh-pages: **[JavaDocs](https://jguwekarest.github.io/jguwekarest/javadoc/index.html)**.
  

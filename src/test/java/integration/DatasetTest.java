@@ -2,22 +2,23 @@ package integration;
 
 import com.google.gson.Gson;
 import helper.TestHelper;
-import io.swagger.api.authorization.AuthorizationService;
-import io.swagger.api.data.Dao;
-import io.swagger.api.data.Dataset;
-import io.swagger.api.data.DatasetService;
+
 import org.bson.Document;
 import org.glassfish.jersey.media.multipart.FormDataMultiPart;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
+import org.kramerlab.wekarestapi.authorization.AuthorizationService;
+import org.kramerlab.wekarestapi.data.Dao;
+import org.kramerlab.wekarestapi.data.Dataset;
+import org.kramerlab.wekarestapi.data.DatasetService;
 import org.testng.Assert;
 import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
+import static org.kramerlab.wekarestapi.Constants.TEXT_ARFF;
+
 import javax.ws.rs.client.*;
 import javax.ws.rs.core.Response;
-
-import static io.swagger.api.Constants.TEXT_ARFF;
 
 public class DatasetTest {
 
